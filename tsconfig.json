@@ -1,8 +1,40 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": false,
+    "baseUrl": ".",
+    "outDir": "public/js",
+    "types": [
+    ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/standardized-audio-context",
+      "./src/@types",
+    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
   },
-  "exclude": ["node_modules", "dist"],
-  "extends": "@tsconfig/recommended/tsconfig.json",
-  "include": ["src/**/*"]
- }
+  "include": [
+    "src/**/*.ts",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
