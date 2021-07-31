@@ -3,12 +3,10 @@
   padding: 0;
   margin: 0;
 }
-
 html, body {
   background-color: #333;
   color: #ccc;
 }
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -33,6 +31,13 @@ button {
   background: #333;
   border: 1px solid #666;
   color: #ccc;
+}
+#canvas-container {
+  width: 90vw;
+}
+#canvas-container canvas {
+  height: 100% !important;
+  width: 100% !important;
 }
 .display {
   background-color: #eee;

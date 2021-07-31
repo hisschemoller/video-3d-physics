@@ -1,26 +1,29 @@
 import { ExtendedObject3D, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d';
 
-let rootEl: HTMLDivElement;
+const CANVAS_HEIGHT = 1080;
+const CANVAS_WIDTH = 1920;
 
 class MainScene extends Scene3D {
   private box!: ExtendedObject3D;
+  private rootEl: HTMLDivElement;
 
   constructor() {
     super({ key: 'MainScene' });
+    this.rootEl = document.getElementById('canvas-container') as HTMLDivElement;
   }
 
   init() {
-    console.log('init')
-    this.renderer.setPixelRatio(1)
-    this.renderer.setSize(window.innerWidth, window.innerHeight)
+    this.renderer.setPixelRatio(1); // window.devicePixelRatio);
+    this.renderer.setSize(CANVAS_WIDTH, CANVAS_HEIGHT, true);
+    this.rootEl.appendChild(this.renderer.domElement);
   }
 
   preload() {
-    console.log('preload')
+    console.log('preload');
   }
 
   create() {
-    console.log('create')
+    console.log('create');
 
     // set up scene (light, ground, grid, sky, orbitControls)
     this.warpSpeed();
@@ -29,7 +32,9 @@ class MainScene extends Scene3D {
     this.physics.debug?.enable();
 
     // position camera
-    this.camera.position.set(10, 10, 20)
+    this.camera.position.set(10, 10, 20);
+    this.camera.aspect = CANVAS_WIDTH / CANVAS_HEIGHT;
+    this.camera.updateProjectionMatrix();
 
     // blue box
     this.box = this.add.box({ y: 2 }, { lambert: { color: 'deepskyblue' } })
@@ -44,7 +49,7 @@ class MainScene extends Scene3D {
     cube.position.set(0.2, 3, 0)
     this.scene.add(cube)
     // add physics to an existing object
-    this.physics.add.existing(cube)
+    // this.physics.add.existing(cube)
   }
 
   update() {
@@ -57,7 +62,6 @@ class MainScene extends Scene3D {
  * General setup of the module.
  */
 export default function setup(): void {
-  rootEl = document.getElementById('canvas-container') as HTMLDivElement;
   PhysicsLoader('/lib/kripken', () => new Project({
     scenes: [MainScene],
     antialias: true,
