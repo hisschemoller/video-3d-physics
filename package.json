@@ -10,7 +10,7 @@
     "build": "webpack",
     "lint": "eslint . --ext .ts",
     "start": "node server.js",
-    "watch": "tsc-watch --onSuccess \"node ./public/test.js\""
+    "watch": "webpack --watch"
   },
   "dependencies": {
     "@enable3d/ammo-physics": "~0.22.0",
