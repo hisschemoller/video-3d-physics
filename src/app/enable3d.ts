@@ -29,7 +29,7 @@ class MainScene extends Scene3D {
     this.warpSpeed();
 
     // enable physics debug
-    this.physics.debug?.enable();
+    this.physics.debug?.enable(); 
 
     // position camera
     this.camera.position.set(10, 10, 20);
@@ -37,24 +37,28 @@ class MainScene extends Scene3D {
     this.camera.updateProjectionMatrix();
 
     // blue box
-    this.box = this.add.box({ y: 2 }, { lambert: { color: 'deepskyblue' } })
+    this.box = this.add.box({ y: 2 }, { lambert: { color: 'deepskyblue' } });
 
     // pink box
-    this.physics.add.box({ y: 10 }, { lambert: { color: 'hotpink' } })
+    this.physics.add.box({ y: 10 }, { lambert: { color: 'hotpink' } });
 
     // green sphere
-    const geometry = new THREE.SphereGeometry(0.8, 16, 16)
-    const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 })
-    const cube = new THREE.Mesh(geometry, material)
-    cube.position.set(0.2, 3, 0)
-    this.scene.add(cube)
+    const geometry = new THREE.SphereGeometry(0.8, 16, 16);
+    const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
+    const sphere = new THREE.Mesh(geometry, material);
+    sphere.position.set(0.2, 3, 0);
+    this.scene.add(sphere);
     // add physics to an existing object
-    // this.physics.add.existing(cube)
+    this.physics.add.existing(sphere);
+
+    // @ts-ignore
+    setInterval(() => this._update(), 500);
   }
 
   update() {
-    // this.box.rotation.x += 0.01
-    // this.box.rotation.y += 0.01
+    this.renderer.setAnimationLoop(null);
+    // this.box.rotation.x += 0.01;
+    // this.box.rotation.y += 0.01;
   }
 }
 
@@ -62,8 +66,16 @@ class MainScene extends Scene3D {
  * General setup of the module.
  */
 export default function setup(): void {
-  PhysicsLoader('/lib/kripken', () => new Project({
-    scenes: [MainScene],
-    antialias: true,
-  }));
+  // PhysicsLoader('/lib/kripken', () => new Project({
+  //   scenes: [MainScene],
+  //   antialias: true,
+  // }));
+  let project: Project;
+  PhysicsLoader('/lib/kripken', () => {
+    project = new Project({
+      scenes: [MainScene],
+      antialias: true,
+    });
+    return project;
+  });
 }
