@@ -19,7 +19,7 @@ if (existsSync(resolve('screenshots'))) {
 await mkdir(resolve('screenshots'));
 
 const app = express();
-const port = 5402;
+const port = 3020;
 const publicPath = 'public';
 
 app.use(cors());
