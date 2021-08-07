@@ -9,10 +9,10 @@
   "scripts": {
     "build": "webpack",
     "lint": "eslint . --ext .ts",
-    "start": "node server.js",
     "watch": "webpack --watch",
 
-    "render": "node server.mjs"
+    "serve": "node server.mjs serve",
+    "render": "node server.mjs render"
   },
   "dependencies": {
     "@enable3d/ammo-physics": "~0.22.0",

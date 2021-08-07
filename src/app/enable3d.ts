@@ -71,7 +71,7 @@ export default function setup(): void {
   //   antialias: true,
   // }));
   let project: Project;
-  PhysicsLoader('/lib/kripken', () => {
+  PhysicsLoader('./lib', () => {
     project = new Project({
       scenes: [MainScene],
       antialias: true,
