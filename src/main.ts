@@ -1,9 +1,7 @@
-import setup from './app/enable3d';
-import render from './app/render';
+import { PhysicsLoader, Project } from 'enable3d';
+import Scene from './projects/test/scene';
 
-const urlSearchParams = new URLSearchParams(window.location.search);
-if (urlSearchParams.get('mode') === 'render') {
-  render();
-} else {
-  setup();
-}
+PhysicsLoader('./lib', () => new Project(
+  // @ts-ignore
+  { scenes: [Scene], anisotropy: 4, antialias: true }
+));

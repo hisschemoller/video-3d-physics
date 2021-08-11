@@ -1,14 +1,14 @@
-import { PhysicsLoader, Project, Scene3D } from 'enable3d';
+import { Scene3D } from 'enable3d';
 
 const IS_PUPPETEER = navigator.userAgent.indexOf('puppeteer') !== -1;
 const MAX_FRAMES = 10;
 const FPS = 30;
-const WIDTH = IS_PUPPETEER ? 1280 : 960;
-const HEIGHT = IS_PUPPETEER ? 720 : 540;
 const PORT = 3020;
 
 // @ts-ignore
-class MainScene extends Scene3D {
+export default class MainScene extends Scene3D {
+  width = IS_PUPPETEER ? 1280 : 960;
+  height = IS_PUPPETEER ? 720 : 540;
   frame = 0;
   delta = 1 / FPS;
   time = 0;
@@ -18,21 +18,6 @@ class MainScene extends Scene3D {
   }
 
   async create() {
-    this.warpSpeed();
-
-    this.renderer.setSize(WIDTH, HEIGHT);
-    this.camera.aspect = WIDTH / HEIGHT;
-    this.camera.updateProjectionMatrix();
-
-    const x = () => (Math.random() - 0.5) * 2;
-    const bounciness = 0.6;
-
-    this.physics.add.sphere({ x: x(), y: 5 }, { lambert: { color: 'red' } }).body.setBounciness(bounciness);
-    this.physics.add.box({ x: x(), y: 10 }, { lambert: { color: 'blue' } }).body.setBounciness(bounciness);
-    this.physics.add.torus({ x: x(), y: 12 }, { lambert: { color: 'orange' } }).body.setBounciness(bounciness);
-    this.physics.add.cone({ x: x(), y: 14 }, { lambert: { color: 'green' } }).body.setBounciness(bounciness);
-    this.physics.add.cylinder({ x: x(), y: 16 }, { lambert: { color: 'yellow' } }).body.setBounciness(bounciness);
-
     if (IS_PUPPETEER) this.saveFrame();
   }
 
@@ -54,7 +39,7 @@ class MainScene extends Scene3D {
       }
     }).catch(err => {});
 
-    this.frame ++;
+    this.frame++;
 
     if (this.frame > MAX_FRAMES) console.log('DONE');
     this.saveFrame();
@@ -82,11 +67,4 @@ class MainScene extends Scene3D {
     else this.renderer.render(this.scene, this.camera);
     this.postRender();
   }
-}
-
-export default function render() {
-  PhysicsLoader('./lib', () => new Project(
-    // @ts-ignore
-    { scenes: [MainScene], anisotropy: 4, antialias: true }
-  ));
 }
