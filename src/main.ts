@@ -1,5 +1,5 @@
 import { PhysicsLoader, Project } from 'enable3d';
-import Scene from './projects/test/scene';
+import Scene from '@projects/test/scene';
 
 PhysicsLoader('./lib', () => new Project(
   // @ts-ignore

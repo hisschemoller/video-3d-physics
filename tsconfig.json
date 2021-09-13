@@ -20,9 +20,9 @@
       "./src/@types",
     ],
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@app/*": ["src/app/*"],
+      "@projects/*": ["public/projects/*"],
+      "@/*": ["src/*"]
     },
     "lib": [
       "esnext",
