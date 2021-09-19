@@ -21,7 +21,7 @@
     ],
     "paths": {
       "@app/*": ["src/app/*"],
-      "@projects/*": ["public/projects/*"],
+      "@projects/*": ["src/projects/*"],
       "@/*": ["src/*"]
     },
     "lib": [

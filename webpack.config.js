@@ -16,7 +16,7 @@ module.exports = {
   resolve: {
     alias: {
       '@app': path.resolve(__dirname, 'src/app'),
-      '@projects': path.resolve(__dirname, 'public/projects'),
+      '@projects': path.resolve(__dirname, 'src/projects'),
     },
     extensions: ['.tsx', '.ts', '.js'],
   },
