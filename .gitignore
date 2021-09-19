@@ -1,4 +1,5 @@
 node_modules
+/public/assets/projects
 /public/js
 /public/lib
 screenshots
