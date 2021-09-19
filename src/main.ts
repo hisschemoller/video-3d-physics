@@ -1,7 +1,6 @@
-import { PhysicsLoader, Project } from 'enable3d';
-import Scene from '@projects/test/scene';
+import { Scene3D } from 'enable3d';
+import { setup } from '@app/app';
+// import TestScene from '@projects/test/scene';
+import BrugPHKadeScene from '@projects/brugphkade/scene';
 
-PhysicsLoader('./lib', () => new Project(
-  // @ts-ignore
-  { scenes: [Scene], anisotropy: 4, antialias: true }
-));
+setup(BrugPHKadeScene as unknown as Scene3D);

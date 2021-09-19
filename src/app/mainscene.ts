@@ -18,10 +18,13 @@ export default class MainScene extends Scene3D {
   }
 
   async create() {
-    if (IS_PUPPETEER) this.saveFrame();
+    
+    if (IS_PUPPETEER) {
+      this.saveFrame();
+    }
   }
 
-  update() {
+  update(time: number, delta: number) {
     if (IS_PUPPETEER) this.renderer.setAnimationLoop(null);
   }
 
@@ -56,15 +59,15 @@ export default class MainScene extends Scene3D {
       time = this.time += this.delta;
     }
 
-    super.update?.(parseFloat(time.toFixed(3)), parseInt(delta.toString()));
+    this.update.call(this, parseFloat(time.toFixed(3)), parseInt(delta.toString()));
     this.physics?.update(delta);
     this.physics?.updateDebugger();
 
     this.animationMixers.update(delta);
 
-    this.preRender();
+    this.preRender.call(this);
     if (this.composer) this.composer.render();
     else this.renderer.render(this.scene, this.camera);
-    this.postRender();
+    this.postRender.call(this);
   }
 }
