@@ -1,12 +1,22 @@
 import { THREE } from 'enable3d';
+import * as TWEEN from '@tweenjs/tween.js';
 import MainScene from '@app/mainscene';
 import { getMatrix, MatrixConfig } from '@app/utils';
 
-const VIDEO_SRC = '../assets/projects/droogbak8/droogbak8-slice.mov';
+const VIDEO_FULL_SRC = '../assets/projects/droogbak8/droogbak8.mov';
+const VIDEO_SLICE_SRC = '../assets/projects/droogbak8/droogbak8-slice.mov';
 const VIDEO_WIDTH = 1920;
 const VIDEO_HEIGHT = 1080;
 const PLANE_WIDTH = 16;
 const PLANE_HEIGHT = 9;
+
+interface ActorConfig {
+  xPx?: number;
+  yPx?: number;
+  wPx?: number;
+  hPx?: number;
+  startTime?: number;
+};
 
 export default class Scene extends MainScene {
   constructor() {
@@ -59,17 +69,32 @@ export default class Scene extends MainScene {
     orbitControls.target = cameraTarget;
     orbitControls.update();
 
-    const background = createBackground();
-    this.scene.add(background);
-    background.add(createActor(200, 600, 700, 200));
+    this.scene.add(createBackground());
+    this.scene.add(createActor({
+      xPx: 960, yPx: 690, wPx: 475, hPx: 300, vStart: 14, xDist: -480, yDist: -300, duration: 1000,
+    }));
 
     super.create();
   }
 
   preRender() {}
+
+  update(time: number, delta: number) {
+    TWEEN.update(time * 1000);
+    super.update(time, delta);
+  }
 };
 
-function createActor(xPx = 0, yPx = 0, wPx = 100, hPx = 100) {
+function createActor({
+  xPx = 0,
+  yPx = 0,
+  wPx = 100,
+  hPx = 100,
+  xDist = 0,
+  yDist = 0,
+  vStart = 0,
+  duration = 0,
+}) {
   const x3d = xPx * (PLANE_WIDTH / VIDEO_WIDTH);
   const y3d = yPx * (PLANE_HEIGHT / VIDEO_HEIGHT);
   const w3d = (wPx / VIDEO_WIDTH) * PLANE_WIDTH;
@@ -82,7 +107,8 @@ function createActor(xPx = 0, yPx = 0, wPx = 100, hPx = 100) {
   const yVP = (y3d + (h3d / 2) - (PLANE_HEIGHT / 2)) * -1;
 
   const video = document.createElement('video');
-  video.src = VIDEO_SRC;
+  video.src = VIDEO_FULL_SRC;
+  video.currentTime = vStart;
   video.loop = true;
   video.load();
   video.play();
@@ -97,12 +123,43 @@ function createActor(xPx = 0, yPx = 0, wPx = 100, hPx = 100) {
   const material = new THREE.MeshBasicMaterial({ map: texture });
   const mesh = new THREE.Mesh(geometry, material);
   mesh.applyMatrix4(getMatrix({ x: xVP, y: yVP, }));
+
+  if (duration > 0 && (xDist !== 0 || yDist !== 0)) {
+    const coords = {
+      ...mesh.position.clone(),
+      xOffset,
+      yOffset,
+    };
+    const x3dEnd = (xPx + xDist) * (PLANE_WIDTH / VIDEO_WIDTH);
+    const xVpEnd = x3dEnd + (w3d / 2) - (PLANE_WIDTH / 2);
+    const y3dEnd = (yPx + yDist) * (PLANE_HEIGHT / VIDEO_HEIGHT);
+    const yVpEnd = (y3dEnd + (h3d / 2) - (PLANE_HEIGHT / 2)) * -1;
+    const xOffsetEnd = x3dEnd / PLANE_WIDTH;
+    const yOffsetEnd = 1 - ((y3dEnd + h3d) / PLANE_HEIGHT);
+    const tween = new TWEEN.Tween(coords)
+      .to({
+        x: xVpEnd,
+        y: yVpEnd,
+        xOffset: xOffsetEnd,
+        yOffset: yOffsetEnd,
+      }, duration)
+      .easing(TWEEN.Easing.Quadratic.Out)
+      .onUpdate(() => {
+        mesh.position.set(coords.x, coords.y, coords.z);
+        texture.offset = new THREE.Vector2(coords.xOffset, coords.yOffset);
+        if (mesh.body) {
+          mesh.body.needUpdate = true;
+        }
+      });
+    tween.start(0);
+  }
+
   return mesh;
 }
 
 function createBackground() {
   const video = document.createElement('video');
-  video.src = VIDEO_SRC;
+  video.src = VIDEO_SLICE_SRC;
   video.loop = true;
   video.load();
   video.play();
