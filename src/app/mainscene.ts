@@ -18,7 +18,6 @@ export default class MainScene extends Scene3D {
   }
 
   async create() {
-    
     if (IS_PUPPETEER) {
       this.saveFrame();
     }
