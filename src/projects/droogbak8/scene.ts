@@ -1,5 +1,5 @@
 import { THREE } from 'enable3d';
-import * as TWEEN from '@tweenjs/tween.js';
+import gsap from 'gsap';
 import MainScene from '@app/mainscene';
 import { getMatrix, MatrixConfig } from '@app/utils';
 
@@ -9,6 +9,10 @@ const VIDEO_WIDTH = 1920;
 const VIDEO_HEIGHT = 1080;
 const PLANE_WIDTH = 16;
 const PLANE_HEIGHT = 9;
+const BPM = 113;
+const STEPS = 16;
+const SECONDS_PER_BEAT = 60 / BPM;
+const PATTERN_DURATION = SECONDS_PER_BEAT * 4;
 
 interface ActorConfig {
   xPx?: number;
@@ -19,6 +23,8 @@ interface ActorConfig {
 };
 
 export default class Scene extends MainScene {
+  // actors: Actor[] = [];
+
   constructor() {
     super();
   }
@@ -68,11 +74,15 @@ export default class Scene extends MainScene {
     // ORBIT CONTROLS
     orbitControls.target = cameraTarget;
     orbitControls.update();
+    
+    // MESHES AND TWEENS
+    gsap.ticker.remove(gsap.updateRoot);
 
-    this.scene.add(createBackground());
     this.scene.add(createActor({
-      xPx: 960, yPx: 690, wPx: 475, hPx: 300, vStart: 14, xDist: -480, yDist: -300, duration: 1000,
+      xPx: 960, yPx: 690, wPx: 475, hPx: 300, vStart: 14, xDist: -480, yDist: -300, duration: 1,
     }));
+
+    // gsap.timeline();
 
     super.create();
   }
@@ -80,7 +90,7 @@ export default class Scene extends MainScene {
   preRender() {}
 
   update(time: number, delta: number) {
-    TWEEN.update(time * 1000);
+    gsap.updateRoot(time);
     super.update(time, delta);
   }
 };
@@ -136,40 +146,25 @@ function createActor({
     const yVpEnd = (y3dEnd + (h3d / 2) - (PLANE_HEIGHT / 2)) * -1;
     const xOffsetEnd = x3dEnd / PLANE_WIDTH;
     const yOffsetEnd = 1 - ((y3dEnd + h3d) / PLANE_HEIGHT);
-    const tween = new TWEEN.Tween(coords)
-      .to({
-        x: xVpEnd,
-        y: yVpEnd,
-        xOffset: xOffsetEnd,
-        yOffset: yOffsetEnd,
-      }, duration)
-      .easing(TWEEN.Easing.Quadratic.Out)
-      .onUpdate(() => {
+    const tween = gsap.to(coords, {
+      x: xVpEnd,
+      y: yVpEnd,
+      xOffset: xOffsetEnd,
+      yOffset: yOffsetEnd,
+      duration,
+      ease: 'power2.out',
+      onUpdate: () => {
+        console.log('onUpdate', duration);
         mesh.position.set(coords.x, coords.y, coords.z);
         texture.offset = new THREE.Vector2(coords.xOffset, coords.yOffset);
         if (mesh.body) {
           mesh.body.needUpdate = true;
         }
-      });
-    tween.start(0);
+      },
+    });
+    tween.seek(0);
+    tween.play();
   }
 
-  return mesh;
-}
-
-function createBackground() {
-  const video = document.createElement('video');
-  video.src = VIDEO_SLICE_SRC;
-  video.loop = true;
-  video.load();
-  video.play();
-
-  const texture = new THREE.VideoTexture(video);
-  texture.minFilter = THREE.LinearFilter;
-  texture.magFilter = THREE.LinearFilter;
-
-  const geometry = new THREE.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);
-  const material = new THREE.MeshBasicMaterial({ map: texture });
-  const mesh = new THREE.Mesh(geometry, material);
   return mesh;
 }
