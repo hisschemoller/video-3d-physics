@@ -1,10 +1,9 @@
-import { THREE } from 'enable3d';
+import { Scene3D, THREE } from 'enable3d';
 import gsap from 'gsap';
 import MainScene from '@app/mainscene';
 import { getMatrix, MatrixConfig } from '@app/utils';
 
 const VIDEO_FULL_SRC = '../assets/projects/droogbak8/droogbak8.mov';
-const VIDEO_SLICE_SRC = '../assets/projects/droogbak8/droogbak8-slice.mov';
 const VIDEO_WIDTH = 1920;
 const VIDEO_HEIGHT = 1080;
 const PLANE_WIDTH = 16;
@@ -14,16 +13,7 @@ const STEPS = 16;
 const SECONDS_PER_BEAT = 60 / BPM;
 const PATTERN_DURATION = SECONDS_PER_BEAT * 4;
 
-interface ActorConfig {
-  xPx?: number;
-  yPx?: number;
-  wPx?: number;
-  hPx?: number;
-  startTime?: number;
-};
-
 export default class Scene extends MainScene {
-  // actors: Actor[] = [];
 
   constructor() {
     super();
@@ -77,17 +67,26 @@ export default class Scene extends MainScene {
     
     // MESHES AND TWEENS
     gsap.ticker.remove(gsap.updateRoot);
+    const timeline = gsap.timeline({
+      repeat: -1,
+      onStart: () => {
+        console.log('onStart');
+      },
+      onRepeat: () => {
+        console.log('onRepeat');
+      },
+    });
 
-    this.scene.add(createActor({
+    createActor(this.scene, timeline, {
+      xPx: 0, yPx: 0, wPx: VIDEO_WIDTH, hPx: VIDEO_HEIGHT, vStart: 114, duration: PATTERN_DURATION,
+    });
+    createActor(this.scene, timeline, {
       xPx: 960, yPx: 690, wPx: 475, hPx: 300, vStart: 14, xDist: -480, yDist: -300, duration: 1,
-    }));
-
-    // gsap.timeline();
-
+      position: 1,
+    });
+    
     super.create();
   }
-
-  preRender() {}
 
   update(time: number, delta: number) {
     gsap.updateRoot(time);
@@ -95,16 +94,20 @@ export default class Scene extends MainScene {
   }
 };
 
-function createActor({
-  xPx = 0,
-  yPx = 0,
-  wPx = 100,
-  hPx = 100,
-  xDist = 0,
-  yDist = 0,
-  vStart = 0,
-  duration = 0,
-}) {
+function createActor(
+  scene: THREE.scene,
+  timeline: gsap.core.Timeline,
+  {
+    xPx = 0,
+    yPx = 0,
+    wPx = 100,
+    hPx = 100,
+    xDist = 0,
+    yDist = 0,
+    vStart = 0,
+    duration = 0,
+    position = 0,
+  }) {
   const x3d = xPx * (PLANE_WIDTH / VIDEO_WIDTH);
   const y3d = yPx * (PLANE_HEIGHT / VIDEO_HEIGHT);
   const w3d = (wPx / VIDEO_WIDTH) * PLANE_WIDTH;
@@ -119,9 +122,7 @@ function createActor({
   const video = document.createElement('video');
   video.src = VIDEO_FULL_SRC;
   video.currentTime = vStart;
-  video.loop = true;
   video.load();
-  video.play();
 
   const texture = new THREE.VideoTexture(video);
   texture.minFilter = THREE.LinearFilter;
@@ -133,8 +134,9 @@ function createActor({
   const material = new THREE.MeshBasicMaterial({ map: texture });
   const mesh = new THREE.Mesh(geometry, material);
   mesh.applyMatrix4(getMatrix({ x: xVP, y: yVP, }));
+  scene.add(mesh);
 
-  if (duration > 0 && (xDist !== 0 || yDist !== 0)) {
+  if (duration > 0) {
     const coords = {
       ...mesh.position.clone(),
       xOffset,
@@ -151,10 +153,14 @@ function createActor({
       y: yVpEnd,
       xOffset: xOffsetEnd,
       yOffset: yOffsetEnd,
+      delay: 0,
       duration,
       ease: 'power2.out',
+      onStart: () => {
+        video.currentTime = vStart;
+        video.play();
+      },
       onUpdate: () => {
-        console.log('onUpdate', duration);
         mesh.position.set(coords.x, coords.y, coords.z);
         texture.offset = new THREE.Vector2(coords.xOffset, coords.yOffset);
         if (mesh.body) {
@@ -162,9 +168,6 @@ function createActor({
         }
       },
     });
-    tween.seek(0);
-    tween.play();
+    timeline.add(tween, position);
   }
-
-  return mesh;
 }
