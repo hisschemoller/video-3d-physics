@@ -1,17 +1,20 @@
-import { Scene3D, THREE } from 'enable3d';
+import { THREE } from 'enable3d';
 import gsap from 'gsap';
 import MainScene from '@app/mainscene';
-import { getMatrix, MatrixConfig } from '@app/utils';
+import { getMatrix } from '@app/utils';
 
 const VIDEO_FULL_SRC = '../assets/projects/droogbak8/droogbak8.mov';
+const AUDIO_SRC = '../assets/projects/droogbak8/digitakt1.wav';
 const VIDEO_WIDTH = 1920;
 const VIDEO_HEIGHT = 1080;
 const PLANE_WIDTH = 16;
 const PLANE_HEIGHT = 9;
 const BPM = 113;
 const STEPS = 16;
+const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
-const PATTERN_DURATION = SECONDS_PER_BEAT * 4;
+const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
+const STEP_DURATION = PATTERN_DURATION / STEPS;
 
 export default class Scene extends MainScene {
 
@@ -64,21 +67,27 @@ export default class Scene extends MainScene {
     // ORBIT CONTROLS
     orbitControls.target = cameraTarget;
     orbitControls.update();
+
+    // AUDIO
+    const audio = document.createElement('audio');
+    audio.src = AUDIO_SRC;
+    audio.load();
     
     // MESHES AND TWEENS
     gsap.ticker.remove(gsap.updateRoot);
     const timeline = gsap.timeline({
       repeat: -1,
       onStart: () => {
-        console.log('onStart');
+        audio.currentTime = 0;
+        audio.play();
       },
       onRepeat: () => {
-        console.log('onRepeat');
+        audio.currentTime = 0;
       },
     });
 
     createActor(this.scene, timeline, {
-      xPx: 0, yPx: 0, wPx: VIDEO_WIDTH, hPx: VIDEO_HEIGHT, vStart: 114, duration: PATTERN_DURATION,
+      xPx: 0, yPx: 0, wPx: VIDEO_WIDTH, hPx: VIDEO_HEIGHT, vStart: 74, duration: PATTERN_DURATION,
     });
     createActor(this.scene, timeline, {
       xPx: 960, yPx: 690, wPx: 475, hPx: 300, vStart: 14, xDist: -480, yDist: -300, duration: 1,
