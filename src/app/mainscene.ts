@@ -1,8 +1,8 @@
 import { Scene3D } from 'enable3d';
 
+export const FPS = 4;
 const IS_PUPPETEER = navigator.userAgent.indexOf('puppeteer') !== -1;
 const MAX_FRAMES = 10;
-const FPS = 30;
 const PORT = 3020;
 
 // @ts-ignore

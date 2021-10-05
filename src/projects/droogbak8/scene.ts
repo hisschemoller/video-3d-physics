@@ -1,12 +1,16 @@
 import { THREE } from 'enable3d';
 import gsap from 'gsap';
-import MainScene from '@app/mainscene';
+import MainScene, { FPS }  from '@app/mainscene';
 import { getMatrix } from '@app/utils';
 
 const VIDEO_FULL_SRC = '../assets/projects/droogbak8/droogbak8.mov';
+const RAF_PER_SECOND = 60;
+const FRAMES_PER_RAF = RAF_PER_SECOND / FPS;
 const AUDIO_SRC = '../assets/projects/droogbak8/digitakt1.wav';
 const VIDEO_WIDTH = 1920;
 const VIDEO_HEIGHT = 1080;
+const VIDEO_FPS = 50;
+const IMG_NR_LAST = 6509;
 const PLANE_WIDTH = 16;
 const PLANE_HEIGHT = 9;
 const BPM = 113;
@@ -17,6 +21,7 @@ const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
 
 export default class Scene extends MainScene {
+  frameCounter = 0;
 
   constructor() {
     super();
@@ -100,6 +105,14 @@ export default class Scene extends MainScene {
   update(time: number, delta: number) {
     gsap.updateRoot(time);
     super.update(time, delta);
+  }
+
+  postRender() {
+    super.postRender();
+    if (this.frameCounter % FRAMES_PER_RAF === 0) {
+      actors.map((actor) => actor.loadImage());
+    }
+    this.frameCounter++;
   }
 };
 
