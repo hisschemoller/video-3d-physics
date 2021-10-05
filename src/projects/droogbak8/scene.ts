@@ -3,9 +3,11 @@ import gsap from 'gsap';
 import MainScene, { FPS }  from '@app/mainscene';
 import { getMatrix } from '@app/utils';
 
-const VIDEO_FULL_SRC = '../assets/projects/droogbak8/droogbak8.mov';
 const RAF_PER_SECOND = 60;
 const FRAMES_PER_RAF = RAF_PER_SECOND / FPS;
+const VIDEO_FULL_SRC = '../assets/projects/droogbak8/droogbak8.mp4';
+const IMG_SRC_PREFIX = '../assets/projects/droogbak8/frames/frame_';
+const IMG_SRC_SUFFIX = '.png';
 const AUDIO_SRC = '../assets/projects/droogbak8/digitakt1.wav';
 const VIDEO_WIDTH = 1920;
 const VIDEO_HEIGHT = 1080;
@@ -13,12 +15,17 @@ const VIDEO_FPS = 50;
 const IMG_NR_LAST = 6509;
 const PLANE_WIDTH = 16;
 const PLANE_HEIGHT = 9;
-const BPM = 113;
+const BPM = 112;
 const STEPS = 16;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
 const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
+const actors: Actor[] = [];
+
+interface Actor {
+  loadImage: Function;
+};
 
 export default class Scene extends MainScene {
   frameCounter = 0;
@@ -129,7 +136,7 @@ function createActor(
     vStart = 0,
     duration = 0,
     position = 0,
-  }) {
+  }): Actor {
   const x3d = xPx * (PLANE_WIDTH / VIDEO_WIDTH);
   const y3d = yPx * (PLANE_HEIGHT / VIDEO_HEIGHT);
   const w3d = (wPx / VIDEO_WIDTH) * PLANE_WIDTH;
@@ -140,13 +147,14 @@ function createActor(
   const hRepeat = h3d / PLANE_HEIGHT;
   const xVP = x3d + (w3d / 2) - (PLANE_WIDTH / 2);
   const yVP = (y3d + (h3d / 2) - (PLANE_HEIGHT / 2)) * -1;
+  const IMG_NR_FIRST = vStart * VIDEO_FPS;
+  const IMG_NR_INCREASE = VIDEO_FPS / FPS;
+  console.log(IMG_NR_INCREASE, VIDEO_FPS, FPS, IMG_NR_FIRST, IMG_NR_LAST);
+  let imgNr = IMG_NR_FIRST;
 
-  const video = document.createElement('video');
-  video.src = VIDEO_FULL_SRC;
-  video.currentTime = vStart;
-  video.load();
-
-  const texture = new THREE.VideoTexture(video);
+  const texture = new THREE.TextureLoader().load(IMG_SRC_PREFIX
+    + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)).slice(-5) : '99999')
+    + IMG_SRC_SUFFIX);
   texture.minFilter = THREE.LinearFilter;
   texture.magFilter = THREE.LinearFilter;
   texture.offset = new THREE.Vector2(xOffset, yOffset);
@@ -155,6 +163,7 @@ function createActor(
   const geometry = new THREE.PlaneGeometry(w3d, h3d);
   const material = new THREE.MeshBasicMaterial({ map: texture });
   const mesh = new THREE.Mesh(geometry, material);
+  mesh.visible = false;
   mesh.applyMatrix4(getMatrix({ x: xVP, y: yVP, }));
   scene.add(mesh);
 
@@ -177,10 +186,9 @@ function createActor(
       yOffset: yOffsetEnd,
       delay: 0,
       duration,
-      ease: 'power2.out',
+      ease: 'none',
       onStart: () => {
-        video.currentTime = vStart;
-        video.play();
+        mesh.visible = true;
       },
       onUpdate: () => {
         mesh.position.set(coords.x, coords.y, coords.z);
@@ -189,7 +197,28 @@ function createActor(
           mesh.body.needUpdate = true;
         }
       },
+      onComplete: () => {
+        mesh.visible = false;
+        imgNr = IMG_NR_FIRST;
+      },
     });
     timeline.add(tween, position);
   }
+
+  const loadImage = () => {
+    if (imgNr < IMG_NR_LAST) {
+      imgNr = Math.min(imgNr + IMG_NR_INCREASE, IMG_NR_LAST);
+    } else {
+      imgNr = IMG_NR_FIRST;
+    }
+
+    if (mesh.material.map.image) {
+      mesh.material.map = new THREE.TextureLoader().load(IMG_SRC_PREFIX
+        + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)).slice(-5) : '99999')
+        + IMG_SRC_SUFFIX);
+      mesh.material.needsUpdate = true;
+    }
+  };
+
+  return { loadImage };
 }
