@@ -125,17 +125,37 @@ export default class Scene extends MainScene {
       xPx: 1433, yPx: 484, wPx: 384, hPx: 82, vStart: 82.5, xDist: -150, 
       duration: STEP_DURATION * 12, position: STEP_DURATION * 0,
     }));
-    actors.push(createActor(this.scene, this.timeline, video, { // BUS 22
-      xPx: 1170, yPx: 380, wPx: 250, hPx: 1080-380, vStart: 118.5, xDist: -400, 
-      duration: STEP_DURATION * 8, position: STEP_DURATION * 8,
+    actors.push(createActor(this.scene, this.timeline, video, { // RODE AUTO LINKS
+      xPx: 500, yPx: 700, wPx: 200, hPx: 330, vStart: 6.9, xDist: -500, 
+      duration: STEP_DURATION * 4, position: STEP_DURATION * 0,
+    }));
+    actors.push(createActor(this.scene, this.timeline, video, { // GROEPJE VAN DRIE
+      xPx: 860, yPx: 614, wPx: 210, hPx: 300, vStart: 35, xDist: 0, 
+      duration: STEP_DURATION * 5, position: STEP_DURATION * 1,
     }));
     actors.push(createActor(this.scene, this.timeline, video, { // AUTO LINKS
       xPx: 580, yPx: 690, wPx: 380, hPx: 300, vStart: 15.1, xDist: (-580-380), 
       duration: STEP_DURATION * 5, position: STEP_DURATION * 4,
     }));
+    actors.push(createActor(this.scene, this.timeline, video, { // MOTORFIETS
+      xPx: 1150, yPx: 676, wPx: 300, hPx: 260, vStart: 71.6, xDist: -300, 
+      duration: STEP_DURATION * 4, position: STEP_DURATION * 12,
+    }));
+    actors.push(createActor(this.scene, this.timeline, video, { // BUS VERDER WEG
+      xPx: 1284, yPx: 624, wPx: 300, hPx: 174, vStart: 106, xDist: -50, 
+      duration: STEP_DURATION * 11, position: STEP_DURATION * 5,
+    }));
     actors.push(createActor(this.scene, this.timeline, video, { // MAN IN ROLSTOEL
       xPx: 910, yPx: 720, wPx: 380, hPx: 1080-720, vStart: 10, xDist: -400, 
       duration: STEP_DURATION * 6, position: STEP_DURATION * 6,
+    }));
+    actors.push(createActor(this.scene, this.timeline, video, { // BUS 22
+      xPx: 1170, yPx: 380, wPx: 250, hPx: 1080-380, vStart: 118.5, xDist: -600, 
+      duration: STEP_DURATION * 7, position: STEP_DURATION * 9,
+    }));
+    actors.push(createActor(this.scene, this.timeline, video, { // WIT BUSJE RECHTS
+      xPx: 1545, yPx: 650, wPx: 320, hPx: 210, vStart: 80, xDist: 50, 
+      duration: STEP_DURATION * 7, position: STEP_DURATION * 9,
     }));
     actors.push(createActor(this.scene, this.timeline, video, { // MAN WANDELEND
       xPx: 320, yPx: 634, wPx: 370, hPx: 1080-634, vStart: 45.8, xDist: -400, 

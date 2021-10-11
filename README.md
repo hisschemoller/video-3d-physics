@@ -16,27 +16,40 @@ ffmpeg -i input.avi -f mp4 -vcodec libx264 -pix_fmt yuv420p output.mp4
 '%05d' generates a zero padded five digit integer.
 
 ```
-ffmpeg -i input.avi output_%05d.png
+ffmpeg -i input.avi rendered/frame_%05d.png
 ```
 
 ### Convert PNG image sequence to MP4.
 
 ```
-ffmpeg -framerate 30 -i tmp/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p output.mp4
+ffmpeg -framerate 30 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p output.mp4
 ```
 
 ### Grab single frame from a video
-
 Get frame 180 as a png image:
 
 ```
 ffmpeg -i input.mov -vf "select=eq(n\,179)" -vframes 1 output.png
 ```
 
+### Repeat a video multiple times.
+0 means no loop, -1 means infinite loop.
+
+```
+ffmpeg -stream_loop 3 -i input.mp4 -c copy output.mp4
+```
+
 ### Remove audio from a video file.
 
 ```
 ffmpeg -i input.mov -vcodec copy -an input.mov
+```
+
+### Add wav audio to mp4 video.
+
+```
+ffmpeg -i input_vid.mp4 -i input_audio.wav -vcodec copy output.mp4
+ffmpeg -i input_vid.mp4 -i input_audio.wav -vcodec libx264 -acodec libmp3lame output.mp4
 ```
 
 ### Perspective correction filter
@@ -57,10 +70,3 @@ ffmpeg -hide_banner -i input.mp4 -lavfi "perspective=x0=0:y0=0:x1=640:y1=0:x2=-0
 ffmpeg -i input.avi -vf scale=320:240 output.avi
 ffmpeg -i input.jpg -vf scale=320:-1 output_320.png
 ```
-
-## Resources
-
-* https://moduscreate.com/blog/lint-style-typescript/
-* https://dev.to/saurabhggc/add-eslint-prettier-and-airbnb-to-your-project-3mo8
-* https://khalilstemmler.com/blogs/typescript/eslint-for-typescript/
-* https://robertcooper.me/post/using-eslint-and-prettier-in-a-typescript-project
