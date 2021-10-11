@@ -1,11 +1,11 @@
 import { THREE } from 'enable3d';
-import gsap from 'gsap';
-import MainScene, { FPS }  from '@app/mainscene';
+// import gsap from 'gsap';
+import MainScene, { FPS, RAF_RATE }  from '@app/mainscene';
 import { getMatrix } from '@app/utils';
+import createTimeline, { Timeline } from '@app/timeline';
+import createTween from '@app/tween';
 
-const RAF_PER_SECOND = 60;
-const FRAMES_PER_RAF = RAF_PER_SECOND / FPS;
-const VIDEO_FULL_SRC = '../assets/projects/droogbak8/droogbak8.mp4';
+// const VIDEO_FULL_SRC = '../assets/projects/droogbak8/droogbak8.mp4';
 const IMG_SRC_PREFIX = '../assets/projects/droogbak8/frames/frame_';
 const IMG_SRC_SUFFIX = '.png';
 const AUDIO_SRC = '../assets/projects/droogbak8/digitakt1.wav';
@@ -28,7 +28,9 @@ interface Actor {
 };
 
 export default class Scene extends MainScene {
-  frameCounter = 0;
+  videoFrame = 0;
+  
+  timeline: Timeline;
 
   constructor() {
     super();
@@ -41,7 +43,7 @@ export default class Scene extends MainScene {
 
     // RENDERER
     this.renderer.setSize(this.width, this.height);
-    this.renderer.autoClear = false;
+    this.renderer.autoClear = true;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFShadowMap; // PCFSoftShadowMap
     this.renderer.setClearColor(0xbbddff);
@@ -86,46 +88,76 @@ export default class Scene extends MainScene {
     audio.load();
     
     // MESHES AND TWEENS
-    gsap.ticker.remove(gsap.updateRoot);
-    const timeline = gsap.timeline({
-      repeat: -1,
-      onStart: () => {
-        audio.currentTime = 0;
-        audio.play();
-      },
-      onRepeat: () => {
-        audio.currentTime = 0;
-      },
+    // gsap.ticker.remove(gsap.updateRoot);
+    // gsap.ticker.fps(2);
+    // gsap.ticker.add((time, delta, frame) => console.log(time, delta, frame));
+    this.timeline = createTimeline({
+      duration: PATTERN_DURATION,
+      // repeat: -1,
+      // onStart: () => {
+      //   console.log('timeline.onStart');
+      //   // audio.play();
+      // },
+      // onRepeat: () => {
+      //   audio.currentTime = 0;
+      // },
     });
 
-    createActor(this.scene, timeline, {
-      xPx: 0, yPx: 0, wPx: VIDEO_WIDTH, hPx: VIDEO_HEIGHT, vStart: 74, duration: PATTERN_DURATION,
-    });
-    createActor(this.scene, timeline, {
-      xPx: 960, yPx: 690, wPx: 475, hPx: 300, vStart: 14, xDist: -480, yDist: -300, duration: 1,
-      position: 1,
-    });
+    actors.push(createActor(this.scene, this.timeline, { // ACHTERGROND
+      xPx: 0, yPx: 0, wPx: VIDEO_WIDTH, hPx: VIDEO_HEIGHT, vStart: 74,
+      duration: PATTERN_DURATION,
+    }));
+    // actors.push(createActor(this.scene, this.timeline, { // TREIN BEGIN
+    //   xPx: 1433, yPx: 484, wPx: 384, hPx: 82, vStart: 82.5, xDist: -150, 
+    //   duration: STEP_DURATION * 12, position: STEP_DURATION * 0,
+    // }));
+    // actors.push(createActor(this.scene, this.timeline, { // BUS 22
+    //   xPx: 1170, yPx: 380, wPx: 250, hPx: 1080-380, vStart: 118.5, xDist: -400, 
+    //   duration: STEP_DURATION * 8, position: STEP_DURATION * 8,
+    // }));
+    actors.push(createActor(this.scene, this.timeline, { // AUTO LINKS
+      xPx: 580, yPx: 690, wPx: 380, hPx: 300, vStart: 15.1, xDist: (-580-380), 
+      duration: STEP_DURATION * 5, position: STEP_DURATION * 3,
+    }));
+    // actors.push(createActor(this.scene, this.timeline, { // MAN IN ROLSTOEL
+    //   xPx: 910, yPx: 720, wPx: 380, hPx: 1080-720, vStart: 10, xDist: -400, 
+    //   duration: STEP_DURATION * 6, position: STEP_DURATION * 6,
+    // }));
+    // actors.push(createActor(this.scene, this.timeline, { // MAN WANDELEND
+    //   xPx: 320, yPx: 634, wPx: 370, hPx: 1080-634, vStart: 45.8, xDist: -400, 
+    //   duration: STEP_DURATION * 4, position: STEP_DURATION * 12,
+    // }));
     
     super.create();
   }
 
   update(time: number, delta: number) {
-    gsap.updateRoot(time);
+    // if (this.frameCounter % FRAMES_PER_DRAW === 0) {
+      // console.log('progress', (time % PATTERN_DURATION) / PATTERN_DURATION);
+      // gsap.updateRoot(time);
+      // PATTERN_DURATION
+      // this.timeline.progress((time % PATTERN_DURATION) / PATTERN_DURATION);
+      // this.timeline.progress(prog);
+      // prog = (prog + 0.05) % 1;
+    // }
+    this.timeline.update(time, delta);
     super.update(time, delta);
   }
 
   postRender() {
+    // if (this.frameCounter % FRAMES_PER_DRAW === 0) {
+      // actors.map((actor) => actor.loadImage());
+    // }
+    this.videoFrame = Math.floor((this.frame / RAF_RATE) * VIDEO_FPS);
+    // console.log('videoFrame', this.videoFrame, 'frame', this.frame, RAF_RATE, VIDEO_FPS);
+    actors.map((actor) => actor.loadImage(this.time));
     super.postRender();
-    if (this.frameCounter % FRAMES_PER_RAF === 0) {
-      actors.map((actor) => actor.loadImage());
-    }
-    this.frameCounter++;
   }
 };
 
 function createActor(
   scene: THREE.scene,
-  timeline: gsap.core.Timeline,
+  timeline: Timeline,
   {
     xPx = 0,
     yPx = 0,
@@ -148,13 +180,35 @@ function createActor(
   const xVP = x3d + (w3d / 2) - (PLANE_WIDTH / 2);
   const yVP = (y3d + (h3d / 2) - (PLANE_HEIGHT / 2)) * -1;
   const IMG_NR_FIRST = vStart * VIDEO_FPS;
-  const IMG_NR_INCREASE = VIDEO_FPS / FPS;
-  console.log(IMG_NR_INCREASE, VIDEO_FPS, FPS, IMG_NR_FIRST, IMG_NR_LAST);
+  // const IMG_NR_INCREASE = VIDEO_FPS / FPS;
+  const img = new Image();
   let imgNr = IMG_NR_FIRST;
+  
+  const canvasEl = document.createElement('canvas');
+  canvasEl.width = VIDEO_WIDTH;
+  canvasEl.height = VIDEO_HEIGHT;
 
-  const texture = new THREE.TextureLoader().load(IMG_SRC_PREFIX
-    + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)).slice(-5) : '99999')
-    + IMG_SRC_SUFFIX);
+  const canvasCtx = canvasEl.getContext('2d');
+  if (canvasCtx) {
+    canvasCtx.fillStyle = '#6c645f';
+    canvasCtx.fillRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+
+    img.src = IMG_SRC_PREFIX
+      + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)).slice(-5) : '99999')
+      + IMG_SRC_SUFFIX;
+  }
+
+  img.onload = () => {
+    if (canvasCtx) {
+      canvasCtx.drawImage(img, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+      texture.needsUpdate = true;
+    }
+  };
+
+  const texture = new THREE.CanvasTexture(canvasEl);
+  // const texture = new THREE.TextureLoader().load(IMG_SRC_PREFIX
+  //   + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)).slice(-5) : '99999')
+  //   + IMG_SRC_SUFFIX);
   texture.minFilter = THREE.LinearFilter;
   texture.magFilter = THREE.LinearFilter;
   texture.offset = new THREE.Vector2(xOffset, yOffset);
@@ -179,20 +233,23 @@ function createActor(
     const yVpEnd = (y3dEnd + (h3d / 2) - (PLANE_HEIGHT / 2)) * -1;
     const xOffsetEnd = x3dEnd / PLANE_WIDTH;
     const yOffsetEnd = 1 - ((y3dEnd + h3d) / PLANE_HEIGHT);
-    const tween = gsap.to(coords, {
-      x: xVpEnd,
-      y: yVpEnd,
-      xOffset: xOffsetEnd,
-      yOffset: yOffsetEnd,
-      delay: 0,
+    const tween = createTween({
+      delay: position,
       duration,
-      ease: 'none',
       onStart: () => {
         mesh.visible = true;
       },
-      onUpdate: () => {
-        mesh.position.set(coords.x, coords.y, coords.z);
-        texture.offset = new THREE.Vector2(coords.xOffset, coords.yOffset);
+      onUpdate: (progress: number) => {
+        // console.log('progress', progress);
+        mesh.position.set(
+          coords.x + ((xVpEnd - coords.x) * progress),
+          coords.y + ((yVpEnd - coords.y) * progress),
+          coords.z,
+        );
+        mesh.material.map.offset = new THREE.Vector2(
+          coords.xOffset + ((xOffsetEnd - coords.xOffset) * progress),
+          coords.yOffset + ((yOffsetEnd - coords.yOffset) * progress),
+        );
         if (mesh.body) {
           mesh.body.needUpdate = true;
         }
@@ -202,22 +259,59 @@ function createActor(
         imgNr = IMG_NR_FIRST;
       },
     });
-    timeline.add(tween, position);
+    // const tween = createTween(coords, {
+    //   x: xVpEnd,
+    //   y: yVpEnd,
+    //   xOffset: xOffsetEnd,
+    //   yOffset: yOffsetEnd,
+    //   delay: 0,
+    //   duration,
+    //   ease: 'none',
+    //   onStart: () => {
+    //     mesh.visible = true;
+    //   },
+    //   onUpdate: () => {
+    //     if (vStart === 15.1) {
+    //       console.log('tween.onUpdate', coords.xOffset);
+    //     }
+    //     mesh.position.set(coords.x, coords.y, coords.z);
+    //     mesh.material.map.offset = new THREE.Vector2(coords.xOffset, coords.yOffset);
+    //     if (mesh.body) {
+    //       mesh.body.needUpdate = true;
+    //     }
+    //   },
+    //   onComplete: () => {
+    //     console.log('tween.onComplete');
+    //     mesh.visible = false;
+    //     imgNr = IMG_NR_FIRST;
+    //   },
+    // });
+    timeline.add(tween);
   }
 
-  const loadImage = () => {
-    if (imgNr < IMG_NR_LAST) {
-      imgNr = Math.min(imgNr + IMG_NR_INCREASE, IMG_NR_LAST);
-    } else {
-      imgNr = IMG_NR_FIRST;
-    }
+  const loadImage = (time: number) => {
+    const timePosition = vStart + (time % duration);
+    imgNr = Math.floor(timePosition * VIDEO_FPS);
+    // console.log('imgNr', imgNr);
+    // if (vStart === 15.1) {
+    //   console.log('loadImage', imgNr);
+    // }
+    // if (mesh.material.map) {
+    //   mesh.material.map = new THREE.TextureLoader().load(IMG_SRC_PREFIX
+    //     + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)s).slice(-5) : '99999')
+    //     + IMG_SRC_SUFFIX);
+    //   mesh.material.map.repeat = new THREE.Vector2(wRepeat, hRepeat);
+    //   mesh.material.needsUpdate = true;
+    // }
+    img.src = IMG_SRC_PREFIX
+      + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)).slice(-5) : '99999')
+      + IMG_SRC_SUFFIX;
 
-    if (mesh.material.map.image) {
-      mesh.material.map = new THREE.TextureLoader().load(IMG_SRC_PREFIX
-        + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)).slice(-5) : '99999')
-        + IMG_SRC_SUFFIX);
-      mesh.material.needsUpdate = true;
-    }
+    // if (imgNr < IMG_NR_LAST) {
+    //   imgNr = Math.min(imgNr + IMG_NR_INCREASE, IMG_NR_LAST);
+    // } else {
+    //   imgNr = IMG_NR_FIRST;
+    // }
   };
 
   return { loadImage };

@@ -1,11 +1,16 @@
 import { PhysicsLoader, Project, Scene3D } from 'enable3d';
 
+const IS_PUPPETEER = navigator.userAgent.indexOf('puppeteer') !== -1;
 let project: Project;
 let sceneClass: Scene3D;
 
 export function setup(scene3d: Scene3D) {
   sceneClass = scene3d;
-  document.addEventListener('click', start);
+  if (IS_PUPPETEER) {
+    start();
+  } else {
+    document.addEventListener('click', start);
+  }
 }
 
 function start() {
@@ -17,6 +22,6 @@ function start() {
     )
     document.getElementById('canvas-container')?.appendChild(project.renderer.domElement);
     document.getElementById('overlay')?.remove();
-    console.log(project);
+    console.log('project', project);
   });
 }

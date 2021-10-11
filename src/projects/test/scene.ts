@@ -1,5 +1,5 @@
 import { ExtendedObject3D, THREE } from 'enable3d';
-import * as TWEEN from '@tweenjs/tween.js';
+// import * as TWEEN from '@tweenjs/tween.js';
 import { renderBackground, setupBackground } from '@app/background';
 import MainScene from '@app/mainscene';
 
@@ -73,22 +73,22 @@ export default class Scene extends MainScene {
   }
 
   update(time: number, delta: number) {
-    TWEEN.update(time * 1000);
+    // TWEEN.update(time * 1000);
     super.update(time, delta);
   }
 
   tween(object: THREE.Object3D, moveTo: THREE.Vector3, time = 1000, delay = 0) {
     const coords = object.position.clone();
 
-    const tween = new TWEEN.Tween(coords)
-      .to({ x: moveTo.x, y: moveTo.y, z: moveTo.z }, time)
-      .easing(TWEEN.Easing.Quadratic.Out)
-      .onUpdate(() => {
-        object.position.set(coords.x, coords.y, coords.z);
-        if (object.body) object.body.needUpdate = true;
-      })
+    // const tween = new TWEEN.Tween(coords)
+    //   .to({ x: moveTo.x, y: moveTo.y, z: moveTo.z }, time)
+    //   .easing(TWEEN.Easing.Quadratic.Out)
+    //   .onUpdate(() => {
+    //     object.position.set(coords.x, coords.y, coords.z);
+    //     if (object.body) object.body.needUpdate = true;
+    //   })
 
-    if (delay === 0) tween.start();
-    else setTimeout(() => tween.start(), delay);
+    // if (delay === 0) tween.start();
+    // else setTimeout(() => tween.start(), delay);
   }
 };

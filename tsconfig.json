@@ -12,6 +12,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "outDir": "public/js",
+    "strictPropertyInitialization": false,
     "types": [
     ],
     "typeRoots": [

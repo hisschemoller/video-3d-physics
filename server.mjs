@@ -21,7 +21,7 @@ if (params[0] === 'serve') {
     console.log('listening on %d', port);
   });
   
-  app.use(express.static('public'));
+  app.use(express.static(publicPath));
 }
 
 if (params[0] === 'render') {
@@ -70,6 +70,7 @@ if (params[0] === 'render') {
   
     // wait for the "DONE" log of the scene
     page.on('console', async message => {
+      console.log(message.text());
       if (message.text() === 'DONE') {
         await page.close();
         await browser.close();
@@ -95,6 +96,7 @@ if (params[0] === 'render') {
     })
   
     await page.setUserAgent('puppeteer');
+    console.log(`url:http://localhost:${port}/${publicPath}?mode=render`);
     await page.goto(`http://localhost:${port}/${publicPath}?mode=render`);
   })
 }
