@@ -22,7 +22,7 @@ ffmpeg -i input.avi output_%05d.png
 ### Convert PNG image sequence to MP4.
 
 ```
-ffmpeg -framerate 30 -i tmp/frame_%05d.png -c:v libx264 -crf 19 -preset slow -c:a aac -b:a 192k -ac 2 output.mp4
+ffmpeg -framerate 30 -i tmp/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p output.mp4
 ```
 
 ### Grab single frame from a video

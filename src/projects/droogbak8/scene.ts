@@ -1,5 +1,5 @@
 import { THREE } from 'enable3d';
-import MainScene, { FPS, RAF_RATE }  from '@app/mainscene';
+import MainScene, { FPS }  from '@app/mainscene';
 import { getMatrix } from '@app/utils';
 import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
@@ -18,19 +18,18 @@ const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
 const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
-
-const isPreview = true;
 const actors: Actor[] = [];
-const video = {
-  scale: isPreview ? VIDEO_PREVIEW_SCALE : 1,
-  height: isPreview ? VIDEO_HEIGHT * VIDEO_PREVIEW_SCALE : VIDEO_HEIGHT,
-  width: isPreview ? VIDEO_WIDTH * VIDEO_PREVIEW_SCALE : VIDEO_WIDTH,
-  imgSrcPrefix: `../assets/projects/droogbak8/frames${isPreview ? '_preview' : ''}/frame_`,
-  imgSrcSuffix: '.png',
-};
 
 interface Actor {
   loadImage: Function;
+};
+
+interface VideoData {
+  scale: number;
+  height: number;
+  width: number;
+  imgSrcPrefix: string;
+  imgSrcSuffix: string;
 };
 
 export default class Scene extends MainScene {
@@ -41,6 +40,21 @@ export default class Scene extends MainScene {
   }
 
   async create() {
+    this.captureLastFrame = Math.floor(PATTERN_DURATION * FPS);
+    console.log('PATTERN_DURATION', PATTERN_DURATION);
+    console.log('captureLastFrame', this.captureLastFrame);
+    this.width = VIDEO_WIDTH;
+    this.height = VIDEO_HEIGHT;
+
+    const isPreview = true && !this.isCapture;
+    const video = {
+      scale: isPreview ? VIDEO_PREVIEW_SCALE : 1,
+      height: isPreview ? VIDEO_HEIGHT * VIDEO_PREVIEW_SCALE : VIDEO_HEIGHT,
+      width: isPreview ? VIDEO_WIDTH * VIDEO_PREVIEW_SCALE : VIDEO_WIDTH,
+      imgSrcPrefix: `../assets/projects/droogbak8/frames${isPreview ? '_preview' : ''}/frame_`,
+      imgSrcSuffix: '.png',
+    };
+
     const { orbitControls } = await this.warpSpeed('orbitControls');
 
     const cameraTarget = new THREE.Vector3(0, 0, 0);
@@ -94,34 +108,36 @@ export default class Scene extends MainScene {
       audio.play();
     }, false);
     audio.load();
-    audio.play();
+    if (!this.isCapture) {
+      // audio.play();
+    }
     
     // MESHES AND TWEENS
     this.timeline = createTimeline({
       duration: PATTERN_DURATION,
     });
 
-    actors.push(createActor(this.scene, this.timeline, { // ACHTERGROND
+    actors.push(createActor(this.scene, this.timeline, video, { // ACHTERGROND
       xPx: 0, yPx: 0, wPx: VIDEO_WIDTH, hPx: VIDEO_HEIGHT, vStart: 74,
       duration: PATTERN_DURATION,
     }));
-    actors.push(createActor(this.scene, this.timeline, { // TREIN BEGIN
+    actors.push(createActor(this.scene, this.timeline, video, { // TREIN BEGIN
       xPx: 1433, yPx: 484, wPx: 384, hPx: 82, vStart: 82.5, xDist: -150, 
       duration: STEP_DURATION * 12, position: STEP_DURATION * 0,
     }));
-    actors.push(createActor(this.scene, this.timeline, { // BUS 22
+    actors.push(createActor(this.scene, this.timeline, video, { // BUS 22
       xPx: 1170, yPx: 380, wPx: 250, hPx: 1080-380, vStart: 118.5, xDist: -400, 
       duration: STEP_DURATION * 8, position: STEP_DURATION * 8,
     }));
-    actors.push(createActor(this.scene, this.timeline, { // AUTO LINKS
+    actors.push(createActor(this.scene, this.timeline, video, { // AUTO LINKS
       xPx: 580, yPx: 690, wPx: 380, hPx: 300, vStart: 15.1, xDist: (-580-380), 
       duration: STEP_DURATION * 5, position: STEP_DURATION * 4,
     }));
-    actors.push(createActor(this.scene, this.timeline, { // MAN IN ROLSTOEL
+    actors.push(createActor(this.scene, this.timeline, video, { // MAN IN ROLSTOEL
       xPx: 910, yPx: 720, wPx: 380, hPx: 1080-720, vStart: 10, xDist: -400, 
       duration: STEP_DURATION * 6, position: STEP_DURATION * 6,
     }));
-    actors.push(createActor(this.scene, this.timeline, { // MAN WANDELEND
+    actors.push(createActor(this.scene, this.timeline, video, { // MAN WANDELEND
       xPx: 320, yPx: 634, wPx: 370, hPx: 1080-634, vStart: 45.8, xDist: -400, 
       duration: STEP_DURATION * 4, position: STEP_DURATION * 12,
     }));
@@ -143,6 +159,7 @@ export default class Scene extends MainScene {
 function createActor(
   scene: THREE.scene,
   timeline: Timeline,
+  video: VideoData,
   {
     xPx = 0,
     yPx = 0,
