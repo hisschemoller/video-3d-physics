@@ -51,6 +51,13 @@ Settings for a 640x480px video to have no correction applied:
 ffmpeg -hide_banner -i input.mp4 -lavfi "perspective=x0=0:y0=0:x1=640:y1=0:x2=-0:y2=480:x3=640:y3=480:interpolation=linear"  output.mp4
 ```
 
+### Scale video to a specific size. -1 to keep aspect ratio.
+
+```
+ffmpeg -i input.avi -vf scale=320:240 output.avi
+ffmpeg -i input.jpg -vf scale=320:-1 output_320.png
+```
+
 ## Resources
 
 * https://moduscreate.com/blog/lint-style-typescript/

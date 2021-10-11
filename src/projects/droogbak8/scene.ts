@@ -5,14 +5,15 @@ import { getMatrix } from '@app/utils';
 import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 
-// const VIDEO_FULL_SRC = '../assets/projects/droogbak8/droogbak8.mp4';
-const IMG_SRC_PREFIX = '../assets/projects/droogbak8/frames/frame_';
-const IMG_SRC_SUFFIX = '.png';
 const AUDIO_SRC = '../assets/projects/droogbak8/digitakt1.wav';
+// const IMG_SRC_PREFIX = '../assets/projects/droogbak8/frames/frame_';
+// const IMG_SRC_SUFFIX = '.png';
+const IMG_NR_LAST = 6509;
+// const VIDEO_FULL_SRC = '../assets/projects/droogbak8/droogbak8.mp4';
 const VIDEO_WIDTH = 1920;
 const VIDEO_HEIGHT = 1080;
 const VIDEO_FPS = 50;
-const IMG_NR_LAST = 6509;
+const VIDEO_PREVIEW_SCALE = 0.2;
 const PLANE_WIDTH = 16;
 const PLANE_HEIGHT = 9;
 const BPM = 112;
@@ -21,7 +22,16 @@ const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
 const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
+
+const isPreview = true;
 const actors: Actor[] = [];
+const video = {
+  scale: isPreview ? VIDEO_PREVIEW_SCALE : 1,
+  height: isPreview ? VIDEO_HEIGHT * VIDEO_PREVIEW_SCALE : VIDEO_HEIGHT,
+  width: isPreview ? VIDEO_WIDTH * VIDEO_PREVIEW_SCALE : VIDEO_WIDTH,
+  imgSrcPrefix: `../assets/projects/droogbak8/frames${isPreview ? '_preview' : ''}/frame_`,
+  imgSrcSuffix: '.png',
+};
 
 interface Actor {
   loadImage: Function;
@@ -185,22 +195,22 @@ function createActor(
   let imgNr = IMG_NR_FIRST;
   
   const canvasEl = document.createElement('canvas');
-  canvasEl.width = VIDEO_WIDTH;
-  canvasEl.height = VIDEO_HEIGHT;
+  canvasEl.width = video.width;
+  canvasEl.height = video.height;
 
   const canvasCtx = canvasEl.getContext('2d');
   if (canvasCtx) {
     canvasCtx.fillStyle = '#6c645f';
-    canvasCtx.fillRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+    canvasCtx.fillRect(0, 0, video.width, video.height);
 
-    img.src = IMG_SRC_PREFIX
+    img.src = video.imgSrcPrefix
       + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)).slice(-5) : '99999')
-      + IMG_SRC_SUFFIX;
+      + video.imgSrcSuffix;
   }
 
   img.onload = () => {
     if (canvasCtx) {
-      canvasCtx.drawImage(img, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
+      canvasCtx.drawImage(img, 0, 0, video.width, video.height);
       texture.needsUpdate = true;
     }
   };
@@ -303,9 +313,9 @@ function createActor(
     //   mesh.material.map.repeat = new THREE.Vector2(wRepeat, hRepeat);
     //   mesh.material.needsUpdate = true;
     // }
-    img.src = IMG_SRC_PREFIX
+    img.src = video.imgSrcPrefix
       + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)).slice(-5) : '99999')
-      + IMG_SRC_SUFFIX;
+      + video.imgSrcSuffix;
 
     // if (imgNr < IMG_NR_LAST) {
     //   imgNr = Math.min(imgNr + IMG_NR_INCREASE, IMG_NR_LAST);
