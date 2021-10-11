@@ -141,8 +141,12 @@ export default class Scene extends MainScene {
       xPx: 1150, yPx: 676, wPx: 300, hPx: 260, vStart: 71.6, xDist: -300, 
       duration: STEP_DURATION * 4, position: STEP_DURATION * 12,
     }));
+    actors.push(createActor(this.scene, this.timeline, video, { // WIT BUSJE RECHTS
+      xPx: 1545, yPx: 650, wPx: 320, hPx: 210, vStart: 80, xDist: 50, 
+      duration: STEP_DURATION * 7, position: STEP_DURATION * 9,
+    }));
     actors.push(createActor(this.scene, this.timeline, video, { // BUS VERDER WEG
-      xPx: 1284, yPx: 624, wPx: 300, hPx: 174, vStart: 106, xDist: -50, 
+      xPx: 1284, yPx: 624, wPx: 300, hPx: 174, vStart: 106, xDist: 0, 
       duration: STEP_DURATION * 11, position: STEP_DURATION * 5,
     }));
     actors.push(createActor(this.scene, this.timeline, video, { // MAN IN ROLSTOEL
@@ -151,10 +155,6 @@ export default class Scene extends MainScene {
     }));
     actors.push(createActor(this.scene, this.timeline, video, { // BUS 22
       xPx: 1170, yPx: 380, wPx: 250, hPx: 1080-380, vStart: 118.5, xDist: -600, 
-      duration: STEP_DURATION * 7, position: STEP_DURATION * 9,
-    }));
-    actors.push(createActor(this.scene, this.timeline, video, { // WIT BUSJE RECHTS
-      xPx: 1545, yPx: 650, wPx: 320, hPx: 210, vStart: 80, xDist: 50, 
       duration: STEP_DURATION * 7, position: STEP_DURATION * 9,
     }));
     actors.push(createActor(this.scene, this.timeline, video, { // MAN WANDELEND
