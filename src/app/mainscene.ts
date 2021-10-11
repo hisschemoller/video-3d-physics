@@ -1,8 +1,9 @@
 import { Scene3D } from 'enable3d';
 
-export const FPS = 5;
+export const FPS = 30;
 export const RAF_RATE = 60;
 const FRAMES_PER_DRAW = RAF_RATE / FPS;
+const SECONDS_PER_FRAME = 1 / FPS;
 const IS_PUPPETEER = navigator.userAgent.indexOf('puppeteer') !== -1;
 const MAX_FRAMES = 50 * 3;
 const PORT = 3020;
@@ -14,39 +15,28 @@ export default class MainScene extends Scene3D {
   frame = 0;
   delta = 0;
   time = 0;
+  captureCounter = 0;
+  captureThrottle = 15;
 
   constructor() {
     super({ key: 'MainScene' });
   }
 
   async create() {
-    if (IS_PUPPETEER) {
-      this.saveFrame();
-    }
     this.run();
+    // this.capture();
   }
 
   update(time: number, delta: number) {
-    // if (IS_PUPPETEER) {
-      this.renderer.setAnimationLoop(null);
-    // }
+    this.renderer.setAnimationLoop(null);
   }
 
   /**
    * Overwrite the private _update() method.
    */
   _update() {
-    // let delta = this.clock.getDelta() * 1000;
-    // let time = this.clock.getElapsedTime();
-    this.delta = this.clock.getDelta() * 1000;
-    this.time = this.clock.getElapsedTime();
-    // console.log('delta', delta, 'time', time, 'frame', this.frame);
-
-    // modify time
-    if (IS_PUPPETEER) {
-      this.delta = this.delta * 1000;
-      this.time += this.delta;
-    }
+    this.delta = SECONDS_PER_FRAME;
+    this.time += this.delta;
 
     this.update.call(this, parseFloat(this.time.toFixed(3)), parseInt(this.delta.toString()));
     this.physics?.update(this.delta);
@@ -69,6 +59,26 @@ export default class MainScene extends Scene3D {
     requestAnimationFrame(this.run.bind(this));
 
     this._update();
+  }
+
+  capture() {
+    this.frame++;
+    if (this.frame % FRAMES_PER_DRAW !== 0) {
+      requestAnimationFrame(this.capture.bind(this));
+      return;
+    }
+
+    this.captureCounter++;
+    if (this.captureCounter % this.captureThrottle !== 0) {
+      requestAnimationFrame(this.capture.bind(this));
+      return;
+    }
+    
+    requestAnimationFrame(this.capture.bind(this));
+
+    this._update();
+
+    // capture the image data here
   }
 
   /**

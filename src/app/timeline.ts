@@ -13,8 +13,6 @@ interface TimelineParams {
 
 export default function createTimeline({
   duration = 1,
-  onStart = undefined,
-  onRepeat = undefined,
 }: TimelineParams): Timeline {
   const repeat = true;
   const tweens: Tween[] = [];
@@ -24,8 +22,9 @@ export default function createTimeline({
   }
 
   const update = function(time: number, delta: number) {
-    const progress = (time % duration) / duration;
-    tweens.forEach((tween) => tween.update(progress));
+    const position = time % duration;
+    const progress = position / duration;
+    tweens.forEach((tween) => tween.update(position, progress));
   }
 
   return { add, update };
