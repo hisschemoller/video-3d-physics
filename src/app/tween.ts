@@ -23,7 +23,7 @@ export default function createTween({
 
   const update = (timelinePosition: number, timelineProgress: number) => {
     const wasActive = isActive;
-    isActive = timelinePosition >= delay && timelinePosition < delay + duration;
+    isActive = timelinePosition > delay && timelinePosition <= delay + duration;
     if (onStart && !wasActive && isActive) {
       onStart();
     }

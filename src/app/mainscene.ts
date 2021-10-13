@@ -1,6 +1,6 @@
 import { Scene3D } from 'enable3d';
 
-export const FPS = 30;
+export const FPS = 25;
 const RAF_RATE = 60;
 const FRAMES_PER_DRAW = RAF_RATE / FPS;
 const SECONDS_PER_FRAME = 1 / FPS;
@@ -9,16 +9,17 @@ const PORT = 3020;
 
 // @ts-ignore
 export default class MainScene extends Scene3D {
-  isCapture = false;
+  isCapture = true;
   width = this.isCapture ? 1280 : 960;
   height = this.isCapture ? 720 : 540;
-  frame = 0;
+  count = 0;
   delta = 0;
   time = 0;
-  captureCounter = 0;
+  captureCount = 0;
   captureThrottle = 15;
   captureLastFrame = MAX_FRAMES;
-  frameCounter = 0;
+  frameCount = 0;
+  nextFramePosition = 0;
 
   constructor() {
     super({ key: 'MainScene' });
@@ -55,32 +56,50 @@ export default class MainScene extends Scene3D {
     this.postRender.call(this);
   }
 
+  /**
+   * Play the scene.
+   */
   run() {
-    this.frame++;
-    if (this.frame % FRAMES_PER_DRAW !== 0) {
-      requestAnimationFrame(this.run.bind(this));
+    // wait for the next frame to render
+    let isWaiting = true;
+    if (this.count >= this.nextFramePosition) {
+      isWaiting = false;
+      this.nextFramePosition += FRAMES_PER_DRAW;
+    }
+    this.count++;
+    requestAnimationFrame(this.run.bind(this));
+    if (isWaiting) {
       return;
     }
-    requestAnimationFrame(this.run.bind(this));
 
     this._update();
   }
 
+  /**
+   * Save the frames at a lower framerate.
+   */
   async capture() {
-    this.frame++;
-    if (this.frame % FRAMES_PER_DRAW !== 0) {
+    // throttle the rAF framerate
+    this.captureCount++;
+    if (this.captureCount % this.captureThrottle !== 0) {
       requestAnimationFrame(this.capture.bind(this));
       return;
     }
 
-    this.captureCounter++;
-    if (this.captureCounter % this.captureThrottle !== 0) {
+    // wait for the next frame to render
+    let isWaiting = true;
+    if (this.count >= this.nextFramePosition) {
+      isWaiting = false;
+      this.nextFramePosition += FRAMES_PER_DRAW;
+    }
+    this.count++;
+    if (isWaiting) {
       requestAnimationFrame(this.capture.bind(this));
       return;
     }
     
     // stop when done
-    if (this.frameCounter < this.captureLastFrame) {
+    if (this.frameCount < this.captureLastFrame) {
       requestAnimationFrame(this.capture.bind(this));
     }
 
@@ -88,7 +107,7 @@ export default class MainScene extends Scene3D {
 
     // capture the image data here
     const img = this.renderer.domElement.toDataURL();
-    const body = JSON.stringify({ img, frame: this.frameCounter });
+    const body = JSON.stringify({ img, frame: this.frameCount + 1 });
     await fetch(`http://localhost:${PORT}`, {
       body,
       method: 'POST',
@@ -96,6 +115,7 @@ export default class MainScene extends Scene3D {
         'Content-Type': 'application/json'
       }
     }).catch(err => {});
-    this.frameCounter++;
+
+    this.frameCount++;
   }
 }

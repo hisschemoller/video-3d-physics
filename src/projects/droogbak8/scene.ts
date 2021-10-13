@@ -5,10 +5,10 @@ import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 
 const AUDIO_SRC = '../assets/projects/droogbak8/digitakt1-loop.wav';
-const IMG_NR_LAST = 6509;
+const IMG_NR_LAST = 3255;
 const VIDEO_WIDTH = 1920;
 const VIDEO_HEIGHT = 1080;
-const VIDEO_FPS = 50;
+const VIDEO_FPS = 25;
 const VIDEO_PREVIEW_SCALE = 0.2;
 const PLANE_WIDTH = 16;
 const PLANE_HEIGHT = 9;
@@ -203,7 +203,7 @@ function createActor(
   const yVP = (y3d + (h3d / 2) - (PLANE_HEIGHT / 2)) * -1;
   const IMG_NR_FIRST = vStart * VIDEO_FPS;
   const IMG_NR_LAST = (vStart + duration) * VIDEO_FPS;
-  const img = new Image();
+  
   let imgNr = IMG_NR_FIRST;
   let tweenActive = false;
   let tweenProgress = 0;
@@ -216,18 +216,24 @@ function createActor(
   if (canvasCtx) {
     canvasCtx.fillStyle = '#6c645f';
     canvasCtx.fillRect(0, 0, video.width, video.height);
-
-    img.src = video.imgSrcPrefix
-      + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)).slice(-5) : '99999')
-      + video.imgSrcSuffix;
   }
 
+  const img = new Image();
   img.onload = () => {
     if (canvasCtx) {
       canvasCtx.drawImage(img, 0, 0, video.width, video.height);
       texture.needsUpdate = true;
     }
   };
+  const loadImage = (ignoreTweenActive = false) => {
+    if (tweenActive || ignoreTweenActive) {
+      imgNr = IMG_NR_FIRST + Math.round((IMG_NR_LAST - IMG_NR_FIRST) * tweenProgress);
+      img.src = video.imgSrcPrefix
+        + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)).slice(-5) : '99999')
+        + video.imgSrcSuffix;
+    }
+  };
+  loadImage(true);
 
   const texture = new THREE.CanvasTexture(canvasEl);
   texture.minFilter = THREE.LinearFilter;
@@ -286,15 +292,6 @@ function createActor(
     });
     timeline.add(tween);
   }
-
-  const loadImage = () => {
-    if (tweenActive) {
-      imgNr = IMG_NR_FIRST + Math.round((IMG_NR_LAST - IMG_NR_FIRST) * tweenProgress);
-      img.src = video.imgSrcPrefix
-        + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)).slice(-5) : '99999')
-        + video.imgSrcSuffix;
-    }
-  };
 
   return { loadImage };
 }

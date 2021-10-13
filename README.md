@@ -4,6 +4,8 @@ Video textures on 3D objects in a physics world that can be rendered as an image
 
 ## Background
 
+Background.ts to create a background video that exactly covers the viewport.
+
 ## FFMPEG
 
 ### Convert another video format to MP4.
@@ -15,8 +17,13 @@ ffmpeg -i input.avi -f mp4 -vcodec libx264 -pix_fmt yuv420p output.mp4
 ### Convert video to PNG image sequence.
 '%05d' generates a zero padded five digit integer.
 
+Second line to also deinterlace the video.<br>
+https://superuser.com/questions/1274282/how-to-extract-images-from-video-files-using-ffmpeg-without-blur
+
+
 ```
-ffmpeg -i input.avi rendered/frame_%05d.png
+ffmpeg -i input.avi frames/frame_%05d.png
+ffmpeg -i input.avi -vf yadif frames/frame_%05d.png
 ```
 
 ### Convert PNG image sequence to MP4.
@@ -25,7 +32,7 @@ ffmpeg -i input.avi rendered/frame_%05d.png
 ffmpeg -framerate 30 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p output.mp4
 ```
 
-### Grab single frame from a video
+### Grab a single frame from a video
 Get frame 180 as a png image:
 
 ```
@@ -50,6 +57,12 @@ ffmpeg -i input.mov -vcodec copy -an input.mov
 ```
 ffmpeg -i input_vid.mp4 -i input_audio.wav -vcodec copy output.mp4
 ffmpeg -i input_vid.mp4 -i input_audio.wav -vcodec libx264 -acodec libmp3lame output.mp4
+```
+
+### Extract sound from video to wav.
+
+```
+ffmpeg -i input.mp4 -vn -acodec pcm_s16le -ar 44100 -ac 2 output.wav
 ```
 
 ### Perspective correction filter

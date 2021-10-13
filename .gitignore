@@ -4,4 +4,9 @@ node_modules
 /public/lib
 rendered
 screenshots
-output.mp4
+
+*.mp4
+*.wav
+*.bwproject
+*.bitwig-project
+*.screenflow
