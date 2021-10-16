@@ -4,7 +4,8 @@ Video textures on 3D objects in a physics world that can be rendered as an image
 
 ## Background
 
-Background.ts to create a background video that exactly covers the viewport.
+Background.ts to create a background video that exactly covers the viewport, but is in it's own 
+scene.
 
 ## FFMPEG
 

@@ -4,6 +4,8 @@ import MainScene from '@app/mainscene';
 import { getMatrix, MatrixConfig } from '@app/utils';
 
 export default class Scene extends MainScene {
+  pCamera: THREE.PerspectiveCamera;
+  
   constructor() {
     super();
   }
@@ -21,10 +23,11 @@ export default class Scene extends MainScene {
     this.renderer.setClearColor(0xbbddff);
 
     // CAMERA
-    this.camera.aspect = this.width / this.height;
-    this.camera.fov = 25;
-    this.camera.position.set(0, 1.8, 10);
-    this.camera.lookAt(cameraTarget);
+    this.pCamera = this.camera as THREE.PerspectiveCamera;
+    this.pCamera.aspect = this.width / this.height;
+    this.pCamera.fov = 25;
+    this.pCamera.position.set(0, 1.8, 10);
+    this.pCamera.lookAt(cameraTarget);
     this.camera.updateProjectionMatrix();
 
     // HEMI LIGHT
@@ -69,8 +72,10 @@ export default class Scene extends MainScene {
     this.scene.add(axesHelper);
   
     // ORBIT CONTROLS
-    orbitControls.target = cameraTarget;
-    orbitControls.update();
+    if (orbitControls) {
+      orbitControls.target = cameraTarget;
+      orbitControls.update();
+    }
 
     setupBackground('../assets/projects/brugphkade/brugphkade1.mp4');
 
@@ -89,18 +94,20 @@ export default class Scene extends MainScene {
     // }));
     // this.scene.add(plane);
 
-    const ground = gltf.scene.getObjectByName('ground');
-    ground.receiveShadow = true;
-    ground.position.set(0, 0, 0);
-    ground.geometry.applyMatrix4( getMatrix({
-      x: -0.5, y: 0, z: -35,
-      sx: 30/3.1, sy: 30/4.3, sz: 30/4.7,
-      ry: Math.PI,
-    }));
-    const texture = new THREE.TextureLoader().load('../assets/projects/brugphkade/ground-flipx.png');
-    ground.material.map = texture;
-    console.log('ground', ground);
-    this.scene.add(ground);
+    const ground = gltf.scene.getObjectByName('ground') as THREE.Mesh;
+    if (ground) {
+      ground.receiveShadow = true;
+      ground.position.set(0, 0, 0);
+      ground.geometry.applyMatrix4( getMatrix({
+        x: -0.5, y: 0, z: -35,
+        sx: 30/3.1, sy: 30/4.3, sz: 30/4.7,
+        ry: Math.PI,
+      }));
+      const texture = new THREE.TextureLoader().load('../assets/projects/brugphkade/ground-flipx.png');
+      const mat = ground.material as THREE.MeshBasicMaterial;
+      mat.map = texture;
+      this.scene.add(ground);
+    }
 
     super.create();
   }

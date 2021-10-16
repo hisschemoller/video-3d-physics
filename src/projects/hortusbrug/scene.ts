@@ -1,4 +1,5 @@
 import { THREE } from 'enable3d';
+import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
 import MainScene, { FPS }  from '@app/mainscene';
 import { getMatrix } from '@app/utils';
 import createTimeline, { Timeline } from '@app/timeline';
@@ -123,6 +124,36 @@ export default class Scene extends MainScene {
       xPx: 0, yPx: 0, wPx: VIDEO_WIDTH, hPx: VIDEO_HEIGHT, vStart: 1,
       duration: PATTERN_DURATION,
     }));
+
+    new SVGLoader().load(
+      '../assets/projects/hortusbrug/path3.svg',
+      (data) => {
+        const paths = data.paths;
+		    const group = new THREE.Group();
+        
+        paths.forEach((path) => {
+          const material = new THREE.MeshBasicMaterial({
+            color: path.color,
+            side: THREE.DoubleSide,
+            depthWrite: false,
+          });
+    
+          const shapes = SVGLoader.createShapes(path);
+          shapes.forEach((shape) => {
+            const geometry = new THREE.ShapeGeometry(shape);
+            geometry.applyMatrix4(getMatrix({
+              x: PLANE_WIDTH * -0.5,
+              y: PLANE_HEIGHT * 0.5,
+              sy: -1, 
+            }));
+            const mesh = new THREE.Mesh(geometry, material);
+            group.add(mesh);
+          });
+        });
+    
+        this.scene.add( group );
+      },
+    );
     
     super.create();
   }

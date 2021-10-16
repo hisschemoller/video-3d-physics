@@ -58,7 +58,7 @@ export default class Scene extends MainScene {
 
     const { orbitControls } = await this.warpSpeed('orbitControls');
 
-    const cameraTarget = new THREE.Vector3(0, 0, 0);
+    const cameraTarget = new THREE.Vector3(0, 0, 0); 
 
     // RENDERER
     this.renderer.setSize(this.width, this.height);
