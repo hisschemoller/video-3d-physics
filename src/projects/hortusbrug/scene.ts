@@ -31,6 +31,7 @@ interface VideoData {
 };
 
 export default class Scene extends MainScene {
+  pCamera: THREE.PerspectiveCamera;
   timeline: Timeline;
 
   constructor() {
@@ -65,10 +66,11 @@ export default class Scene extends MainScene {
     this.renderer.setClearColor(0xbbddff);
 
     // CAMERA
-    this.camera.aspect = this.width / this.height;
-    this.camera.position.set(0, 0, 3.21);
-    this.camera.lookAt(cameraTarget);
-    this.camera.updateProjectionMatrix();
+    this.pCamera = this.camera as THREE.PerspectiveCamera;
+    this.pCamera.aspect = this.width / this.height;
+    this.pCamera.position.set(0, 0, 3.21);
+    this.pCamera.lookAt(cameraTarget);
+    this.pCamera.updateProjectionMatrix();
 
     // HEMI LIGHT
     const hemiLight = new THREE.HemisphereLight();
@@ -95,8 +97,10 @@ export default class Scene extends MainScene {
     this.scene.add(directionalLight);
   
     // ORBIT CONTROLS
-    orbitControls.target = cameraTarget;
-    orbitControls.update();
+    if (orbitControls) {
+      orbitControls.target = cameraTarget;
+      orbitControls.update();
+    }
 
     // AUDIO
     // const audio = document.createElement('audio');
@@ -154,7 +158,7 @@ export default class Scene extends MainScene {
  * @returns {Actor}
  */
 function createActor(
-  scene: THREE.scene,
+  scene: THREE.Scene,
   timeline: Timeline,
   video: VideoData,
   {
@@ -251,13 +255,15 @@ function createActor(
           coords.y + ((yVpEnd - coords.y) * progress),
           coords.z,
         );
-        mesh.material.map.offset = new THREE.Vector2(
-          coords.xOffset + ((xOffsetEnd - coords.xOffset) * progress),
-          coords.yOffset + ((yOffsetEnd - coords.yOffset) * progress),
-        );
-        if (mesh.body) {
-          mesh.body.needUpdate = true;
+        if (mesh.material.map) {
+          mesh.material.map.offset = new THREE.Vector2(
+            coords.xOffset + ((xOffsetEnd - coords.xOffset) * progress),
+            coords.yOffset + ((yOffsetEnd - coords.yOffset) * progress),
+          );
         }
+        // if (mesh.body) {
+        //   mesh.body.needUpdate = true;
+        // }
       },
       onComplete: () => {
         imgNr = IMG_NR_FIRST;

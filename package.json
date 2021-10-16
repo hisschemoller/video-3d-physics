@@ -16,6 +16,7 @@
   "dependencies": {
     "@enable3d/ammo-physics": "~0.22.0",
     "@enable3d/three-graphics": "~0.22.0",
+    "@types/three": "^0.133.1",
     "@yandeu/express-dev": "^0.0.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
