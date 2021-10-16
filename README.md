@@ -65,19 +65,31 @@ ffmpeg -i input_vid.mp4 -i input_audio.wav -vcodec libx264 -acodec libmp3lame ou
 ffmpeg -i input.mp4 -vn -acodec pcm_s16le -ar 44100 -ac 2 output.wav
 ```
 
+### Extract a time slice of an original video.
+-ss is the start time,<br>
+-t is the slice duration.<br>
+Timestamps are in HH:MM:SS.xxx format or in seconds (s.msec).
+
+```
+ffmpeg -ss 00:00:30.0 -i input.avi -c copy -t 00:00:10.0 output.avi
+ffmpeg -ss 30 -i input.avi -c copy -t 10 output.avi
+```
+
 ### Perspective correction filter
 * Documentation: https://ffmpeg.org/ffmpeg-filters.html#perspective
 * Example: https://stackoverflow.com/questions/61028674/perspective-correction-example
 
 Coordinates are top left, top right, bottom left, bottom right.<br>
 `x0=50` moves left top 50 pixels to the left, so outside the frame.<br>
+But on the right side `x1=590` (width of 640 - 50) moves top right 50 px to the right, so outside the frame.<br>
 Settings for a 640x480px video to have no correction applied:
 
 ```
-ffmpeg -hide_banner -i input.mp4 -lavfi "perspective=x0=0:y0=0:x1=640:y1=0:x2=-0:y2=480:x3=640:y3=480:interpolation=linear"  output.mp4
+ffmpeg -hide_banner -i input.mp4 -lavfi "perspective=x0=0:y0=0:x1=640:y1=0:x2=-0:y2=480:x3=640:y3=480:interpolation=linear" output.mp4
 ```
 
-### Scale video to a specific size. -1 to keep aspect ratio.
+### Scale video to a specific size. 
+-1 to keep aspect ratio.
 
 ```
 ffmpeg -i input.avi -vf scale=320:240 output.avi

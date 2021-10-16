@@ -9,7 +9,7 @@ const PORT = 3020;
 
 // @ts-ignore
 export default class MainScene extends Scene3D {
-  isCapture = true;
+  isCapture = false;
   width = this.isCapture ? 1280 : 960;
   height = this.isCapture ? 720 : 540;
   count = 0;

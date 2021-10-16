@@ -1,0 +1,22 @@
+# Hortusbrug 2017
+
+```
+// remove first 17 seconds, remove audio
+ffmpeg -ss 00:00:17.0 -i Hortusbrug_2017-08-27_MVI_0548.avi -t 00:10:00.0 -c copy -an hortusbrug.avi
+// extract frame 180 as image
+ffmpeg -i hortusbrug.avi -vf "select=eq(n\,179)" -vframes 1 hortusbrug_frame_180.png
+// scale x 4 (2560 x 1920)
+ffmpeg -i hortusbrug.avi -vf scale=2560:-1 hortusbrugx4.avi
+// convert to mp4
+ffmpeg -i hortusbrugx4.avi -f mp4 -vcodec libx264 -pix_fmt yuv420p hortusbrugx4.mp4
+// perspective filter 2560 - 104 = 2456
+ffmpeg -hide_banner -i hortusbrugx4.mp4 -lavfi "perspective=x0=192:y0=0:x1=2456:y1=0:x2=0:y2=1920:x3=2560:y3=1920:interpolation=linear" hortusbrugx4_perspective.mp4
+// extract frame 180 as image
+ffmpeg -i hortusbrugx4_perspective.mp4 -vf "select=eq(n\,179)" -vframes 1 hortusbrugx4_perspective_frame_180.png
+// convert to png sequence
+ffmpeg -i hortusbrugx4_perspective.mp4 '/Volumes/Samsung_X5/frames_hortusbrug/frames/frame_%05d.png'
+// scale to 20%, 2560 * 0.2 = 512
+ffmpeg -i hortusbrugx4_perspective.mp4 -vf scale=512:-1 hortusbrugx4_perspective_preview.mp4
+// convert preview to png sequence
+ffmpeg -i hortusbrugx4_perspective_preview.mp4 '/Volumes/Samsung_X5/frames_hortusbrug/frames_preview/frame_%05d.png'
+```
