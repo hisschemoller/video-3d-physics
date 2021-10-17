@@ -4,8 +4,30 @@ Video textures on 3D objects in a physics world that can be rendered as an image
 
 ## Background
 
-Background.ts to create a background video that exactly covers the viewport, but is in it's own 
+Use background.ts to create a background video that exactly covers the viewport, but is in it's own 
 scene.
+
+## SVG
+
+### Create an SVG with Sketch
+
+* Add an Artboard in the size of the scene's plane width and height.
+  * Or a multiple of the size because a small size can't zoom in enough in Sketch.
+* Add an image to the Artboard to serve as a reference while drawing.
+* Draw a vector shape.
+  * Menu Insert > Vector.
+  * Set Border width to 0 in the Inspector.
+  * Draw with the pen tool.
+  * Check Fill in the Inspector.
+  * Correct node position with the pen tool while holding Command.
+  * Name the drawn path in the Layer List.
+  * Click 'Make exportable' and select SVG in the Inspector.
+
+### Load with SVGLoader
+
+* Use SVGLoader as in the documentation.
+* Flip Y because the geometry will be upside down.
+* Move half a plane left and up because the geometry's pivot is left top.
 
 ## FFMPEG
 

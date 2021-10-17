@@ -4,18 +4,19 @@ import { renderBackground, setupBackground } from '@app/background';
 import MainScene from '@app/mainscene';
 
 export default class Scene extends MainScene {
+  pCamera: THREE.PerspectiveCamera;
 
   constructor() {
     super();
   }
 
   async create() {
-    console.log('create');
     this.warpSpeed();
 
     this.renderer.setSize(this.width, this.height);
-    this.camera.aspect = this.width / this.height;
-    this.camera.updateProjectionMatrix();
+    this.pCamera = this.camera as THREE.PerspectiveCamera;
+    this.pCamera.aspect = this.width / this.height;
+    this.pCamera.updateProjectionMatrix();
 
     // dynamic physics objects
     const x = () => (Math.random() - 0.5) * 2;
@@ -29,13 +30,13 @@ export default class Scene extends MainScene {
     // Use tween.js to move three.js objects with or without kinematic body.
     const box1 = this.add.box({ x: -1, y: 1, collisionFlags: 2 });
     const box2 = this.physics.add.box({ x: 1, y: 1, collisionFlags: 2 });
-    this.tween(box1, { x: -2, y: 3, z: 2 }, 1000, 0);
-    this.tween(box2, { x: 1, y: 4, z: 0 }, 2000, 0);
+    this.tween(box1, new THREE.Vector3(-2, 3, 2), 1000, 0);
+    this.tween(box2, new THREE.Vector3(1, 4, 0), 1000, 0);
 
     // gltf loader
     const gltf = await this.load.gltf('../assets/projects/test/test.glb');
 
-    const house = gltf.scene.getObjectByName('house');
+    const house = gltf.scene.getObjectByName('house') as ExtendedObject3D;
     house.castShadow = true;
     house.receiveShadow = true;
     house.position.set(0, 0, 0);
@@ -45,7 +46,7 @@ export default class Scene extends MainScene {
     this.scene.add(house);
     this.physics.add.existing(house, { shape: 'convex' });
     
-    const box = gltf.scene.getObjectByName('box');
+    const box = gltf.scene.getObjectByName('box') as ExtendedObject3D;
     box.castShadow = true;
     box.receiveShadow = true;
     box.position.set(0, 0, 5);
@@ -57,7 +58,6 @@ export default class Scene extends MainScene {
     const boxTexture = new THREE.VideoTexture(video);
     boxTexture.minFilter = THREE.LinearFilter;
     boxTexture.magFilter = THREE.LinearFilter;
-    // const boxTexture: THREE.Texture = new THREE.TextureLoader().load('../projects/test/30_seconds_of_frame_counter.png');
     boxTexture.flipY = true;
     box.material = new THREE.MeshPhongMaterial({ map: boxTexture });
     this.scene.add(box);
