@@ -61,17 +61,21 @@ export default class Scene extends MainScene {
     this.pCamera.lookAt(cameraTarget);
     this.pCamera.updateProjectionMatrix();
 
+    // AMBIENT
+    const ambient = new THREE.AmbientLight(0xffffff, 0.35); // color = 0xffffff, intensity = 1
+    this.scene.add(ambient);
+
     // HEMI LIGHT
-    const hemiLight = new THREE.HemisphereLight();
-    hemiLight.color.setHSL(0.55, 0.1, 0.3);
-    hemiLight.groundColor.setHSL(0.1, 0.1, 0.3);
-    hemiLight.position.set(0, 50, 0);
-    this.scene.add(hemiLight);
+    // const hemiLight = new THREE.HemisphereLight();
+    // hemiLight.color.setHSL(0.55, 0.1, 0.3);
+    // hemiLight.groundColor.setHSL(0.1, 0.1, 0.3);
+    // hemiLight.position.set(0, 50, 0);
+    // this.scene.add(hemiLight);
 
     // DIRECTIONAL LIGHT
     const SHADOW_SIZE = 10;
     const SHADOW_FAR = 13500;
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.6);
     directionalLight.position.set(10, 17.5, 10);
     directionalLight.position.multiplyScalar(100);
     directionalLight.color.setHSL(0.1, 1, 0.95);
@@ -115,7 +119,7 @@ export default class Scene extends MainScene {
     actors.push(await createActor(this.scene, this.timeline, video, { // FRONT
       xPx: 0, yPx: 0, wPx: VIDEO_WIDTH, hPx: VIDEO_HEIGHT, vStart: 25,
       duration: PATTERN_DURATION,
-      svgPath: '../assets/projects/hortusbrug/front.svg',
+      svgPath: '../assets/projects/hortusbrug/front.svg', z: 0.1,
     }));
 
     super.create();

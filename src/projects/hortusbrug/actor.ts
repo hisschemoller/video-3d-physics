@@ -52,6 +52,7 @@ interface VideoData {
     duration = 0,
     position = 0,
     svgPath = '',
+    z = 0,
   }): Promise<Actor> {
   const x3d = xPx * (PLANE_WIDTH / VIDEO_WIDTH);
   const y3d = yPx * (PLANE_HEIGHT / VIDEO_HEIGHT);
@@ -104,12 +105,11 @@ interface VideoData {
   texture.offset = new THREE.Vector2(xOffset, yOffset);
   texture.repeat = new THREE.Vector2(wRepeat, hRepeat);
 
-  // const geometry = new THREE.PlaneGeometry(w3d, h3d);
-  // const material = new THREE.MeshBasicMaterial({ map: texture });
-  // const mesh = new THREE.Mesh(geometry, material);
   const mesh = svgPath ? await createSVG(svgPath, texture) : await createPlane(w3d, h3d, texture);
   mesh.visible = false;
-  mesh.applyMatrix4(getMatrix({ x: xVP, y: yVP, }));
+  mesh.applyMatrix4(getMatrix({ x: xVP, y: yVP, z }));
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
   scene.add(mesh);
 
   if (duration > 0) {
@@ -160,27 +160,34 @@ interface VideoData {
 }
 
 function createPlane(width: number, height: number, texture : THREE.Texture) {
-  return new Promise<THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>>((resolve) => {
-    const geometry = new THREE.PlaneGeometry(width, height);
-    const material = new THREE.MeshBasicMaterial({ map: texture });
+  return new Promise<THREE.Mesh<THREE.PlaneGeometry, THREE.MeshPhongMaterial>>((resolve) => {
+    const geometry = new THREE.BoxGeometry(width, height, 0.02);
+    const material = new THREE.MeshPhongMaterial({ map: texture });
     resolve(new THREE.Mesh(geometry, material));
   });
 }
 
 function createSVG(svgPath: string, texture : THREE.Texture) {
-  return new Promise<THREE.Mesh<THREE.ShapeGeometry, THREE.MeshBasicMaterial>>((resolve, reject) => {
+  return new Promise<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshPhongMaterial>>((resolve, reject) => {
     new SVGLoader().load(
       svgPath,
       (data) => {
         const { paths } = data;
 
         paths.forEach((path) => {
-          const material = new THREE.MeshBasicMaterial({ map: texture, });
+          const material = new THREE.MeshPhongMaterial({
+            side: THREE.BackSide,
+            map: texture, 
+          });
     
           const shapes = SVGLoader.createShapes(path);
           if (shapes.length > 0) {
             const shape = shapes[0];
-            const geometry = new THREE.ShapeGeometry(shape);
+            // const geometry = new THREE.ShapeGeometry(shape);
+            const geometry = new THREE.ExtrudeGeometry(shape, {
+              bevelEnabled: false,
+              depth: 0.02,
+            });
             geometry.applyMatrix4(getMatrix({
               x: PLANE_WIDTH * -0.5,
               y: PLANE_HEIGHT * 0.5,
