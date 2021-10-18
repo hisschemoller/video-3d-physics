@@ -21,6 +21,7 @@ interface ActorData {
   position?: number; // time position within the pattern, so start delay in seconds
   svgScale?: number;
   svgUrl?: string; // SVG file to load and extrude
+  svgYPx?: number,
   z: number; // mesh z position
 };
 
@@ -59,6 +60,7 @@ const BASE_COLOR = 0x6c645f;
     position = 0,
     svgScale = 1,
     svgUrl = '',
+    svgYPx = 0,
     z = 0,
   }: ActorData): Promise<Actor> {
 
@@ -68,9 +70,12 @@ const BASE_COLOR = 0x6c645f;
   const w3d = (wPx / PROJECT_WIDTH) * PLANE_WIDTH;
   const h3d = (hPx / PROJECT_HEIGHT) * PLANE_HEIGHT;
 
+  const svgY3d = svgYPx * (PLANE_HEIGHT / PROJECT_HEIGHT);
+  console.log(svgYPx, svgY3d);
+
   // translate the image position and size in 3d units to texture offset and repeat
   const xOffset = x3d / PLANE_WIDTH;
-  const yOffset = 1 - ((y3d + h3d) / PLANE_HEIGHT);
+  const yOffset = 1 - ((y3d - svgY3d + h3d) / PLANE_HEIGHT);
   const wRepeat = svgUrl ? 1 / w3d : w3d / PLANE_WIDTH;
   const hRepeat = svgUrl ? 1 / h3d : h3d / PLANE_HEIGHT;
 
@@ -122,7 +127,9 @@ const BASE_COLOR = 0x6c645f;
   texture.flipY = svgUrl ? false : true;
 
   // MESH
-  const mesh = svgUrl ? await createSVG(svgUrl, svgScale, texture) : await createPlane(w3d, h3d, texture);
+  const mesh = svgUrl 
+    ? await createSVG(svgUrl, svgScale, svgY3d, texture) 
+    : await createPlane(w3d, h3d, texture);
   mesh.visible = false;
   mesh.applyMatrix4(getMatrix({ x: xVP, y: yVP, z }));
   mesh.castShadow = true;
@@ -141,7 +148,7 @@ const BASE_COLOR = 0x6c645f;
     const y3dEnd = (yPx + yDist) * (PLANE_HEIGHT / PROJECT_HEIGHT);
     const yVpEnd = (y3dEnd + (h3d / 2) - (PLANE_HEIGHT / 2)) * -1;
     const xOffsetEnd = x3dEnd / PLANE_WIDTH;
-    const yOffsetEnd = 1 - ((y3dEnd + h3d) / PLANE_HEIGHT);
+    const yOffsetEnd = 1 - ((y3dEnd - svgY3d + h3d) / PLANE_HEIGHT);
     const tween = createTween({
       delay: position,
       duration,
@@ -192,7 +199,7 @@ function createPlane(width: number, height: number, texture : THREE.Texture) {
   });
 }
 
-function createSVG(svgUrl: string, svgScale: number, texture : THREE.Texture) {
+function createSVG(svgUrl: string, svgScale: number, svgY3d: number, texture : THREE.Texture) {
   return new Promise<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshPhongMaterial[]>>((resolve, reject) => {
     new SVGLoader().load(
       svgUrl,
@@ -217,7 +224,7 @@ function createSVG(svgUrl: string, svgScale: number, texture : THREE.Texture) {
             });
             geometry.applyMatrix4(getMatrix({
               x: PLANE_WIDTH * -0.5,
-              y: PLANE_HEIGHT * 0.5,
+              y: (PLANE_HEIGHT * 0.5) - svgY3d,
               sx: svgScale,
               sy: svgScale * -1,
             }));
