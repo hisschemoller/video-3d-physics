@@ -25,3 +25,10 @@ export interface MatrixConfig {
   matrix4.setPosition(x, y, z);
   return matrix4;
 }
+
+export function logBoundingBox(geometry: THREE.BufferGeometry) {
+  geometry.computeBoundingBox();
+  const size = new THREE.Vector3();
+  geometry.boundingBox?.getSize(size);
+  console.log('boundingBox size', JSON.stringify(size, null, 4));
+}

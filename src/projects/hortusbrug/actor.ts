@@ -176,7 +176,6 @@ interface VideoData {
 function createPlane(width: number, height: number, texture : THREE.Texture) {
   return new Promise<THREE.Mesh<THREE.PlaneGeometry, THREE.MeshPhongMaterial>>((resolve) => {
     const geometry = new THREE.BoxGeometry(width, height, 0.02);
-    geometry.computeBoundingBox();
     const material = new THREE.MeshPhongMaterial({ map: texture });
     resolve(new THREE.Mesh(geometry, material));
   });
@@ -205,8 +204,9 @@ function createSVG(svgUrl: string, texture : THREE.Texture) {
             geometry.applyMatrix4(getMatrix({
               x: PLANE_WIDTH * -0.5,
               y: PLANE_HEIGHT * 0.5,
-              sy: -1, 
+              sy: -1,
             }));
+            geometry.computeVertexNormals();
             const mesh = new THREE.Mesh(geometry, material);
             resolve(mesh);
           }
@@ -218,11 +218,4 @@ function createSVG(svgUrl: string, texture : THREE.Texture) {
       },
     );
   });
-}
-
-function logBoundingBox(geometry: THREE.BufferGeometry) {
-  geometry.computeBoundingBox();
-  const size = new THREE.Vector3();
-  geometry.boundingBox?.getSize(size);
-  console.log('boundingBox size', JSON.stringify(size, null, 4));
 }

@@ -71,15 +71,16 @@ export default class Scene extends MainScene {
     // this.scene.add(hemiLight);
 
     // DIRECTIONAL LIGHT
-    const SHADOW_SIZE = 10;
+    const SHADOW_MAP_SIZE = 1024;
+    const SHADOW_SIZE = 2;
     const SHADOW_FAR = 13500;
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.6);
     directionalLight.position.set(10, 17.5, 10);
     directionalLight.position.multiplyScalar(100);
     directionalLight.color.setHSL(0.1, 1, 0.95);
     directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 2048;
-    directionalLight.shadow.mapSize.height = 2048;
+    directionalLight.shadow.mapSize.width = SHADOW_MAP_SIZE;
+    directionalLight.shadow.mapSize.height = SHADOW_MAP_SIZE;
     directionalLight.shadow.camera.left = -SHADOW_SIZE;
     directionalLight.shadow.camera.right = SHADOW_SIZE;
     directionalLight.shadow.camera.top = SHADOW_SIZE;
