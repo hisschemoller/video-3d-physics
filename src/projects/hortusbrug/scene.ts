@@ -113,12 +113,17 @@ export default class Scene extends MainScene {
 
     actors.push(await createActor(this.scene, this.timeline, video, { // ACHTERGROND
       xPx: 0, yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, vStart: 1,
-      duration: PATTERN_DURATION,
+      duration: PATTERN_DURATION, z: 0,
     }));
     actors.push(await createActor(this.scene, this.timeline, video, { // FRONT
       xPx: 0, yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, vStart: 25,
-      duration: PATTERN_DURATION,
-      svgUrl: '../assets/projects/hortusbrug/front.svg', z: 0.1,
+      duration: PATTERN_DURATION, z: 0.1,
+      svgUrl: '../assets/projects/hortusbrug/second.svg', svgScale: 0.1,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, video, { // FRONT
+      xPx: 0, yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, vStart: 50,
+      duration: PATTERN_DURATION, z: 0.2,
+      svgUrl: '../assets/projects/hortusbrug/first.svg', svgScale: 0.1,
     }));
 
     super.create();

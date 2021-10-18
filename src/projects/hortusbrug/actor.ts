@@ -14,12 +14,13 @@ interface ActorData {
   yPx: number;
   wPx: number; // size of video fragment within the full video
   hPx: number;
-  xDist: number; // tween distance
-  yDist: number;
+  xDist?: number; // tween distance
+  yDist?: number;
   vStart: number; // playback start within the video
   duration: number;
-  position: number; // time position within the pattern, so start delay in seconds
-  svgUrl: string; // SVG file to load and extrude
+  position?: number; // time position within the pattern, so start delay in seconds
+  svgScale?: number;
+  svgUrl?: string; // SVG file to load and extrude
   z: number; // mesh z position
 };
 
@@ -56,9 +57,10 @@ const BASE_COLOR = 0x6c645f;
     vStart = 0,
     duration = 0,
     position = 0,
+    svgScale = 1,
     svgUrl = '',
     z = 0,
-  }): Promise<Actor> {
+  }: ActorData): Promise<Actor> {
 
   // translate position and size of image section in px to 3d units so it covers the surface
   const x3d = xPx * (PLANE_WIDTH / PROJECT_WIDTH);
@@ -116,11 +118,11 @@ const BASE_COLOR = 0x6c645f;
   texture.minFilter = THREE.LinearFilter;
   texture.magFilter = THREE.LinearFilter;
   texture.offset = new THREE.Vector2(xOffset, yOffset);
-  texture.repeat = new THREE.Vector2(wRepeat, hRepeat);
+  texture.repeat = new THREE.Vector2(wRepeat * svgScale, hRepeat * svgScale);
   texture.flipY = svgUrl ? false : true;
 
   // MESH
-  const mesh = svgUrl ? await createSVG(svgUrl, texture) : await createPlane(w3d, h3d, texture);
+  const mesh = svgUrl ? await createSVG(svgUrl, svgScale, texture) : await createPlane(w3d, h3d, texture);
   mesh.visible = false;
   mesh.applyMatrix4(getMatrix({ x: xVP, y: yVP, z }));
   mesh.castShadow = true;
@@ -154,8 +156,8 @@ const BASE_COLOR = 0x6c645f;
           coords.y + ((yVpEnd - coords.y) * progress),
           coords.z,
         );
-        if (mesh.material.map) {
-          mesh.material.map.offset = new THREE.Vector2(
+        if (mesh.material[1].map) {
+          mesh.material[1].map.offset = new THREE.Vector2(
             coords.xOffset + ((xOffsetEnd - coords.xOffset) * progress),
             coords.yOffset + ((yOffsetEnd - coords.yOffset) * progress),
           );
@@ -190,7 +192,7 @@ function createPlane(width: number, height: number, texture : THREE.Texture) {
   });
 }
 
-function createSVG(svgUrl: string, texture : THREE.Texture) {
+function createSVG(svgUrl: string, svgScale: number, texture : THREE.Texture) {
   return new Promise<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshPhongMaterial[]>>((resolve, reject) => {
     new SVGLoader().load(
       svgUrl,
@@ -216,11 +218,11 @@ function createSVG(svgUrl: string, texture : THREE.Texture) {
             geometry.applyMatrix4(getMatrix({
               x: PLANE_WIDTH * -0.5,
               y: PLANE_HEIGHT * 0.5,
-              sy: -1,
+              sx: svgScale,
+              sy: svgScale * -1,
             }));
             geometry.computeVertexNormals();
             const mesh = new THREE.Mesh(geometry, materials);
-            console.log('geometry', mesh.geometry);
             resolve(mesh);
           }
         });
