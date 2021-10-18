@@ -1,16 +1,14 @@
 import { THREE } from 'enable3d';
 import MainScene, { FPS }  from '@app/mainscene';
-import { getMatrix } from '@app/utils';
 import createTimeline, { Timeline } from '@app/timeline';
-import createTween from '@app/tween';
 import { Actor, createActor } from './actor';
 
-export const VIDEO_WIDTH = 2560;
-export const VIDEO_HEIGHT = 1920;
-export const VIDEO_FPS = 30;
+export const PROJECT_WIDTH = 2560;
+export const PROJECT_HEIGHT = 1920;
+export const PROJECT_FPS = 30;
 export const PLANE_WIDTH = 4;
 export const PLANE_HEIGHT = 3;
-const VIDEO_PREVIEW_SCALE = 0.2;
+const PROJECT_PREVIEW_SCALE = 0.2;
 const BPM = 112;
 const STEPS = 16;
 const STEPS_PER_BEAT = 4;
@@ -29,14 +27,14 @@ export default class Scene extends MainScene {
 
   async create() {
     this.captureLastFrame = Math.floor(PATTERN_DURATION * FPS);
-    this.width = VIDEO_WIDTH;
-    this.height = VIDEO_HEIGHT;
+    this.width = PROJECT_WIDTH;
+    this.height = PROJECT_HEIGHT;
 
     const isPreview = true && !this.isCapture;
     const video = {
-      scale: isPreview ? VIDEO_PREVIEW_SCALE : 1,
-      height: isPreview ? VIDEO_HEIGHT * VIDEO_PREVIEW_SCALE : VIDEO_HEIGHT,
-      width: isPreview ? VIDEO_WIDTH * VIDEO_PREVIEW_SCALE : VIDEO_WIDTH,
+      scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+      height: isPreview ? PROJECT_HEIGHT * PROJECT_PREVIEW_SCALE : PROJECT_HEIGHT,
+      width: isPreview ? PROJECT_WIDTH * PROJECT_PREVIEW_SCALE : PROJECT_WIDTH,
       imgSrcPrefix: isPreview
         ? '../assets/projects/hortusbrug/frames_preview/frame_'
         : '/Volumes/Samsung_X5/frames_hortusbrug/frames/frame_',
@@ -113,13 +111,13 @@ export default class Scene extends MainScene {
     });
 
     actors.push(await createActor(this.scene, this.timeline, video, { // ACHTERGROND
-      xPx: 0, yPx: 0, wPx: VIDEO_WIDTH, hPx: VIDEO_HEIGHT, vStart: 1,
+      xPx: 0, yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, vStart: 1,
       duration: PATTERN_DURATION,
     }));
     actors.push(await createActor(this.scene, this.timeline, video, { // FRONT
-      xPx: 0, yPx: 0, wPx: VIDEO_WIDTH, hPx: VIDEO_HEIGHT, vStart: 25,
+      xPx: 0, yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, vStart: 25,
       duration: PATTERN_DURATION,
-      svgPath: '../assets/projects/hortusbrug/front.svg', z: 0.1,
+      svgUrl: '../assets/projects/hortusbrug/front.svg', z: 0.1,
     }));
 
     super.create();
