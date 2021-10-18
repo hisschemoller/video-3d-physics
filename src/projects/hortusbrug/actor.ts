@@ -31,6 +31,8 @@ interface VideoData {
   imgSrcSuffix: string;
 };
 
+const BASE_COLOR = 0x6c645f;
+
 /**
  * Create an actor, an optionally animating 3d object.
  *
@@ -174,25 +176,32 @@ interface VideoData {
 }
 
 function createPlane(width: number, height: number, texture : THREE.Texture) {
-  return new Promise<THREE.Mesh<THREE.PlaneGeometry, THREE.MeshPhongMaterial>>((resolve) => {
+  return new Promise<THREE.Mesh<THREE.PlaneGeometry, THREE.MeshPhongMaterial[]>>((resolve) => {
     const geometry = new THREE.BoxGeometry(width, height, 0.02);
-    const material = new THREE.MeshPhongMaterial({ map: texture });
-    resolve(new THREE.Mesh(geometry, material));
+    geometry.groups.forEach((group, index) => {
+      group.materialIndex = index === 4 ? 1 : 0;
+    });
+    const materials = [
+      new THREE.MeshPhongMaterial({ color: BASE_COLOR, side: THREE.FrontSide, }),
+      new THREE.MeshPhongMaterial({ map: texture, side: THREE.FrontSide, }),
+    ];
+    const mesh = new THREE.Mesh(geometry, materials);
+    resolve(mesh);
   });
 }
 
 function createSVG(svgUrl: string, texture : THREE.Texture) {
-  return new Promise<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshPhongMaterial>>((resolve, reject) => {
+  return new Promise<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshPhongMaterial[]>>((resolve, reject) => {
     new SVGLoader().load(
       svgUrl,
       (data) => {
         const { paths } = data;
 
         paths.forEach((path) => {
-          const material = new THREE.MeshPhongMaterial({
-            side: THREE.BackSide,
-            map: texture, 
-          });
+          const materials = [
+            new THREE.MeshPhongMaterial({ color: BASE_COLOR, side: THREE.BackSide, }),
+            new THREE.MeshPhongMaterial({ map: texture, side: THREE.BackSide, })
+          ];
     
           const shapes = SVGLoader.createShapes(path);
           if (shapes.length > 0) {
@@ -201,13 +210,17 @@ function createSVG(svgUrl: string, texture : THREE.Texture) {
               bevelEnabled: false,
               depth: 0.02,
             });
+            geometry.groups.forEach((group, index) => {
+              group.materialIndex = index === 0 ? 1 : 0;
+            });
             geometry.applyMatrix4(getMatrix({
               x: PLANE_WIDTH * -0.5,
               y: PLANE_HEIGHT * 0.5,
               sy: -1,
             }));
             geometry.computeVertexNormals();
-            const mesh = new THREE.Mesh(geometry, material);
+            const mesh = new THREE.Mesh(geometry, materials);
+            console.log('geometry', mesh.geometry);
             resolve(mesh);
           }
         });
