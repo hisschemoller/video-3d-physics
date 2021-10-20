@@ -104,19 +104,49 @@ export default class Scene extends MainScene {
       duration: PATTERN_DURATION,
     });
 
-    actors.push(await createActor(this.scene, this.timeline, video, { // ACHTERGROND
-      xPx: 0, yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, vStart: 1,
-      duration: PATTERN_DURATION, z: 0,
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // ACHTERGROND
+      xPx: 0, yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, z: 0,
+      vStart: 1, duration: PATTERN_DURATION,
     }));
-    actors.push(await createActor(this.scene, this.timeline, video, { // SECOND
-      xPx: 0, yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, vStart: 25,
-      duration: PATTERN_DURATION, z: 0.1,
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // SECOND
+      xPx: 0, yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, z: 0.1,
+      vStart: 25, duration: PATTERN_DURATION,
       svgUrl: '../assets/projects/hortusbrug/second.svg', svgScale: 0.1, svgYPx: 310,
     }));
-    actors.push(await createActor(this.scene, this.timeline, video, { // FIRST
-      xPx: 0, yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, vStart: 50,
-      duration: PATTERN_DURATION, z: 0.2,
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // FIRST
+      xPx: 0, yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, z: 0.2,
+      vStart: 50, duration: PATTERN_DURATION,
       svgUrl: '../assets/projects/hortusbrug/first.svg', svgScale: 0.1,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // MAN FIETS
+      xPx: 0, yPx: 716, wPx: 1000, hPx: 1205, z: 0.25,
+      vStart: 24.3, xDist: -1000,
+      position: STEP_DURATION * 0, duration: STEP_DURATION * 8,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // TRAM NAAR RECHTS
+      xPx: 50, yPx: 960, wPx: 800, hPx: 900, z: 0.15,
+      vStart: 36.6, xDist: 500,
+      position: STEP_DURATION * 2, duration: STEP_DURATION * 10,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // TRAM NAAR LINKS
+      xPx: 450, yPx: 1000, wPx: 450, hPx: 900, z: 0.05,
+      vStart: 173.1, xDist: -440,
+      position: STEP_DURATION * 4, duration: STEP_DURATION * 8,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // PAAR WANDELEND
+      xPx: 2076, yPx: 1140, wPx: 520, hPx: 780, z: 0.3,
+      vStart: 10.8, xDist: -250,
+      position: STEP_DURATION * 8, duration: STEP_DURATION * 8,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // SCOOTER NAAR LINKS
+      xPx: 380, yPx: 1330, wPx: 260, hPx: 580, z: 0.05,
+      vStart: 151, xDist: -300,
+      position: STEP_DURATION * 12, duration: STEP_DURATION * 4,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // VROUW FIETS
+      xPx: 1448, yPx: 1294, wPx: 330, hPx: 620, z: 0.15,
+      vStart: 346.7, xDist: 320,
+      position: STEP_DURATION * 8, duration: STEP_DURATION * 8,
     }));
 
     super.create();
