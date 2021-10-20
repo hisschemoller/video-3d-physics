@@ -1,9 +1,8 @@
 import { THREE } from 'enable3d';
-import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
 import { getMatrix } from '@app/utils';
 import { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
-import { PLANE_HEIGHT, PLANE_WIDTH, PROJECT_FPS, PROJECT_HEIGHT, PROJECT_WIDTH } from './scene';
+import { VIEWPORT_3D_HEIGHT, VIEWPORT_3D_WIDTH, PROJECT_HEIGHT, PROJECT_WIDTH } from './scene';
 import { createRectangle, createSVG } from './actor-mesh';
 
 export interface Actor {
@@ -11,25 +10,27 @@ export interface Actor {
 };
 
 interface ActorData {
-  xPx: number; // position of video fragment from left top
+  xPx: number; // position of videoData fragment from left top
   yPx: number;
-  wPx: number; // size of video fragment within the full video
+  wPx: number; // size of videoData fragment within the full videoData
   hPx: number;
   xDist?: number; // tween distance
   yDist?: number;
-  vStart: number; // playback start within the video
+  vStart: number; // playback start within the videoData
   duration: number;
   position?: number; // time position within the pattern, so start delay in seconds
   svgScale?: number;
   svgUrl?: string; // SVG file to load and extrude
+  svgXPx?: number,
   svgYPx?: number,
   z: number; // mesh z position
 };
 
-interface VideoData {
+export interface VideoData {
+  fps: number;
   scale: number;
-  height: number;
   width: number;
+  height: number;
   imgSrcPrefix: string;
   imgSrcSuffix: string;
 };
@@ -41,14 +42,14 @@ const BASE_COLOR = 0x6c645f;
  *
  * @param {THREE.scene} scene
  * @param {Timeline} timeline
- * @param {VideoData} video
+ * @param {VideoData} videoData
  * @param {ActorData} actorData
  * @returns {Actor}
  */
  export async function createActor(
   scene: THREE.Scene,
   timeline: Timeline,
-  video: VideoData,
+  videoData: VideoData,
   {
     xPx = 0,
     yPx = 0,
@@ -61,31 +62,33 @@ const BASE_COLOR = 0x6c645f;
     position = 0,
     svgScale = 1,
     svgUrl = '',
+    svgXPx = 0,
     svgYPx = 0,
     z = 0,
   }: ActorData): Promise<Actor> {
 
   // translate position and size of image section in px to 3d units so it covers the surface
-  const x3d = xPx * (PLANE_WIDTH / PROJECT_WIDTH);
-  const y3d = yPx * (PLANE_HEIGHT / PROJECT_HEIGHT);
-  const w3d = (wPx / PROJECT_WIDTH) * PLANE_WIDTH;
-  const h3d = (hPx / PROJECT_HEIGHT) * PLANE_HEIGHT;
+  const x3d = xPx * (VIEWPORT_3D_WIDTH / PROJECT_WIDTH);
+  const y3d = yPx * (VIEWPORT_3D_HEIGHT / PROJECT_HEIGHT);
+  const w3d = (wPx / PROJECT_WIDTH) * VIEWPORT_3D_WIDTH;
+  const h3d = (hPx / PROJECT_HEIGHT) * VIEWPORT_3D_HEIGHT;
 
-  const svgY3d = svgYPx * (PLANE_HEIGHT / PROJECT_HEIGHT);
-  console.log(svgYPx, svgY3d);
+  // translate position of SVG in pixels to 3d units
+  const svgX3d = svgXPx * (VIEWPORT_3D_WIDTH / PROJECT_WIDTH);
+  const svgY3d = svgYPx * (VIEWPORT_3D_HEIGHT / PROJECT_HEIGHT);
 
   // translate the image position and size in 3d units to texture offset and repeat
-  const xOffset = x3d / PLANE_WIDTH;
-  const yOffset = 1 - ((y3d - svgY3d + h3d) / PLANE_HEIGHT);
-  const wRepeat = svgUrl ? 1 / w3d : w3d / PLANE_WIDTH;
-  const hRepeat = svgUrl ? 1 / h3d : h3d / PLANE_HEIGHT;
+  const xOffset = x3d / VIEWPORT_3D_WIDTH;
+  const yOffset = 1 - ((y3d - svgY3d + h3d) / VIEWPORT_3D_HEIGHT);
+  const wRepeat = svgUrl ? 1 / w3d : w3d / VIEWPORT_3D_WIDTH;
+  const hRepeat = svgUrl ? 1 / h3d : h3d / VIEWPORT_3D_HEIGHT;
 
   // translate image coordinates which are left top to 3D scene coordinates which are centered
-  const xVP = x3d + (w3d / 2) - (PLANE_WIDTH / 2);
-  const yVP = (y3d + (h3d / 2) - (PLANE_HEIGHT / 2)) * -1;
+  const xVP = x3d + (w3d / 2) - (VIEWPORT_3D_WIDTH / 2);
+  const yVP = (y3d + (h3d / 2) - (VIEWPORT_3D_HEIGHT / 2)) * -1;
 
-  const IMG_NR_FIRST = vStart * PROJECT_FPS;
-  const IMG_NR_LAST = (vStart + duration) * PROJECT_FPS;
+  const IMG_NR_FIRST = vStart * videoData.fps;
+  const IMG_NR_LAST = (vStart + duration) * videoData.fps;
   
   let imgNr = IMG_NR_FIRST;
   let tweenActive = false;
@@ -112,9 +115,9 @@ const BASE_COLOR = 0x6c645f;
   const loadImage = (ignoreTweenActive = false) => {
     if (tweenActive || ignoreTweenActive) {
       imgNr = IMG_NR_FIRST + Math.round((IMG_NR_LAST - IMG_NR_FIRST) * tweenProgress);
-      img.src = video.imgSrcPrefix
+      img.src = videoData.imgSrcPrefix
         + ((imgNr <= 99999) ? ('0000' + Math.round(imgNr)).slice(-5) : '99999')
-        + video.imgSrcSuffix;
+        + videoData.imgSrcSuffix;
     }
   };
   loadImage(true);
@@ -129,8 +132,8 @@ const BASE_COLOR = 0x6c645f;
 
   // MESH
   const mesh = svgUrl 
-    ? await createSVG(svgUrl, svgScale, svgY3d, texture) 
-    : await createPlane(w3d, h3d, texture);
+    ? await createSVG(svgUrl, svgScale, svgX3d, svgY3d, texture, VIEWPORT_3D_WIDTH, VIEWPORT_3D_HEIGHT) 
+    : await createRectangle(w3d, h3d, texture);
   mesh.visible = false;
   mesh.applyMatrix4(getMatrix({ x: xVP, y: yVP, z }));
   mesh.castShadow = true;
@@ -144,12 +147,12 @@ const BASE_COLOR = 0x6c645f;
       xOffset,
       yOffset,
     };
-    const x3dEnd = (xPx + xDist) * (PLANE_WIDTH / PROJECT_WIDTH);
-    const xVpEnd = x3dEnd + (w3d / 2) - (PLANE_WIDTH / 2);
-    const y3dEnd = (yPx + yDist) * (PLANE_HEIGHT / PROJECT_HEIGHT);
-    const yVpEnd = (y3dEnd + (h3d / 2) - (PLANE_HEIGHT / 2)) * -1;
-    const xOffsetEnd = x3dEnd / PLANE_WIDTH;
-    const yOffsetEnd = 1 - ((y3dEnd - svgY3d + h3d) / PLANE_HEIGHT);
+    const x3dEnd = (xPx + xDist) * (VIEWPORT_3D_WIDTH / PROJECT_WIDTH);
+    const xVpEnd = x3dEnd + (w3d / 2) - (VIEWPORT_3D_WIDTH / 2);
+    const y3dEnd = (yPx + yDist) * (VIEWPORT_3D_HEIGHT / PROJECT_HEIGHT);
+    const yVpEnd = (y3dEnd + (h3d / 2) - (VIEWPORT_3D_HEIGHT / 2)) * -1;
+    const xOffsetEnd = x3dEnd / VIEWPORT_3D_WIDTH;
+    const yOffsetEnd = 1 - ((y3dEnd - svgY3d + h3d) / VIEWPORT_3D_HEIGHT);
     const tween = createTween({
       delay: position,
       duration,

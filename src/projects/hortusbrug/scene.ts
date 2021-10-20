@@ -5,9 +5,8 @@ import { Actor, createActor } from './actor';
 
 export const PROJECT_WIDTH = 2560;
 export const PROJECT_HEIGHT = 1920;
-export const PROJECT_FPS = 30;
-export const PLANE_WIDTH = 4;
-export const PLANE_HEIGHT = 3;
+export const VIEWPORT_3D_WIDTH = 4;
+export const VIEWPORT_3D_HEIGHT = 3;
 const PROJECT_PREVIEW_SCALE = 0.2;
 const BPM = 112;
 const STEPS = 16;
@@ -31,13 +30,14 @@ export default class Scene extends MainScene {
     this.height = PROJECT_HEIGHT;
 
     const isPreview = true && !this.isCapture;
-    const video = {
+    const videoData = {
+      fps: 30,
       scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
       height: isPreview ? PROJECT_HEIGHT * PROJECT_PREVIEW_SCALE : PROJECT_HEIGHT,
       width: isPreview ? PROJECT_WIDTH * PROJECT_PREVIEW_SCALE : PROJECT_WIDTH,
       imgSrcPrefix: isPreview
         ? '../assets/projects/hortusbrug/frames_preview/frame_'
-        : '/Volumes/Samsung_X5/frames_hortusbrug/frames/frame_',
+        : 'fs-img?dir=/Volumes/Samsung_X5/frames_hortusbrug/frames/&img=frame_',
       imgSrcSuffix: '.png',
     };
 
@@ -62,13 +62,6 @@ export default class Scene extends MainScene {
     // AMBIENT
     const ambient = new THREE.AmbientLight(0xffffff, 0.35); // color = 0xffffff, intensity = 1
     this.scene.add(ambient);
-
-    // HEMI LIGHT
-    // const hemiLight = new THREE.HemisphereLight();
-    // hemiLight.color.setHSL(0.55, 0.1, 0.3);
-    // hemiLight.groundColor.setHSL(0.1, 0.1, 0.3);
-    // hemiLight.position.set(0, 50, 0);
-    // this.scene.add(hemiLight);
 
     // DIRECTIONAL LIGHT
     const SHADOW_MAP_SIZE = 1024;
@@ -135,7 +128,7 @@ export default class Scene extends MainScene {
   }
 
   postRender() {
-    actors.map((actor) => actor.loadImage());
+    actors.forEach((actor) => actor.loadImage());
     super.postRender();
   }
 }
