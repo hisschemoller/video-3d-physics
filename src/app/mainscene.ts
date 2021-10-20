@@ -1,6 +1,6 @@
 import { Scene3D } from 'enable3d';
 
-export const FPS = 25;
+export const FPS = 30;
 const RAF_RATE = 60;
 const FRAMES_PER_DRAW = RAF_RATE / FPS;
 const SECONDS_PER_FRAME = 1 / FPS;

@@ -3,7 +3,7 @@ import cors from 'cors';
 import express from 'express';
 import http from 'http';
 import { exec as _exec } from 'child_process';
-import { resolve } from 'path';
+import path, { resolve } from 'path';
 import fs from 'fs';
 
 const params = process.argv.slice(2);
@@ -22,6 +22,11 @@ if (params[0] === 'serve') {
   
   // app.use(express.static(publicPath));
   app.use(`/`, express.static(resolve(publicPath)));
+  
+  app.get('/fs-img', function (req, res) {
+    const url = `${req.query.dir}${req.query.img}`;
+    res.sendFile(path.resolve(url));
+  });
 
   app.post('/', async (req, res) => {
     const { img, frame } = req.body;

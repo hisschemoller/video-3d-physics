@@ -21,7 +21,11 @@ ffmpeg -i hortusbrugx4_perspective.mp4 '/Volumes/Samsung_X5/frames_hortusbrug/fr
 ffmpeg -i hortusbrugx4_perspective.mp4 -vf scale=512:-1 hortusbrugx4_perspective_preview.mp4
 // convert preview to png sequence
 ffmpeg -i hortusbrugx4_perspective_preview.mp4 '/Volumes/Samsung_X5/frames_hortusbrug/frames_preview/frame_%05d.png'
+
+// png to mp4
+ffmpeg -framerate 25 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p output.mp4
+// repeat 32 times
+ffmpeg -stream_loop 32 -i output.mp4 -c copy output-x32.mp4
 ```
 
 ## SVG
-
