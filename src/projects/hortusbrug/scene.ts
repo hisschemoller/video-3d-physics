@@ -123,6 +123,11 @@ export default class Scene extends MainScene {
       vStart: 24.3, xDist: -1000,
       position: STEP_DURATION * 0, duration: STEP_DURATION * 8,
     }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // VROUW FIETS
+      xPx: 1300, yPx: 716, wPx: 600, hPx: 1205, z: 0.25,
+      vStart: 34.9, xDist: -1800,
+      position: STEP_DURATION * 2, duration: STEP_DURATION * 8,
+    }));
     actors.push(await createActor(this.scene, this.timeline, videoData, { // TRAM NAAR RECHTS
       xPx: 50, yPx: 960, wPx: 800, hPx: 900, z: 0.15,
       vStart: 36.6, xDist: 500,
@@ -138,15 +143,25 @@ export default class Scene extends MainScene {
       vStart: 10.8, xDist: -250,
       position: STEP_DURATION * 8, duration: STEP_DURATION * 8,
     }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // VROUW FIETS
+      xPx: 1448, yPx: 1294, wPx: 330, hPx: 620, z: 0.15,
+      vStart: 346.7, xDist: 320,
+      position: STEP_DURATION * 8, duration: STEP_DURATION * 8,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // OVERSTEKERS VER WEG
+      xPx: 1410, yPx: 1420, wPx: 130, hPx: 400, z: 0.03,
+      vStart: 29.2, xDist: -40,
+      position: STEP_DURATION * 10, duration: STEP_DURATION * 6,
+    }));
     actors.push(await createActor(this.scene, this.timeline, videoData, { // SCOOTER NAAR LINKS
       xPx: 380, yPx: 1330, wPx: 260, hPx: 580, z: 0.05,
       vStart: 151, xDist: -300,
       position: STEP_DURATION * 12, duration: STEP_DURATION * 4,
     }));
-    actors.push(await createActor(this.scene, this.timeline, videoData, { // VROUW FIETS
-      xPx: 1448, yPx: 1294, wPx: 330, hPx: 620, z: 0.15,
-      vStart: 346.7, xDist: 320,
-      position: STEP_DURATION * 8, duration: STEP_DURATION * 8,
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // FIETS NAAR RECHTS
+      xPx: 550, yPx: 1240, wPx: 550, hPx: 670, z: 0.15,
+      vStart: 5.9, xDist: 500,
+      position: STEP_DURATION * 12, duration: STEP_DURATION * 4,
     }));
 
     super.create();
