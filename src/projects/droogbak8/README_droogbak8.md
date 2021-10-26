@@ -41,4 +41,27 @@ ffmpeg -i output-audio.mp4 -vn -acodec pcm_s16le -ar 44100 -ac 2 output-audio.wa
 2,142857142857143 * 30 = 64,285714285714286 frames in een maat. 
 
 25 FPS is de video, 
-2,142857142857143 * 25 = 53,571428571428575 frames in een maat. 
+2,142857142857143 * 25 = 53,571428571428575 frames in een maat.
+
+## Render
+
+53 frames is de video lang, 
+25 FPS is de video, 
+53 / 25 = 2.12 seconden voor een maat, 
+2.12 / 4 = 0.53 seconden voor een beat, 
+60 / 0.53 = 113.20754716981132 BPM 
+
+```
+// png to mp4
+ffmpeg -framerate 25 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p droogbak.mp4
+
+// beter synchroon, als audio en video precies de juiste maat zijn.
+// repeat 32 times, video alleen
+ffmpeg -i droogbak.mp4 -filter_complex "loop=loop=32:size=64:start=0" droogbak-video-x32.mp4
+// repeat 32, audio alleen
+ffmpeg -stream_loop 32 -i "droogbak-x1-2.160s.wav" -c copy droogbak-audio-x32.wav
+// video en audio samenvoegen
+ffmpeg -i hortusbrug-video-x32.mp4 -i hortusbrug-audio-x32.wav -vcodec copy hortusbrug-x32.mp4
+```
+
+

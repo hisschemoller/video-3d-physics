@@ -33,6 +33,7 @@ interface VideoData {
 };
 
 export default class Scene extends MainScene {
+  pCamera: THREE.PerspectiveCamera;
   timeline: Timeline;
 
   constructor() {
@@ -67,10 +68,11 @@ export default class Scene extends MainScene {
     this.renderer.setClearColor(0xbbddff);
 
     // CAMERA
-    this.camera.aspect = this.width / this.height;
-    this.camera.position.set(0, 0, 9.6);
-    this.camera.lookAt(cameraTarget);
-    this.camera.updateProjectionMatrix();
+    this.pCamera = this.camera as THREE.PerspectiveCamera;
+    this.pCamera.aspect = this.width / this.height;
+    this.pCamera.position.set(0, 0, 9.6);
+    this.pCamera.lookAt(cameraTarget);
+    this.pCamera.updateProjectionMatrix();
 
     // HEMI LIGHT
     const hemiLight = new THREE.HemisphereLight();
@@ -97,8 +99,10 @@ export default class Scene extends MainScene {
     this.scene.add(directionalLight);
   
     // ORBIT CONTROLS
-    orbitControls.target = cameraTarget;
-    orbitControls.update();
+    if (orbitControls) {
+      orbitControls.target = cameraTarget;
+      orbitControls.update();
+    }
 
     // AUDIO
     const audio = document.createElement('audio');
@@ -177,7 +181,7 @@ export default class Scene extends MainScene {
 };
 
 function createActor(
-  scene: THREE.scene,
+  scene: THREE.Scene,
   timeline: Timeline,
   video: VideoData,
   {
@@ -209,19 +213,20 @@ function createActor(
   let tweenProgress = 0;
   
   const canvasEl = document.createElement('canvas');
-  canvasEl.width = video.width;
-  canvasEl.height = video.height;
+  canvasEl.width = VIDEO_WIDTH;
+  canvasEl.height = VIDEO_HEIGHT;
+
 
   const canvasCtx = canvasEl.getContext('2d');
   if (canvasCtx) {
     canvasCtx.fillStyle = '#6c645f';
-    canvasCtx.fillRect(0, 0, video.width, video.height);
+    canvasCtx.fillRect(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
   }
 
   const img = new Image();
   img.onload = () => {
     if (canvasCtx) {
-      canvasCtx.drawImage(img, 0, 0, video.width, video.height);
+      canvasCtx.drawImage(img, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT);
       texture.needsUpdate = true;
     }
   };
@@ -274,12 +279,11 @@ function createActor(
           coords.y + ((yVpEnd - coords.y) * progress),
           coords.z,
         );
-        mesh.material.map.offset = new THREE.Vector2(
-          coords.xOffset + ((xOffsetEnd - coords.xOffset) * progress),
-          coords.yOffset + ((yOffsetEnd - coords.yOffset) * progress),
-        );
-        if (mesh.body) {
-          mesh.body.needUpdate = true;
+        if (mesh.material.map) {
+          mesh.material.map.offset = new THREE.Vector2(
+            coords.xOffset + ((xOffsetEnd - coords.xOffset) * progress),
+            coords.yOffset + ((yOffsetEnd - coords.yOffset) * progress),
+          );
         }
       },
       onComplete: () => {
