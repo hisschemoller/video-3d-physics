@@ -20,11 +20,11 @@ ffmpeg -i Amsterdam_Droogbak_2021-08-14_0008.mov -vf yadif frames/frame_%05d.png
 ffmpeg -i Amsterdam_Droogbak_2021-08-14_0008.mov -r 25 -vf yadif frames/frame_%05d.png
 
 // png to mp4
-ffmpeg -framerate 25 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p output.mp4
+ffmpeg -framerate 25 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p droogbak.mp4
 // add audio
-ffmpeg -i output.mp4 -i public/assets/projects/droogbak8/digitakt1-loop.wav -vcodec copy output-audio.mp4
+ffmpeg -i output.mp4 -i public/assets/projects/droogbak8/digitakt1-loop.wav -vcodec copy droogbak-audio.mp4
 // repeat 16 times
-ffmpeg -stream_loop 16 -i output-audio.mp4 -c copy output-audio-x16-25fps.mp4
+ffmpeg -stream_loop 16 -i droogbak-audio.mp4 -c copy droogbak-audio-x16-25fps.mp4
 
 // extract audio
 ffmpeg -i output-audio-x16-30fps.mp4 -vn -acodec pcm_s16le -ar 44100 -ac 2 output-audio-x16-30fps.wav

@@ -3,6 +3,7 @@ node_modules
 /public/js
 /public/lib
 rendered
+rendered_droogbak
 screenshots
 
 *.mp4

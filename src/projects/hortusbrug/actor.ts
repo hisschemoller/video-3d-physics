@@ -96,19 +96,19 @@ const BASE_COLOR = 0x6c645f;
   
   // CANVAS
   const canvasEl = document.createElement('canvas');
-  canvasEl.width = wPx;
-  canvasEl.height = hPx;
+  canvasEl.width = PROJECT_WIDTH;
+  canvasEl.height = PROJECT_HEIGHT;
   const canvasCtx = canvasEl.getContext('2d');
   if (canvasCtx) {
     canvasCtx.fillStyle = '#6c645f';
-    canvasCtx.fillRect(0, 0, wPx, hPx);
+    canvasCtx.fillRect(0, 0, PROJECT_WIDTH, PROJECT_HEIGHT);
   }
 
   // IMAGE
   const img = new Image();
   img.onload = () => {
     if (canvasCtx) {
-      canvasCtx.drawImage(img, 0, 0, wPx, hPx);
+      canvasCtx.drawImage(img, 0, 0, PROJECT_WIDTH, PROJECT_HEIGHT);
       texture.needsUpdate = true;
     }
   };

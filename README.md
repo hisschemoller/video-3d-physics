@@ -69,6 +69,14 @@ ffmpeg -i input.mov -vf "select=eq(n\,179)" -vframes 1 output.png
 ffmpeg -stream_loop 3 -i input.mp4 -c copy output.mp4
 ```
 
+### Repeat a video every number of frames.
+
+Loop 3 times, each loop is 75 frames, skip the first 25 frames of the input.
+
+```
+ffmpeg -i input.mp4 -filter_complex "loop=loop=3:size=75:start=25" output.mp4
+```
+
 ### Remove audio from a video file.
 
 ```
@@ -118,3 +126,26 @@ ffmpeg -hide_banner -i input.mp4 -lavfi "perspective=x0=0:y0=0:x1=640:y1=0:x2=-0
 ffmpeg -i input.avi -vf scale=320:240 output.avi
 ffmpeg -i input.jpg -vf scale=320:-1 output_320.png
 ```
+
+## FFProbe
+
+### Number of frames in a video
+
+```
+ffprobe -v error -select_streams v:0 -count_packets -show_entries stream=nb_read_packets -of csv=p=0 input.mp4
+```
+
+### Information per frame
+
+```
+// show keyframe timestamps
+ffprobe -v error -skip_frame nokey -show_entries frame=pkt_pts_time -select_streams v -of csv=p=0 input.mp4
+// show all frames timestamps
+ffprobe -v error -show_entries frame=pkt_pts_time -select_streams v -of csv=p=0 input.mp4
+// show all frames timestamps and type
+ffprobe -v error -show_entries frame=pkt_pts_time,pict_type -select_streams v -of csv=p=0 input.mp4
+```
+
+ffprobe -show_streams -count_frames droogbak.mp4
+ffprobe -loglevel panic -select\_streams v -show\_entries "frames" -read\_intervals %+#1 droogbak.mp4
+ffprobe -v error -show_entries frame=pkt_pts_time,pict_type,frame_index -select_streams v -of csv=p=0 droogbak.mp4
