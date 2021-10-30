@@ -65,11 +65,11 @@ export default class Scene extends MainScene {
     this.scene.add(ambient);
 
     // DIRECTIONAL LIGHT
-    const SHADOW_MAP_SIZE = 1024;
-    const SHADOW_SIZE = 2;
+    const SHADOW_MAP_SIZE = 2048;
+    const SHADOW_SIZE = 4;
     const SHADOW_FAR = 13500;
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.6);
-    directionalLight.position.set(10, 17.5, 10);
+    directionalLight.position.set(20, 5, 10);
     directionalLight.position.multiplyScalar(100);
     directionalLight.color.setHSL(0.1, 1, 0.95);
     directionalLight.castShadow = true;
@@ -96,7 +96,24 @@ export default class Scene extends MainScene {
     // ACTORS
     actors.push(await createActor(this.scene, this.timeline, videoData, { // ACHTERGROND
       xPx: 0, yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, z: 0,
-      vStart: 1, duration: PATTERN_DURATION,
+      vStart: 43, duration: PATTERN_DURATION,
+    }));
+    // actors.push(await createActor(this.scene, this.timeline, videoData, { // huizen
+    //   xPx: 7.013 * (PROJECT_WIDTH / VIEWPORT_3D_WIDTH), 
+    //   yPx: 0, svgYPx: 2 * (PROJECT_HEIGHT / VIEWPORT_3D_HEIGHT), 
+    //   wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, z: 0.3,
+    //   vStart: 25.5, duration: PATTERN_DURATION,
+    //   svgUrl: '../assets/projects/plantageparklaan/huizen.svg', svgScale: 0.1,
+    // }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // deur
+      xPx: 5.329 * (PROJECT_WIDTH / VIEWPORT_3D_WIDTH), yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, z: 0.3,
+      vStart: 25.5, duration: PATTERN_DURATION,
+      svgUrl: '../assets/projects/plantageparklaan/deur.svg', svgScale: 0.1,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // TERRAS
+      xPx: 0, yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, z: 0.6,
+      vStart: 25, duration: PATTERN_DURATION,
+      svgUrl: '../assets/projects/plantageparklaan/terras.svg', svgScale: 0.1,
     }));
 
     super.create();

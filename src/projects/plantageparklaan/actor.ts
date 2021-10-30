@@ -78,7 +78,7 @@ const BASE_COLOR = 0x6c645f;
   const svgY3d = svgYPx * (VIEWPORT_3D_HEIGHT / PROJECT_HEIGHT);
 
   // translate the image position and size in 3d units to texture offset and repeat
-  const xOffset = x3d / VIEWPORT_3D_WIDTH;
+  const xOffset = (x3d + svgX3d) / VIEWPORT_3D_WIDTH;
   const yOffset = 1 - ((y3d - svgY3d + h3d) / VIEWPORT_3D_HEIGHT);
   const wRepeat = svgUrl ? 1 / w3d : w3d / VIEWPORT_3D_WIDTH;
   const hRepeat = svgUrl ? 1 / h3d : h3d / VIEWPORT_3D_HEIGHT;
@@ -151,7 +151,7 @@ const BASE_COLOR = 0x6c645f;
     const xVpEnd = x3dEnd + (w3d / 2) - (VIEWPORT_3D_WIDTH / 2);
     const y3dEnd = (yPx + yDist) * (VIEWPORT_3D_HEIGHT / PROJECT_HEIGHT);
     const yVpEnd = (y3dEnd + (h3d / 2) - (VIEWPORT_3D_HEIGHT / 2)) * -1;
-    const xOffsetEnd = x3dEnd / VIEWPORT_3D_WIDTH;
+    const xOffsetEnd = (x3dEnd + svgX3d) / VIEWPORT_3D_WIDTH;
     const yOffsetEnd = 1 - ((y3dEnd - svgY3d + h3d) / VIEWPORT_3D_HEIGHT);
     const tween = createTween({
       delay: position,
