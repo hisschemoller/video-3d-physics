@@ -127,6 +127,15 @@ ffmpeg -i input.avi -vf scale=320:240 output.avi
 ffmpeg -i input.jpg -vf scale=320:-1 output_320.png
 ```
 
+## Crop video with the crop filter.
+out_w and out_h are width and height of the output rectangle.
+out_x and out_y are the left top corner of the output rectangle.
+
+```
+ffmpeg -i input.avi -filter:v "crop=out_w:out_h:out_x:out_y" output.avi
+```
+
+
 ## FFProbe
 
 ### Number of frames in a video
