@@ -5,7 +5,7 @@ export interface Tween {
 };
 
 interface TweenParams {
-  delay: number;
+  delay?: number;
   duration: number;
   onComplete?: Function | undefined;
   onStart?: Function | undefined;

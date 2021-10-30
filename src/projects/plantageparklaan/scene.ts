@@ -2,6 +2,7 @@ import { THREE } from 'enable3d';
 import MainScene, { FPS }  from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { Actor, createActor } from './actor';
+import { createRotatingWheel } from './rotating-wheel'
 
 export const PROJECT_WIDTH = 1920;
 export const PROJECT_HEIGHT = 1080;
@@ -115,6 +116,16 @@ export default class Scene extends MainScene {
       vStart: 25, duration: PATTERN_DURATION,
       svgUrl: '../assets/projects/plantageparklaan/terras.svg', svgScale: 0.1,
     }));
+
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // VROUW OVERSTEKEND
+      xPx: 270, yPx: 790, wPx: 140, hPx: 280, z: 0.8,
+      vStart: 35, xDist: -130,
+      position: STEP_DURATION * 2, duration: STEP_DURATION * 10,
+    }));
+    createRotatingWheel({
+      scene: this.scene, timeline: this.timeline, 
+      xPx: 550, yPx: 450, z: 0.4, duration: PATTERN_DURATION, 
+    });
 
     super.create();
   }

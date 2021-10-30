@@ -2,7 +2,7 @@ import { THREE } from 'enable3d';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
 import { getMatrix } from '@app/utils';
 
-const BASE_COLOR = 0x6c645f;
+export const BASE_COLOR = 0x6c645f;
 
 /**
  * Create 3D box.
