@@ -2,7 +2,8 @@ import { THREE } from 'enable3d';
 import MainScene, { FPS }  from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { Actor, createActor } from './actor';
-import { createRotatingWheel } from './rotating-wheel'
+import { createRotatingWheel } from './rotating-wheel';
+import { createTube } from './tube';
 
 export const PROJECT_WIDTH = 1920;
 export const PROJECT_HEIGHT = 1080;
@@ -106,7 +107,7 @@ export default class Scene extends MainScene {
     //   vStart: 25.5, duration: PATTERN_DURATION,
     //   svgUrl: '../assets/projects/plantageparklaan/huizen.svg', svgScale: 0.1,
     // }));
-    actors.push(await createActor(this.scene, this.timeline, videoData, { // deur
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // DEUR
       xPx: 5.329 * (PROJECT_WIDTH / VIEWPORT_3D_WIDTH), yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, z: 0.3,
       vStart: 25.5, duration: PATTERN_DURATION,
       svgUrl: '../assets/projects/plantageparklaan/deur.svg', svgScale: 0.1,
@@ -117,15 +118,20 @@ export default class Scene extends MainScene {
       svgUrl: '../assets/projects/plantageparklaan/terras.svg', svgScale: 0.1,
     }));
 
+    createRotatingWheel({
+      scene: this.scene, timeline: this.timeline, 
+      xPx: 550, yPx: 450, z: 0.4, duration: PATTERN_DURATION, 
+    });
+    createTube({
+      scene: this.scene, timeline: this.timeline, 
+      xPx: 800, yPx: 700, z: 0.4, duration: PATTERN_DURATION, 
+    });
+
     actors.push(await createActor(this.scene, this.timeline, videoData, { // VROUW OVERSTEKEND
       xPx: 270, yPx: 790, wPx: 140, hPx: 280, z: 0.8,
       vStart: 35, xDist: -130,
       position: STEP_DURATION * 2, duration: STEP_DURATION * 10,
     }));
-    createRotatingWheel({
-      scene: this.scene, timeline: this.timeline, 
-      xPx: 550, yPx: 450, z: 0.4, duration: PATTERN_DURATION, 
-    });
 
     super.create();
   }
