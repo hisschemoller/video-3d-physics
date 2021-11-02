@@ -12,9 +12,17 @@ interface TubeArgs {
   yPx: number,
   z: number,
   duration: number,
+  curve: [number, number, number][],
+  angleY: number;
+  angleZ: number;
+  phase?: number;
 };
 
-export function createTube({scene, timeline, xPx, yPx, z, duration}: TubeArgs) {
+const DOUBLE_PI = Math.PI * 2;
+
+export function createTube({
+  scene, timeline, xPx, yPx, z, duration, curve, angleY, angleZ, phase = 0,
+}: TubeArgs) {
 
   // translate position and size of image section in px to 3d units so it covers the surface
   const x3d = xPx * (VIEWPORT_3D_WIDTH / PROJECT_WIDTH);
@@ -24,16 +32,24 @@ export function createTube({scene, timeline, xPx, yPx, z, duration}: TubeArgs) {
   const xVP = x3d - (VIEWPORT_3D_WIDTH / 2);
   const yVP = (y3d - (VIEWPORT_3D_HEIGHT / 2)) * -1;
 
-  const curve = new THREE.CatmullRomCurve3( [
-    new THREE.Vector3( 0, 0, 0 ),
-    new THREE.Vector3( 5, 0, 0.4 ),
-    new THREE.Vector3( 6, 1, 0.2 )
-  ] );
-  const geometry = new THREE.TubeGeometry(curve, 40, 0.05, 16, false);
-  const material = new THREE.MeshPhongMaterial({ color: BASE_COLOR });
+  const points = curve.map((curve) => new THREE.Vector3(...curve));
+  const curve3 = new THREE.CatmullRomCurve3(points);
+  const geometry = new THREE.TubeGeometry(curve3, 40, 0.05, 16, false);
+  const texture = new THREE.TextureLoader().load( 'assets/projects/plantageparklaan/pipe1.jpg' );
+  const material = new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture, });
   const mesh = new THREE.Mesh(geometry, material);
   mesh.applyMatrix4(getMatrix({ x: xVP, y: yVP, z }));
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   scene.add(mesh);
+
+  const tween = createTween({
+    duration,
+    onUpdate: (progress: number) => {
+      const phasedProgress = (progress + phase) % 1;
+      mesh.rotation.y = Math.cos(phasedProgress * DOUBLE_PI) * angleY;
+      mesh.rotation.z = Math.cos(phasedProgress * DOUBLE_PI) * angleZ;
+    },
+  });
+  timeline.add(tween);
 }

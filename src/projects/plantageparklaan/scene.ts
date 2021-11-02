@@ -75,9 +75,29 @@ export default class Scene extends MainScene {
       scene: this.scene, timeline: this.timeline, 
       xPx: 550, yPx: 450, z: 0.4, duration: PATTERN_DURATION, 
     });
+    // createTube({
+    //   scene: this.scene, timeline: this.timeline, 
+    //   xPx: 800, yPx: 690, z: 0.4, duration: PATTERN_DURATION, 
+    //   curve: [[0, 0, 0], [5, 0, 0.4], [6, 1, 0.2]],
+    //   angleY: 0.01, angleZ: 0.05,
+    // });
     createTube({
       scene: this.scene, timeline: this.timeline, 
-      xPx: 800, yPx: 700, z: 0.4, duration: PATTERN_DURATION, 
+      xPx: 800, yPx: 640, z: 0.45, duration: PATTERN_DURATION, 
+      curve: [[0, 0, 0], [4, 0.4, -0.3], [7, -0.1, 0.2], [7.2, -0.8, 1]],
+      angleY: -0.03, angleZ: 0.02,
+    });
+    createTube({
+      scene: this.scene, timeline: this.timeline, 
+      xPx: 800, yPx: 670, z: 0.45, duration: PATTERN_DURATION, 
+      curve: [[0, 0, 0], [5, 0, 0.4], [5.5, 0.5, 0.5], [6.5, 0.9, 0.6]],
+      angleY: 0.01, angleZ: 0.025, phase: 0.4,
+    });
+    createTube({
+      scene: this.scene, timeline: this.timeline, 
+      xPx: 800, yPx: 600, z: 0.45, duration: PATTERN_DURATION, 
+      curve: [[0, 0, 0], [3.5, 0.6, 0.4], [4, -1.1, -0.1]],
+      angleY: 0.025, angleZ: 0.015, phase: 0.7,
     });
 
     actors.push(await createActor(this.scene, this.timeline, videoData, { // VROUW OVERSTEKEND
