@@ -19,7 +19,6 @@ const STEP_DURATION = PATTERN_DURATION / STEPS;
 const actors: Actor[] = [];
 
 export default class Scene extends MainScene {
-  pCamera: THREE.PerspectiveCamera;
   timeline: Timeline;
 
   constructor() {
@@ -43,52 +42,6 @@ export default class Scene extends MainScene {
         : 'fs-img?dir=/Volumes/Samsung_X5/plantageparklaan/frames/&img=frame_',
       imgSrcSuffix: '.png',
     };
-
-    const { orbitControls } = await this.warpSpeed('orbitControls');
-
-    const cameraTarget = new THREE.Vector3(0, 0, 0);
-
-    // RENDERER
-    this.renderer.setSize(this.width, this.height);
-    this.renderer.autoClear = true;
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFShadowMap; // PCFSoftShadowMap
-    this.renderer.setClearColor(0xbbddff);
-
-    // CAMERA
-    this.pCamera = this.camera as THREE.PerspectiveCamera;
-    this.pCamera.aspect = this.width / this.height;
-    this.pCamera.position.set(0, 0, 9.6);
-    this.pCamera.lookAt(cameraTarget);
-    this.pCamera.updateProjectionMatrix();
-
-    // AMBIENT
-    const ambient = new THREE.AmbientLight(0xffffff, 0.35); // color = 0xffffff, intensity = 1
-    this.scene.add(ambient);
-
-    // DIRECTIONAL LIGHT
-    const SHADOW_MAP_SIZE = 2048;
-    const SHADOW_SIZE = 4;
-    const SHADOW_FAR = 13500;
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.6);
-    directionalLight.position.set(20, 5, 10);
-    directionalLight.position.multiplyScalar(100);
-    directionalLight.color.setHSL(0.1, 1, 0.95);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = SHADOW_MAP_SIZE;
-    directionalLight.shadow.mapSize.height = SHADOW_MAP_SIZE;
-    directionalLight.shadow.camera.left = -SHADOW_SIZE;
-    directionalLight.shadow.camera.right = SHADOW_SIZE;
-    directionalLight.shadow.camera.top = SHADOW_SIZE;
-    directionalLight.shadow.camera.bottom = -SHADOW_SIZE;
-    directionalLight.shadow.camera.far = SHADOW_FAR;
-    this.scene.add(directionalLight);
-  
-    // ORBIT CONTROLS
-    if (orbitControls) {
-      orbitControls.target = cameraTarget;
-      orbitControls.update();
-    }
 
     // MESHES AND TWEENS
     this.timeline = createTimeline({

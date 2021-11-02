@@ -31,6 +31,13 @@ button {
   background: #333;
   border: 1px solid #666;
   color: #ccc;
+  cursor: pointer;
+  padding: 10px 20px;
+}
+button:hover {
+  background: #555;
+  border-color: #999;
+  color: #fff;
 }
 #canvas-container {
   width: 90vw;
@@ -38,6 +45,9 @@ button {
 #canvas-container canvas {
   height: 100% !important;
   width: 100% !important;
+}
+#controls {
+  margin: 20px 10px;
 }
 #overlay {
   align-items: center;
@@ -50,6 +60,9 @@ button {
   position: fixed;
   text-align: center;
   width: 100%;
+}
+.control {
+  padding: 10px 20px;
 }
 .display {
   background-color: #eee;

@@ -1,9 +1,10 @@
 import { PhysicsLoader, Project, Scene3D } from 'enable3d';
+import MainScene from './mainscene';
 
 let project: Project;
-let sceneClass: Scene3D;
+let sceneClass: MainScene;
 
-export function setup(scene3d: Scene3D) {
+export function setup(scene3d: MainScene) {
   sceneClass = scene3d;
   document.addEventListener('click', start);
 }
