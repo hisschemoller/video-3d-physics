@@ -11,7 +11,8 @@
     "watch": "webpack --watch",
     "lint": "eslint . --ext .ts",
     "serve": "node server.mjs serve",
-    "render": "node server.mjs render"
+    "render": "node server.mjs render",
+    "start": "node server.mjs serve & webpack --watch"
   },
   "dependencies": {
     "@enable3d/ammo-physics": "~0.22.0",
