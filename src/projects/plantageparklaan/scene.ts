@@ -1,5 +1,5 @@
 import { THREE } from 'enable3d';
-import MainScene, { FPS }  from '@app/mainscene';
+import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { Actor, createActor } from './actor';
 import { createRotatingWheel } from './rotating-wheel';
@@ -19,17 +19,21 @@ const STEP_DURATION = PATTERN_DURATION / STEPS;
 const actors: Actor[] = [];
 
 export default class Scene extends MainScene {
+
   timeline: Timeline;
 
   constructor() {
     super();
+
+    this.fps = 15;
+    this.width = PROJECT_WIDTH;
+    this.height = PROJECT_HEIGHT;
+    this.isCapture = false;
+    this.captureThrottle = 15;
+    this.captureLastFrame = Math.floor(PATTERN_DURATION * this.fps);
   }
 
   async create() {
-    this.captureLastFrame = Math.floor(PATTERN_DURATION * FPS);
-    this.width = PROJECT_WIDTH;
-    this.height = PROJECT_HEIGHT;
-
     const isPreview = true && !this.isCapture;
 
     const videoData = {

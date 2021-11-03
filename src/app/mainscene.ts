@@ -1,24 +1,25 @@
 import { Scene3D, THREE } from 'enable3d';
 
-export const FPS = 15;
 const RAF_RATE = 60;
-const FRAMES_PER_DRAW = RAF_RATE / FPS;
-const SECONDS_PER_FRAME = 1 / FPS;
 const MAX_FRAMES = 50 * 3;
 const PORT = 3020;
 
 // @ts-ignore
 export default class MainScene extends Scene3D {
+  fps: number;
+  framesPerDraw: number;
+  secondsPerFrame: number;
+  isCapture: boolean;
+  width: number;
+  height: number;
+  captureThrottle: number;
+  captureLastFrame: number;
   pCamera: THREE.PerspectiveCamera;
-  isCapture = false;
-  width = this.isCapture ? 1280 : 960;
-  height = this.isCapture ? 720 : 540;
+
   count = 0;
   delta = 0;
   time = 0;
   captureCount = 0;
-  captureThrottle = 15;
-  captureLastFrame = MAX_FRAMES;
   frameCount = 0;
   nextFramePosition = 0;
 
@@ -27,6 +28,9 @@ export default class MainScene extends Scene3D {
   }
 
   async create() {
+    this.framesPerDraw = RAF_RATE / this.fps;
+    this.secondsPerFrame = 1 / this.fps;
+
     const cameraTarget = new THREE.Vector3(0, 0, 0);
 
     const { orbitControls } = await this.warpSpeed('orbitControls');
@@ -143,7 +147,7 @@ export default class MainScene extends Scene3D {
    * Overwrite the private _update() method.
    */
   _update() {
-    this.delta = SECONDS_PER_FRAME;
+    this.delta = this.secondsPerFrame;
     this.time += this.delta;
 
     this.update.call(this, parseFloat(this.time.toFixed(3)), parseInt(this.delta.toString()));
@@ -166,7 +170,7 @@ export default class MainScene extends Scene3D {
     let isWaiting = true;
     if (this.count >= this.nextFramePosition) {
       isWaiting = false;
-      this.nextFramePosition += FRAMES_PER_DRAW;
+      this.nextFramePosition += this.framesPerDraw;
     }
     this.count++;
     requestAnimationFrame(this.run.bind(this));
@@ -192,7 +196,7 @@ export default class MainScene extends Scene3D {
     let isWaiting = true;
     if (this.count >= this.nextFramePosition) {
       isWaiting = false;
-      this.nextFramePosition += FRAMES_PER_DRAW;
+      this.nextFramePosition += this.framesPerDraw;
     }
     this.count++;
     if (isWaiting) {
