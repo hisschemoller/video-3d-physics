@@ -3,7 +3,7 @@ import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { Actor, createActor } from './actor';
 import { createRotatingWheel } from './rotating-wheel';
-import { createTube } from './tube';
+import { createTube, createSkyTube } from './tube';
 
 export const PROJECT_WIDTH = 1920;
 export const PROJECT_HEIGHT = 1080;
@@ -85,6 +85,8 @@ export default class Scene extends MainScene {
     //   curve: [[0, 0, 0], [5, 0, 0.4], [6, 1, 0.2]],
     //   angleY: 0.01, angleZ: 0.05,
     // });
+
+    // TUBES IN THE DOOR
     createTube({
       scene: this.scene, timeline: this.timeline, 
       xPx: 800, yPx: 640, z: 0.45, duration: PATTERN_DURATION, 
@@ -102,6 +104,26 @@ export default class Scene extends MainScene {
       xPx: 800, yPx: 600, z: 0.45, duration: PATTERN_DURATION, 
       curve: [[0, 0, 0], [3.5, 0.6, 0.4], [4, -1.1, -0.1]],
       angleY: 0.025, angleZ: 0.015, phase: 0.7,
+    });
+
+    // TUBES IN THE SKY
+    createSkyTube({
+      scene: this.scene, timeline: this.timeline, 
+      xPx: 900, yPx: 200, z: 0.15, duration: PATTERN_DURATION, 
+      curve: [[0, 0, 0], [4, -0.2, 0.2], [6, -0.5, 0.5]],
+      angleY: 0.02, angleZ: 0.01, phase: 0,
+    });
+    createSkyTube({
+      scene: this.scene, timeline: this.timeline, 
+      xPx: 900, yPx: 80, z: 0.2, duration: PATTERN_DURATION, 
+      curve: [[0, 0, 0], [3, -0.3, 0.2], [7, -0.9, 0.6]],
+      angleY: 0.015, angleZ: 0.01, phase: 0.4,
+    });
+    createSkyTube({
+      scene: this.scene, timeline: this.timeline, 
+      xPx: 900, yPx: 110, z: 0.1, duration: PATTERN_DURATION, 
+      curve: [[0, 0, 0], [3, -0.1, 0.3], [9, -0.4, 0.3]],
+      angleY: 0.01, angleZ: 0.015, phase: 0.7,
     });
 
     actors.push(await createActor(this.scene, this.timeline, videoData, { // VROUW OVERSTEKEND
