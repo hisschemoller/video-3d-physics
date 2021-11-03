@@ -66,7 +66,7 @@ export default class Scene extends MainScene {
     // }));
     actors.push(await createActor(this.scene, this.timeline, videoData, { // DEUR
       xPx: 5.329 * (PROJECT_WIDTH / VIEWPORT_3D_WIDTH), yPx: 0, wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, z: 0.3,
-      vStart: 25.5, duration: PATTERN_DURATION,
+      vStart: 61.5, duration: PATTERN_DURATION,
       svgUrl: '../assets/projects/plantageparklaan/deur.svg', svgScale: 0.1,
     }));
     actors.push(await createActor(this.scene, this.timeline, videoData, { // TERRAS
@@ -126,10 +126,31 @@ export default class Scene extends MainScene {
       angleY: 0.01, angleZ: 0.015, phase: 0.7,
     });
 
+    // ACTORS
     actors.push(await createActor(this.scene, this.timeline, videoData, { // VROUW OVERSTEKEND
       xPx: 270, yPx: 790, wPx: 140, hPx: 280, z: 0.8,
       vStart: 35, xDist: -130,
       position: STEP_DURATION * 2, duration: STEP_DURATION * 10,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // MAN UIT CAFÉ
+      xPx: 830, yPx: 700, wPx: 200, hPx: 470, z: 0.01,
+      vStart: 61.5, xDist: 10,
+      position: STEP_DURATION * 0, duration: STEP_DURATION * 16,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // MOEDER EN KIND
+      xPx: 1710, yPx: 800, wPx: 120, hPx: 280, z: 0.05,
+      vStart: 1, xDist: 150,
+      position: STEP_DURATION * 6, duration: STEP_DURATION * 14,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // WIT BUSJE
+      xPx: 1500, yPx: 690, wPx: 160, hPx: 380, z: 0.1,
+      vStart: 8.3, xDist: -100,
+      position: STEP_DURATION * 6, duration: STEP_DURATION * 6,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // FIETSER NAAR CAFÉ
+      xPx: 1240, yPx: 780, wPx: 170, hPx: 290, z: 0.02,
+      vStart: 55.1, xDist: -180,
+      position: STEP_DURATION * 4, duration: STEP_DURATION * 8,
     }));
 
     super.create();
