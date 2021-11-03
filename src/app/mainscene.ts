@@ -122,7 +122,11 @@ export default class MainScene extends Scene3D {
     if (orbitControls) {
       orbitControls.target = cameraTarget;
       orbitControls.update();
+      orbitControls.saveState();
     }
+    document.getElementById('reset-orbitcontrols')?.addEventListener('click', (e) => {
+      orbitControls?.reset();
+    });
 
     if (this.isCapture) {
       this.capture();

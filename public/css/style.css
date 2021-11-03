@@ -39,6 +39,10 @@ button:hover {
   border-color: #999;
   color: #fff;
 }
+label {
+  color: #ccc;
+  font-size: 0.8rem;
+}
 #canvas-container {
   width: 90vw;
 }
@@ -62,7 +66,7 @@ button:hover {
   width: 100%;
 }
 .control {
-  padding: 10px 20px;
+  padding: 5px 10px;
 }
 .display {
   background-color: #eee;
