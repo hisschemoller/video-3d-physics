@@ -9,7 +9,7 @@
   "scripts": {
     "build": "webpack",
     "watch": "webpack --watch",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint . --ext .ts --fix",
     "serve": "node server.mjs serve",
     "render": "node server.mjs render",
     "start": "node server.mjs serve & webpack --watch"
@@ -18,7 +18,6 @@
     "@enable3d/ammo-physics": "~0.22.0",
     "@enable3d/three-graphics": "~0.22.0",
     "@types/three": "^0.133.1",
-    "@yandeu/express-dev": "^0.0.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "enable3d": "~0.22.0",
@@ -27,6 +26,12 @@
     "three": "~0.127.0"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "@typescript-eslint/parser": "^4.29.3",
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-config-airbnb-typescript": "^14.0.1",
+    "eslint-plugin-import": "^2.22.1",
     "ts-loader": "^9.2.4",
     "typescript": "^4.3.5",
     "webpack": "^5.47.1",
