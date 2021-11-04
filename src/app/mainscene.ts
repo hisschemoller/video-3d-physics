@@ -1,26 +1,38 @@
 import { Scene3D, THREE } from 'enable3d';
 
 const RAF_RATE = 60;
-const MAX_FRAMES = 50 * 3;
 const PORT = 3020;
 
 // @ts-ignore
 export default class MainScene extends Scene3D {
   fps: number;
+
   framesPerDraw: number;
+
   secondsPerFrame: number;
+
   isCapture: boolean;
+
   width: number;
+
   height: number;
+
   captureThrottle: number;
+
   captureLastFrame: number;
-  pCamera: THREE.PerspectiveCamera;
+
+  protected pCamera: THREE.PerspectiveCamera;
 
   count = 0;
+
   delta = 0;
+
   time = 0;
+
   captureCount = 0;
+
   frameCount = 0;
+
   nextFramePosition = 0;
 
   constructor() {
@@ -70,7 +82,7 @@ export default class MainScene extends Scene3D {
     directionalLight.shadow.camera.bottom = -SHADOW_SIZE;
     directionalLight.shadow.camera.far = SHADOW_FAR;
     this.scene.add(directionalLight);
-    
+
     // DIRECTIONAL LIGHT SHADOW CAM HELPER
     const cameraHelper = new THREE.CameraHelper(this.pCamera);
     document.getElementById('camera-helper')?.addEventListener('click', (e) => {
@@ -90,7 +102,7 @@ export default class MainScene extends Scene3D {
         this.scene.remove(directionalLightHelper);
       }
     });
-    
+
     // DIRECTIONAL LIGHT SHADOW CAM HELPER
     const shadowCamHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
     document.getElementById('shadow-camera-helper')?.addEventListener('click', (e) => {
@@ -111,7 +123,7 @@ export default class MainScene extends Scene3D {
         this.scene.remove(gridHelper);
       }
     });
-    
+
     // AXES HELPER
     const axesHelper = new THREE.AxesHelper(25);
     document.getElementById('axes-helper')?.addEventListener('click', (e) => {
@@ -128,7 +140,7 @@ export default class MainScene extends Scene3D {
       orbitControls.update();
       orbitControls.saveState();
     }
-    document.getElementById('reset-orbitcontrols')?.addEventListener('click', (e) => {
+    document.getElementById('reset-orbitcontrols')?.addEventListener('click', () => {
       orbitControls?.reset();
     });
 
@@ -139,6 +151,7 @@ export default class MainScene extends Scene3D {
     }
   }
 
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   update(time: number, delta: number) {
     this.renderer.setAnimationLoop(null);
   }
@@ -146,11 +159,12 @@ export default class MainScene extends Scene3D {
   /**
    * Overwrite the private _update() method.
    */
+  /* eslint-disable no-underscore-dangle */
   _update() {
     this.delta = this.secondsPerFrame;
     this.time += this.delta;
 
-    this.update.call(this, parseFloat(this.time.toFixed(3)), parseInt(this.delta.toString()));
+    this.update.call(this, parseFloat(this.time.toFixed(3)), parseInt(this.delta.toString(), 10));
     this.physics?.update(this.delta);
     this.physics?.updateDebugger();
 
@@ -172,7 +186,7 @@ export default class MainScene extends Scene3D {
       isWaiting = false;
       this.nextFramePosition += this.framesPerDraw;
     }
-    this.count++;
+    this.count += 1;
     requestAnimationFrame(this.run.bind(this));
     if (isWaiting) {
       return;
@@ -186,7 +200,7 @@ export default class MainScene extends Scene3D {
    */
   async capture() {
     // throttle the rAF framerate
-    this.captureCount++;
+    this.captureCount += 1;
     if (this.captureCount % this.captureThrottle !== 0) {
       requestAnimationFrame(this.capture.bind(this));
       return;
@@ -198,12 +212,12 @@ export default class MainScene extends Scene3D {
       isWaiting = false;
       this.nextFramePosition += this.framesPerDraw;
     }
-    this.count++;
+    this.count += 1;
     if (isWaiting) {
       requestAnimationFrame(this.capture.bind(this));
       return;
     }
-    
+
     // stop when done
     if (this.frameCount < this.captureLastFrame) {
       requestAnimationFrame(this.capture.bind(this));
@@ -218,10 +232,10 @@ export default class MainScene extends Scene3D {
       body,
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
-      }
-    }).catch(err => {});
+        'Content-Type': 'application/json',
+      },
+    }).catch(() => {});
 
-    this.frameCount++;
+    this.frameCount += 1;
   }
 }

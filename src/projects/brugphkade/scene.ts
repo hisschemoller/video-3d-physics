@@ -1,14 +1,10 @@
 import { THREE } from 'enable3d';
 import { renderBackground, setupBackground } from '@app/background';
 import MainScene from '@app/mainscene';
-import { getMatrix, MatrixConfig } from '@app/utils';
+import { getMatrix } from '@app/utils';
 
 export default class Scene extends MainScene {
-  pCamera: THREE.PerspectiveCamera;
-  
-  constructor() {
-    super();
-  }
+  declare protected pCamera: THREE.PerspectiveCamera;
 
   async create() {
     const { orbitControls } = await this.warpSpeed('orbitControls');
@@ -53,7 +49,7 @@ export default class Scene extends MainScene {
     directionalLight.shadow.camera.bottom = -SHADOW_SIZE;
     directionalLight.shadow.camera.far = SHADOW_FAR;
     this.scene.add(directionalLight);
-    
+
     // GRID
     // const grid = new THREE.GridHelper(30, 10, 0xff0000, 0xffff00);
     // grid.position.set(0, 0, -19);
@@ -66,11 +62,11 @@ export default class Scene extends MainScene {
     //   rx: Math.PI * 0.5,
     // }));
     // this.scene.add(grid2);
-    
+
     // AXES
     const axesHelper = new THREE.AxesHelper(10);
     this.scene.add(axesHelper);
-  
+
     // ORBIT CONTROLS
     if (orbitControls) {
       orbitControls.target = cameraTarget;
@@ -98,9 +94,13 @@ export default class Scene extends MainScene {
     if (ground) {
       ground.receiveShadow = true;
       ground.position.set(0, 0, 0);
-      ground.geometry.applyMatrix4( getMatrix({
-        x: -0.5, y: 0, z: -35,
-        sx: 30/3.1, sy: 30/4.3, sz: 30/4.7,
+      ground.geometry.applyMatrix4(getMatrix({
+        x: -0.5,
+        y: 0,
+        z: -35,
+        sx: 30 / 3.1,
+        sy: 30 / 4.3,
+        sz: 30 / 4.7,
         ry: Math.PI,
       }));
       const texture = new THREE.TextureLoader().load('../assets/projects/brugphkade/ground-flipx.png');
@@ -115,4 +115,4 @@ export default class Scene extends MainScene {
   preRender() {
     renderBackground(this.renderer);
   }
-};
+}

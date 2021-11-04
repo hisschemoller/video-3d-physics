@@ -1,8 +1,7 @@
-
 export interface Tween {
   isActive: boolean;
   update: Function;
-};
+}
 
 interface TweenParams {
   delay?: number;
@@ -10,7 +9,7 @@ interface TweenParams {
   onComplete?: Function | undefined;
   onStart?: Function | undefined;
   onUpdate?: Function | undefined;
-};
+}
 
 export default function createTween({
   delay = 0,
@@ -21,7 +20,7 @@ export default function createTween({
 }: TweenParams): Tween {
   let isActive = false;
 
-  const update = (timelinePosition: number, timelineProgress: number) => {
+  const update = (timelinePosition: number) => {
     const wasActive = isActive;
     isActive = timelinePosition > delay && timelinePosition <= delay + duration;
     if (onStart && !wasActive && isActive) {
@@ -35,6 +34,6 @@ export default function createTween({
       onComplete();
     }
   };
-  
+
   return { isActive, update };
 }
