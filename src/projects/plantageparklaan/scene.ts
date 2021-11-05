@@ -67,13 +67,6 @@ export default class Scene extends MainScene {
       vStart: 43,
       duration: PATTERN_DURATION,
     }));
-    // actors.push(await createActor(this.scene, this.timeline, videoData, { // huizen
-    //   xPx: 7.013 * (PROJECT_WIDTH / VIEWPORT_3D_WIDTH),
-    //   yPx: 0, svgYPx: 2 * (PROJECT_HEIGHT / VIEWPORT_3D_HEIGHT),
-    //   wPx: PROJECT_WIDTH, hPx: PROJECT_HEIGHT, z: 0.3,
-    //   vStart: 25.5, duration: PATTERN_DURATION,
-    //   svgUrl: '../assets/projects/plantageparklaan/huizen.svg', svgScale: 0.1,
-    // }));
     actors.push(await createActor(this.scene, this.timeline, videoData, { // DEUR
       ...PROJECT_SETTINGS,
       xPx: 5.329 * (PROJECT_WIDTH / VIEWPORT_3D_WIDTH),
@@ -231,7 +224,7 @@ export default class Scene extends MainScene {
       vStart: 1,
       xDist: 150,
       position: STEP_DURATION * 6,
-      duration: STEP_DURATION * 14,
+      duration: STEP_DURATION * 10,
     }));
     actors.push(await createActor(this.scene, this.timeline, videoData, { // WIT BUSJE
       ...PROJECT_SETTINGS,
@@ -256,6 +249,66 @@ export default class Scene extends MainScene {
       xDist: -180,
       position: STEP_DURATION * 4,
       duration: STEP_DURATION * 8,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // GELE FIETSER
+      ...PROJECT_SETTINGS,
+      xPx: 750,
+      yPx: 770,
+      wPx: 240,
+      hPx: 280,
+      z: 0.7,
+      vStart: 17,
+      xDist: -450,
+      position: STEP_DURATION * 6,
+      duration: STEP_DURATION * 10,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // SCOOTER
+      ...PROJECT_SETTINGS,
+      xPx: 1230,
+      yPx: 800,
+      wPx: 200,
+      hPx: 260,
+      z: 0.7,
+      vStart: 79.35,
+      xDist: -700,
+      position: STEP_DURATION * 12,
+      duration: STEP_DURATION * 16,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // FIETSER RECHTS
+      ...PROJECT_SETTINGS,
+      xPx: 1450,
+      yPx: 750,
+      wPx: 240,
+      hPx: 290,
+      z: 0.4,
+      vStart: 50.8,
+      xDist: 200,
+      position: STEP_DURATION * 0,
+      duration: STEP_DURATION * 6,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // FIETSER FIETSSPAD
+      ...PROJECT_SETTINGS,
+      xPx: 1180,
+      yPx: 790,
+      wPx: 100,
+      hPx: 260,
+      z: 0.1,
+      vStart: 31,
+      xDist: 30,
+      position: STEP_DURATION * 0,
+      duration: STEP_DURATION * 6,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // ZILVEREN AUTO
+      ...PROJECT_SETTINGS,
+      xPx: 1440,
+      yPx: 800,
+      wPx: 330,
+      hPx: 260,
+      z: 0.1,
+      vStart: 29,
+      xDist: -200,
+      position: STEP_DURATION * 12,
+      duration: STEP_DURATION * 4,
     }));
 
     super.create();
