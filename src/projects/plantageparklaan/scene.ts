@@ -9,7 +9,7 @@ const PROJECT_HEIGHT = 1080;
 const VIEWPORT_3D_WIDTH = 16;
 const VIEWPORT_3D_HEIGHT = 9;
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 109;
+const BPM = 107;
 const STEPS = 16;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
@@ -29,10 +29,10 @@ export default class Scene extends MainScene {
   constructor() {
     super();
 
-    this.fps = 15;
     this.width = PROJECT_WIDTH;
     this.height = PROJECT_HEIGHT;
-    this.isCapture = false;
+    this.fps = 30;
+    this.isCapture = true;
     this.captureThrottle = 15;
     this.captureLastFrame = Math.floor(PATTERN_DURATION * this.fps);
   }
@@ -102,12 +102,6 @@ export default class Scene extends MainScene {
       z: 0.22,
       duration: PATTERN_DURATION,
     });
-    // createTube({
-    //   scene: this.scene, timeline: this.timeline,
-    //   xPx: 800, yPx: 690, z: 0.4, duration: PATTERN_DURATION,
-    //   curve: [[0, 0, 0], [5, 0, 0.4], [6, 1, 0.2]],
-    //   angleY: 0.01, angleZ: 0.05,
-    // });
 
     // TUBES IN THE DOOR
     createTube({
@@ -191,18 +185,6 @@ export default class Scene extends MainScene {
     });
 
     // ACTORS
-    actors.push(await createActor(this.scene, this.timeline, videoData, { // VROUW OVERSTEKEND
-      ...PROJECT_SETTINGS,
-      xPx: 270,
-      yPx: 790,
-      wPx: 140,
-      hPx: 280,
-      z: 0.8,
-      vStart: 35,
-      xDist: -130,
-      position: STEP_DURATION * 2,
-      duration: STEP_DURATION * 10,
-    }));
     actors.push(await createActor(this.scene, this.timeline, videoData, { // MAN UIT CAFÉ
       ...PROJECT_SETTINGS,
       xPx: 830,
@@ -215,6 +197,54 @@ export default class Scene extends MainScene {
       position: STEP_DURATION * 0,
       duration: STEP_DURATION * 16,
     }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // FIETSER RECHTS
+      ...PROJECT_SETTINGS,
+      xPx: 1450,
+      yPx: 750,
+      wPx: 240,
+      hPx: 290,
+      z: 0.4,
+      vStart: 50.8,
+      xDist: 260,
+      position: STEP_DURATION * 0,
+      duration: STEP_DURATION * 7.5,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // FIETSER FIETSSPAD
+      ...PROJECT_SETTINGS,
+      xPx: 1180,
+      yPx: 790,
+      wPx: 100,
+      hPx: 260,
+      z: 0.1,
+      vStart: 31,
+      xDist: 30,
+      position: STEP_DURATION * 1.1,
+      duration: STEP_DURATION * 6.4,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // VROUW OVERSTEKEND
+      ...PROJECT_SETTINGS,
+      xPx: 270,
+      yPx: 790,
+      wPx: 140,
+      hPx: 280,
+      z: 0.8,
+      vStart: 35,
+      xDist: -100,
+      position: STEP_DURATION * 1.1,
+      duration: STEP_DURATION * 7.4,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // FIETSER NAAR CAFÉ
+      ...PROJECT_SETTINGS,
+      xPx: 1170,
+      yPx: 780,
+      wPx: 170,
+      hPx: 290,
+      z: 0.02,
+      vStart: 55.55,
+      xDist: -120,
+      position: STEP_DURATION * 7.5,
+      duration: STEP_DURATION * 5.5,
+    }));
     actors.push(await createActor(this.scene, this.timeline, videoData, { // MOEDER EN KIND
       ...PROJECT_SETTINGS,
       xPx: 1710,
@@ -223,7 +253,7 @@ export default class Scene extends MainScene {
       hPx: 280,
       z: 0.05,
       vStart: 1,
-      xDist: 150,
+      xDist: 125,
       position: STEP_DURATION * 6,
       duration: STEP_DURATION * 10,
     }));
@@ -236,20 +266,8 @@ export default class Scene extends MainScene {
       z: 0.1,
       vStart: 8.3,
       xDist: -100,
-      position: STEP_DURATION * 6,
-      duration: STEP_DURATION * 6,
-    }));
-    actors.push(await createActor(this.scene, this.timeline, videoData, { // FIETSER NAAR CAFÉ
-      ...PROJECT_SETTINGS,
-      xPx: 1240,
-      yPx: 780,
-      wPx: 170,
-      hPx: 290,
-      z: 0.02,
-      vStart: 55.1,
-      xDist: -180,
-      position: STEP_DURATION * 4,
-      duration: STEP_DURATION * 8,
+      position: STEP_DURATION * 7.5,
+      duration: STEP_DURATION * 5.5,
     }));
     actors.push(await createActor(this.scene, this.timeline, videoData, { // GELE FIETSER
       ...PROJECT_SETTINGS,
@@ -260,44 +278,32 @@ export default class Scene extends MainScene {
       z: 0.7,
       vStart: 17,
       xDist: -450,
-      position: STEP_DURATION * 6,
+      position: STEP_DURATION * 7.5,
       duration: STEP_DURATION * 10,
+    }));
+    actors.push(await createActor(this.scene, this.timeline, videoData, { // DONKERE AUTO
+      ...PROJECT_SETTINGS,
+      xPx: 1650,
+      yPx: 690,
+      wPx: 160,
+      hPx: 380,
+      z: 0.05,
+      vStart: 58.5,
+      xDist: -100,
+      position: STEP_DURATION * 8.5,
+      duration: STEP_DURATION * 5.5,
     }));
     actors.push(await createActor(this.scene, this.timeline, videoData, { // SCOOTER
       ...PROJECT_SETTINGS,
-      xPx: 1230,
+      xPx: 1220,
       yPx: 800,
       wPx: 200,
       hPx: 260,
       z: 0.7,
-      vStart: 79.35,
-      xDist: -700,
-      position: STEP_DURATION * 12,
-      duration: STEP_DURATION * 16,
-    }));
-    actors.push(await createActor(this.scene, this.timeline, videoData, { // FIETSER RECHTS
-      ...PROJECT_SETTINGS,
-      xPx: 1450,
-      yPx: 750,
-      wPx: 240,
-      hPx: 290,
-      z: 0.4,
-      vStart: 50.8,
-      xDist: 200,
-      position: STEP_DURATION * 0,
-      duration: STEP_DURATION * 6,
-    }));
-    actors.push(await createActor(this.scene, this.timeline, videoData, { // FIETSER FIETSSPAD
-      ...PROJECT_SETTINGS,
-      xPx: 1180,
-      yPx: 790,
-      wPx: 100,
-      hPx: 260,
-      z: 0.1,
-      vStart: 31,
-      xDist: 30,
-      position: STEP_DURATION * 0,
-      duration: STEP_DURATION * 6,
+      vStart: 79.4,
+      xDist: -200,
+      position: STEP_DURATION * 13,
+      duration: STEP_DURATION * 4,
     }));
     actors.push(await createActor(this.scene, this.timeline, videoData, { // ZILVEREN AUTO
       ...PROJECT_SETTINGS,
@@ -306,9 +312,9 @@ export default class Scene extends MainScene {
       wPx: 330,
       hPx: 260,
       z: 0.1,
-      vStart: 29,
-      xDist: -200,
-      position: STEP_DURATION * 12,
+      vStart: 29.3,
+      xDist: -160,
+      position: STEP_DURATION * 13,
       duration: STEP_DURATION * 4,
     }));
 

@@ -28,4 +28,32 @@ ffmpeg -i plantageparklaan-d.mov '/Volumes/Samsung_X5/plantageparklaan/frames/fr
 ffmpeg -i plantageparklaan-d.mov -vf scale=480:-1 plantageparklaan-d_preview.mov
 // convert preview to png sequence
 ffmpeg -i plantageparklaan-d_preview.mov '/Volumes/Samsung_X5/plantageparklaan/frames_preview/frame_%05d.png'
+
+// png to mp4
+ffmpeg -framerate 30 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p plantageparklaan-video-x1.mp4
+// repeat 32 times, 66 frames, video alleen
+ffmpeg -i plantageparklaan-video-x1.mp4 -filter_complex "loop=loop=32:size=66:start=0" plantageparklaan-video-x32.mp4
+// repeat 32, audio alleen
+ffmpeg -stream_loop 32 -i "plantageparklaan-audio-x1.wav" -c copy plantageparklaan-audio-x32.wav
+// video en audio samenvoegen
+ffmpeg -i plantageparklaan-video-x32.mp4 -i plantageparklaan-audio-x32.wav -vcodec copy plantageparklaan-x32.mp4
 ```
+
+65 frames is de video lang, 
+30 FPS is de video, 
+65 / 30 = 2,166666666666667 seconden voor een maat, 
+2,166666666666667 / 4 = 0,541666666666667 seconden voor een beat, 
+60 / 0,541666666666667 = 110,769230769230701 BPM 
+
+Audio bestand tijdsduur: 2.20183 seconden
+
+Video bestand tijdsduur: 2,166666666666667 seconden
+
+Dan proberen met video op 108 BPM: Nog steeds 65 frames.
+
+Dan proberen met video op 107 BPM: 
+
+66 frames is de video lang, 
+66 / 30 = 2,2 seconden voor een maat,   
+2,2 / 4 = 0,55 seconden voor een beat, 
+60 / 0,55 = 109,090909090909091 BPM 
