@@ -69,7 +69,7 @@ export default class Scene extends MainScene {
     }));
     actors.push(await createActor(this.scene, this.timeline, videoData, { // DEUR
       ...PROJECT_SETTINGS,
-      xPx: 5.329 * (PROJECT_WIDTH / VIEWPORT_3D_WIDTH),
+      xPx: 0,
       yPx: 0,
       wPx: PROJECT_WIDTH,
       hPx: PROJECT_HEIGHT,
@@ -85,6 +85,7 @@ export default class Scene extends MainScene {
       yPx: 0,
       wPx: PROJECT_WIDTH,
       hPx: PROJECT_HEIGHT,
+      xAddPx: 10,
       z: 0.6,
       vStart: 25,
       duration: PATTERN_DURATION,

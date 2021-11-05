@@ -32,8 +32,8 @@ export function createRectangle(
 export function createSVG(
   svgUrl: string,
   svgScale: number,
-  svgX3d: number,
-  svgY3d: number,
+  xVP: number,
+  yVP: number,
   texture : THREE.Texture,
   viewport3dWidth: number,
   viewport3dHeight: number,
@@ -61,8 +61,8 @@ export function createSVG(
               group.materialIndex = index === 0 ? 1 : 0;
             });
             geometry.applyMatrix4(getMatrix({
-              x: (viewport3dWidth * -0.5) + svgX3d,
-              y: (viewport3dHeight * 0.5) - svgY3d,
+              x: (viewport3dWidth * -0.5) + xVP,
+              y: (viewport3dHeight * 0.5) - yVP,
               sx: svgScale,
               sy: svgScale * -1,
             }));

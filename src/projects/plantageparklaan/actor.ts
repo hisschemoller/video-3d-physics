@@ -13,6 +13,7 @@ interface ActorData {
   yPx: number;
   wPx: number; // size of videoData fragment within the full videoData
   hPx: number;
+  xAddPx?: number; // move actor without adjussting the video position
   xDist?: number; // tween distance
   yDist?: number;
   vStart: number; // playback start within the videoData
@@ -20,8 +21,6 @@ interface ActorData {
   position?: number; // time position within the pattern, so start delay in seconds
   svgScale?: number;
   svgUrl?: string; // SVG file to load and extrude
-  svgXPx?: number,
-  svgYPx?: number,
   z: number; // mesh z position
   vp3dWidth: number;
   vp3dHeight: number;
@@ -56,6 +55,7 @@ export async function createActor(
     yPx = 0,
     wPx = 100,
     hPx = 100,
+    xAddPx = 0,
     xDist = 0,
     yDist = 0,
     vStart = 0,
@@ -63,8 +63,6 @@ export async function createActor(
     position = 0,
     svgScale = 1,
     svgUrl = '',
-    svgXPx = 0,
-    svgYPx = 0,
     z = 0,
     vp3dWidth,
     vp3dHeight,
@@ -79,12 +77,11 @@ export async function createActor(
   const h3d = (hPx / projectPxHeight) * vp3dHeight;
 
   // translate position of SVG in pixels to 3d units
-  const svgX3d = svgXPx * (vp3dWidth / projectPxWidth);
-  const svgY3d = svgYPx * (vp3dHeight / projectPxHeight);
+  const xAdd3d = xAddPx * (vp3dWidth / projectPxWidth);
 
   // translate the image position and size in 3d units to texture offset and repeat
-  const xOffset = (x3d + svgX3d) / vp3dWidth;
-  const yOffset = 1 - ((y3d - svgY3d + h3d) / vp3dHeight);
+  const xOffset = (x3d) / vp3dWidth;
+  const yOffset = 1 - ((y3d + h3d) / vp3dHeight);
   const wRepeat = svgUrl ? 1 / w3d : w3d / vp3dWidth;
   const hRepeat = svgUrl ? 1 / h3d : h3d / vp3dHeight;
 
@@ -138,7 +135,7 @@ export async function createActor(
   // MESH
   const mesh = svgUrl
     ? await createSVG(
-      svgUrl, svgScale, svgX3d, svgY3d, texture, vp3dWidth, vp3dHeight,
+      svgUrl, svgScale, xVP, yVP, texture, vp3dWidth, vp3dHeight,
     )
     : await createRectangle(w3d, h3d, texture);
   mesh.visible = false;
@@ -155,11 +152,11 @@ export async function createActor(
       yOffset,
     };
     const x3dEnd = (xPx + xDist) * (vp3dWidth / projectPxWidth);
-    const xVpEnd = x3dEnd + (w3d / 2) - (vp3dWidth / 2);
     const y3dEnd = (yPx + yDist) * (vp3dHeight / projectPxHeight);
+    const xVpEnd = x3dEnd + (w3d / 2) - (vp3dWidth / 2);
     const yVpEnd = (y3dEnd + (h3d / 2) - (vp3dHeight / 2)) * -1;
-    const xOffsetEnd = (x3dEnd + svgX3d) / vp3dWidth;
-    const yOffsetEnd = 1 - ((y3dEnd - svgY3d + h3d) / vp3dHeight);
+    const xOffsetEnd = (x3dEnd) / vp3dWidth;
+    const yOffsetEnd = 1 - ((y3dEnd + h3d) / vp3dHeight);
     const tween = createTween({
       delay: position,
       duration,
@@ -170,7 +167,7 @@ export async function createActor(
       onUpdate: (progress: number) => {
         tweenProgress = progress;
         mesh.position.set(
-          coords.x + ((xVpEnd - coords.x) * progress),
+          coords.x + xAdd3d + ((xVpEnd - coords.x) * progress),
           coords.y + ((yVpEnd - coords.y) * progress),
           coords.z,
         );
