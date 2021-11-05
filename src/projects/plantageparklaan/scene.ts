@@ -4,10 +4,10 @@ import { Actor, createActor } from './actor';
 import createRotatingWheel from './rotating-wheel';
 import { createTube, createSkyTube } from './tube';
 
-export const PROJECT_WIDTH = 1920;
-export const PROJECT_HEIGHT = 1080;
-export const VIEWPORT_3D_WIDTH = 16;
-export const VIEWPORT_3D_HEIGHT = 9;
+const PROJECT_WIDTH = 1920;
+const PROJECT_HEIGHT = 1080;
+const VIEWPORT_3D_WIDTH = 16;
+const VIEWPORT_3D_HEIGHT = 9;
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 109;
 const STEPS = 16;
@@ -105,7 +105,7 @@ export default class Scene extends MainScene {
       timeline: this.timeline,
       xPx: 550,
       yPx: 450,
-      z: 0.4,
+      z: 0.22,
       duration: PATTERN_DURATION,
     });
     // createTube({
