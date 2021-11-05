@@ -33,3 +33,26 @@ export function logBoundingBox(geometry: THREE.BufferGeometry) {
   const size = new THREE.Vector3();
   geometry.boundingBox?.getSize(size);
 }
+
+
+
+/**
+ * Create blob from image URI.
+ */
+ export function dataURIToBlob(dataURI: string): Blob {
+  const binStr = window.atob(dataURI.split(',')[1]);
+  const len = binStr.length;
+  const arr = new Uint8Array(len);
+  for (let i = 0; i < len; i += 1) {
+    arr[i] = binStr.charCodeAt(i);
+  }
+  return new window.Blob([arr]);
+}
+
+/**
+ * Create filename.
+ */
+export function defaultFileName (ext: string) {
+  const str = `${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}${ext}`;
+  return str.replace(/\//g, '-').replace(/:/g, '.');
+}

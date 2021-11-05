@@ -1,4 +1,5 @@
 import { Scene3D, THREE } from 'enable3d';
+import { dataURIToBlob, defaultFileName } from '@app/utils';
 
 const RAF_RATE = 60;
 const PORT = 3020;
@@ -144,6 +145,25 @@ export default class MainScene extends Scene3D {
       orbitControls?.reset();
     });
 
+    // SAVE IMAGE
+    document.getElementById('save-image')?.addEventListener('click', () => {
+      const dataURI = this.renderer.domElement.toDataURL('image/png');
+      const blob = dataURIToBlob(dataURI);
+
+      // force download
+      const link = document.createElement('a');
+      link.download = defaultFileName('.png');
+      link.href = window.URL.createObjectURL(blob);
+      link.onclick = () => {
+        window.setTimeout( () => {
+          window.URL.revokeObjectURL(link.href);
+          link.removeAttribute('href');
+        }, 500);
+      };
+      link.click();
+    });
+
+    // START
     if (this.isCapture) {
       this.capture();
     } else {
