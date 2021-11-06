@@ -18,6 +18,7 @@ interface RotatingWheelArgs {
   projectPxHeight: number;
 }
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 function createBoxSegment(): THREE.Mesh<THREE.PlaneGeometry, THREE.MeshPhongMaterial[]> {
   const geometry = new THREE.BoxGeometry(3.1, 0.15, 0.02);
   geometry.groups.forEach((group, index) => {
@@ -36,49 +37,51 @@ function createBoxSegment(): THREE.Mesh<THREE.PlaneGeometry, THREE.MeshPhongMate
 }
 
 function createSvgSegment(svgUrl: string, svgWidth: number, svgHeight: number, svgScale: number) {
-  return new Promise<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshPhongMaterial[]>>((resolve, reject) => {
-    new SVGLoader().load(
-      svgUrl,
-      (data) => {
-        const { paths } = data;
+  return new Promise<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshPhongMaterial[]>>(
+    (resolve, reject) => {
+      new SVGLoader().load(
+        svgUrl,
+        (data) => {
+          const { paths } = data;
 
-        paths.forEach((path) => {
-          const materials = [
-            new THREE.MeshPhongMaterial({ color: BASE_COLOR, side: THREE.BackSide }),
-            new THREE.MeshPhongMaterial({ color: BASE_COLOR, side: THREE.BackSide }),
-          ];
-          const shapes = SVGLoader.createShapes(path);
-          if (shapes.length > 0) {
-            const shape = shapes[0];
-            const geometry = new THREE.ExtrudeGeometry(shape, {
-              bevelEnabled: true,
-              bevelThickness: 0.02,
-              bevelSize: 0.2,
-              depth: 0.02,
-            });
-            geometry.groups.forEach((group, index) => {
-              group.materialIndex = index === 0 ? 1 : 0;
-            });
-            geometry.applyMatrix4(getMatrix({
-              x: 0,
-              y: svgHeight * svgScale * -0.5,
-              sx: svgScale * -1,
-              sy: svgScale * 1,
-            }));
-            geometry.computeVertexNormals();
-            const mesh = new THREE.Mesh(geometry, materials);
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
-            resolve(mesh);
-          }
-        });
-      },
-      () => {},
-      () => {
-        reject();
-      },
-    );
-  });
+          paths.forEach((path) => {
+            const materials = [
+              new THREE.MeshPhongMaterial({ color: BASE_COLOR, side: THREE.BackSide }),
+              new THREE.MeshPhongMaterial({ color: BASE_COLOR, side: THREE.BackSide }),
+            ];
+            const shapes = SVGLoader.createShapes(path);
+            if (shapes.length > 0) {
+              const shape = shapes[0];
+              const geometry = new THREE.ExtrudeGeometry(shape, {
+                bevelEnabled: true,
+                bevelThickness: 0.02,
+                bevelSize: 0.2,
+                depth: 0.02,
+              });
+              geometry.groups.forEach((group, index) => {
+                group.materialIndex = index === 0 ? 1 : 0;
+              });
+              geometry.applyMatrix4(getMatrix({
+                x: 0,
+                y: svgHeight * svgScale * -0.5,
+                sx: svgScale * -1,
+                sy: svgScale * 1,
+              }));
+              geometry.computeVertexNormals();
+              const mesh = new THREE.Mesh(geometry, materials);
+              mesh.castShadow = true;
+              mesh.receiveShadow = true;
+              resolve(mesh);
+            }
+          });
+        },
+        () => {},
+        () => {
+          reject();
+        },
+      );
+    },
+  );
 }
 
 export default async function createRotatingWheel({
@@ -105,6 +108,8 @@ export default async function createRotatingWheel({
     // const mesh = createBoxSegment();
     // mesh.translateX(Math.sin(rad) * -1.55);
     // mesh.translateY(Math.cos(rad) * -1.55);
+
+    /* eslint-disable no-await-in-loop */
     const mesh = await createSvgSegment(
       '../assets/projects/plantageparklaan/blad3.svg', 30, 5, 0.1,
     );

@@ -155,7 +155,7 @@ export default class MainScene extends Scene3D {
       link.download = defaultFileName('.png');
       link.href = window.URL.createObjectURL(blob);
       link.onclick = () => {
-        window.setTimeout( () => {
+        window.setTimeout(() => {
           window.URL.revokeObjectURL(link.href);
           link.removeAttribute('href');
         }, 500);

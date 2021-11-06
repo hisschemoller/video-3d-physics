@@ -31,8 +31,8 @@ export default class Scene extends MainScene {
 
     this.width = PROJECT_WIDTH;
     this.height = PROJECT_HEIGHT;
-    this.fps = 30;
-    this.isCapture = true;
+    this.fps = 15;
+    this.isCapture = false;
     this.captureThrottle = 15;
     this.captureLastFrame = Math.floor(PATTERN_DURATION * this.fps);
   }

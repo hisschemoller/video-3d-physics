@@ -34,12 +34,10 @@ export function logBoundingBox(geometry: THREE.BufferGeometry) {
   geometry.boundingBox?.getSize(size);
 }
 
-
-
 /**
  * Create blob from image URI.
  */
- export function dataURIToBlob(dataURI: string): Blob {
+export function dataURIToBlob(dataURI: string): Blob {
   const binStr = window.atob(dataURI.split(',')[1]);
   const len = binStr.length;
   const arr = new Uint8Array(len);
@@ -52,7 +50,7 @@ export function logBoundingBox(geometry: THREE.BufferGeometry) {
 /**
  * Create filename.
  */
-export function defaultFileName (ext: string) {
+export function defaultFileName(ext: string) {
   const str = `${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}${ext}`;
   return str.replace(/\//g, '-').replace(/:/g, '.');
 }

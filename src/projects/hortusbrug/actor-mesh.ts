@@ -60,6 +60,7 @@ export function createSVG(
                 depth: 0.02,
               });
               geometry.groups.forEach((group, index) => {
+                /* eslint-disable no-param-reassign */
                 group.materialIndex = index === 0 ? 1 : 0;
               });
               geometry.applyMatrix4(getMatrix({
