@@ -33,10 +33,15 @@ export default class Scene extends MainScene {
   }
 
   async create() {
+    await super.create();
+
     const isPreview = true && !this.isCapture;
 
     // CAMERA
-    this.camera.position.set(0, 0, 3.21);
+    this.pCamera.position.set(0, 0, 9.6);
+
+    // DIRECTIONAL LIGHT
+    this.directionalLight.position.set(-20, 5, 10);
 
     // MESHES AND TWEENS
     this.timeline = createTimeline({
@@ -64,7 +69,7 @@ export default class Scene extends MainScene {
 
     this.createActors(projectSettings, videoData);
 
-    super.create();
+    this.postCreate();
   }
 
   update(time: number, delta: number) {

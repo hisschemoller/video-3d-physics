@@ -22,7 +22,9 @@ export default class MainScene extends Scene3D {
 
   captureLastFrame: number;
 
-  protected pCamera: THREE.PerspectiveCamera;
+  pCamera: THREE.PerspectiveCamera;
+
+  directionalLight: THREE.DirectionalLight;
 
   count = 0;
 
@@ -70,21 +72,21 @@ export default class MainScene extends Scene3D {
     const SHADOW_MAP_SIZE = 2048;
     const SHADOW_SIZE = 6;
     const SHADOW_FAR = 13500;
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.6);
-    directionalLight.position.set(20, 5, 10);
-    // directionalLight.position.multiplyScalar(100);
-    directionalLight.color.setHSL(0.1, 1, 0.95);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = SHADOW_MAP_SIZE;
-    directionalLight.shadow.mapSize.height = SHADOW_MAP_SIZE;
-    directionalLight.shadow.camera.left = -SHADOW_SIZE;
-    directionalLight.shadow.camera.right = SHADOW_SIZE;
-    directionalLight.shadow.camera.top = SHADOW_SIZE;
-    directionalLight.shadow.camera.bottom = -SHADOW_SIZE;
-    directionalLight.shadow.camera.far = SHADOW_FAR;
-    this.scene.add(directionalLight);
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.6);
+    this.directionalLight.position.set(20, 5, 10);
+    // this.directionalLight.position.multiplyScalar(100);
+    this.directionalLight.color.setHSL(0.1, 1, 0.95);
+    this.directionalLight.castShadow = true;
+    this.directionalLight.shadow.mapSize.width = SHADOW_MAP_SIZE;
+    this.directionalLight.shadow.mapSize.height = SHADOW_MAP_SIZE;
+    this.directionalLight.shadow.camera.left = -SHADOW_SIZE;
+    this.directionalLight.shadow.camera.right = SHADOW_SIZE;
+    this.directionalLight.shadow.camera.top = SHADOW_SIZE;
+    this.directionalLight.shadow.camera.bottom = -SHADOW_SIZE;
+    this.directionalLight.shadow.camera.far = SHADOW_FAR;
+    this.scene.add(this.directionalLight);
 
-    // DIRECTIONAL LIGHT SHADOW CAM HELPER
+    // CAMERA HELPER
     const cameraHelper = new THREE.CameraHelper(this.pCamera);
     document.getElementById('camera-helper')?.addEventListener('click', (e) => {
       if ((e.target as HTMLInputElement).checked) {
@@ -95,7 +97,7 @@ export default class MainScene extends Scene3D {
     });
 
     // DIRECTIONAL LIGHT HELPER
-    const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
+    const directionalLightHelper = new THREE.DirectionalLightHelper(this.directionalLight);
     document.getElementById('directional-light-helper')?.addEventListener('click', (e) => {
       if ((e.target as HTMLInputElement).checked) {
         this.scene.add(directionalLightHelper);
@@ -105,7 +107,7 @@ export default class MainScene extends Scene3D {
     });
 
     // DIRECTIONAL LIGHT SHADOW CAM HELPER
-    const shadowCamHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+    const shadowCamHelper = new THREE.CameraHelper(this.directionalLight.shadow.camera);
     document.getElementById('shadow-camera-helper')?.addEventListener('click', (e) => {
       if ((e.target as HTMLInputElement).checked) {
         this.scene.add(shadowCamHelper);
@@ -162,8 +164,9 @@ export default class MainScene extends Scene3D {
       };
       link.click();
     });
+  }
 
-    // START
+  postCreate() {
     if (this.isCapture) {
       this.capture();
     } else {
