@@ -1,6 +1,7 @@
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { Actor, createActor } from './actor';
+import createSphere from './sphere';
 import { ProjectSettings, VideoData } from './interfaces';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
@@ -59,6 +60,7 @@ export default class Scene extends MainScene {
     };
 
     const projectSettings: ProjectSettings = {
+      scene3d: this,
       scene: this.scene,
       timeline: this.timeline,
       width: this.width,
@@ -89,8 +91,10 @@ export default class Scene extends MainScene {
       wPx: this.width,
       hPx: this.height,
       z: 0,
-      vStart: 43,
+      vStart: 129,
       duration: STEP_DURATION * STEPS,
     }));
+
+    createSphere(projectSettings);
   }
 }

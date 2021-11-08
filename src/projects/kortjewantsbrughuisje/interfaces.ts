@@ -1,6 +1,8 @@
+import MainScene from '@app/mainscene';
 import { Timeline } from '@app/timeline';
 
 export interface ProjectSettings {
+  scene3d: MainScene,
   scene: THREE.Scene,
   timeline: Timeline,
   width: number,
