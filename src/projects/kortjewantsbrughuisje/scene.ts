@@ -1,5 +1,6 @@
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
+import { getMatrix } from '@app/utils';
 import { Actor, createActor } from './actor';
 import createSphere from './sphere';
 import { ProjectSettings, VideoData } from './interfaces';
@@ -98,5 +99,21 @@ export default class Scene extends MainScene {
     createSphere(projectSettings, {
       duration: STEP_DURATION * 15,
     });
+
+    const actor = await createActor(projectSettings, videoData, { // FRONT
+      xPx: 0,
+      yPx: 0,
+      wPx: this.width,
+      hPx: this.height,
+      z: 0.8,
+      vStart: 129,
+      duration: PATTERN_DURATION,
+      svgUrl: '../assets/projects/kortjewantsbrughuisje/front.svg',
+      svgScale: 0.1,
+    });
+    actors.push(actor);
+    const mesh = actor.getMesh();
+    const scale = 0.915;
+    mesh.applyMatrix4(getMatrix({ sx: scale, sy: scale }));
   }
 }

@@ -5,6 +5,7 @@ import { createRectangle, createSVG } from './actor-mesh';
 import { ProjectSettings, VideoData } from './interfaces';
 
 export interface Actor {
+  getMesh: Function;
   loadImage: Function;
 }
 
@@ -129,6 +130,7 @@ export async function createActor(
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   scene.add(mesh);
+  const getMesh = () => mesh;
 
   // TWEEN
   if (duration > 0) {
@@ -175,5 +177,5 @@ export async function createActor(
     timeline.add(tween);
   }
 
-  return { loadImage };
+  return { getMesh, loadImage };
 }

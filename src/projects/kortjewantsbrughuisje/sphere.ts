@@ -21,9 +21,9 @@ export default function createSphere(
 
   let sphere : ExtendedObject3D;
   const sphereConfig = {
-    x: -2, y: 2.2, z: 0.4, radius: 0.28, mass: 10,
+    x: -1.5, y: 2.1, z: 0.4, radius: 0.28, mass: 10,
   };
-  const materialConfig = { lambert: { color: 0x333333 } };
+  const materialConfig = { lambert: { color: 0x444444 } };
   const tween = createTween({
     duration,
     onStart: () => {

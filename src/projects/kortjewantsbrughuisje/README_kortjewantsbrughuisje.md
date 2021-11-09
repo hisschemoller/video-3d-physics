@@ -21,6 +21,8 @@ ffmpeg -i kortjewantsbrughuisje-b.mov -vf scale=1920:1080 kortjewantsbrughuisje-
 ffmpeg -i kortjewantsbrughuisje-c.mov -vcodec copy -an kortjewantsbrughuisje-d.mov
 // convert to mp4
 ffmpeg -i kortjewantsbrughuisje-d.mov -f mp4 -vcodec libx264 -pix_fmt yuv420p kortjewantsbrughuisje.mp4
+// extract frame 2:06 * 30 = 3780 as an image
+ffmpeg -i kortjewantsbrughuisje.mp4 -vf "select=eq(n\,3779)" -vframes 1 kortjewantsbrughuisje-d_frame_3780.png
 
 // convert to png sequence
 ffmpeg -i kortjewantsbrughuisje-d.mov '/Volumes/Samsung_X5/kortjewantsbrughuisje/frames/frame_%05d.png'
