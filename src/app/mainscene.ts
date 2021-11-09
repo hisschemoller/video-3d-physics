@@ -22,7 +22,7 @@ export default class MainScene extends Scene3D {
 
   captureLastFrame: number;
 
-  pCamera: THREE.PerspectiveCamera;
+  protected pCamera: THREE.PerspectiveCamera;
 
   directionalLight: THREE.DirectionalLight;
 
@@ -188,7 +188,7 @@ export default class MainScene extends Scene3D {
     this.time += this.delta;
 
     this.update.call(this, parseFloat(this.time.toFixed(3)), parseInt(this.delta.toString(), 10));
-    this.physics?.update(this.delta);
+    this.physics?.update(this.delta * 1000);
     this.physics?.updateDebugger();
 
     this.animationMixers.update(this.delta);

@@ -95,6 +95,8 @@ export default class Scene extends MainScene {
       duration: STEP_DURATION * STEPS,
     }));
 
-    createSphere(projectSettings);
+    createSphere(projectSettings, {
+      duration: STEP_DURATION * 15,
+    });
   }
 }
