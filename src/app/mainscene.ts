@@ -12,8 +12,6 @@ export default class MainScene extends Scene3D {
 
   secondsPerFrame: number;
 
-  isCapture: boolean;
-
   width: number;
 
   height: number;
@@ -167,7 +165,7 @@ export default class MainScene extends Scene3D {
   }
 
   postCreate() {
-    if (this.isCapture) {
+    if (this.scene.userData.isCapture) {
       this.capture();
     } else {
       this.run();

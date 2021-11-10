@@ -9,31 +9,42 @@
   </head>
   <body>
 		<div id="app">
-			<div id="overlay">Click to start</div>
+			<div id="overlay">
+				<button type="button" id="overlay__start">Click to start</button>
+				<div class="control">
+					<input type="checkbox" id="play-render-toggle">
+					<label for="play-render-toggle">Play / Render</label>
+				</div>
+			</div>
 			<div id="canvas-container"></div>
 			<div id="controls">
 				<button type="button" id="save-image">Save image as...</button>
 				<button type="button" id="reset-orbitcontrols">Reset OrbitControls</button>
 				<!-- <span>time: <span id="info__time"></span></span> -->
-				<div class="control">
-					<input type="checkbox" id="grid-helper">
-					<label for="grid-helper">Grid Helper</label>
-				</div>
-				<div class="control">
-					<input type="checkbox" id="axes-helper">
-					<label for="axes-helper">Axes Helper</label>
-				</div>
-				<div class="control">
-					<input type="checkbox" id="camera-helper">
-					<label for="camera-helper">Camera Helper</label>
-				</div>
-				<div class="control">
-					<input type="checkbox" id="directional-light-helper">
-					<label for="directional-light-helper">Directional Light Helper</label>
-				</div>
-				<div class="control">
-					<input type="checkbox" id="shadow-camera-helper">
-					<label for="shadow-camera-helper">Shadow Camera Helper</label>
+				<div style="display:flex; margin-top: 20px;">
+					<div>
+						<div class="control">
+							<input type="checkbox" id="grid-helper">
+							<label for="grid-helper">Grid Helper</label>
+						</div>
+						<div class="control">
+							<input type="checkbox" id="axes-helper">
+							<label for="axes-helper">Axes Helper</label>
+						</div>
+						<div class="control">
+							<input type="checkbox" id="camera-helper">
+							<label for="camera-helper">Camera Helper</label>
+						</div>
+						<div class="control">
+							<input type="checkbox" id="directional-light-helper">
+							<label for="directional-light-helper">Directional Light Helper</label>
+						</div>
+						<div class="control">
+							<input type="checkbox" id="shadow-camera-helper">
+							<label for="shadow-camera-helper">Shadow Camera Helper</label>
+						</div>
+					</div>
+					<div></div>
 				</div>
 			</div>
 		</div>
