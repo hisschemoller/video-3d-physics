@@ -1,9 +1,10 @@
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix } from '@app/utils';
+import { ProjectSettings, VideoData } from './interfaces';
 import { Actor, createActor } from './actor';
 import createSphere from './sphere';
-import { ProjectSettings, VideoData } from './interfaces';
+import createTube from './tube';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 109;
@@ -43,6 +44,8 @@ export default class Scene extends MainScene {
 
     // DIRECTIONAL LIGHT
     this.directionalLight.position.set(-20, 5, 10);
+
+    this.physics.setGravity(0, -4, 0);
 
     // MESHES AND TWEENS
     this.timeline = createTimeline({
@@ -91,28 +94,69 @@ export default class Scene extends MainScene {
       wPx: this.width,
       hPx: this.height,
       z: 0,
-      vStart: 129,
+      vStart: 369,
       duration: STEP_DURATION * STEPS,
     }));
 
+    this.physics.add.box({
+      x: -2, y: 1.8, z: 0.4, mass: 0, height: 0.1, width: 2, depth: 0.6,
+    }, { phong: { color: 0x434b52 } });
+
     createSphere(projectSettings, {
+      x: -1.5,
+      y: 2.1,
+      z: 0.4,
       duration: STEP_DURATION * 15,
     });
+
+    // createSphere(projectSettings, {
+    //   x: 0,
+    //   y: 5,
+    //   z: 0.4,
+    //   position: STEP_DURATION * 8,
+    //   duration: STEP_DURATION * 15,
+    // });
 
     const actor = await createActor(projectSettings, videoData, { // FRONT
       xPx: 0,
       yPx: 0,
       wPx: this.width,
       hPx: this.height,
-      z: 0.8,
-      vStart: 129,
+      z: 0.82,
+      vStart: 369,
       duration: PATTERN_DURATION,
-      svgUrl: '../assets/projects/kortjewantsbrughuisje/front.svg',
+      svgUrl: '../assets/projects/kortjewantsbrughuisje/frontwindow.svg',
       svgScale: 0.1,
     });
     actors.push(actor);
     const mesh = actor.getMesh();
     const scale = 0.915;
     mesh.applyMatrix4(getMatrix({ sx: scale, sy: scale }));
+
+    // try {
+    //   await createHook(projectSettings, {
+    //     x: 0.1,
+    //     y: 1.7,
+    //     z: 0.77,
+    //     duration: STEP_DURATION * 16,
+    //     angleY: 0.025,
+    //     angleZ: 0.035,
+    //     svgUrl: '../assets/projects/kortjewantsbrughuisje/haak.svg',
+    //     svgScale: 0.1,
+    //   });
+    // } catch (err) {
+    //   console.log(err);
+    // }
+
+    // TUBES IN THE DOOR
+    createTube(projectSettings, {
+      xPx: 1025,
+      yPx: 470, // 400,
+      z: 0.45,
+      duration: PATTERN_DURATION,
+      curve: [[0, 0, 0], [0.1, -0.1, 1], [1, -0.2, 1.2], [1, -0.21, 1.28], [1.1, -0.65, 1.3]],
+      angleY: -0.05,
+      angleZ: 0.02,
+    });
   }
 }

@@ -3,6 +3,10 @@ import createTween from '@app/tween';
 import { ProjectSettings } from './interfaces';
 
 interface SphereArgs {
+  x: number;
+  y: number;
+  z: number;
+  position?: number;
   duration: number;
 }
 
@@ -12,23 +16,24 @@ export default function createSphere(
     timeline,
   }: ProjectSettings,
   {
+    x,
+    y,
+    z,
+    position = 0,
     duration,
   }: SphereArgs,
 ) {
-  scene3d.physics.add.box({
-    x: -2, y: 1.7, z: 0.4, mass: 0, height: 0.1, width: 1, depth: 0.6,
-  }, { phong: { color: 0x333333 } });
-
   let sphere : ExtendedObject3D;
   const sphereConfig = {
-    x: -1.5, y: 2.1, z: 0.4, radius: 0.28, mass: 10,
+    x, y, z, radius: 0.27, mass: 10,
   };
   const materialConfig = { lambert: { color: 0x444444 } };
   const tween = createTween({
+    delay: position,
     duration,
     onStart: () => {
       sphere = scene3d.physics.add.sphere(sphereConfig, materialConfig);
-      sphere.body.applyImpulse({ x: -10 }, {});
+      sphere.body.applyImpulse({ x: -8 }, {});
     },
     onComplete: () => {
       sphere.remove();
