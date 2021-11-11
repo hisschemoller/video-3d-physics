@@ -161,7 +161,7 @@ export default class Scene extends MainScene {
     this.width = VIDEO_WIDTH;
     this.height = VIDEO_HEIGHT;
 
-    const isPreview = true && !this.isCapture;
+    const isPreview = true && !this.scene.userData.isCapture;
     const video = {
       scale: isPreview ? VIDEO_PREVIEW_SCALE : 1,
       height: isPreview ? VIDEO_HEIGHT * VIDEO_PREVIEW_SCALE : VIDEO_HEIGHT,
@@ -226,7 +226,7 @@ export default class Scene extends MainScene {
       audio.play();
     }, false);
     audio.load();
-    if (!this.isCapture) {
+    if (!this.scene.userData.isCapture) {
       // audio.play();
     }
 

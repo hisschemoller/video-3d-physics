@@ -29,7 +29,6 @@ export default class Scene extends MainScene {
     this.width3d = 16;
     this.height3d = 9;
     this.fps = 15;
-    this.isCapture = false;
     this.captureThrottle = 15;
     this.captureLastFrame = Math.floor(PATTERN_DURATION * this.fps);
   }
@@ -37,7 +36,7 @@ export default class Scene extends MainScene {
   async create() {
     await super.create();
 
-    const isPreview = true && !this.isCapture;
+    const isPreview = true && !this.scene.userData.isCapture;
 
     // CAMERA
     this.pCamera.position.set(0, 0, 9.6);

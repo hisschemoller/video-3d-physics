@@ -33,7 +33,7 @@ export default class Scene extends MainScene {
     this.width = PROJECT_WIDTH;
     this.height = PROJECT_HEIGHT;
 
-    const isPreview = true && !this.isCapture;
+    const isPreview = true && !this.scene.userData.isCapture;
     const videoData = {
       fps: 30,
       scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,

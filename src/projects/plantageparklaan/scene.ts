@@ -32,13 +32,12 @@ export default class Scene extends MainScene {
     this.width = PROJECT_WIDTH;
     this.height = PROJECT_HEIGHT;
     this.fps = 15;
-    this.isCapture = false;
     this.captureThrottle = 15;
     this.captureLastFrame = Math.floor(PATTERN_DURATION * this.fps);
   }
 
   async create() {
-    const isPreview = true && !this.isCapture;
+    const isPreview = true && !this.scene.userData.isCapture;
 
     const videoData = {
       fps: 30,
