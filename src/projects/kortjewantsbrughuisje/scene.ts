@@ -114,14 +114,6 @@ export default class Scene extends MainScene {
       duration: STEP_DURATION * 15,
     });
 
-    // createSphere(projectSettings, {
-    //   x: 0,
-    //   y: 5,
-    //   z: 0.4,
-    //   position: STEP_DURATION * 8,
-    //   duration: STEP_DURATION * 15,
-    // });
-
     const actor = await createActor(projectSettings, videoData, { // FRONT
       xPx: 0,
       yPx: 0,
@@ -137,45 +129,6 @@ export default class Scene extends MainScene {
     const mesh = actor.getMesh();
     const scale = 0.915;
     mesh.applyMatrix4(getMatrix({ sx: scale, sy: scale }));
-
-    // try {
-    //   await createHook(projectSettings, {
-    //     x: 0.1,
-    //     y: 1.7,
-    //     z: 0.77,
-    //     duration: STEP_DURATION * 16,
-    //     angleY: 0.025,
-    //     angleZ: 0.035,
-    //     svgUrl: '../assets/projects/kortjewantsbrughuisje/haak.svg',
-    //     svgScale: 0.1,
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    // }
-
-    // TUBES IN THE WINDOW
-    // createTube(projectSettings, {
-    //   xPx: 1025,
-    //   yPx: 410,
-    //   z: 0.45,
-    //   duration: PATTERN_DURATION,
-    //   curve: [[0, 0, 0], [0.1, -0.1, 1], [0.2, -0.55, 1.2], [0.5, -0.3, 1.28], [0.6, 0.5, 1.3]],
-    //   angleY: -0.03,
-    //   angleZ: 0.035,
-    //   phase: 0.7,
-    // });
-
-    // createTube(projectSettings, {
-    //   xPx: 1025,
-    //   yPx: 445,
-    //   z: 0.45,
-    //   duration: PATTERN_DURATION,
-    //   curve:
-    //   [[0, 0, 0], [0.1, -0.1, 0.5], [1.6, 0.3, 1.0], [2.3, -0.21, 0.9], [2.4, -0.65, 1.1]],
-    //   angleY: -0.02,
-    //   angleZ: 0.05,
-    //   phase: 0.4,
-    // });
 
     createTube(projectSettings, {
       xPx: 1025,
@@ -212,5 +165,32 @@ export default class Scene extends MainScene {
     createRoofTube(projectSettings, {
       duration: PATTERN_DURATION,
     });
+
+    actors.push(await createActor(projectSettings, videoData, { // AGENT KOMT AAN
+      xPx: 1340,
+      yPx: 650,
+      wPx: 400,
+      hPx: 430,
+      z: 0.85,
+      vStart: 130,
+      xDist: -250,
+      easeAmount: 0.5,
+      position: STEP_DURATION * 0,
+      duration: STEP_DURATION * 10,
+    }));
+
+    actors.push(await createActor(projectSettings, videoData, { // WITTE AUTO
+      xPx: 1880,
+      yPx: 750,
+      wPx: 150,
+      hPx: 330,
+      z: 0.85,
+      xAddPx: -90,
+      vStart: 132,
+      xDist: -100,
+      easeAmount: 0.5,
+      position: STEP_DURATION * 2,
+      duration: STEP_DURATION * 8,
+    }));
   }
 }

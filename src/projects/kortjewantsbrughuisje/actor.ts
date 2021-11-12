@@ -20,6 +20,7 @@ interface ActorData {
   vStart: number; // playback start within the videoData
   duration: number;
   position?: number; // time position within the pattern, so start delay in seconds
+  easeAmount?: number; // mimics the simple -100 to 100 easing in Adobe Flash/Animate
   svgScale?: number;
   svgUrl?: string; // SVG file to load and extrude
   z: number; // mesh z position
@@ -52,6 +53,7 @@ export async function createActor(
     vStart = 0,
     duration = 0,
     position = 0,
+    easeAmount = 0,
     svgScale = 1,
     svgUrl = '',
     z = 0,
@@ -148,6 +150,7 @@ export async function createActor(
     const tween = createTween({
       delay: position,
       duration,
+      easeAmount,
       onStart: () => {
         mesh.visible = true;
         tweenActive = true;
