@@ -4,7 +4,7 @@ import { getMatrix } from '@app/utils';
 import { ProjectSettings, VideoData } from './interfaces';
 import { Actor, createActor } from './actor';
 import createSphere from './sphere';
-import createTube from './tube';
+import createTube, { createRoofTube } from './tube';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 109;
@@ -42,9 +42,14 @@ export default class Scene extends MainScene {
     // CAMERA
     this.pCamera.position.set(0, 0, 9.6);
 
+    // AMBIENT LIGHT
+    this.ambientLight.intensity = 0.6;
+
     // DIRECTIONAL LIGHT
     this.directionalLight.position.set(-20, 5, 10);
+    this.directionalLight.intensity = 1;
 
+    // PHYSICS
     this.physics.setGravity(0, -4, 0);
 
     // MESHES AND TWEENS
@@ -148,15 +153,64 @@ export default class Scene extends MainScene {
     //   console.log(err);
     // }
 
-    // TUBES IN THE DOOR
+    // TUBES IN THE WINDOW
+    // createTube(projectSettings, {
+    //   xPx: 1025,
+    //   yPx: 410,
+    //   z: 0.45,
+    //   duration: PATTERN_DURATION,
+    //   curve: [[0, 0, 0], [0.1, -0.1, 1], [0.2, -0.55, 1.2], [0.5, -0.3, 1.28], [0.6, 0.5, 1.3]],
+    //   angleY: -0.03,
+    //   angleZ: 0.035,
+    //   phase: 0.7,
+    // });
+
+    // createTube(projectSettings, {
+    //   xPx: 1025,
+    //   yPx: 445,
+    //   z: 0.45,
+    //   duration: PATTERN_DURATION,
+    //   curve:
+    //   [[0, 0, 0], [0.1, -0.1, 0.5], [1.6, 0.3, 1.0], [2.3, -0.21, 0.9], [2.4, -0.65, 1.1]],
+    //   angleY: -0.02,
+    //   angleZ: 0.05,
+    //   phase: 0.4,
+    // });
+
     createTube(projectSettings, {
       xPx: 1025,
-      yPx: 470, // 400,
+      yPx: 410,
       z: 0.45,
       duration: PATTERN_DURATION,
-      curve: [[0, 0, 0], [0.1, -0.1, 1], [1, -0.2, 1.2], [1, -0.21, 1.28], [1.1, -0.65, 1.3]],
+      curve: [[0, 0, 0], [0.1, -0.1, 1], [0.3, -0.4, 1.2], [1.1, -0.4, 0.9]],
+      angleY: -0.03,
+      angleZ: 0.035,
+      phase: 0.7,
+    });
+
+    createTube(projectSettings, {
+      xPx: 1025,
+      yPx: 445,
+      z: 0.45,
+      duration: PATTERN_DURATION,
+      curve: [[0, 0, 0], [0.1, -0.1, 1], [1, -0.5, 0.5], [1.2, -0.5, 0.6], [1.5, -0.4, 0.6]],
+      angleY: -0.02,
+      angleZ: 0.05,
+      phase: 0.4,
+    });
+
+    createTube(projectSettings, {
+      xPx: 1025,
+      yPx: 470,
+      z: 0.45,
+      duration: PATTERN_DURATION,
+      curve: [[0, 0, 0], [0.1, -0.1, 1], [0.6, -0.1, 1.2], [0.9, -0.21, 0.9], [1.0, -0.65, 0.8]],
       angleY: -0.05,
       angleZ: 0.02,
+    });
+
+    createRoofTube(projectSettings, {
+      duration: PATTERN_DURATION,
     });
   }
 }

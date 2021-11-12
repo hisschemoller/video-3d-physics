@@ -22,6 +22,8 @@ export default class MainScene extends Scene3D {
 
   protected pCamera: THREE.PerspectiveCamera;
 
+  ambientLight: THREE.AmbientLight;
+
   directionalLight: THREE.DirectionalLight;
 
   count = 0;
@@ -63,8 +65,8 @@ export default class MainScene extends Scene3D {
     this.pCamera.updateProjectionMatrix();
 
     // AMBIENT LIGHT
-    const ambient = new THREE.AmbientLight(0xffffff, 0.35); // color = 0xffffff, intensity = 1
-    this.scene.add(ambient);
+    this.ambientLight = new THREE.AmbientLight(0xffffff, 0.35); // color = 0xffffff, intensity = 1
+    this.scene.add(this.ambientLight);
 
     // DIRECTIONAL LIGHT
     const SHADOW_MAP_SIZE = 2048;
