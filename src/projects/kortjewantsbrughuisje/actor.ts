@@ -20,7 +20,7 @@ interface ActorData {
   vStart: number; // playback start within the videoData
   duration: number;
   position?: number; // time position within the pattern, so start delay in seconds
-  easeAmount?: number; // mimics the simple -100 to 100 easing in Adobe Flash/Animate
+  easeAmount?: number; // mimics the simple -1 to 1 easing in Adobe Flash/Animate
   svgScale?: number;
   svgUrl?: string; // SVG file to load and extrude
   z: number; // mesh z position

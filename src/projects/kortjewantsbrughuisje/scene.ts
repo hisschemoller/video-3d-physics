@@ -180,17 +180,57 @@ export default class Scene extends MainScene {
     }));
 
     actors.push(await createActor(projectSettings, videoData, { // WITTE AUTO
-      xPx: 1880,
+      xPx: 1900,
       yPx: 750,
       wPx: 150,
       hPx: 330,
       z: 0.85,
       xAddPx: -90,
-      vStart: 132,
-      xDist: -100,
+      vStart: 132.2,
+      xDist: -120,
       easeAmount: 0.5,
       position: STEP_DURATION * 2,
       duration: STEP_DURATION * 8,
+    }));
+
+    actors.push(await createActor(projectSettings, videoData, { // WITTE AUTO EN AGENT
+      xPx: 1720,
+      yPx: 650,
+      wPx: 200,
+      hPx: 430,
+      z: 0.9,
+      xAddPx: -90,
+      vStart: 145.2,
+      xDist: 100,
+      easeAmount: 0,
+      position: STEP_DURATION * 10,
+      duration: STEP_DURATION * 6,
+    }));
+
+    // actors.push(await createActor(projectSettings, videoData, { // AGENT RIJDT WEG
+    //   xPx: 580,
+    //   yPx: 620,
+    //   wPx: 250,
+    //   hPx: 450,
+    //   z: 0.95,
+    //   vStart: 367.5,
+    //   xDist: -750,
+    //   easeAmount: 0,
+    //   position: STEP_DURATION * 10,
+    //   duration: STEP_DURATION * 6,
+    // }));
+
+    actors.push(await createActor(projectSettings, videoData, { // MOTOR ALLEEN
+      xPx: 1150,
+      yPx: 700,
+      wPx: 350,
+      hPx: 380,
+      z: 0.85,
+      vStart: 205,
+      xDist: 0,
+      easeAmount: 0,
+      position: STEP_DURATION * 14,
+      duration: STEP_DURATION * 2,
     }));
   }
 }
