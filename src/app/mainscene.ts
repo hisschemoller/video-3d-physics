@@ -168,6 +168,7 @@ export default class MainScene extends Scene3D {
 
   postCreate() {
     if (this.scene.userData.isCapture) {
+      this.postRender();
       this.capture();
     } else {
       this.run();
@@ -183,7 +184,11 @@ export default class MainScene extends Scene3D {
    * Overwrite the private _update() method.
    */
   /* eslint-disable no-underscore-dangle */
-  _update() {
+  _update(isValid = false) {
+    if (!isValid) {
+      return;
+    }
+
     this.delta = this.secondsPerFrame;
     this.time += this.delta;
 
@@ -215,7 +220,7 @@ export default class MainScene extends Scene3D {
       return;
     }
 
-    this._update();
+    this._update(true);
   }
 
   /**
@@ -246,7 +251,7 @@ export default class MainScene extends Scene3D {
       requestAnimationFrame(this.capture.bind(this));
     }
 
-    this._update();
+    this._update(true);
 
     // capture the image data here
     const img = this.renderer.domElement.toDataURL();
