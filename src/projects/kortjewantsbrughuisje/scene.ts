@@ -114,22 +114,65 @@ export default class Scene extends MainScene {
       duration: STEP_DURATION * 15,
     });
 
-    const actor = await createActor(projectSettings, videoData, { // FRONT
-      xPx: 0,
-      yPx: 0,
-      wPx: this.width,
-      hPx: this.height,
-      z: 0.82,
-      vStart: 369,
-      duration: PATTERN_DURATION,
-      svgUrl: '../assets/projects/kortjewantsbrughuisje/frontwindow.svg',
-      svgScale: 0.1,
-    });
-    actors.push(actor);
-    const mesh = actor.getMesh();
-    const scale = 0.915;
-    mesh.applyMatrix4(getMatrix({ sx: scale, sy: scale }));
+    {
+      const actor = await createActor(projectSettings, videoData, { // FRONT
+        xPx: 0,
+        yPx: 0,
+        wPx: this.width,
+        hPx: this.height,
+        z: 0.82,
+        vStart: 369,
+        duration: PATTERN_DURATION,
+        svgUrl: '../assets/projects/kortjewantsbrughuisje/frontwindow.svg',
+        svgScale: 0.1,
+      });
+      actors.push(actor);
+      const mesh = actor.getMesh();
+      const scale = 0.915;
+      mesh.applyMatrix4(getMatrix({ sx: scale, sy: scale }));
+    }
 
+    {
+      const svgHeight = 466;
+      const actor = await createActor(projectSettings, videoData, { // FIETSPAD COULISSE
+        xPx: 0,
+        yPx: this.height - svgHeight,
+        wPx: this.width,
+        hPx: svgHeight,
+        z: 0.88,
+        yAddPx: 30,
+        vStart: 369,
+        duration: PATTERN_DURATION,
+        svgUrl: '../assets/projects/kortjewantsbrughuisje/fietspad.svg',
+        svgScale: 0.1,
+      });
+      actors.push(actor);
+      const mesh = actor.getMesh();
+      const scale = 0.91;
+      mesh.applyMatrix4(getMatrix({ sx: scale, sy: scale }));
+    }
+
+    {
+      const svgHeight = 84;
+      const actor = await createActor(projectSettings, videoData, { // VLUCHTHEUVEL COULISSE
+        xPx: 0,
+        yPx: this.height - svgHeight,
+        wPx: this.width,
+        hPx: svgHeight,
+        z: 1.1,
+        yAddPx: 60,
+        vStart: 369,
+        duration: PATTERN_DURATION,
+        svgUrl: '../assets/projects/kortjewantsbrughuisje/vluchtheuvel.svg',
+        svgScale: 0.1,
+      });
+      actors.push(actor);
+      const mesh = actor.getMesh();
+      const scale = 0.89;
+      mesh.applyMatrix4(getMatrix({ sx: scale, sy: scale }));
+    }
+
+    // TUBES
     createTube(projectSettings, {
       xPx: 1025,
       yPx: 410,
@@ -166,6 +209,20 @@ export default class Scene extends MainScene {
       duration: PATTERN_DURATION,
     });
 
+    // ACTORS
+    actors.push(await createActor(projectSettings, videoData, { // MAN MET HONDEN
+      xPx: 750,
+      yPx: 650,
+      wPx: 200,
+      hPx: 430,
+      z: 0.85,
+      vStart: 192.1,
+      xDist: 100,
+      easeAmount: 0,
+      position: STEP_DURATION * 0,
+      duration: STEP_DURATION * 7,
+    }));
+
     actors.push(await createActor(projectSettings, videoData, { // AGENT KOMT AAN
       xPx: 1340,
       yPx: 650,
@@ -176,7 +233,21 @@ export default class Scene extends MainScene {
       xDist: -250,
       easeAmount: 0.6,
       position: STEP_DURATION * 0,
-      duration: STEP_DURATION * 10,
+      duration: STEP_DURATION * 9,
+    }));
+
+    actors.push(await createActor(projectSettings, videoData, { // MEISJE WITTE JURK
+      xPx: 300,
+      yPx: 640,
+      wPx: 260,
+      hPx: 430,
+      z: 0.90,
+      yAddPx: 10,
+      vStart: 22.6,
+      xDist: -40,
+      easeAmount: 1,
+      position: STEP_DURATION * 0,
+      duration: STEP_DURATION * 12,
     }));
 
     actors.push(await createActor(projectSettings, videoData, { // WITTE AUTO
@@ -184,133 +255,67 @@ export default class Scene extends MainScene {
       yPx: 750,
       wPx: 150,
       hPx: 330,
-      z: 0.85,
+      z: 0.90,
       xAddPx: -90,
       vStart: 132.2,
       xDist: -120,
-      easeAmount: 0.5,
+      easeAmount: 1,
       position: STEP_DURATION * 2,
-      duration: STEP_DURATION * 8,
+      duration: STEP_DURATION * 10,
     }));
-
-    actors.push(await createActor(projectSettings, videoData, { // WITTE AUTO EN AGENT
-      xPx: 1720,
-      yPx: 650,
-      wPx: 200,
-      hPx: 430,
-      z: 0.9,
-      xAddPx: -90,
-      vStart: 145.2,
-      xDist: 100,
-      easeAmount: 0,
-      position: STEP_DURATION * 10,
-      duration: STEP_DURATION * 6,
-    }));
-
-    // actors.push(await createActor(projectSettings, videoData, { // AGENT RIJDT WEG
-    //   xPx: 580,
-    //   yPx: 620,
-    //   wPx: 250,
-    //   hPx: 450,
-    //   z: 0.95,
-    //   vStart: 367.5,
-    //   xDist: -750,
-    //   easeAmount: 0,
-    //   position: STEP_DURATION * 10,
-    //   duration: STEP_DURATION * 6,
-    // }));
-
-    // actors.push(await createActor(projectSettings, videoData, { // MOTOR ALLEEN
-    //   xPx: 1150,
-    //   yPx: 700,
-    //   wPx: 350,
-    //   hPx: 380,
-    //   z: 0.85,
-    //   vStart: 205,
-    //   xDist: 0,
-    //   easeAmount: 0,
-    //   position: STEP_DURATION * 14,
-    //   duration: STEP_DURATION * 2,
-    // }));
-
-    // actors.push(await createActor(projectSettings, videoData, { // MEISJE VOOROP
-    //   xPx: 1040,
-    //   yPx: 650,
-    //   wPx: 300,
-    //   hPx: 430,
-    //   z: 0.95,
-    //   vStart: 253.15,
-    //   xDist: -370,
-    //   easeAmount: 0,
-    //   position: STEP_DURATION * 6,
-    //   duration: STEP_DURATION * 8,
-    // }));
 
     actors.push(await createActor(projectSettings, videoData, { // MEISJE VOOROP
       xPx: 1040,
       yPx: 650,
       wPx: 300,
       hPx: 430,
-      z: 0.85,
-      vStart: 253.15,
+      z: 0.9,
+      vStart: 253.25,
       xDist: -450,
       easeAmount: 0,
-      position: STEP_DURATION * 6,
-      duration: STEP_DURATION * 10,
+      position: STEP_DURATION * 7,
+      duration: STEP_DURATION * 9,
     }));
 
-    // actors.push(await createActor(projectSettings, videoData, { // MEISJE WITTE JURK
-    //   xPx: 750,
-    //   yPx: 650,
-    //   wPx: 300,
-    //   hPx: 430,
-    //   z: 0.85,
-    //   vStart: 20.2,
-    //   xDist: -200,
-    //   easeAmount: 0,
-    //   position: STEP_DURATION * 12,
-    //   duration: STEP_DURATION * 4,
-    // }));
-
-    actors.push(await createActor(projectSettings, videoData, { // MEISJE WITTE JURK
-      xPx: 300,
-      yPx: 640,
-      wPx: 300,
+    actors.push(await createActor(projectSettings, videoData, { // BOTEN
+      xPx: 0,
+      yPx: 700,
+      wPx: 325,
       hPx: 430,
-      z: 0.90,
-      vStart: 22.6,
-      xDist: -50,
-      easeAmount: 1,
-      position: STEP_DURATION * 0,
-      duration: STEP_DURATION * 6,
+      z: 0.001,
+      vStart: 284,
+      xDist: 0,
+      easeAmount: 0,
+      position: STEP_DURATION * 7,
+      duration: STEP_DURATION * 9,
     }));
 
-    // actors.push(await createActor(projectSettings, videoData, { // MEISJE BLAUWE JURK
-    //   xPx: 100,
-    //   yPx: 640,
-    //   wPx: 300,
-    //   hPx: 430,
-    //   z: 0.85,
-    //   vStart: 21,
-    //   xDist: -300,
-    //   easeAmount: 0,
-    //   position: STEP_DURATION * 0,
-    //   duration: STEP_DURATION * 6,
-    //   svgScale: 1.1,
-    //   xAddPx: 80,
-    // }));
+    actors.push(await createActor(projectSettings, videoData, { // MAN FIETST WEG
+      xPx: 280,
+      yPx: 650,
+      wPx: 190,
+      hPx: 420,
+      z: 0.90,
+      yAddPx: 10,
+      vStart: 158.1,
+      xDist: -30,
+      easeAmount: -1,
+      position: STEP_DURATION * 12,
+      duration: STEP_DURATION * 4,
+    }));
 
-    actors.push(await createActor(projectSettings, videoData, { // MAN MET HONDEN
-      xPx: 750,
+    actors.push(await createActor(projectSettings, videoData, { // WITTE AUTO EN AGENT
+      xPx: 1700,
       yPx: 650,
       wPx: 200,
       hPx: 430,
-      z: 0.85,
-      vStart: 192,
-      xDist: 60,
+      z: 0.9,
+      xAddPx: -90,
+      vStart: 145.2,
+      xDist: 90,
       easeAmount: 0,
-      position: STEP_DURATION * 0,
-      duration: STEP_DURATION * 6,
+      position: STEP_DURATION * 12,
+      duration: STEP_DURATION * 4,
     }));
 
     actors.push(await createActor(projectSettings, videoData, { // MAN KORTE BROEK
@@ -320,23 +325,10 @@ export default class Scene extends MainScene {
       hPx: 420,
       z: 0.85,
       vStart: 58.8,
-      xDist: 100,
+      xDist: 70.1,
       easeAmount: 0,
-      position: STEP_DURATION * 10,
-      duration: STEP_DURATION * 6,
-    }));
-
-    actors.push(await createActor(projectSettings, videoData, { // MEISJE WITTE JURK
-      xPx: 0,
-      yPx: 700,
-      wPx: 325,
-      hPx: 430,
-      z: 0.001,
-      vStart: 284,
-      xDist: 0,
-      easeAmount: 0,
-      position: STEP_DURATION * 6,
-      duration: STEP_DURATION * 10,
+      position: STEP_DURATION * 12,
+      duration: STEP_DURATION * 4,
     }));
   }
 }

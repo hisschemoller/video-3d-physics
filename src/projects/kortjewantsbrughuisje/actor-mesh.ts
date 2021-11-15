@@ -64,7 +64,7 @@ export function createSVG(
               });
               geometry.applyMatrix4(getMatrix({
                 x: (viewport3dWidth * -0.5) + xVP,
-                y: (viewport3dHeight * 0.5) - yVP,
+                y: (viewport3dHeight * 0.5) + yVP,
                 sx: svgScale,
                 sy: svgScale * -1,
               }));

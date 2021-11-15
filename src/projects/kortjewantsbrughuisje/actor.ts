@@ -15,6 +15,7 @@ interface ActorData {
   wPx: number; // size of videoData fragment within the full videoData
   hPx: number;
   xAddPx?: number; // move actor without adjussting the video position
+  yAddPx?: number;
   xDist?: number; // tween distance
   yDist?: number;
   vStart: number; // playback start within the videoData
@@ -48,6 +49,7 @@ export async function createActor(
     wPx = 100,
     hPx = 100,
     xAddPx = 0,
+    yAddPx = 0,
     xDist = 0,
     yDist = 0,
     vStart = 0,
@@ -67,12 +69,13 @@ export async function createActor(
 
   // translate position of SVG in pixels to 3d units
   const xAdd3d = xAddPx * (width3d / width);
+  const yAdd3d = yAddPx * (height3d / height);
 
   // translate the image position and size in 3d units to texture offset and repeat
-  const xOffset = (x3d) / width3d;
-  const yOffset = 1 - ((y3d + h3d) / height3d);
+  const xOffset = x3d / width3d;
+  const yOffset = svgUrl ? y3d / height3d : 1 - ((y3d + h3d) / height3d);
   const wRepeat = svgUrl ? 1 / w3d : w3d / width3d;
-  const hRepeat = svgUrl ? 1 / h3d : h3d / height3d;
+  const hRepeat = svgUrl ? 1 / height3d : h3d / height3d;
 
   // translate image coordinates which are left top to 3D scene coordinates which are centered
   const xVP = x3d + (w3d / 2) - (width3d / 2);
@@ -146,7 +149,7 @@ export async function createActor(
     const xVpEnd = x3dEnd + (w3d / 2) - (width3d / 2);
     const yVpEnd = (y3dEnd + (h3d / 2) - (height3d / 2)) * -1;
     const xOffsetEnd = (x3dEnd) / width3d;
-    const yOffsetEnd = 1 - ((y3dEnd + h3d) / height3d);
+    const yOffsetEnd = svgUrl ? y3d / height3d : 1 - ((y3dEnd + h3d) / height3d);
     const tween = createTween({
       delay: position,
       duration,
@@ -159,7 +162,7 @@ export async function createActor(
         tweenProgress = progress;
         mesh.position.set(
           coords.x + xAdd3d + ((xVpEnd - coords.x) * progress),
-          coords.y + ((yVpEnd - coords.y) * progress),
+          coords.y + yAdd3d + ((yVpEnd - coords.y) * progress),
           coords.z,
         );
         if (mesh.material[1].map) {
