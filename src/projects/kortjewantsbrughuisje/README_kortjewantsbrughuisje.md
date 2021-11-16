@@ -30,4 +30,26 @@ ffmpeg -i kortjewantsbrughuisje-d.mov '/Volumes/Samsung_X5/kortjewantsbrughuisje
 ffmpeg -i kortjewantsbrughuisje-d.mov -vf scale=480:-1 kortjewantsbrughuisje-d_preview.mov
 // convert preview to png sequence
 ffmpeg -i kortjewantsbrughuisje-d_preview.mov '/Volumes/Samsung_X5/kortjewantsbrughuisje/frames_preview/frame_%05d.png'
+
+// png to mp4 (from index 69)
+ffmpeg -framerate 30 -start_number 69 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p kortjewantsbrughuisje-video-x1.mp4
+// repeat 32 times, 68 frames, video alleen
+ffmpeg -i kortjewantsbrughuisje-video-x1.mp4 -filter_complex "loop=loop=32:size=68:start=0" kortjewantsbrughuisje-video-x32.mp4
+// repeat 32, audio alleen
+ffmpeg -stream_loop 32 -i "kortjewantsbrughuisje-audio-x1.wav" -c copy kortjewantsbrughuisje-audio-x32.wav
+// video en audio samenvoegen
+ffmpeg -i kortjewantsbrughuisje-video-x32.mp4 -i kortjewantsbrughuisje-audio-x32.wav -vcodec copy kortjewantsbrughuisje-x32.mp4
 ```
+
+* Audio is 105 BPM. 
+* Audio is 2.28572 seconden lang.
+* Video is 30 FPS.
+* Video is 2.28572 * 30 = 68.5716 frames lang.
+
+Video terug van 109 naar 105 BPM.
+
+* Nu zijn er 68 frames.
+* Video is 30 FPS.
+* 68 / 30 = 2.2666666666666666 seconden voor een maat.
+* Audio bestand tijdsduur: 2.28572 seconden,
+* Dus audio korter maken.

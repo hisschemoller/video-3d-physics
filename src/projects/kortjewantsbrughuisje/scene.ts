@@ -7,7 +7,7 @@ import createSphere from './sphere';
 import createTube, { createRoofTube } from './tube';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 109;
+const BPM = 105.5;
 const STEPS = 16;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
@@ -31,7 +31,7 @@ export default class Scene extends MainScene {
     this.height3d = 9;
     this.fps = 15;
     this.captureThrottle = 15;
-    this.captureLastFrame = Math.floor(PATTERN_DURATION * this.fps);
+    this.captureLastFrame = Math.floor(PATTERN_DURATION * this.fps) * 2; // 2 maten
   }
 
   async create() {
@@ -210,19 +210,6 @@ export default class Scene extends MainScene {
     });
 
     // ACTORS
-    actors.push(await createActor(projectSettings, videoData, { // MAN MET HONDEN
-      xPx: 750,
-      yPx: 650,
-      wPx: 200,
-      hPx: 430,
-      z: 0.85,
-      vStart: 192.1,
-      xDist: 100,
-      easeAmount: 0,
-      position: STEP_DURATION * 0,
-      duration: STEP_DURATION * 7,
-    }));
-
     actors.push(await createActor(projectSettings, videoData, { // AGENT KOMT AAN
       xPx: 1340,
       yPx: 650,
@@ -262,6 +249,19 @@ export default class Scene extends MainScene {
       easeAmount: 1,
       position: STEP_DURATION * 2,
       duration: STEP_DURATION * 10,
+    }));
+
+    actors.push(await createActor(projectSettings, videoData, { // MAN MET HONDEN
+      xPx: 750,
+      yPx: 650,
+      wPx: 200,
+      hPx: 430,
+      z: 0.85,
+      vStart: 192.3,
+      xDist: 100,
+      easeAmount: 0,
+      position: STEP_DURATION * 2,
+      duration: STEP_DURATION * 5,
     }));
 
     actors.push(await createActor(projectSettings, videoData, { // MEISJE VOOROP
