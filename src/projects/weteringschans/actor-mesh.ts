@@ -11,9 +11,10 @@ export function createRectangle(
   width: number,
   height: number,
   texture : THREE.Texture,
+  depth = 0.02,
 ) {
   return new Promise<THREE.Mesh<THREE.PlaneGeometry, THREE.MeshPhongMaterial[]>>((resolve) => {
-    const geometry = new THREE.BoxGeometry(width, height, 0.02);
+    const geometry = new THREE.BoxGeometry(width, height, depth);
     geometry.groups.forEach((group, index) => {
       /* eslint-disable no-param-reassign */
       group.materialIndex = index === 4 ? 1 : 0;

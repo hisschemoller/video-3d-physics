@@ -3,6 +3,7 @@ import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix } from '@app/utils';
 import { ProjectSettings, VideoData } from './interfaces';
 import { Actor, createActor } from './actor';
+import { Scenery, createScenery } from './scenery';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 119;
@@ -11,7 +12,7 @@ const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
 const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
-const actors: Actor[] = [];
+const actors: (Actor | Scenery)[] = [];
 
 export default class Scene extends MainScene {
   timeline: Timeline;
@@ -97,8 +98,18 @@ export default class Scene extends MainScene {
       wPx: this.width,
       hPx: this.height,
       z: 0,
-      vStart: 7,
+      vStart: 7.5,
       duration: STEP_DURATION * STEPS,
+    }));
+
+    actors.push(await createScenery(projectSettings, videoData, {
+      box: {
+        x: 0, y: 0, w: 200, h: 1000, d: 0.1,
+      },
+      matrix4: getMatrix({
+        x: 0, y: 0, z: 1, ry: 1,
+      }),
+      video: { start: 1, duration: PATTERN_DURATION },
     }));
   }
 }
