@@ -1,6 +1,6 @@
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
-import { getMatrix } from '@app/utils';
+import { getMatrix4 } from '@app/utils';
 import { ProjectSettings, VideoData } from './interfaces';
 import { Actor, createActor } from './actor';
 import { Scenery, createScenery } from './scenery';
@@ -106,7 +106,7 @@ export default class Scene extends MainScene {
       box: {
         x: 0, y: 0, w: 200, h: 1000, d: 0.1,
       },
-      matrix4: getMatrix({
+      matrix4: getMatrix4({
         x: 0, y: 0, z: 1, ry: 1,
       }),
       video: { start: 1, duration: PATTERN_DURATION },

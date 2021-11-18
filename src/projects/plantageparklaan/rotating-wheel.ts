@@ -1,6 +1,6 @@
 import { THREE } from 'enable3d';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
-import { getMatrix } from '@app/utils';
+import { getMatrix4 } from '@app/utils';
 import { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 import { BASE_COLOR } from './actor-mesh';
@@ -61,7 +61,7 @@ function createSvgSegment(svgUrl: string, svgWidth: number, svgHeight: number, s
               geometry.groups.forEach((group, index) => {
                 group.materialIndex = index === 0 ? 1 : 0;
               });
-              geometry.applyMatrix4(getMatrix({
+              geometry.applyMatrix4(getMatrix4({
                 x: 0,
                 y: svgHeight * svgScale * -0.5,
                 sx: svgScale * -1,
@@ -100,7 +100,7 @@ export default async function createRotatingWheel({
   const yVP = (y3d - (vp3dHeight / 2)) * -1;
 
   const group = new THREE.Group();
-  group.applyMatrix4(getMatrix({ x: xVP, y: yVP, z }));
+  group.applyMatrix4(getMatrix4({ x: xVP, y: yVP, z }));
   scene.add(group);
 
   for (let i = 0, n = 12; i < n; i += 1) {

@@ -1,5 +1,5 @@
 import { THREE } from 'enable3d';
-import { getMatrix } from '@app/utils';
+import { getMatrix4 } from '@app/utils';
 import createTween from '@app/tween';
 import { ProjectSettings } from './interfaces';
 
@@ -75,7 +75,7 @@ export default function createTube(
   const group = new THREE.Group();
   group.add(mesh);
   group.add(sphere);
-  group.applyMatrix4(getMatrix({ x: xVP, y: yVP, z }));
+  group.applyMatrix4(getMatrix4({ x: xVP, y: yVP, z }));
 
   scene3d.scene.add(group);
 
@@ -108,7 +108,7 @@ export function createRoofTube(
     color: 0x4466aa, opacity: 0.5, transparent: true,
   });
   const mesh = new THREE.Mesh(geometry, material);
-  mesh.applyMatrix4(getMatrix({ x: -1.2, y: 2.6, z: 0.4 }));
+  mesh.applyMatrix4(getMatrix4({ x: -1.2, y: 2.6, z: 0.4 }));
   // mesh.castShadow = true;
   mesh.receiveShadow = true;
   scene3d.scene.add(mesh);

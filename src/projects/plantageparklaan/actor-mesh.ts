@@ -1,6 +1,6 @@
 import { THREE } from 'enable3d';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
-import { getMatrix } from '@app/utils';
+import { getMatrix4 } from '@app/utils';
 
 export const BASE_COLOR = 0x6c645f;
 
@@ -62,7 +62,7 @@ export function createSVG(
               geometry.groups.forEach((group, index) => {
                 group.materialIndex = index === 0 ? 1 : 0;
               });
-              geometry.applyMatrix4(getMatrix({
+              geometry.applyMatrix4(getMatrix4({
                 x: (viewport3dWidth * -0.5) + xVP,
                 y: (viewport3dHeight * 0.5) - yVP,
                 sx: svgScale,

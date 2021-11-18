@@ -1,7 +1,7 @@
 import { THREE } from 'enable3d';
 import { renderBackground, setupBackground } from '@app/background';
 import MainScene from '@app/mainscene';
-import { getMatrix } from '@app/utils';
+import { getMatrix4 } from '@app/utils';
 
 export default class Scene extends MainScene {
   declare protected pCamera: THREE.PerspectiveCamera;
@@ -56,7 +56,7 @@ export default class Scene extends MainScene {
     // this.scene.add(grid);
 
     // const grid2 = new THREE.GridHelper(2, 2, 0x00ffff, 0x00ffff);
-    // grid2.geometry.applyMatrix4( getMatrix({
+    // grid2.geometry.applyMatrix4( getMatrix4({
     //   y: 1,
     //   z: -19,
     //   rx: Math.PI * 0.5,
@@ -83,7 +83,7 @@ export default class Scene extends MainScene {
     // this.scene.add(cube);
 
     // const plane = gltf.scene.getObjectByName('Plane');
-    // plane.geometry.applyMatrix4( getMatrix({
+    // plane.geometry.applyMatrix4( getMatrix4({
     //   z: -34,
     //   sx: 30/2, sy: 30/2, sz: 30/2,
     //   ry: Math.PI * -0.5,
@@ -94,7 +94,7 @@ export default class Scene extends MainScene {
     if (ground) {
       ground.receiveShadow = true;
       ground.position.set(0, 0, 0);
-      ground.geometry.applyMatrix4(getMatrix({
+      ground.geometry.applyMatrix4(getMatrix4({
         x: -0.5,
         y: 0,
         z: -35,

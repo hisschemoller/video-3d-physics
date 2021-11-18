@@ -1,6 +1,6 @@
 import { THREE } from 'enable3d';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
-import { getMatrix } from '@app/utils';
+import { getMatrix4 } from '@app/utils';
 import createTween from '@app/tween';
 import { ProjectSettings } from './interfaces';
 
@@ -61,7 +61,7 @@ export default function createHook(
               const mesh = new THREE.Mesh(geometry, materials);
               mesh.castShadow = true;
               mesh.receiveShadow = true;
-              mesh.applyMatrix4(getMatrix({
+              mesh.applyMatrix4(getMatrix4({
                 x,
                 y,
                 z,

@@ -1,5 +1,5 @@
 import { THREE } from 'enable3d';
-import { getMatrix } from '@app/utils';
+import { getMatrix4 } from '@app/utils';
 import { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 
@@ -43,7 +43,7 @@ export function createTube({
   const texture = new THREE.TextureLoader().load('assets/projects/plantageparklaan/pipe1.jpg');
   const material = new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture });
   const mesh = new THREE.Mesh(geometry, material);
-  mesh.applyMatrix4(getMatrix({ x: xVP, y: yVP, z }));
+  mesh.applyMatrix4(getMatrix4({ x: xVP, y: yVP, z }));
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   scene.add(mesh);
@@ -81,7 +81,7 @@ export function createSkyTube({
     { color: 0xbdd2ec, opacity: 0.4, transparent: true },
   );
   const mesh = new THREE.Mesh(geometry, material);
-  mesh.applyMatrix4(getMatrix({ x: xVP, y: yVP, z }));
+  mesh.applyMatrix4(getMatrix4({ x: xVP, y: yVP, z }));
   // mesh.castShadow = true;
   mesh.receiveShadow = true;
   scene.add(mesh);

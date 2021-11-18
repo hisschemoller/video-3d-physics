@@ -1,5 +1,5 @@
 import { THREE } from 'enable3d';
-import { getMatrix } from '@app/utils';
+import { getMatrix4 } from '@app/utils';
 import { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 import { createRectangle, createSVG } from './actor-mesh';
@@ -142,7 +142,7 @@ export async function createActor(
     )
     : await createRectangle(w3d, h3d, texture);
   mesh.visible = false;
-  mesh.applyMatrix4(getMatrix({ x: xVP, y: yVP, z }));
+  mesh.applyMatrix4(getMatrix4({ x: xVP, y: yVP, z }));
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   scene.add(mesh);

@@ -1,6 +1,6 @@
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
-import { getMatrix } from '@app/utils';
+import { getMatrix4 } from '@app/utils';
 import { ProjectSettings, VideoData } from './interfaces';
 import { Actor, createActor } from './actor';
 import createSphere from './sphere';
@@ -129,7 +129,7 @@ export default class Scene extends MainScene {
       actors.push(actor);
       const mesh = actor.getMesh();
       const scale = 0.915;
-      mesh.applyMatrix4(getMatrix({ sx: scale, sy: scale }));
+      mesh.applyMatrix4(getMatrix4({ sx: scale, sy: scale }));
     }
 
     {
@@ -149,7 +149,7 @@ export default class Scene extends MainScene {
       actors.push(actor);
       const mesh = actor.getMesh();
       const scale = 0.91;
-      mesh.applyMatrix4(getMatrix({ sx: scale, sy: scale }));
+      mesh.applyMatrix4(getMatrix4({ sx: scale, sy: scale }));
     }
 
     {
@@ -169,7 +169,7 @@ export default class Scene extends MainScene {
       actors.push(actor);
       const mesh = actor.getMesh();
       const scale = 0.89;
-      mesh.applyMatrix4(getMatrix({ sx: scale, sy: scale }));
+      mesh.applyMatrix4(getMatrix4({ sx: scale, sy: scale }));
     }
 
     // TUBES

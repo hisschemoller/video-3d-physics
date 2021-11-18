@@ -1,6 +1,6 @@
 import { THREE } from 'enable3d';
 import MainScene from '@app/mainscene';
-import { getMatrix } from '@app/utils';
+import { getMatrix4 } from '@app/utils';
 import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 
@@ -101,7 +101,7 @@ function createActor(
   const material = new THREE.MeshBasicMaterial({ map: texture });
   const mesh = new THREE.Mesh(geometry, material);
   mesh.visible = false;
-  mesh.applyMatrix4(getMatrix({ x: xVP, y: yVP }));
+  mesh.applyMatrix4(getMatrix4({ x: xVP, y: yVP }));
   scene.add(mesh);
 
   if (duration > 0) {
