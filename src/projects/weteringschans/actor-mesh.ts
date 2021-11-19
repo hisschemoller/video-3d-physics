@@ -39,6 +39,8 @@ export function createSVG(
   texture : THREE.Texture,
   viewport3dWidth: number,
   viewport3dHeight: number,
+  depth = 0.02,
+  alignWithViewport = true,
 ) {
   return new Promise<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshPhongMaterial[]>>(
     (resolve, reject) => {
@@ -58,14 +60,14 @@ export function createSVG(
               const shape = shapes[0];
               const geometry = new THREE.ExtrudeGeometry(shape, {
                 bevelEnabled: false,
-                depth: 0.02,
+                depth,
               });
               geometry.groups.forEach((group, index) => {
                 group.materialIndex = index === 0 ? 1 : 0;
               });
               geometry.applyMatrix4(getMatrix4({
-                x: (viewport3dWidth * -0.5) + xVP,
-                y: (viewport3dHeight * 0.5) + yVP,
+                x: alignWithViewport ? (viewport3dWidth * -0.5) + xVP : 0,
+                y: alignWithViewport ? (viewport3dHeight * 0.5) + yVP : 0,
                 sx: svgScale,
                 sy: svgScale * -1,
               }));

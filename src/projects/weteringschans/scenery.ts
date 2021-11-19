@@ -4,14 +4,14 @@ import { createRectangle, createSVG } from './actor-mesh';
 import { ProjectSettings, VideoData } from './interfaces';
 
 export interface Scenery {
-  getMesh: Function;
-  loadImage: Function;
+  getMesh: () => THREE.Mesh;
+  loadImage: () => void;
 }
 
 export interface SceneryData {
   box: { x: number, y: number, w: number, h: number, d: number },
   matrix4: THREE.Matrix4,
-  svg?: { url: string, scale: number },
+  svg?: { url: string, scale: number, alignWithViewport?: boolean },
   video: { start: number, duration: number },
 }
 
@@ -98,7 +98,7 @@ export async function createScenery(
   // MESH
   const mesh = svg
     ? await createSVG(
-      svg.url, svg.scale, 0, 0, texture, width3d, height3d,
+      svg.url, svg.scale, 0, 0, texture, width3d, height3d, d, svg.alignWithViewport,
     )
     : await createRectangle(w3d, h3d, texture, d);
   mesh.applyMatrix4(matrix4);
