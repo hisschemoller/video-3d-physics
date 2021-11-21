@@ -4,7 +4,7 @@ import { getMatrix4 } from '@app/utils';
 import { ProjectSettings, VideoData } from './interfaces';
 import { Actor, createActor } from './actor';
 import { Scenery, createScenery } from './scenery';
-import { createWalls } from './walls';
+import createSphere from './sphere';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 119;
@@ -43,14 +43,14 @@ export default class Scene extends MainScene {
     this.pCamera.position.set(0, 0, 9.6);
 
     // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.6;
+    this.ambientLight.intensity = 0.4;
 
     // DIRECTIONAL LIGHT
-    this.directionalLight.position.set(-20, 5, 10);
-    this.directionalLight.intensity = 1;
+    this.directionalLight.position.set(15, 5, 10);
+    this.directionalLight.intensity = 0.9;
 
     // PHYSICS
-    this.physics.setGravity(0, -4, 0);
+    this.physics.setGravity(0, 4, 0);
 
     // MESHES AND TWEENS
     this.timeline = createTimeline({
@@ -93,40 +93,51 @@ export default class Scene extends MainScene {
   }
 
   async createActors(projectSettings: ProjectSettings, videoData: VideoData) {
-    actors.push(await createActor(projectSettings, videoData, { // ACHTERGROND
-      xPx: 0,
-      yPx: 0,
-      wPx: this.width,
-      hPx: this.height,
+    const to3d = (size: number, isWidth = true) => (isWidth
+      ? (size / this.width) * this.width3d
+      : (size / this.height) * this.height3d);
+
+    const BG_SCALE = 1.097;
+
+    actors.push(await createScenery(projectSettings, videoData, { // ACHTERGROND
+      box: { w: this.width, h: this.height },
+      matrix4: getMatrix4({
+        x: 0, y: 0, z: -1, sx: BG_SCALE, sy: BG_SCALE, sz: BG_SCALE,
+      }),
+      video: { start: 23, duration: PATTERN_DURATION },
+    }));
+
+    {
+      const wall = await createScenery(projectSettings, videoData, { // GEVEL
+        box: { x: 117, w: this.width, h: this.height },
+        matrix4: getMatrix4({ x: to3d(117), y: 0 }),
+        video: { start: 23, duration: PATTERN_DURATION },
+        svg: {
+          scale: this.width3d / this.width,
+          url: '../assets/projects/weteringschans/wallwindows.svg',
+          alignWithViewport: true,
+        },
+      });
+      // const mesh = wall.getMesh();
+      // mesh.body.setGravity(0, 0, 0);
+      // this.add.existing(mesh as unknown as ExtendedObject3D);
+      actors.push(wall);
+    }
+
+    createSphere(projectSettings, {
+      x: to3d(386),
+      y: to3d(78),
       z: 0,
-      vStart: 7.5,
-      duration: STEP_DURATION * STEPS,
-    }));
+      radius: 0.2,
+      duration: STEP_DURATION * 15,
+    });
 
-    // actors.push(await createActor(projectSettings, videoData, { // WALL0
-    //   xPx: 0,
-    //   yPx: 0,
-    //   wPx: this.width,
-    //   hPx: this.height,
-    //   z: 0,
-    //   vStart: 7.5,
-    //   duration: STEP_DURATION * STEPS,
-    //   svgUrl: '../assets/projects/weteringschans/wall0.svg',
-    //   svgScale: this.width3d / this.width,
-    // }));
-
-    // actors.push(await createScenery(projectSettings, videoData, {
-    //   box: {
-    //     x: 0, y: 0, w: 200, h: 1000, d: 0.1,
-    //   },
-    //   matrix4: getMatrix4({
-    //     x: 0, y: 0, z: 1, ry: 1,
-    //   }),
-    //   video: { start: 1, duration: PATTERN_DURATION },
-    // }));
-
-    actors.push(...await createWalls(projectSettings, videoData, {
-      start: 1, duration: PATTERN_DURATION,
-    }));
+    createSphere(projectSettings, {
+      x: to3d(1701),
+      y: to3d(247),
+      z: 0,
+      radius: 0.3,
+      duration: STEP_DURATION * 15,
+    });
   }
 }

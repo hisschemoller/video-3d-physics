@@ -58,8 +58,17 @@ export async function createWalls(
       const angle = Math.PI * 0.4;
 
       const group = new THREE.Group();
-      group.rotation.y = Math.PI + (angle * 0.37);
-      group.position.set((width3d * 0.5) - 0.8, (height3d * 0.5) - 0.3, 1);
+      // group.rotation.y = Math.PI + (angle * 0.37);
+      // group.position.set((width3d * 0.5) - 0.8, (height3d * 0.5) - 0.3, 1);
+      group.applyMatrix4(getMatrix4({
+        x: (width3d * 0.5) - 0.8,
+        y: (height3d * 0.5) - 0.3,
+        z: 1.1,
+        ry: Math.PI + (angle * 0.37),
+        sx: 1.1,
+        sy: 1.1,
+        sz: 1.1,
+      }));
       scene.add(group);
 
       // group.add(new THREE.Mesh(

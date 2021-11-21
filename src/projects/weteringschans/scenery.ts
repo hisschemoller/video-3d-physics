@@ -1,15 +1,15 @@
-import { THREE } from 'enable3d';
+import { ExtendedMesh, THREE } from 'enable3d';
 import createTween from '@app/tween';
 import { createRectangle, createSVG } from './actor-mesh';
 import { ProjectSettings, VideoData } from './interfaces';
 
 export interface Scenery {
-  getMesh: () => THREE.Mesh;
+  getMesh: () => ExtendedMesh;
   loadImage: () => void;
 }
 
 export interface SceneryData {
-  box: { x: number, y: number, w: number, h: number, d: number },
+  box: { x?: number, y?: number, w?: number, h?: number, d?: number },
   matrix4: THREE.Matrix4,
   svg?: { url: string, scale: number, alignWithViewport?: boolean },
   video: { start: number, duration: number },
@@ -33,7 +33,7 @@ export async function createScenery(
   }: VideoData,
   {
     box: {
-      x = 0, y = 0, w = 1, h = 1, d = 1,
+      x = 0, y = 0, w = 1, h = 1, d = 0.02,
     },
     matrix4,
     svg,

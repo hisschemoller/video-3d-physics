@@ -1,12 +1,12 @@
-import { THREE } from 'enable3d';
+import { ExtendedMesh, THREE } from 'enable3d';
 import { getMatrix4 } from '@app/utils';
 import createTween from '@app/tween';
 import { createRectangle, createSVG } from './actor-mesh';
 import { ProjectSettings, VideoData } from './interfaces';
 
 export interface Actor {
-  getMesh: Function;
-  loadImage: Function;
+  getMesh: () => ExtendedMesh;
+  loadImage: () => void;
 }
 
 interface ActorData {
@@ -137,6 +137,12 @@ export async function createActor(
   scene.add(mesh);
   const getMesh = () => mesh;
 
+  // MATERIALS
+  let materials: THREE.MeshPhongMaterial[] = [];
+  if ((mesh.material as THREE.MeshPhongMaterial[]).length !== undefined) {
+    materials = mesh.material as THREE.MeshPhongMaterial[];
+  }
+
   // TWEEN
   if (duration > 0) {
     const coords = {
@@ -165,8 +171,8 @@ export async function createActor(
           coords.y + yAdd3d + ((yVpEnd - coords.y) * progress),
           coords.z,
         );
-        if (mesh.material[1].map) {
-          mesh.material[1].map.offset = new THREE.Vector2(
+        if (materials[1].map) {
+          materials[1].map.offset = new THREE.Vector2(
             coords.xOffset + ((xOffsetEnd - coords.xOffset) * progress),
             coords.yOffset + ((yOffsetEnd - coords.yOffset) * progress),
           );

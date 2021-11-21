@@ -1,4 +1,4 @@
-import { THREE } from 'enable3d';
+import { ExtendedMesh, THREE } from 'enable3d';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
 import { getMatrix4 } from '@app/utils';
 
@@ -13,7 +13,7 @@ export function createRectangle(
   texture : THREE.Texture,
   depth = 0.02,
 ) {
-  return new Promise<THREE.Mesh<THREE.PlaneGeometry, THREE.MeshPhongMaterial[]>>((resolve) => {
+  return new Promise<ExtendedMesh>((resolve) => {
     const geometry = new THREE.BoxGeometry(width, height, depth);
     geometry.groups.forEach((group, index) => {
       /* eslint-disable no-param-reassign */
@@ -23,7 +23,7 @@ export function createRectangle(
       new THREE.MeshPhongMaterial({ color: BASE_COLOR, side: THREE.FrontSide }),
       new THREE.MeshPhongMaterial({ map: texture, side: THREE.FrontSide }),
     ];
-    const mesh = new THREE.Mesh(geometry, materials);
+    const mesh = new ExtendedMesh(geometry, materials);
     resolve(mesh);
   });
 }
@@ -42,7 +42,7 @@ export function createSVG(
   depth = 0.02,
   alignWithViewport = true,
 ) {
-  return new Promise<THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshPhongMaterial[]>>(
+  return new Promise<ExtendedMesh>(
     (resolve, reject) => {
       new SVGLoader().load(
         svgUrl,
@@ -72,7 +72,7 @@ export function createSVG(
                 sy: svgScale * -1,
               }));
               geometry.computeVertexNormals();
-              const mesh = new THREE.Mesh(geometry, materials);
+              const mesh = new ExtendedMesh(geometry, materials);
               resolve(mesh);
             }
           });
