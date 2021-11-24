@@ -215,5 +215,61 @@ export default class Scene extends MainScene {
         ...sphere.w, position: STEP_DURATION * sphere.p, duration: STEP_DURATION * 15,
       });
     });
+
+    actors.push(await createActor(projectSettings, videoData, { // MAN MET TELEFOON
+      xPx: 1420,
+      yPx: 500,
+      wPx: 360,
+      hPx: 580,
+      yAddPx: 20,
+      z: 1,
+      vStart: 7.8,
+      xDist: -200,
+      easeAmount: 0,
+      position: STEP_DURATION * 4,
+      duration: STEP_DURATION * 12,
+    }));
+
+    actors.push(await createActor(projectSettings, videoData, { // FIETSER VAN LINKS
+      xPx: -200,
+      yPx: 520,
+      wPx: 330,
+      hPx: 580,
+      yAddPx: 20,
+      z: 1,
+      vStart: 56,
+      xDist: 600,
+      easeAmount: 0,
+      position: STEP_DURATION * 8,
+      duration: STEP_DURATION * 8,
+    }));
+
+    // actors.push(await createActor(projectSettings, videoData, { // DONKERBLAUW BUSJE
+    //   xPx: -200,
+    //   yPx: 480,
+    //   wPx: 380,
+    //   hPx: 600,
+    //   yAddPx: 20,
+    //   z: 0.6,
+    //   vStart: 63,
+    //   xDist: 600,
+    //   easeAmount: 0,
+    //   position: STEP_DURATION * 0,
+    //   duration: STEP_DURATION * 6,
+    // }));
+
+    actors.push(await createActor(projectSettings, videoData, { // FIETSER BLAUWE JAS
+      xPx: 150,
+      yPx: 500,
+      wPx: 300,
+      hPx: 580,
+      yAddPx: 20,
+      z: 1,
+      vStart: 39,
+      xDist: -10,
+      easeAmount: 0,
+      position: STEP_DURATION * 0,
+      duration: STEP_DURATION * 8,
+    }));
   }
 }
