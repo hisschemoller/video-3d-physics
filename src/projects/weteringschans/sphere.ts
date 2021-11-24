@@ -5,7 +5,6 @@ import { ProjectSettings } from './interfaces';
 interface SphereArgs {
   x: number;
   y: number;
-  z: number;
   w?: number;
   h?: number;
   radius: number;
@@ -20,6 +19,8 @@ export default function createSphere(
     scene,
     scene3d,
     timeline,
+    width,
+    height,
     width3d,
     height3d,
   }: ProjectSettings,
@@ -34,8 +35,12 @@ export default function createSphere(
   }: SphereArgs,
 ) {
   // translate image coordinates which are left top to 3D scene coordinates which are centered
-  const xVP = x - (width3d / 2);
-  const yVP = -y + (height3d / 2);
+  const x3d = x * (width3d / width);
+  const y3d = y * (height3d / height);
+
+  // translate image coordinates which are left top to 3D scene coordinates which are centered
+  const xVP = x3d - (width3d / 2);
+  const yVP = -y3d + (height3d / 2);
 
   // PLANE
   const plane = new THREE.Mesh(
@@ -43,24 +48,29 @@ export default function createSphere(
     new THREE.MeshPhongMaterial({ color: 0x000000, opacity: 0.7, transparent: true }),
   );
   plane.position.set(xVP * BG_SCALE, yVP * BG_SCALE, -0.9);
-  const planeTeen = createTween({
-    delay: position,
-    duration: 1.5,
-    onStart: () => {
-      scene.add(plane);
-    },
-    onComplete: () => {
-      scene.remove(plane);
-    },
-  });
-  timeline.add(planeTeen);
+  scene.add(plane);
+  // const planeTeen = createTween({
+  //   delay: position,
+  //   duration: 1.5,
+  //   onStart: () => {
+  //     scene.add(plane);
+  //   },
+  //   onComplete: () => {
+  //     scene.remove(plane);
+  //   },
+  // });
+  // timeline.add(planeTeen);
 
   // SPHERE
   let sphere : ExtendedObject3D;
   const sphereConfig = {
-    x: xVP, y: yVP + 0.8, z: -0.1 - radius, radius, mass: 1,
+    x: xVP, y: yVP + 0.8, z: -0.1 - radius, radius: radius * 0.5, mass: 1,
   };
-  const materialConfig = { lambert: { color: 0xff0000 } };
+  const materialConfig = {
+    phong: {
+      color: 0xcccccc, opacity: 0.6, transparent: true, shininess: 100,
+    },
+  };
   const sphereTween = createTween({
     delay: position,
     duration,
