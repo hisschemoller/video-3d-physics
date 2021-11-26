@@ -212,17 +212,17 @@ export default class Scene extends MainScene {
 
     spheres.forEach((sphere) => {
       createSphere(projectSettings, {
-        ...sphere.w, position: STEP_DURATION * sphere.p, duration: STEP_DURATION * 15,
+        ...sphere.w, position: STEP_DURATION * sphere.p, duration: PATTERN_DURATION * 0.9,
       });
     });
 
     actors.push(await createActor(projectSettings, videoData, { // MAN MET TELEFOON
       xPx: 1420,
       yPx: 500,
-      wPx: 360,
+      wPx: 320,
       hPx: 580,
       yAddPx: 20,
-      z: 1,
+      z: 1.2,
       vStart: 7.8,
       xDist: -200,
       easeAmount: 0,
@@ -231,17 +231,17 @@ export default class Scene extends MainScene {
     }));
 
     actors.push(await createActor(projectSettings, videoData, { // FIETSER VAN LINKS
-      xPx: -200,
+      xPx: 450,
       yPx: 520,
-      wPx: 330,
+      wPx: 400,
       hPx: 580,
       yAddPx: 20,
       z: 1,
-      vStart: 56,
+      vStart: 57.1,
       xDist: 600,
       easeAmount: 0,
-      position: STEP_DURATION * 8,
-      duration: STEP_DURATION * 8,
+      position: STEP_DURATION * 10,
+      duration: STEP_DURATION * 6,
     }));
 
     // actors.push(await createActor(projectSettings, videoData, { // DONKERBLAUW BUSJE
@@ -269,6 +269,83 @@ export default class Scene extends MainScene {
       xDist: -10,
       easeAmount: 0,
       position: STEP_DURATION * 0,
+      duration: STEP_DURATION * 8,
+    }));
+
+    actors.push(await createActor(projectSettings, videoData, { // MAN MET KOPTELEFOON
+      xPx: 880,
+      yPx: 510,
+      wPx: 230,
+      hPx: 570,
+      yAddPx: 20,
+      z: 1,
+      vStart: 2.5,
+      xDist: 170,
+      position: STEP_DURATION * 0,
+      duration: STEP_DURATION * 12,
+    }));
+
+    actors.push(await createActor(projectSettings, videoData, { // DRIETAL NAAR LINKS
+      xPx: 470,
+      yPx: 500,
+      wPx: 440,
+      hPx: 580,
+      yAddPx: 20,
+      z: 1,
+      vStart: 10.2,
+      xDist: -170,
+      position: STEP_DURATION * 4,
+      duration: STEP_DURATION * 8,
+    }));
+
+    // actors.push(await createActor(projectSettings, videoData, { // SCOOTER
+    //   xPx: 350,
+    //   yPx: 480,
+    //   wPx: 320,
+    //   hPx: 600,
+    //   yAddPx: 20,
+    //   z: 0.6,
+    //   vStart: 87.15,
+    //   xDist: 1500,
+    //   position: STEP_DURATION * 0,
+    //   duration: STEP_DURATION * 8,
+    // }));
+
+    // actors.push(await createActor(projectSettings, videoData, { // BAKFIETSJE
+    //   xPx: 740,
+    //   yPx: 510,
+    //   wPx: 230,
+    //   hPx: 570,
+    //   yAddPx: 20,
+    //   z: 0.5,
+    //   vStart: 2.4,
+    //   xDist: -350,
+    //   position: STEP_DURATION * 0,
+    //   duration: STEP_DURATION * 10,
+    // }));
+
+    // actors.push(await createActor(projectSettings, videoData, { // SWAPFIETS
+    //   xPx: 1600,
+    //   yPx: 490,
+    //   wPx: 290,
+    //   hPx: 590,
+    //   yAddPx: 20,
+    //   z: 0.6,
+    //   vStart: 89.4,
+    //   xDist: -400,
+    //   position: STEP_DURATION * 0,
+    //   duration: STEP_DURATION * 10,
+    // }));
+
+    actors.push(await createActor(projectSettings, videoData, { // MAN LOOPT AAN OVERKANT
+      xPx: 320,
+      yPx: 500,
+      wPx: 120,
+      hPx: 580,
+      z: 0.2,
+      vStart: 87.8,
+      xDist: 100,
+      position: STEP_DURATION * 12,
       duration: STEP_DURATION * 8,
     }));
   }
