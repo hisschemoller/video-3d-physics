@@ -256,6 +256,18 @@ export default class Scene extends MainScene {
       });
     });
 
+    actors.push(await createActor(projectSettings, videoData, { // VOETGANGER AAN OVERKANT
+      xPx: 1650,
+      yPx: 500,
+      wPx: 160,
+      hPx: 580,
+      z: 0.2,
+      vStart: 8.4,
+      xDist: -120,
+      position: STEP_DURATION * 0,
+      duration: STEP_DURATION * 6,
+    }));
+
     actors.push(await createActor(projectSettings, videoData, { // FIETSER BLAUWE JAS
       xPx: 150,
       yPx: 500,
@@ -263,41 +275,40 @@ export default class Scene extends MainScene {
       hPx: 580,
       yAddPx: 20,
       z: 1,
-      vStart: 39,
+      vStart: 39.2,
       xDist: -10,
-      easeAmount: 0,
-      position: STEP_DURATION * 0,
-      duration: STEP_DURATION * 8,
+      position: STEP_DURATION * 2,
+      duration: STEP_DURATION * 9,
     }));
 
     actors.push(await createActor(projectSettings, videoData, { // MAN MET KOPTELEFOON
-      xPx: 880,
+      xPx: 840,
       yPx: 510,
       wPx: 230,
       hPx: 570,
       yAddPx: 20,
       z: 1,
       vStart: 2.5,
-      xDist: 170,
+      xDist: 250,
       position: STEP_DURATION * 0,
       duration: STEP_DURATION * 12,
     }));
 
     actors.push(await createActor(projectSettings, videoData, { // DRIETAL NAAR LINKS
-      xPx: 470,
+      xPx: 490,
       yPx: 500,
       wPx: 440,
       hPx: 580,
       yAddPx: 20,
       z: 1.1,
       vStart: 10.2,
-      xDist: -170,
-      position: STEP_DURATION * 4,
-      duration: STEP_DURATION * 8,
+      xDist: -220,
+      position: STEP_DURATION * 5,
+      duration: STEP_DURATION * 9,
     }));
 
     actors.push(await createActor(projectSettings, videoData, { // MAN MET TELEFOON
-      xPx: 1420,
+      xPx: 1440,
       yPx: 500,
       wPx: 320,
       hPx: 580,
@@ -305,35 +316,33 @@ export default class Scene extends MainScene {
       z: 1.2,
       vStart: 7.8,
       xDist: -200,
-      easeAmount: 0,
-      position: STEP_DURATION * 4,
-      duration: STEP_DURATION * 12,
+      position: STEP_DURATION * 6,
+      duration: STEP_DURATION * 10,
     }));
 
     actors.push(await createActor(projectSettings, videoData, { // FIETSER VAN LINKS
-      xPx: 450,
+      xPx: 400,
       yPx: 520,
       wPx: 400,
       hPx: 580,
       yAddPx: 20,
       z: 0.6,
-      vStart: 57.1,
+      vStart: 57.0,
       xDist: 600,
-      easeAmount: 0,
-      position: STEP_DURATION * 10,
+      position: STEP_DURATION * 8,
       duration: STEP_DURATION * 6,
     }));
 
     actors.push(await createActor(projectSettings, videoData, { // VOETGANGER AAN OVERKANT
-      xPx: 320,
+      xPx: 330,
       yPx: 500,
       wPx: 120,
       hPx: 580,
       z: 0.2,
       vStart: 87.8,
       xDist: 100,
-      position: STEP_DURATION * 12,
-      duration: STEP_DURATION * 4,
+      position: STEP_DURATION * 0,
+      duration: STEP_DURATION * 5,
     }));
 
     // actors.push(await createActor(projectSettings, videoData, { // DONKERBLAUW BUSJE
