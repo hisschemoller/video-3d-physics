@@ -49,20 +49,10 @@ export default function createSphere(
   );
   plane.position.set(xVP * BG_SCALE, yVP * BG_SCALE, -0.9);
   scene.add(plane);
-  // const planeTeen = createTween({
-  //   delay: position,
-  //   duration: 1.5,
-  //   onStart: () => {
-  //     scene.add(plane);
-  //   },
-  //   onComplete: () => {
-  //     scene.remove(plane);
-  //   },
-  // });
-  // timeline.add(planeTeen);
 
   // SPHERE
   let sphere : ExtendedObject3D;
+  const spheres: ExtendedObject3D[] = [];
   const sphereConfig = {
     x: xVP, y: yVP + 0.8, z: -0.1 - radius, radius: radius * 0.5, mass: 1,
   };
@@ -77,9 +67,16 @@ export default function createSphere(
     onStart: () => {
       sphere = scene3d.physics.add.sphere(sphereConfig, materialConfig);
       sphere.body.applyImpulse({ y: -2.5, z: 0.5 }, {});
+      spheres.unshift(sphere);
     },
     onComplete: () => {
-      sphere.remove();
+      while (spheres.length > 2) {
+        const sphereToRemove = spheres.pop();
+        if (sphereToRemove) {
+          scene3d.scene.remove(sphereToRemove);
+          scene3d.physics.destroy(sphereToRemove);
+        }
+      }
     },
   });
   timeline.add(sphereTween);
