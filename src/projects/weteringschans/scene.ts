@@ -43,7 +43,7 @@ export default class Scene extends MainScene {
     this.pCamera.position.set(0, 0, 9.6);
 
     // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.4;
+    this.ambientLight.intensity = 0.5;
 
     // DIRECTIONAL LIGHT
     this.directionalLight.position.set(15, 5, 10);
@@ -127,6 +127,37 @@ export default class Scene extends MainScene {
       // this.add.existing(mesh as unknown as ExtendedObject3D);
       actors.push(wall);
     }
+
+    actors.push(await createScenery(projectSettings, videoData, { // OVERKANT
+      box: { y: 641, w: this.width, h: this.height },
+      matrix4: getMatrix4({
+        x: 0, y: ((-641 / this.height) * this.height3d), z: 0.3,
+      }),
+      video: { start: 23, duration: PATTERN_DURATION },
+      svg: {
+        scale: this.width3d / this.width,
+        url: '../assets/projects/weteringschans/overkant.svg',
+        alignWithViewport: true,
+      },
+    }));
+
+    actors.push(await createScenery(projectSettings, videoData, { // STOEP
+      box: { y: 124, w: this.width, h: this.height },
+      matrix4: getMatrix4({
+        x: 0,
+        y: ((-124 / this.height) * this.height3d) + 0.05,
+        z: 0.8,
+        sx: 0.94,
+        sy: 0.94,
+        sz: 0.94,
+      }),
+      video: { start: 23, duration: PATTERN_DURATION },
+      svg: {
+        scale: this.width3d / this.width,
+        url: '../assets/projects/weteringschans/stoep.svg',
+        alignWithViewport: true,
+      },
+    }));
 
     const windows = {
       raam1a: { x: 312, y: 84, radius: 0.22 },
@@ -236,7 +267,7 @@ export default class Scene extends MainScene {
       wPx: 400,
       hPx: 580,
       yAddPx: 20,
-      z: 1,
+      z: 0.6,
       vStart: 57.1,
       xDist: 600,
       easeAmount: 0,
@@ -337,7 +368,7 @@ export default class Scene extends MainScene {
     //   duration: STEP_DURATION * 10,
     // }));
 
-    actors.push(await createActor(projectSettings, videoData, { // MAN LOOPT AAN OVERKANT
+    actors.push(await createActor(projectSettings, videoData, { // VOETGANGER AAN OVERKANT
       xPx: 320,
       yPx: 500,
       wPx: 120,
