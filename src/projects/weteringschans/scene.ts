@@ -1,3 +1,4 @@
+import { ExtendedObject3D } from 'enable3d';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
@@ -113,7 +114,9 @@ export default class Scene extends MainScene {
 
     { // GEVEL
       const wall = await createScenery(projectSettings, videoData, {
-        box: { x: 117, w: this.width, h: this.height },
+        box: {
+          x: 117, w: this.width, h: this.height, d: 0.2,
+        },
         matrix4: getMatrix4({ x: to3d(117), y: 0 }),
         video: { start: 23, duration: PATTERN_DURATION },
         svg: {
@@ -122,9 +125,15 @@ export default class Scene extends MainScene {
           alignWithViewport: true,
         },
       });
-      // const mesh = wall.getMesh();
-      // mesh.body.setGravity(0, 0, 0);
-      // this.add.existing(mesh as unknown as ExtendedObject3D);
+      const mesh = wall.getMesh();
+      this.physics.add.existing(mesh as unknown as ExtendedObject3D, { mass: 0 });
+      /* eslint-disable new-cap */
+      // mesh.body.ammo.setMassProps(0, new Ammo.btVector3(0, 0, 0));
+      /* eslint-disable no-bitwise */
+      // mesh.body.ammo.setCollisionFlags(mesh.body.ammo.getCollisionFlags() | 1); // 1 = STATIC
+      // mesh.body.ammo.setLinearVelocity(new Ammo.btVector3(0, 0, 0));
+      // mesh.body.ammo.setAngularVelocity(new Ammo.btVector3(0, 0, 0));
+      // mesh.body.ammo.updateInertiaTensor();
       actors.push(wall);
     }
 
@@ -146,7 +155,7 @@ export default class Scene extends MainScene {
       matrix4: getMatrix4({
         x: 0,
         y: ((-124 / this.height) * this.height3d) + 0.05,
-        z: 0.8,
+        z: 0.9,
         sx: 0.94,
         sy: 0.94,
         sz: 0.94,
@@ -322,7 +331,7 @@ export default class Scene extends MainScene {
       wPx: 440,
       hPx: 580,
       yAddPx: 20,
-      z: 1,
+      z: 1.1,
       vStart: 10.2,
       xDist: -170,
       position: STEP_DURATION * 4,

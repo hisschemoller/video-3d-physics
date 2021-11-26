@@ -28,7 +28,7 @@ export default function createSphere(
     x,
     y,
     w = 1,
-    h = 1,
+    h = 1.3,
     position = 0,
     duration,
     radius = 0.27,
@@ -54,7 +54,7 @@ export default function createSphere(
   let sphere : ExtendedObject3D;
   const spheres: ExtendedObject3D[] = [];
   const sphereConfig = {
-    x: xVP, y: yVP + 0.8, z: -0.1 - radius, radius: radius * 0.5, mass: 1,
+    x: xVP, y: yVP + 0.8, z: 0.05 - radius, radius: radius * 0.5, mass: 1,
   };
   const materialConfig = {
     phong: {
