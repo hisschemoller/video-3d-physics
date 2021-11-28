@@ -37,18 +37,20 @@ export default function createTween({
   onStart,
   onUpdate,
 }: TweenParams): Tween {
-  let isActive = false;
   const easeFuntion = getEasefunction(easeAmount);
+  let isActive = false;
+  let progressOffset = 0;
 
   const update = (timelinePosition: number) => {
     const wasActive = isActive;
     isActive = timelinePosition > delay && timelinePosition <= delay + duration;
     // TODO: start en complete als tween de hele tijd duurt
     if (onStart && !wasActive && isActive) {
+      progressOffset = (timelinePosition - delay) / duration;
       onStart();
     }
     if (onUpdate && isActive) {
-      const progress = easeFuntion((timelinePosition - delay) / duration);
+      const progress = easeFuntion(((timelinePosition - delay) / duration) - progressOffset);
       onUpdate(progress);
     }
     if (onComplete && wasActive && !isActive) {
