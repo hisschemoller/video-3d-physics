@@ -16,7 +16,11 @@ export default class MainScene extends Scene3D {
 
   height: number;
 
+  captureFps: number;
+
   captureThrottle: number;
+
+  captureDuration: number;
 
   captureLastFrame: number;
 
@@ -43,6 +47,8 @@ export default class MainScene extends Scene3D {
   }
 
   async create() {
+    this.fps = this.scene.userData.isCapture ? this.captureFps : this.fps;
+    this.captureLastFrame = Math.floor(this.captureDuration * this.captureFps);
     this.framesPerDraw = RAF_RATE / this.fps;
     this.secondsPerFrame = 1 / this.fps;
 

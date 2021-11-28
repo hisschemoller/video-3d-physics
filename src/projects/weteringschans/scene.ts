@@ -31,8 +31,9 @@ export default class Scene extends MainScene {
     this.width3d = 16;
     this.height3d = 9;
     this.fps = 15;
+    this.captureFps = 30;
     this.captureThrottle = 15;
-    this.captureLastFrame = Math.floor(PATTERN_DURATION * this.fps) * 2; // 2 maten
+    this.captureDuration = PATTERN_DURATION * 2;
   }
 
   async create() {
