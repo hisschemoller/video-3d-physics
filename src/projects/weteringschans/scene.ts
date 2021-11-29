@@ -15,6 +15,7 @@ const SECONDS_PER_BEAT = 60 / BPM;
 const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
 const actors: (Actor | Scenery)[] = [];
+let videoActors: { loadVideoFrame: () => Promise<boolean> }[] = [];
 
 export default class Scene extends MainScene {
   timeline: Timeline;
@@ -30,7 +31,7 @@ export default class Scene extends MainScene {
     this.height = 1080;
     this.width3d = 16;
     this.height3d = 9;
-    this.fps = 15;
+    this.fps = 10;
     this.captureFps = 30;
     this.captureThrottle = 15;
     this.captureDuration = PATTERN_DURATION * 2;
@@ -79,19 +80,22 @@ export default class Scene extends MainScene {
       height3d: this.height3d,
     };
 
-    this.createActors(projectSettings, videoData);
+    await this.createActors(projectSettings, videoData);
+
+    videoActors = actors.reduce((accumulator, actor) => (
+      actor.loadVideoFrame ? [
+        ...accumulator,
+        actor as { loadVideoFrame: () => Promise<boolean> },
+      ] : accumulator
+    ), [] as { loadVideoFrame: () => Promise<boolean> }[]);
 
     this.postCreate();
   }
 
-  update(time: number, delta: number) {
-    this.timeline.update(time, delta);
-    super.update(time, delta);
-  }
-
-  postRender() {
-    actors.forEach((actor) => actor.loadImage());
-    super.postRender();
+  async updateAsync(time: number, delta: number) {
+    this.timeline.update(time);
+    await Promise.all(videoActors.map((actor) => actor.loadVideoFrame()));
+    super.updateAsync(time, delta);
   }
 
   async createActors(projectSettings: ProjectSettings, videoData: VideoData) {

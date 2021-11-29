@@ -186,11 +186,15 @@ export default class MainScene extends Scene3D {
     this.renderer.setAnimationLoop(null);
   }
 
+  /* eslint-disable class-methods-use-this */
+  /* eslint-disable-next-line @typescript-eslint/no-empty-function */
+  async updateAsync(time: number, delta: number) {}
+
   /**
    * Overwrite the private _update() method.
    */
   /* eslint-disable no-underscore-dangle */
-  _update(isValid = false) {
+  async _update(isValid = false) {
     if (!isValid) {
       return;
     }
@@ -199,6 +203,9 @@ export default class MainScene extends Scene3D {
     this.time += this.delta;
 
     this.update.call(this, parseFloat(this.time.toFixed(3)), parseInt(this.delta.toString(), 10));
+    await this.updateAsync.call(
+      this, parseFloat(this.time.toFixed(3)), parseInt(this.delta.toString(), 10),
+    );
     this.physics?.update(this.delta * 1000 * 0.7);
     this.physics?.updateDebugger();
 
@@ -213,7 +220,7 @@ export default class MainScene extends Scene3D {
   /**
    * Play the scene.
    */
-  run() {
+  async run() {
     // wait for the next frame to render
     let isWaiting = true;
     if (this.count >= this.nextFramePosition) {
@@ -226,7 +233,7 @@ export default class MainScene extends Scene3D {
       return;
     }
 
-    this._update(true);
+    await this._update(true);
   }
 
   /**
@@ -257,7 +264,7 @@ export default class MainScene extends Scene3D {
       requestAnimationFrame(this.capture.bind(this));
     }
 
-    this._update(true);
+    await this._update(true);
 
     // capture the image data here
     const img = this.renderer.domElement.toDataURL();

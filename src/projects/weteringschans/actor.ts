@@ -6,7 +6,8 @@ import { ProjectSettings, VideoData } from './interfaces';
 
 export interface Actor {
   getMesh: () => ExtendedMesh;
-  loadImage: () => void;
+  loadImage?: () => Promise<boolean>;
+  loadVideoFrame?: () => Promise<boolean>;
 }
 
 interface ActorData {
@@ -108,21 +109,26 @@ export async function createActor(
 
   // IMAGE
   const img = new Image();
-  img.onload = () => {
-    if (canvasCtx) {
-      canvasCtx.drawImage(img, 0, 0, width, height);
-      texture.needsUpdate = true;
-    }
-  };
-  const loadImage = (ignoreTweenActive = false) => {
-    if (tweenActive || ignoreTweenActive) {
+
+  const loadVideoFrame = async () => (
+    new Promise<boolean>((resolve, reject) => {
+      if (!tweenActive) {
+        resolve(true);
+      }
       imgNr = IMG_NR_FIRST + Math.round((IMG_NR_LAST - IMG_NR_FIRST) * tweenProgress);
+      img.onload = () => {
+        if (canvasCtx) {
+          canvasCtx.drawImage(img, 0, 0, width, height);
+          texture.needsUpdate = true;
+        }
+        resolve(true);
+      };
+      img.onerror = reject;
       img.src = imgSrcPath
         .split('#FRAME#')
         .join((imgNr <= 99999) ? (`0000${Math.round(imgNr)}`).slice(-5) : '99999');
-    }
-  };
-  loadImage(true);
+    })
+  );
 
   // MESH
   const mesh = svgUrl
@@ -179,9 +185,6 @@ export async function createActor(
         }
       },
       onComplete: () => {
-        imgNr = IMG_NR_FIRST;
-        tweenProgress = 0;
-        loadImage();
         mesh.visible = false;
         tweenActive = false;
       },
@@ -189,5 +192,5 @@ export async function createActor(
     timeline.add(tween);
   }
 
-  return { getMesh, loadImage };
+  return { getMesh, loadVideoFrame };
 }

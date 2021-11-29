@@ -39,4 +39,14 @@ ffmpeg -i weteringschans-video-x32.mp4 -i weteringschans-audio-x32.wav -vcodec c
 * Video is 30 FPS.
 * Video is 2.0338983050847457 * 30 = 61.01694915254237 frames lang.
 * Video is 61 frames lang, afgerond.
-* Video iis 61 / 30 = 2.033333333333333 seconden voor een maat.
+* Video is 61 / 30 = 2.033333333333333 seconden voor een maat.
+
+## Refactor
+
+Sommige actors en scenery hebben helemaal geen video, maar een foto of alleen kleur. Dus in
+scene.updateAsync kunnen eerst alle video frames ge-update worden en vervolgens de tweens gewoon
+synchroon.
+
+Maak een tweede array videoActors voor de efficiency, op basis van de actors en een hasVideo getter.
+
+Nee, een actor zonder video heeft de method loadVideoFrame niet.

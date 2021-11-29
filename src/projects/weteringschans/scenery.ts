@@ -5,7 +5,8 @@ import { ProjectSettings, VideoData } from './interfaces';
 
 export interface Scenery {
   getMesh: () => ExtendedMesh;
-  loadImage: () => void;
+  loadImage?: () => void;
+  loadVideoFrame?: () => Promise<boolean>;
 }
 
 export interface SceneryData {
@@ -56,7 +57,6 @@ export async function createScenery(
   const IMG_NR_LAST = (video.start + video.duration) * videoFps;
 
   let imgNr = IMG_NR_FIRST;
-  let tweenActive = false;
   let tweenProgress = 0;
 
   // CANVAS
@@ -78,22 +78,23 @@ export async function createScenery(
   texture.flipY = !svg;
 
   // IMAGE
-  const img = new Image();
-  img.onload = () => {
-    if (canvasCtx) {
-      canvasCtx.drawImage(img, 0, 0, width, height);
-      texture.needsUpdate = true;
-    }
-  };
-  const loadImage = (ignoreTweenActive = false) => {
-    if (tweenActive || ignoreTweenActive) {
+  const loadVideoFrame = async () => (
+    new Promise<boolean>((resolve, reject) => {
+      const img = new Image();
       imgNr = IMG_NR_FIRST + Math.round((IMG_NR_LAST - IMG_NR_FIRST) * tweenProgress);
+      img.onload = () => {
+        if (canvasCtx) {
+          canvasCtx.drawImage(img, 0, 0, width, height);
+          texture.needsUpdate = true;
+        }
+        resolve(true);
+      };
+      img.onerror = reject;
       img.src = imgSrcPath
         .split('#FRAME#')
         .join((imgNr <= 99999) ? (`0000${Math.round(imgNr)}`).slice(-5) : '99999');
-    }
-  };
-  loadImage(true);
+    })
+  );
 
   // MESH
   const mesh = svg
@@ -111,21 +112,13 @@ export async function createScenery(
   if (video.duration > 0) {
     const tween = createTween({
       duration: video.duration,
-      onStart: () => {
-        tweenActive = true;
-      },
-      onUpdate: (progress: number) => {
-        tweenProgress = progress;
-      },
       onComplete: () => {
         imgNr = IMG_NR_FIRST;
         tweenProgress = 0;
-        loadImage();
-        tweenActive = false;
       },
     });
     timeline.add(tween);
   }
 
-  return { getMesh, loadImage };
+  return { getMesh, loadVideoFrame };
 }
