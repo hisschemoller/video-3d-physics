@@ -5,7 +5,7 @@ import { ProjectSettings, VideoData } from './interfaces';
 
 export interface Scenery {
   getMesh: () => ExtendedMesh;
-  loadImage?: () => void;
+  loadImage?: () => Promise<boolean>;
   loadVideoFrame?: () => Promise<boolean>;
 }
 
@@ -57,6 +57,7 @@ export async function createScenery(
   const IMG_NR_LAST = (video.start + video.duration) * videoFps;
 
   let imgNr = IMG_NR_FIRST;
+  let tweenActive = false;
   let tweenProgress = 0;
 
   // CANVAS
@@ -78,9 +79,13 @@ export async function createScenery(
   texture.flipY = !svg;
 
   // IMAGE
+  const img = new Image();
+
   const loadVideoFrame = async () => (
     new Promise<boolean>((resolve, reject) => {
-      const img = new Image();
+      if (!tweenActive) {
+        resolve(true);
+      }
       imgNr = IMG_NR_FIRST + Math.round((IMG_NR_LAST - IMG_NR_FIRST) * tweenProgress);
       img.onload = () => {
         if (canvasCtx) {
@@ -112,9 +117,14 @@ export async function createScenery(
   if (video.duration > 0) {
     const tween = createTween({
       duration: video.duration,
+      onStart: () => {
+        tweenActive = true;
+      },
+      onUpdate: (progress: number) => {
+        tweenProgress = progress;
+      },
       onComplete: () => {
-        imgNr = IMG_NR_FIRST;
-        tweenProgress = 0;
+        tweenActive = false;
       },
     });
     timeline.add(tween);
