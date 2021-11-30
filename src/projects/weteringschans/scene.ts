@@ -31,7 +31,7 @@ export default class Scene extends MainScene {
     this.height = 1080;
     this.width3d = 16;
     this.height3d = 9;
-    this.fps = 10;
+    this.fps = 15;
     this.captureFps = 30;
     this.captureThrottle = 15;
     this.captureDuration = PATTERN_DURATION * 2;
@@ -287,13 +287,13 @@ export default class Scene extends MainScene {
     }));
 
     actors.push(await createActor(projectSettings, videoData, { // MAN MET KOPTELEFOON
-      xPx: 840,
+      xPx: 870,
       yPx: 510,
       wPx: 230,
       hPx: 570,
       yAddPx: 20,
       z: 1,
-      vStart: 2.5,
+      vStart: 2.66,
       xDist: 250,
       position: STEP_DURATION * 0,
       duration: STEP_DURATION * 12,
@@ -326,20 +326,20 @@ export default class Scene extends MainScene {
     }));
 
     actors.push(await createActor(projectSettings, videoData, { // FIETSER VAN LINKS
-      xPx: 400,
+      xPx: 350,
       yPx: 520,
       wPx: 400,
       hPx: 580,
       yAddPx: 20,
       z: 0.6,
-      vStart: 57.0,
+      vStart: 56.84,
       xDist: 600,
       position: STEP_DURATION * 8,
       duration: STEP_DURATION * 6,
     }));
 
     actors.push(await createActor(projectSettings, videoData, { // VOETGANGER AAN OVERKANT
-      xPx: 330,
+      xPx: 310,
       yPx: 500,
       wPx: 120,
       hPx: 580,
