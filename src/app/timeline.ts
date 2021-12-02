@@ -1,14 +1,14 @@
 import { Tween } from '@app/tween';
 
 export interface Timeline {
-  add: Function;
-  update: Function;
+  add: (tween: Tween) => void;
+  update: (time: number) => Promise<boolean[]>;
 }
 
 interface TimelineParams {
   duration: number;
-  onStart?: Function | undefined;
-  onRepeat?: Function | undefined;
+  onStart?: () => void | undefined;
+  onRepeat?: () => void | undefined;
 }
 
 export default function createTimeline({
@@ -20,10 +20,14 @@ export default function createTimeline({
     tweens.push(tween);
   };
 
-  const update = (time: number) => {
+  const update = async (time: number) => {
     const position = time % duration;
     const progress = position / duration;
-    tweens.forEach((tween) => tween.update(position, progress));
+    const promises = tweens.reduce((accumulator, tween) => {
+      const promise = tween.update(position, progress);
+      return (promise === undefined) ? accumulator : [...accumulator, promise];
+    }, [] as Promise<boolean>[]);
+    return Promise.all(promises);
   };
 
   return { add, update };

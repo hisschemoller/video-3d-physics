@@ -24,4 +24,6 @@ ffmpeg -i "weesperflat-d.mov" -vf "select=eq(n\,119)" -vframes 1 weesperflat-d_f
 ffmpeg -i weesperflat-d.mov '/Volumes/Samsung_X5/weesperflat/frames/frame_%05d.png'
 // scale to 25%, 1920 * 0.25 = 480 (x 270)
 ffmpeg -i weesperflat-d.mov -vf scale=480:-1 weesperflat-d_preview.mov
+// convert preview to png sequence
+ffmpeg -i weesperflat-d_preview.mov '/Volumes/Samsung_X5/weesperflat/frames_preview/frame_%05d.png'
 ``` 
