@@ -2,7 +2,7 @@ import { Tween } from '@app/tween';
 
 export interface Timeline {
   add: (tween: Tween) => void;
-  update: (time: number) => Promise<boolean[]>;
+  update: (time: number) => Promise<void[]>;
 }
 
 interface TimelineParams {
@@ -26,7 +26,7 @@ export default function createTimeline({
     const promises = tweens.reduce((accumulator, tween) => {
       const promise = tween.update(position, progress);
       return (promise === undefined) ? accumulator : [...accumulator, promise];
-    }, [] as Promise<boolean>[]);
+    }, [] as Promise<void>[]);
     return Promise.all(promises);
   };
 

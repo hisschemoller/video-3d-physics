@@ -1,6 +1,6 @@
 export interface Tween {
   isActive: boolean;
-  update: (timelinePosition: number, progress?: number) => Promise<boolean> | void | undefined;
+  update: (timelinePosition: number, progress?: number) => Promise<void> | void | undefined;
 }
 
 interface TweenParams {
@@ -9,7 +9,7 @@ interface TweenParams {
   easeAmount?: number;
   onComplete?: () => void | undefined;
   onStart?: () => void | undefined;
-  onUpdate?: (progress: number) => (Promise<boolean> | void) | undefined;
+  onUpdate?: (progress: number) => (Promise<void> | void) | undefined;
 }
 
 /**
@@ -41,8 +41,8 @@ export default function createTween({
   let isActive = false;
   let progressOffset = 0;
 
-  const update = (timelinePosition: number): Promise<boolean> | void | undefined => {
-    let result: Promise<boolean> | void | undefined;
+  const update = (timelinePosition: number): Promise<void> | void | undefined => {
+    let result: Promise<void> | void | undefined;
     const wasActive = isActive;
     isActive = timelinePosition > delay && timelinePosition <= delay + duration;
     // TODO: start en complete als tween de hele tijd duurt

@@ -180,7 +180,6 @@ export async function createActor(
             coords.yOffset + ((yOffsetEnd - coords.yOffset) * progress),
           );
         }
-        return true;
       },
       onComplete: () => {
         mesh.visible = false;
