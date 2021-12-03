@@ -3,6 +3,7 @@ import { getMatrix4 } from '@app/utils';
 import createTween from '@app/tween';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import { createRectangle, createSVG } from './actor-mesh';
+import addImageCanvas from './actor-canvas';
 
 export interface Actor {
   getMesh: () => ExtendedMesh;
@@ -30,19 +31,19 @@ interface ActorData {
  * Create an actor, an optionally animating 3d object.
  */
 export async function createActor(
-  {
+  projectSettings: ProjectSettings,
+  videoData: VideoData,
+  actorData: ActorData,
+): Promise<Actor> {
+  const {
     scene,
     timeline,
     width,
     height,
     width3d,
     height3d,
-  }: ProjectSettings,
-  {
-    fps: videoFps,
-    imgSrcPath,
-  }: VideoData,
-  {
+  } = projectSettings;
+  const {
     xPx = 0,
     yPx = 0,
     wPx = 100,
@@ -51,15 +52,14 @@ export async function createActor(
     yAddPx = 0,
     xDist = 0,
     yDist = 0,
-    vStart = 0,
     duration = 0,
     position = 0,
     easeAmount = 0,
     svgScale = 1,
     svgUrl = '',
     z = 0,
-  }: ActorData,
-): Promise<Actor> {
+  } = actorData;
+
   // translate position and size of image section in px to 3d units so it covers the surface
   const x3d = xPx * (width3d / width);
   const y3d = yPx * (height3d / height);
@@ -80,52 +80,16 @@ export async function createActor(
   const xVP = x3d + (w3d / 2) - (width3d / 2);
   const yVP = (y3d + (h3d / 2) - (height3d / 2)) * -1;
 
-  const IMG_NR_FIRST = vStart * videoFps;
-  const IMG_NR_LAST = (vStart + duration) * videoFps;
-
-  let imgNr = IMG_NR_FIRST;
-  let tweenActive = false;
-
-  // CANVAS
-  const canvasEl = document.createElement('canvas');
-  canvasEl.width = width;
-  canvasEl.height = height;
-  const canvasCtx = canvasEl.getContext('2d');
-  if (canvasCtx) {
-    canvasCtx.fillStyle = '#6c645f';
-    canvasCtx.fillRect(0, 0, width, height);
-  }
+  // IMAGE & CANVAS
+  const { canvas, loadVideoFrame } = addImageCanvas(projectSettings, videoData, actorData);
 
   // TEXTURE
-  const texture = new THREE.CanvasTexture(canvasEl);
+  const texture = new THREE.CanvasTexture(canvas);
   texture.minFilter = THREE.LinearFilter;
   texture.magFilter = THREE.LinearFilter;
   texture.offset = new THREE.Vector2(xOffset, yOffset);
   texture.repeat = new THREE.Vector2(wRepeat * svgScale, hRepeat * svgScale);
   texture.flipY = !svgUrl;
-
-  // IMAGE
-  const img = new Image();
-
-  const loadVideoFrame = async (tweenProgress: number) => (
-    new Promise<boolean>((resolve, reject) => {
-      if (!tweenActive) {
-        resolve(true);
-      }
-      imgNr = IMG_NR_FIRST + Math.round((IMG_NR_LAST - IMG_NR_FIRST) * tweenProgress);
-      img.onload = () => {
-        if (canvasCtx) {
-          canvasCtx.drawImage(img, 0, 0, width, height);
-          texture.needsUpdate = true;
-        }
-        resolve(true);
-      };
-      img.onerror = reject;
-      img.src = imgSrcPath
-        .split('#FRAME#')
-        .join((imgNr <= 99999) ? (`0000${Math.round(imgNr)}`).slice(-5) : '99999');
-    })
-  );
 
   // MESH
   const mesh = svgUrl
@@ -165,7 +129,6 @@ export async function createActor(
       easeAmount,
       onStart: () => {
         mesh.visible = true;
-        tweenActive = true;
       },
       onUpdate: async (progress: number) => {
         mesh.position.set(
@@ -173,7 +136,10 @@ export async function createActor(
           coords.y + yAdd3d + ((yVpEnd - coords.y) * progress),
           coords.z,
         );
-        await loadVideoFrame(progress);
+        if (loadVideoFrame) {
+          await loadVideoFrame(progress);
+          texture.needsUpdate = true;
+        }
         if (materials[1].map) {
           materials[1].map.offset = new THREE.Vector2(
             coords.xOffset + ((xOffsetEnd - coords.xOffset) * progress),
@@ -183,7 +149,6 @@ export async function createActor(
       },
       onComplete: () => {
         mesh.visible = false;
-        tweenActive = false;
       },
     });
     timeline.add(tween);
