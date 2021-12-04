@@ -26,4 +26,18 @@ ffmpeg -i weesperflat-d.mov '/Volumes/Samsung_X5/weesperflat/frames/frame_%05d.p
 ffmpeg -i weesperflat-d.mov -vf scale=480:-1 weesperflat-d_preview.mov
 // convert preview to png sequence
 ffmpeg -i weesperflat-d_preview.mov '/Volumes/Samsung_X5/weesperflat/frames_preview/frame_%05d.png'
+
+
+// TWEEDE VIDEO
+// crop video tot 664 hoogte.
+ffmpeg -i weesperflat-b.mov -filter:v "crop=1920:664:0:0" weesperflat-2a.mov
+// extract frame 4 * 30 = 120 as an image
+ffmpeg -i "weesperflat-2a.mov" -vf "select=eq(n\,119)" -vframes 1 weesperflat-2a_frame_120.png
+
+// convert to png sequence
+ffmpeg -i weesperflat-2a.mov '/Volumes/Samsung_X5/weesperflat2/frames/frame_%05d.png'
+// scale to 25%, 1920 * 0.25 = 480 (x 270)
+ffmpeg -i weesperflat-2a.mov -vf scale=480:-1 weesperflat-2a_preview.mov
+// convert preview to png sequence
+ffmpeg -i weesperflat-2a_preview.mov '/Volumes/Samsung_X5/weesperflat2/frames_preview/frame_%05d.png'
 ``` 

@@ -7,17 +7,18 @@ export interface ImageCanvas {
 }
 
 export default function addImageCanvas(
-  {
-    width,
-    height,
-  }: ProjectSettings,
+  projectSettings: ProjectSettings,
   {
     fps,
+    height,
     imgSrcPath,
+    width,
   }: VideoData,
   {
-    vStart = 0,
-    duration = 0,
+    video: {
+      start = 0,
+      duration = 0,
+    },
   },
 ): ImageCanvas {
   // CANVAS
@@ -32,8 +33,8 @@ export default function addImageCanvas(
 
   // IMAGE
   const img = new Image();
-  const imgNrFirst = vStart * fps;
-  const imgNrLast = (vStart + duration) * fps;
+  const imgNrFirst = start * fps;
+  const imgNrLast = (start + duration) * fps;
   let imgNr = imgNrFirst;
 
   const loadVideoFrame = async (progress: number) => (
