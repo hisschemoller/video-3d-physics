@@ -80,9 +80,7 @@ export async function createActor(
 
   // MESH
   const mesh = svg
-    ? await createSVG(
-      svg.url, svg.scale, 0, 0, texture, width3d, height3d, depth, svg.alignWithViewport,
-    )
+    ? await createSVG(svg.url, svg.scale, texture)
     : await createRectangle(w3d, h3d, texture, depth);
   mesh.applyMatrix4(matrix4);
   mesh.castShadow = true;

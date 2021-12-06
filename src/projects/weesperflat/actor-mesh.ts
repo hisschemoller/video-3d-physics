@@ -21,7 +21,7 @@ export function createRectangle(
     geometry.groups.forEach((group, index) => {
       /* eslint-disable no-param-reassign */
       group.materialIndex = index === 4 ? 1 : 0;
-    }); 
+    });
     const materials = [
       new THREE.MeshPhongMaterial({ color: BASE_COLOR, side: THREE.FrontSide }),
       new THREE.MeshPhongMaterial({ map: texture, side: THREE.FrontSide }),
@@ -37,13 +37,8 @@ export function createRectangle(
 export function createSVG(
   svgUrl: string,
   svgScale: number,
-  xVP: number,
-  yVP: number,
   texture : THREE.Texture,
-  viewport3dWidth: number,
-  viewport3dHeight: number,
   depth = 0.02,
-  alignWithViewport = true,
 ) {
   return new Promise<ExtendedMesh>(
     (resolve, reject) => {
@@ -69,8 +64,6 @@ export function createSVG(
                 group.materialIndex = index === 0 ? 1 : 0;
               });
               geometry.applyMatrix4(getMatrix4({
-                x: alignWithViewport ? (viewport3dWidth * -0.5) + xVP : 0,
-                y: alignWithViewport ? (viewport3dHeight * 0.5) + yVP : 0,
                 sx: svgScale,
                 sy: svgScale * -1,
               }));
