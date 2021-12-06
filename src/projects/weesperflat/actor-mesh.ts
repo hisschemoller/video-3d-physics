@@ -15,10 +15,13 @@ export function createRectangle(
 ) {
   return new Promise<ExtendedMesh>((resolve) => {
     const geometry = new THREE.BoxGeometry(width, height, depth);
+
+    // move registration point to left top corner
+    geometry.translate(width * 0.5, height * -0.5, 0);
     geometry.groups.forEach((group, index) => {
       /* eslint-disable no-param-reassign */
       group.materialIndex = index === 4 ? 1 : 0;
-    });
+    }); 
     const materials = [
       new THREE.MeshPhongMaterial({ color: BASE_COLOR, side: THREE.FrontSide }),
       new THREE.MeshPhongMaterial({ map: texture, side: THREE.FrontSide }),
