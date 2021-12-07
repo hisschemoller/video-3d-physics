@@ -5,7 +5,7 @@ import { getMatrix4 } from '@app/utils';
 import { Actor, createActor } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 119;
+const BPM = 50;
 const STEPS = 16;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
@@ -41,6 +41,13 @@ export default class Scene extends MainScene {
     // RENDERER
     this.renderer.setClearColor(0x749ecc);
 
+    // AMBIENT LIGHT
+    this.ambientLight.intensity = 0.5;
+
+    // DIRECTIONAL LIGHT
+    this.directionalLight.position.set(15, 5, 10);
+    this.directionalLight.intensity = 0.9;
+
     // TWEENS
     this.timeline = createTimeline({
       duration: PATTERN_DURATION,
@@ -52,6 +59,8 @@ export default class Scene extends MainScene {
         scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
         height: 920,
         width: this.width,
+        x: 0,
+        y: 160,
         imgSrcPath: isPreview
           ? '../assets/projects/weesperflat/frames_preview/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/weesperflat/frames/&img=frame_#FRAME#.png',
@@ -61,6 +70,8 @@ export default class Scene extends MainScene {
         scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
         height: 664,
         width: this.width,
+        x: 0,
+        y: 231,
         imgSrcPath: isPreview
           ? '../assets/projects/weesperflat/frames2_preview/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/weesperflat2/frames/&img=frame_#FRAME#.png',
@@ -90,18 +101,20 @@ export default class Scene extends MainScene {
   async createActors(projectSettings: ProjectSettings, videos: { [key: string]: VideoData }) {
     const to3d = (size: number, isWidth = true) => (isWidth
       ? (size / this.width) * this.width3d
-      : (size / this.height) * this.height3d);
+      : (size / this.height) * this.height3d * -1);
+
+    const toVP3d = (size: number, isWidth = true) => (
+      to3d(size, isWidth) + (isWidth ? (this.width3d * -0.5) : (this.height3d * 0.5)));
 
     actors.push(await createActor(projectSettings, videos.video2, { // NIEUWE KEIZERSGRACHT
-      box: { x: 1003, y: 0 },
+      video: { start: 25.7, duration: PATTERN_DURATION },
       matrix4: getMatrix4({
-        x: to3d(1003) + 1,
-        y: to3d(-231, false) - 0.2,
+        x: toVP3d(1003),
+        y: toVP3d(231, false),
         z: -1,
         sx: 1.1,
         sy: 1.1,
       }),
-      video: { start: 25.7, duration: PATTERN_DURATION },
       svg: {
         scale: this.width3d / this.width,
         url: '../assets/projects/weesperflat/nieuwekeizersgracht.svg',
@@ -110,14 +123,58 @@ export default class Scene extends MainScene {
     }));
 
     actors.push(await createActor(projectSettings, videos.video1, { // DE FLAT
-      box: { x: 0, y: 0 },
-      matrix4: getMatrix4({ x: 0, y: to3d(-160, false), z: 0 }),
       video: { start: 25.7, duration: PATTERN_DURATION },
+      matrix4: getMatrix4({
+        x: toVP3d(0),
+        y: toVP3d(this.height - videos.video1.height, false),
+        z: 0,
+      }),
       svg: {
         scale: this.width3d / this.width,
         url: '../assets/projects/weesperflat/flat.svg',
       },
       tween: { position: 0, duration: PATTERN_DURATION },
+    }));
+
+    actors.push(await createActor(projectSettings, videos.video1, { // BOX TEST
+      box: { w: 500, h: 270 },
+      video: { start: 25.7, duration: STEP_DURATION * 14 },
+      matrix4: getMatrix4({
+        x: toVP3d(0),
+        y: toVP3d(810, false),
+        z: 0,
+      }),
+      tween: {
+        position: 0,
+        duration: STEP_DURATION * 15,
+        matrix4End: getMatrix4({
+          x: toVP3d(this.width - 500),
+          y: toVP3d(this.height - videos.video1.height, false),
+          z: 0,
+        }),
+      },
+    }));
+
+    actors.push(await createActor(projectSettings, videos.video1, { // SVG TEST
+      svg: {
+        scale: this.width3d / this.width,
+        url: '../assets/projects/weesperflat/test7.svg',
+      },
+      video: { start: 25.7, duration: STEP_DURATION * 14 },
+      matrix4: getMatrix4({
+        x: toVP3d(videos.video1.x),
+        y: toVP3d(videos.video1.y, false),
+        z: 0.1,
+      }),
+      tween: {
+        position: 0,
+        duration: STEP_DURATION * 15,
+        matrix4End: getMatrix4({
+          x: toVP3d(this.width - 637),
+          y: toVP3d(810, false),
+          z: 0.1,
+        }),
+      },
     }));
   }
 }

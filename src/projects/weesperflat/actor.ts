@@ -9,11 +9,12 @@ export interface Actor {
 }
 
 interface ActorData {
-  box: { x?: number, y?: number, w?: number, h?: number, d?: number, },
+  alignVideoWithViewport?: boolean,
+  box?: { w?: number, h?: number, d?: number, },
   matrix4: THREE.Matrix4,
-  svg?: { url: string, scale: number, alignWithViewport?: boolean },
+  svg?: { url: string, scale: number },
   video: { start: number, duration: number },
-  tween: { position: number, duration: number, easeAmount?: number, matrixEnd?: THREE.Matrix4, },
+  tween: { position: number, duration: number, easeAmount?: number, matrix4End?: THREE.Matrix4, },
 }
 
 /**
@@ -33,12 +34,15 @@ export async function createActor(
     height3d,
   } = projectSettings;
   const {
+    x: videoX = 0,
+    y: videoY = 0,
     height: videoHeight,
     width: videoWidth,
   } = videoData;
   const {
-    box: {
-      x = 0, y = 0, w = 1, h = 1,
+    alignVideoWithViewport = true,
+    box = {
+      w: 1, h: 1, d: 0.02,
     },
     matrix4,
     svg,
@@ -46,24 +50,31 @@ export async function createActor(
       position = 0,
       duration = 0,
       easeAmount = 0,
-      matrixEnd = matrix4,
+      matrix4End = matrix4,
     },
   } = actorData;
-  const depth = 0.02;
 
-  // translate position and size of image section in px to 3d units so it covers the surface
-  const x3d = x * (width3d / width);
-  const y3d = y * (height3d / height);
-  const w3d = (w / width) * width3d;
-  const h3d = (h / height) * height3d;
+  const to3d = (size: number, isWidth = true) => (isWidth
+    ? (size / width) * width3d
+    : (size / height) * height3d * -1);
+
+  const toVp3d = (size: number, isWidth = true) => (
+    to3d(size, isWidth) + (isWidth ? (width3d * -0.5) : (height3d * 0.5)));
+  const startPosition = new THREE.Vector3().setFromMatrixPosition(matrix4);
 
   // translate the video size to 3D units
-  const videoWidth3d = (videoWidth / width) * width3d;
-  const videoHeight3d = (videoHeight / height) * height3d;
+  const videoXVp3d = toVp3d(videoX);
+  const videoYVp3d = toVp3d(videoY, false);
+  const videoWidth3d = to3d(videoWidth);
+  const videoHeight3d = to3d(videoHeight, false);
 
-  // translate the image position and size in 3d units to texture offset and repeat
-  const xOffset = x3d / width3d;
-  const yOffset = svg ? y3d / height3d : 1 - ((y3d + h3d) / height3d);
+  // BOX
+  const { w = 1, h = 1, d: depth } = box;
+  const w3d = to3d(w);
+  const h3d = to3d(h);
+
+  const xOffset = (startPosition.x + (width3d / 2)) / width3d;
+  const yOffset = svg ? 1 - ((startPosition.y - videoYVp3d) / videoHeight3d) : 0;
   const wRepeat = svg ? (1 / videoWidth3d) * svg.scale : w3d / width3d;
   const hRepeat = svg ? (1 / videoHeight3d) * svg.scale : h3d / height3d;
 
@@ -76,7 +87,7 @@ export async function createActor(
   texture.magFilter = THREE.LinearFilter;
   texture.offset = new THREE.Vector2(xOffset, yOffset);
   texture.repeat = new THREE.Vector2(wRepeat, hRepeat);
-  texture.flipY = !svg;
+  // texture.flipY = !svg;
 
   // MESH
   const mesh = svg
@@ -89,47 +100,48 @@ export async function createActor(
   const getMesh = () => mesh;
 
   // MATERIALS
+  let imageTexture: THREE.Texture | null;
   let materials: THREE.MeshPhongMaterial[] = [];
   if ((mesh.material as THREE.MeshPhongMaterial[]).length !== undefined) {
     materials = mesh.material as THREE.MeshPhongMaterial[];
+    imageTexture = materials[1].map;
   }
 
   // TWEEN
   if (duration > 0) {
-    // const coords = {
-    //   ...mesh.position.clone(),
-    //   xOffset,
-    //   yOffset,
-    // };
-    // const x3dEnd = (xPx + xDist) * (width3d / width);
-    // const y3dEnd = (yPx + yDist) * (height3d / height);
-    // const xVpEnd = x3dEnd + (w3d / 2) - (width3d / 2);
-    // const yVpEnd = (y3dEnd + (h3d / 2) - (height3d / 2)) * -1;
-    // const xOffsetEnd = (x3dEnd) / width3d;
-    // const yOffsetEnd = 0; // svgUrl ? y3d / height3d : 1 - ((y3dEnd + h3d) / height3d);
+    const endPosition = new THREE.Vector3().setFromMatrixPosition(matrix4End);
+    const xOffsetEnd = (endPosition.x + (width3d / 2)) / width3d;
+
+    const yPositionVp3dEnd = endPosition.y + (h3d * -1); // 4.5 -> -4.5
+    const vp3dEndZeroBased = yPositionVp3dEnd + (height3d / 2); // 9.0 -> 0.0
+    const yOffsetAtEnd = vp3dEndZeroBased / height3d; // // 1.0 -> 0.0
+
+    const yOffsetEnd = svg
+      ? 1 - ((endPosition.y - videoYVp3d) / videoHeight3d)
+      : yOffsetAtEnd;
+
+    const startOffset = texture.offset.clone();
+    const endOffset = new THREE.Vector2(xOffsetEnd, yOffsetEnd);
     const tween = createTween({
       delay: position,
       duration,
       easeAmount,
       onStart: () => {
         mesh.visible = true;
+        mesh.position.lerp(startPosition, 1);
+        if (imageTexture) {
+          imageTexture.offset.lerp(startOffset, 1);
+        }
       },
       onUpdate: async (progress: number) => {
-        // mesh.position.set(
-        //   coords.x + xAdd3d + ((xVpEnd - coords.x) * progress),
-        //   coords.y + yAdd3d + ((yVpEnd - coords.y) * progress),
-        //   coords.z,
-        // );
+        mesh.position.lerp(endPosition, progress);
         if (loadVideoFrame) {
           await loadVideoFrame(progress);
           texture.needsUpdate = true;
         }
-        // if (materials[1].map) {
-        //   materials[1].map.offset = new THREE.Vector2(
-        //     coords.xOffset + ((xOffsetEnd - coords.xOffset) * progress),
-        //     coords.yOffset + ((yOffsetEnd - coords.yOffset) * progress),
-        //   );
-        // }
+        if (imageTexture) {
+          imageTexture.offset.lerp(endOffset, progress);
+        }
       },
       onComplete: () => {
         mesh.visible = false;

@@ -15,6 +15,8 @@ export interface VideoData {
   fps: number,
   scale: number,
   height: number,
-  width: number,
   imgSrcPath: string,
+  width: number,
+  x: number;
+  y: number;
 }
