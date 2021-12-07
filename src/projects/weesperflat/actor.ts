@@ -17,6 +17,17 @@ interface ActorData {
   tween: { position: number, duration: number, easeAmount?: number, matrix4End?: THREE.Matrix4, },
 }
 
+function getBoxOffsetY(yPosition: number, boxHeight: number, vpHeight: number): number {
+  const yPositionVp3d = yPosition - boxHeight; //
+  const vp3dZeroBased = yPositionVp3d + (vpHeight / 2); //
+  const yOffset = vp3dZeroBased / vpHeight; //
+  // console.log('yPosition', yPosition);
+  // console.log('yPositionVp3d', yPositionVp3d);
+  // console.log('vp3dStartZeroBased', vp3dZeroBased);
+  // console.log('yOffsetAtStart', yOffset);
+  return yOffset;
+}
+
 /**
  * Create an actor, an optionally animating 3d object.
  */
@@ -74,7 +85,9 @@ export async function createActor(
   const h3d = to3d(h);
 
   const xOffset = (startPosition.x + (width3d / 2)) / width3d;
-  const yOffset = svg ? 1 - ((startPosition.y - videoYVp3d) / videoHeight3d) : 0;
+  const yOffset = svg
+    ? 1 - ((startPosition.y - videoYVp3d) / videoHeight3d)
+    : getBoxOffsetY(startPosition.y, h3d, height3d);
   const wRepeat = svg ? (1 / videoWidth3d) * svg.scale : w3d / width3d;
   const hRepeat = svg ? (1 / videoHeight3d) * svg.scale : h3d / height3d;
 
@@ -111,17 +124,13 @@ export async function createActor(
   if (duration > 0) {
     const endPosition = new THREE.Vector3().setFromMatrixPosition(matrix4End);
     const xOffsetEnd = (endPosition.x + (width3d / 2)) / width3d;
-
-    const yPositionVp3dEnd = endPosition.y + (h3d * -1); // 4.5 -> -4.5
-    const vp3dEndZeroBased = yPositionVp3dEnd + (height3d / 2); // 9.0 -> 0.0
-    const yOffsetAtEnd = vp3dEndZeroBased / height3d; // // 1.0 -> 0.0
-
     const yOffsetEnd = svg
       ? 1 - ((endPosition.y - videoYVp3d) / videoHeight3d)
-      : yOffsetAtEnd;
+      : getBoxOffsetY(endPosition.y, h3d, height3d);
 
     const startOffset = texture.offset.clone();
     const endOffset = new THREE.Vector2(xOffsetEnd, yOffsetEnd);
+
     const tween = createTween({
       delay: position,
       duration,

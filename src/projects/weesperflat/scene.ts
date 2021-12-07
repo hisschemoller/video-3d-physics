@@ -141,16 +141,16 @@ export default class Scene extends MainScene {
       video: { start: 25.7, duration: STEP_DURATION * 14 },
       matrix4: getMatrix4({
         x: toVP3d(0),
-        y: toVP3d(810, false),
-        z: 0,
+        y: toVP3d(810, false), // 1080 - 270 = 810
+        z: 0.2,
       }),
       tween: {
         position: 0,
         duration: STEP_DURATION * 15,
         matrix4End: getMatrix4({
           x: toVP3d(this.width - 500),
-          y: toVP3d(this.height - videos.video1.height, false),
-          z: 0,
+          y: toVP3d(videos.video1.y, false),
+          z: 0.2,
         }),
       },
     }));

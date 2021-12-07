@@ -19,14 +19,14 @@ interface TweenParams {
  * direction of the ease.
  */
 const getEasefunction = (amount: number) => {
-  let eAmount = amount;
-  if (eAmount < -1) eAmount = -1;
-  else if (eAmount > 1) eAmount = 1;
-  return (t: number) => {
-    if (eAmount === 0) { return t; }
-    if (amount < 0) { return t * (t * -amount + 1 + amount); }
-    return t * ((2 - t) * amount + (1 - amount));
-  };
+  const eAmount = Math.max(-1, Math.min(amount, 1));
+  if (eAmount === 0) {
+    return (t: number) => t;
+  }
+  if (eAmount < 0) {
+    return (t: number) => t * (t * -amount + 1 + amount);
+  }
+  return (t: number) => t * ((2 - t) * amount + (1 - amount));
 };
 
 export default function createTween({
