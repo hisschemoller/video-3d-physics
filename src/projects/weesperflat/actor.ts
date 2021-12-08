@@ -9,11 +9,10 @@ export interface Actor {
 }
 
 interface ActorData {
-  alignVideoWithViewport?: boolean,
   box?: { w?: number, h?: number, d?: number, },
   matrix4: THREE.Matrix4,
   svg?: { url: string, scale: number },
-  video: { start: number, duration: number },
+  video: { start: number, duration: number, alignWithViewport?: boolean, x?: number, y?: number, },
   tween: { position: number, duration: number, easeAmount?: number, matrix4End?: THREE.Matrix4, },
 }
 
@@ -51,7 +50,6 @@ export async function createActor(
     width: videoWidth,
   } = videoData;
   const {
-    alignVideoWithViewport = true,
     box = {
       w: 1, h: 1, d: 0.02,
     },
@@ -63,6 +61,11 @@ export async function createActor(
       easeAmount = 0,
       matrix4End = matrix4,
     },
+    video: {
+      alignWithViewport = true,
+      x: videoNotAlignedX = 0,
+      y: videoNotAlignedY = 0,
+    },
   } = actorData;
 
   const to3d = (size: number, isWidth = true) => (isWidth
@@ -71,11 +74,16 @@ export async function createActor(
 
   const toVp3d = (size: number, isWidth = true) => (
     to3d(size, isWidth) + (isWidth ? (width3d * -0.5) : (height3d * 0.5)));
+
   const startPosition = new THREE.Vector3().setFromMatrixPosition(matrix4);
 
+  // video aligned with viewport composition or separate - to be rethought, refactored
+  const vidX = alignWithViewport ? videoX : videoNotAlignedX;
+  const vidY = alignWithViewport ? videoY : videoNotAlignedY;
+
   // translate the video size to 3D units
-  const videoXVp3d = toVp3d(videoX);
-  const videoYVp3d = toVp3d(videoY, false);
+  const videoXVp3d = toVp3d(vidX);
+  const videoYVp3d = toVp3d(vidY, false);
   const videoWidth3d = to3d(videoWidth);
   const videoHeight3d = to3d(videoHeight, false);
 
@@ -84,9 +92,15 @@ export async function createActor(
   const w3d = to3d(w);
   const h3d = to3d(h);
 
-  const xOffset = (startPosition.x + (width3d / 2)) / width3d;
+  // const xOffset = (startPosition.x + (width3d / 2)) / width3d;
+  const xOffset = videoNotAlignedX
+    ? videoNotAlignedX / videoWidth
+    : (startPosition.x - videoXVp3d) / videoWidth3d;
+  // eslint-disable-next-line no-nested-ternary
   const yOffset = svg
-    ? 1 - ((startPosition.y - videoYVp3d) / videoHeight3d)
+    ? videoNotAlignedX
+      ? 1 - (videoNotAlignedY / videoHeight)
+      : 1 - ((startPosition.y - videoYVp3d) / videoHeight3d)
     : getBoxOffsetY(startPosition.y, h3d, height3d);
   const wRepeat = svg ? (1 / videoWidth3d) * svg.scale : w3d / width3d;
   const hRepeat = svg ? (1 / videoHeight3d) * svg.scale : h3d / height3d;
@@ -123,9 +137,16 @@ export async function createActor(
   // TWEEN
   if (duration > 0) {
     const endPosition = new THREE.Vector3().setFromMatrixPosition(matrix4End);
-    const xOffsetEnd = (endPosition.x + (width3d / 2)) / width3d;
+    // const xOffsetEnd = (endPosition.x + (width3d / 2)) / width3d;
+    const xOffsetEnd = videoNotAlignedX
+      ? (videoNotAlignedX / videoWidth)
+      : (startPosition.x - videoXVp3d) / videoWidth3d;
+    // const xOffsetEnd = (endPosition.x - videoXVp3d) / videoWidth3d;
+    // eslint-disable-next-line no-nested-ternary
     const yOffsetEnd = svg
-      ? 1 - ((endPosition.y - videoYVp3d) / videoHeight3d)
+      ? videoNotAlignedX
+        ? 1 - (videoNotAlignedY / videoHeight)
+        : 1 - ((endPosition.y - videoYVp3d) / videoHeight3d)
       : getBoxOffsetY(endPosition.y, h3d, height3d);
 
     const startOffset = texture.offset.clone();
