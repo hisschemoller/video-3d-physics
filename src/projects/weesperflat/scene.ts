@@ -106,8 +106,37 @@ export default class Scene extends MainScene {
     const toVP3d = (size: number, isWidth = true) => (
       to3d(size, isWidth) + (isWidth ? (this.width3d * -0.5) : (this.height3d * 0.5)));
 
+    const SVG_SCALE = this.width3d / this.width;
+
+    {
+      const actor = await createActor(projectSettings, videos.video2, { // BOMEN ACHTER
+        video: {
+          start: 25.7,
+          duration: PATTERN_DURATION,
+          alignWithViewport: false,
+          x: 1236,
+          y: 0,
+        },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/bomen.svg' },
+        matrix4: getMatrix4({
+          x: toVP3d(0) - 1.65,
+          y: toVP3d(0, false) + 1,
+          z: -2,
+          sx: 1.2,
+          sy: 1.2,
+        }),
+        tween: { position: 0, duration: PATTERN_DURATION },
+      });
+      const mesh = actor.getMesh();
+      const material = (mesh.material as THREE.Material[])[1];
+      material.transparent = true;
+      material.opacity = 0.8;
+      actors.push(actor);
+    }
+
     actors.push(await createActor(projectSettings, videos.video2, { // NIEUWE KEIZERSGRACHT
       video: { start: 25.7, duration: PATTERN_DURATION },
+      svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/nieuwekeizersgracht.svg' },
       matrix4: getMatrix4({
         x: toVP3d(1003),
         y: toVP3d(231, false),
@@ -115,26 +144,21 @@ export default class Scene extends MainScene {
         sx: 1.1,
         sy: 1.1,
       }),
-      svg: {
-        scale: this.width3d / this.width,
-        url: '../assets/projects/weesperflat/nieuwekeizersgracht.svg',
-      },
       tween: { position: 0, duration: PATTERN_DURATION },
     }));
 
     actors.push(await createActor(projectSettings, videos.video1, { // DE FLAT
+      svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/flat.svg' },
       video: { start: 25.7, duration: PATTERN_DURATION },
       matrix4: getMatrix4({
         x: toVP3d(0),
         y: toVP3d(this.height - videos.video1.height, false),
         z: 0,
       }),
-      svg: {
-        scale: this.width3d / this.width,
-        url: '../assets/projects/weesperflat/flat.svg',
-      },
       tween: { position: 0, duration: PATTERN_DURATION },
     }));
+
+    return;
 
     actors.push(await createActor(projectSettings, videos.video1, { // BOX TEST
       box: { w: 500, h: 270 },
@@ -156,10 +180,7 @@ export default class Scene extends MainScene {
     }));
 
     actors.push(await createActor(projectSettings, videos.video1, { // SVG TEST
-      svg: {
-        scale: this.width3d / this.width,
-        url: '../assets/projects/weesperflat/test7.svg',
-      },
+      svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/test7.svg' },
       video: { start: 25.7, duration: STEP_DURATION * 14 },
       matrix4: getMatrix4({
         x: toVP3d(videos.video1.x),
