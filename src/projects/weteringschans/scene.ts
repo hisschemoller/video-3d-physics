@@ -8,7 +8,7 @@ import { Scenery, createScenery } from './scenery';
 import createSphere from './sphere';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 119;
+const BPM = 118;
 const STEPS = 16;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
@@ -34,7 +34,7 @@ export default class Scene extends MainScene {
     this.fps = 15;
     this.captureFps = 30;
     this.captureThrottle = 15;
-    this.captureDuration = PATTERN_DURATION * 2;
+    this.captureDuration = PATTERN_DURATION * 3;
   }
 
   async create() {

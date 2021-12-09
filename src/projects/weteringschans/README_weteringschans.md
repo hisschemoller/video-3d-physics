@@ -21,8 +21,8 @@ ffmpeg -i weteringschans-b.mov -vf scale=480:-1 weteringschans-b_preview.mov
 // convert preview to png sequence
 ffmpeg -i weteringschans-b_preview.mov '/Volumes/Samsung_X5/weteringschans/frames_preview/frame_%05d.png'
 
-// png to mp4 (from index 61)
-ffmpeg -framerate 30 -start_number 61 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p weteringschans-video-x1.mp4
+// png to mp4 (from index 123)
+ffmpeg -framerate 30 -start_number 123 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p weteringschans-video-x1.mp4
 // repeat 32 times, 61 frames, video alleen
 ffmpeg -i weteringschans-video-x1.mp4 -filter_complex "loop=loop=32:size=61:start=0" weteringschans-video-x32.mp4
 // repeat 32, audio alleen
