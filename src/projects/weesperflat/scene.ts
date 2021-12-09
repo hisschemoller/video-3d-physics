@@ -5,7 +5,7 @@ import { getMatrix4 } from '@app/utils';
 import { Actor, createActor } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 50;
+const BPM = 115;
 const STEPS = 16;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
@@ -158,44 +158,42 @@ export default class Scene extends MainScene {
       tween: { position: 0, duration: PATTERN_DURATION },
     }));
 
-    return;
+    // actors.push(await createActor(projectSettings, videos.video1, { // BOX TEST
+    //   box: { w: 500, h: 270 },
+    //   video: { start: 25.7, duration: STEP_DURATION * 14 },
+    //   matrix4: getMatrix4({
+    //     x: toVP3d(0),
+    //     y: toVP3d(810, false), // 1080 - 270 = 810
+    //     z: 0.2,
+    //   }),
+    //   tween: {
+    //     position: 0,
+    //     duration: STEP_DURATION * 15,
+    //     matrix4End: getMatrix4({
+    //       x: toVP3d(this.width - 500),
+    //       y: toVP3d(videos.video1.y, false),
+    //       z: 0.2,
+    //     }),
+    //   },
+    // }));
 
-    actors.push(await createActor(projectSettings, videos.video1, { // BOX TEST
-      box: { w: 500, h: 270 },
-      video: { start: 25.7, duration: STEP_DURATION * 14 },
-      matrix4: getMatrix4({
-        x: toVP3d(0),
-        y: toVP3d(810, false), // 1080 - 270 = 810
-        z: 0.2,
-      }),
-      tween: {
-        position: 0,
-        duration: STEP_DURATION * 15,
-        matrix4End: getMatrix4({
-          x: toVP3d(this.width - 500),
-          y: toVP3d(videos.video1.y, false),
-          z: 0.2,
-        }),
-      },
-    }));
-
-    actors.push(await createActor(projectSettings, videos.video1, { // SVG TEST
-      svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/test7.svg' },
-      video: { start: 25.7, duration: STEP_DURATION * 14 },
-      matrix4: getMatrix4({
-        x: toVP3d(videos.video1.x),
-        y: toVP3d(videos.video1.y, false),
-        z: 0.1,
-      }),
-      tween: {
-        position: 0,
-        duration: STEP_DURATION * 15,
-        matrix4End: getMatrix4({
-          x: toVP3d(this.width - 637),
-          y: toVP3d(810, false),
-          z: 0.1,
-        }),
-      },
-    }));
+    // actors.push(await createActor(projectSettings, videos.video1, { // SVG TEST
+    //   svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/test7.svg' },
+    //   video: { start: 25.7, duration: STEP_DURATION * 14 },
+    //   matrix4: getMatrix4({
+    //     x: toVP3d(videos.video1.x),
+    //     y: toVP3d(videos.video1.y, false),
+    //     z: 0.1,
+    //   }),
+    //   tween: {
+    //     position: 0,
+    //     duration: STEP_DURATION * 15,
+    //     matrix4End: getMatrix4({
+    //       x: toVP3d(this.width - 637),
+    //       y: toVP3d(810, false),
+    //       z: 0.1,
+    //     }),
+    //   },
+    // }));
   }
 }

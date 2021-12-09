@@ -140,7 +140,7 @@ export async function createActor(
     // const xOffsetEnd = (endPosition.x + (width3d / 2)) / width3d;
     const xOffsetEnd = videoNotAlignedX
       ? (videoNotAlignedX / videoWidth)
-      : (startPosition.x - videoXVp3d) / videoWidth3d;
+      : (endPosition.x - videoXVp3d) / videoWidth3d;
     // const xOffsetEnd = (endPosition.x - videoXVp3d) / videoWidth3d;
     // eslint-disable-next-line no-nested-ternary
     const yOffsetEnd = svg
