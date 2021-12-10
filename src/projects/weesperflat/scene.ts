@@ -110,6 +110,7 @@ export default class Scene extends MainScene {
 
     {
       const actor = await createActor(projectSettings, videos.video2, { // BOMEN ACHTER
+        box: { d: 0.01 },
         video: {
           start: 25.7,
           duration: PATTERN_DURATION,
@@ -135,11 +136,17 @@ export default class Scene extends MainScene {
     }
 
     actors.push(await createActor(projectSettings, videos.video2, { // NIEUWE KEIZERSGRACHT
-      video: { start: 25.7, duration: PATTERN_DURATION },
+      video: {
+        start: 25.7,
+        duration: PATTERN_DURATION,
+        alignWithViewport: false,
+        x: 1003,
+        y: 0,
+      },
       svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/nieuwekeizersgracht.svg' },
       matrix4: getMatrix4({
-        x: toVP3d(1003),
-        y: toVP3d(231, false),
+        x: toVP3d(1053),
+        y: toVP3d(216, false),
         z: -1,
         sx: 1.1,
         sy: 1.1,
@@ -152,8 +159,87 @@ export default class Scene extends MainScene {
       video: { start: 25.7, duration: PATTERN_DURATION },
       matrix4: getMatrix4({
         x: toVP3d(0),
-        y: toVP3d(this.height - videos.video1.height, false),
+        y: toVP3d(205, false),
         z: 0,
+      }),
+      tween: { position: 0, duration: PATTERN_DURATION },
+    }));
+
+    actors.push(await createActor(projectSettings, videos.video1, { // MUUR
+      svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/muur.svg' },
+      video: {
+        start: 25.7,
+        duration: PATTERN_DURATION,
+        alignWithViewport: false,
+        x: -1,
+        y: 1,
+      },
+      matrix4: getMatrix4({
+        x: toVP3d(105),
+        y: toVP3d(205, false),
+        z: 0,
+        sx: 0.89,
+        sy: 0.89,
+      }),
+      box: { d: 0.7 },
+      tween: { position: 0, duration: PATTERN_DURATION },
+    }));
+
+    actors.push(await createActor(projectSettings, videos.video1, { // RAMEN
+      svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/ramen.svg' },
+      video: {
+        start: 25.7,
+        duration: PATTERN_DURATION,
+        alignWithViewport: false,
+        x: -1,
+        y: 1,
+      },
+      matrix4: getMatrix4({
+        x: toVP3d(105),
+        y: toVP3d(205, false),
+        z: 0.7,
+        sx: 0.89,
+        sy: 0.89,
+      }),
+      box: { d: 0.3 },
+      tween: { position: 0, duration: PATTERN_DURATION },
+    }));
+
+    actors.push(await createActor(projectSettings, videos.video1, { // VOORGROND 1
+      svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/voorgrond1.svg' },
+      video: {
+        start: 25.7,
+        duration: PATTERN_DURATION,
+        alignWithViewport: false,
+        x: -1,
+        y: 86,
+      },
+      matrix4: getMatrix4({
+        x: toVP3d(155),
+        y: toVP3d(298, false),
+        z: 1.5,
+        sx: 0.84,
+        sy: 0.84,
+      }),
+      tween: { position: 0, duration: PATTERN_DURATION },
+    }));
+
+    actors.push(await createActor(projectSettings, videos.video1, { // VOORGROND 2
+      box: { d: 0.005 },
+      svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/voorgrond2.svg' },
+      video: {
+        start: 25.7,
+        duration: PATTERN_DURATION,
+        alignWithViewport: false,
+        x: -2,
+        y: 180,
+      },
+      matrix4: getMatrix4({
+        x: toVP3d(180),
+        y: toVP3d(380, false),
+        z: 1.8,
+        sx: 0.81,
+        sy: 0.81,
       }),
       tween: { position: 0, duration: PATTERN_DURATION },
     }));
