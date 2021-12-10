@@ -38,7 +38,7 @@ export function createSVG(
   svgUrl: string,
   svgScale: number,
   texture : THREE.Texture,
-  depth = 0.02,
+  depth: number = 0.02,
 ) {
   return new Promise<ExtendedMesh>(
     (resolve, reject) => {
