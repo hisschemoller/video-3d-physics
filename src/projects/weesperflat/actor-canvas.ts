@@ -54,6 +54,10 @@ export default function addImageCanvas(
     })
   );
 
+  if (duration === 0) {
+    loadVideoFrame(0);
+  }
+
   return {
     canvas,
     loadVideoFrame,

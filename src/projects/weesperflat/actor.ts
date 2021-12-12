@@ -63,6 +63,7 @@ export async function createActor(
     },
     video: {
       alignWithViewport = true,
+      duration: videoDuration = 0,
       x: videoNotAlignedX = 0,
       y: videoNotAlignedY = 0,
     },
@@ -164,12 +165,14 @@ export async function createActor(
         }
       },
       onUpdate: async (progress: number) => {
-        mesh.position.lerp(endPosition, progress);
-        if (loadVideoFrame) {
+        if (endPosition !== startPosition) {
+          mesh.position.lerp(endPosition, progress);
+        }
+        if (loadVideoFrame && videoDuration > 0) {
           await loadVideoFrame(progress);
           texture.needsUpdate = true;
         }
-        if (imageTexture) {
+        if (imageTexture && endPosition !== startPosition) {
           imageTexture.offset.lerp(endOffset, progress);
         }
       },
