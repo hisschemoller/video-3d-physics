@@ -3,6 +3,7 @@ import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
 import { Actor, createActor } from './actor';
+import { createSoftVolume, updateSoftVolumes } from './softbody';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 115;
@@ -91,6 +92,11 @@ export default class Scene extends MainScene {
     await this.createActors(projectSettings, videos);
 
     this.postCreate();
+  }
+
+  preRender() {
+    super.preRender();
+    updateSoftVolumes();
   }
 
   async updateAsync(time: number, delta: number) {
@@ -244,6 +250,12 @@ export default class Scene extends MainScene {
       tween: { position: 0, duration: PATTERN_DURATION },
     }));
 
+
+    const volumeMass = 15;
+    const pressure = 250;
+    const sphereGeometry = new THREE.SphereGeometry(1, 40, 25);
+    sphereGeometry.translate(0.0, 6, 0.4);
+    createSoftVolume(sphereGeometry, volumeMass, pressure, this.scene, this.physics.physicsWorld);
     // actors.push(await createActor(projectSettings, videos.video1, { // BOX TEST
     //   box: { w: 500, h: 270 },
     //   video: { start: 25.7, duration: STEP_DURATION * 14 },
