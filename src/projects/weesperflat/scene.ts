@@ -1,8 +1,11 @@
+import { THREE } from 'enable3d';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
 import { Actor, createActor } from './actor';
+// import createSphere from './sphere';
+import tweenBlock from './block';
 import { createSoftVolume, updateSoftVolumes } from './softbody';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
@@ -250,12 +253,123 @@ export default class Scene extends MainScene {
       tween: { position: 0, duration: PATTERN_DURATION },
     }));
 
+    this.physics.add.box({ // DAK
+      x: -3.2, y: 2.55, z: -0.02, mass: 0, height: 0.4, width: 8, depth: 2,
+    }, { phong: { color: 0x434b52 } });
+
+    { // PUNTEN OP HET DAK
+      const height = 0.3;
+      const depth = 0.2;
+      const width = 0.2;
+      [0.7, 0.15, -1.7, -3.55, -5.4].forEach((x) => {
+        [0.88, -0.3].forEach((z) => {
+          this.physics.add.box({
+            x, y: 2.75 + (height / 2), z, mass: 0, height, width, depth,
+          }, { phong: { color: 0xe7ddc7 } });
+        });
+      });
+    }
+
+    // createSphere(projectSettings, {
+    //   x: -0.1,
+    //   y: 4.5,
+    //   z: 0,
+    //   duration: STEP_DURATION * 15,
+    // });
 
     const volumeMass = 15;
-    const pressure = 250;
+    const pressure = 400;
     const sphereGeometry = new THREE.SphereGeometry(1, 40, 25);
-    sphereGeometry.translate(0.0, 6, 0.4);
-    createSoftVolume(sphereGeometry, volumeMass, pressure, this.scene, this.physics.physicsWorld);
+    sphereGeometry.translate(0.0, 4, 0.4);
+    const cylinderGeometry = new THREE.CylinderGeometry(1, 1, 5, 32);
+    cylinderGeometry.rotateZ(Math.PI * 0.5);
+    cylinderGeometry.translate(0.0, 4, 0.4);
+    const boxGeometry = new THREE.BoxGeometry(1, 1, 6.5, 32, 32, 32);
+    boxGeometry.rotateY(Math.PI * 0.5);
+    boxGeometry.translate(-1.8, 3.8, 0.1);
+    createSoftVolume(boxGeometry, volumeMass, pressure, this.scene, this.physics.physicsWorld);
+
+    {
+      const actor = await createActor(projectSettings, videos.video1, { // BLOK 1
+        box: { d: 0.5 },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok1.svg' },
+        video: { start: 25.7, duration: 0 },
+        matrix4: getMatrix4({ x: toVP3d(979), y: toVP3d(534, false), z: -0.4 }),
+        tween: { position: 0, duration: 0 },
+      });
+      tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
+        { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 8, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 10, vec3: new THREE.Vector3(0, -0.75, 0) },
+        { time: STEP_DURATION * 12, vec3: new THREE.Vector3(0.2, -0.75, 0) },
+        { time: STEP_DURATION * 14, vec3: new THREE.Vector3(0, -0.75, 0) },
+        { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
+      ]);
+      actors.push(actor);
+    }
+
+    // TREEs
+    // actors.push(await createTree(projectSettings, videos.video1, { // BOOMVORM 1
+    //   svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/boomvorm1.svg' },
+    //   video: {
+    //     start: 25.7,
+    //     duration: PATTERN_DURATION,
+    //     alignWithViewport: false,
+    //     x: 1200,
+    //     y: 180,
+    //   },
+    //   matrix4: getMatrix4({
+    //     x: toVP3d(1500),
+    //     y: toVP3d(150, false),
+    //     z: -0.9,
+    //   }),
+    //   tween: { position: 0, duration: PATTERN_DURATION },
+    // },
+    // {
+    //   phase: 0,
+    //   xAmount: 0.04,
+    //   yAmount: 0.07,
+    // }));
+
+    // actors.push(await createTree(projectSettings, videos.video2, { // BOOMVORM 2
+    //   svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/boomvorm2.svg' },
+    //   video: {
+    //     start: 25.7,
+    //     duration: PATTERN_DURATION,
+    //     alignWithViewport: false,
+    //     x: 1500,
+    //     y: 80,
+    //   },
+    //   matrix4: getMatrix4({
+    //     x: toVP3d(1250),
+    //     y: toVP3d(1, false),
+    //     z: -1.1,
+    //   }),
+    //   tween: { position: 0, duration: PATTERN_DURATION },
+    // },
+    // {
+    //   phase: 0.4,
+    //   xAmount: 0.00,
+    //   yAmount: 0.00,
+    // }));
+
+    actors.push(await createActor(projectSettings, videos.video1, { // BALKONVORM
+      svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/balkonvorm.svg' },
+      video: {
+        start: 25.7,
+        duration: PATTERN_DURATION,
+        alignWithViewport: false,
+        x: 1200,
+        y: 180,
+      },
+      matrix4: getMatrix4({
+        x: toVP3d(630),
+        y: toVP3d(290, false),
+        z: 0.8,
+      }),
+      tween: { position: 0, duration: PATTERN_DURATION },
+    }));
+
     // actors.push(await createActor(projectSettings, videos.video1, { // BOX TEST
     //   box: { w: 500, h: 270 },
     //   video: { start: 25.7, duration: STEP_DURATION * 14 },

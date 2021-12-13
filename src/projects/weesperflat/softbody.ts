@@ -3,6 +3,9 @@ import { THREE } from 'enable3d';
 // import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils';
 import BufferGeometryUtils from './BufferGeometryUtils';
 
+// https://github.com/mrdoob/three.js/blob/master/examples/physics_ammo_volume.html
+// https://github.com/enable3d/enable3d-website/blob/master/src/examples/softbody-cloth.html
+
 interface AmmoBufferGeometry extends THREE.BufferGeometry {
   idxVertices: ArrayLike<number>,
   ammoIndices: ArrayLike<number>,
@@ -65,7 +68,6 @@ function processGeometry(bufGeometry: AmmoBufferGeometry) {
   posOnlyBufGeometry.setIndex(bufGeometry.getIndex());
 
   // Merge the vertices so the triangle soup is converted to indexed triangles
-  console.log('BufferGeometryUtils', BufferGeometryUtils);
   const indexedBufferGeom = BufferGeometryUtils.mergeVertices(posOnlyBufGeometry);
 
   // Create index arrays mapping the indexed vertices to bufGeometry vertices
@@ -94,7 +96,7 @@ export function createSoftVolume(
   scene.add(volume);
 
   const textureLoader = new THREE.TextureLoader();
-  textureLoader.load('textures/colors.png', (texture: THREE.Texture) => {
+  textureLoader.load('../assets/projects/weesperflat/weesperflat-d_frame_120.png', (texture: THREE.Texture) => {
     volume.material.map = texture;
     volume.material.needsUpdate = true;
   });
@@ -127,6 +129,8 @@ export function createSoftVolume(
   volumeSoftBody.get_m_materials().at(0).set_m_kAST(0.9);
 
   volumeSoftBody.setTotalMass(mass, false);
+  // friction is 0.5, changing it has no effect
+  volumeSoftBody.setFriction(0.5);
   // Ammo.castObject(volumeSoftBody, Ammo.btCollisionObject).getCollisionShape().setMargin(MARGIN);
   (volumeSoftBody as Ammo.btCollisionObject).getCollisionShape().setMargin(MARGIN);
   physicsWorld.addSoftBody(volumeSoftBody, 1, -1);
