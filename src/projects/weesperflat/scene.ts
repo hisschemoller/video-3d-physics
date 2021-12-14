@@ -9,7 +9,7 @@ import tweenBlock from './block';
 import { createSoftVolume, updateSoftVolumes } from './softbody';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 115;
+const BPM = 114;
 const STEPS = 16;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
@@ -153,7 +153,7 @@ export default class Scene extends MainScene {
 
     actors.push(await createActor(projectSettings, videos.video2, { // NIEUWE KEIZERSGRACHT
       video: {
-        start: 25.7,
+        start: 12.6,
         duration: PATTERN_DURATION,
         alignWithViewport: false,
         x: 1003,
@@ -168,6 +168,28 @@ export default class Scene extends MainScene {
         sy: 1.1,
       }),
       tween: { position: 0, duration: PATTERN_DURATION },
+    }));
+
+    actors.push(await createActor(projectSettings, videos.video2, { // NIEUWE KEIZERSGRACHT 2
+      box: { w: 400, h: 350 },
+      video: {
+        start: 25.5,
+        duration: PATTERN_DURATION,
+        alignWithViewport: false,
+        x: 1000,
+        y: 0,
+      },
+      matrix4: getMatrix4({
+        x: toVP3d(1048),
+        y: toVP3d(640, false),
+        z: -0.9,
+        sx: 1.1,
+        sy: 0.7,
+      }),
+      tween: {
+        position: 0,
+        duration: PATTERN_DURATION,
+      },
     }));
 
     actors.push(await createActor(projectSettings, videos.video1, { // DE FLAT
@@ -260,6 +282,23 @@ export default class Scene extends MainScene {
       tween: { position: 0, duration: PATTERN_DURATION },
     }));
 
+    actors.push(await createActor(projectSettings, videos.video1, { // BALKONVORM
+      svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/balkonvorm.svg' },
+      video: {
+        start: 25.7,
+        duration: PATTERN_DURATION,
+        alignWithViewport: false,
+        x: 1200,
+        y: 180,
+      },
+      matrix4: getMatrix4({
+        x: toVP3d(630),
+        y: toVP3d(290, false),
+        z: 0.8,
+      }),
+      tween: { position: 0, duration: PATTERN_DURATION },
+    }));
+
     this.physics.add.box({ // DAK
       x: -3.2, y: 2.63, z: -0.02, mass: 0, height: 0.3, width: 8, depth: 2,
     }, { phong: { color: 0x434b52 } });
@@ -325,8 +364,8 @@ export default class Scene extends MainScene {
       });
       tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
         { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
-        { time: STEP_DURATION * 4, vec3: new THREE.Vector3(0, 0.97, 0) },
-        { time: STEP_DURATION * 8, vec3: new THREE.Vector3(0, 0.97, 0) },
+        { time: STEP_DURATION * 4, vec3: new THREE.Vector3(0, 0.94, 0) },
+        { time: STEP_DURATION * 8, vec3: new THREE.Vector3(0, 0.94, 0) },
         { time: STEP_DURATION * 12, vec3: new THREE.Vector3(0, 0, 0) },
         { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
       ]);
@@ -338,13 +377,13 @@ export default class Scene extends MainScene {
         box: { d: 0.3 },
         svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok3.svg' },
         video: { start: 25.7, duration: 0 },
-        matrix4: getMatrix4({ x: toVP3d(1000), y: toVP3d(570, false), z: -0.5 }),
+        matrix4: getMatrix4({ x: toVP3d(970), y: toVP3d(550, false), z: -0.5 }),
         tween: { position: 0, duration: 0 },
       });
       tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
         { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
-        { time: STEP_DURATION * 2, vec3: new THREE.Vector3(0.25, 0, 0) },
-        { time: STEP_DURATION * 13, vec3: new THREE.Vector3(0.25, 0, 0) },
+        { time: STEP_DURATION * 2, vec3: new THREE.Vector3(0.45, 0, 0) },
+        { time: STEP_DURATION * 13, vec3: new THREE.Vector3(0.45, 0, 0) },
         { time: STEP_DURATION * 14, vec3: new THREE.Vector3(0, 0, 0) },
         { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
       ]);
@@ -423,6 +462,25 @@ export default class Scene extends MainScene {
       actors.push(actor);
     }
 
+    // actors.push(await createActor(projectSettings, videos.video2, { // FIETSER WEG
+    //   box: { w: 400, h: 270 },
+    //   video: { start: 25.7, duration: STEP_DURATION * 15 },
+    //   matrix4: getMatrix4({
+    //     x: toVP3d(1800),
+    //     y: toVP3d(650, false),
+    //     z: -0.9,
+    //   }),
+    //   tween: {
+    //     position: STEP_DURATION * 3,
+    //     duration: STEP_DURATION * 15,
+    //     matrix4End: getMatrix4({
+    //       x: toVP3d(1400),
+    //       y: toVP3d(650, false),
+    //       z: -0.9,
+    //     }),
+    //   },
+    // }));
+
     // TREEs
     // actors.push(await createTree(projectSettings, videos.video1, { // BOOMVORM 1
     //   svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/boomvorm1.svg' },
@@ -467,23 +525,6 @@ export default class Scene extends MainScene {
     //   xAmount: 0.00,
     //   yAmount: 0.00,
     // }));
-
-    actors.push(await createActor(projectSettings, videos.video1, { // BALKONVORM
-      svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/balkonvorm.svg' },
-      video: {
-        start: 25.7,
-        duration: PATTERN_DURATION,
-        alignWithViewport: false,
-        x: 1200,
-        y: 180,
-      },
-      matrix4: getMatrix4({
-        x: toVP3d(630),
-        y: toVP3d(290, false),
-        z: 0.8,
-      }),
-      tween: { position: 0, duration: PATTERN_DURATION },
-    }));
 
     // actors.push(await createActor(projectSettings, videos.video1, { // BOX TEST
     //   box: { w: 500, h: 270 },
