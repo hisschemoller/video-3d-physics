@@ -83,7 +83,7 @@ export default class Scene extends MainScene {
   }
 
   update(time: number, delta: number) {
-    this.timeline.update(time, delta);
+    this.timeline.update(time);
     super.update(time, delta);
   }
 

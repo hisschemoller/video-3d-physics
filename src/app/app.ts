@@ -8,12 +8,13 @@ let sceneClass: MainScene;
 function start() {
   startButton.removeEventListener('click', start);
   PhysicsLoader('./lib', () => {
-    project = new Project(
+    project = new Project({
       // @ts-ignore
-      {
-        scenes: [sceneClass], anisotropy: 4, antialias: true, softBodies: true,
-      },
-    );
+      scenes: [sceneClass],
+      anisotropy: 4,
+      antialias: true,
+      softBodies: true,
+    });
     const renderCheckbox = document.getElementById('play-render-toggle') as HTMLInputElement;
     project.scene.userData.isCapture = renderCheckbox.checked;
     document.getElementById('canvas-container')?.appendChild(project.renderer.domElement);

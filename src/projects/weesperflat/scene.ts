@@ -80,6 +80,13 @@ export default class Scene extends MainScene {
           ? '../assets/projects/weesperflat/frames2_preview/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/weesperflat2/frames/&img=frame_#FRAME#.png',
       },
+      wall: {
+        fps: 0,
+        height: 64,
+        imgSrcPath: '../assets/projects/weesperflat/wall-color.jpg',
+        scale: 0.1,
+        width: 64,
+      },
     };
 
     const projectSettings: ProjectSettings = {
@@ -254,7 +261,7 @@ export default class Scene extends MainScene {
     }));
 
     this.physics.add.box({ // DAK
-      x: -3.2, y: 2.55, z: -0.02, mass: 0, height: 0.4, width: 8, depth: 2,
+      x: -3.2, y: 2.63, z: -0.02, mass: 0, height: 0.3, width: 8, depth: 2,
     }, { phong: { color: 0x434b52 } });
 
     { // PUNTEN OP HET DAK
@@ -262,7 +269,7 @@ export default class Scene extends MainScene {
       const depth = 0.2;
       const width = 0.2;
       [0.7, 0.15, -1.7, -3.55, -5.4].forEach((x) => {
-        [0.88, -0.3].forEach((z) => {
+        [0.88, 0, -0.8].forEach((z) => {
           this.physics.add.box({
             x, y: 2.75 + (height / 2), z, mass: 0, height, width, depth,
           }, { phong: { color: 0xe7ddc7 } });
@@ -277,17 +284,17 @@ export default class Scene extends MainScene {
     //   duration: STEP_DURATION * 15,
     // });
 
-    const volumeMass = 15;
-    const pressure = 400;
-    const sphereGeometry = new THREE.SphereGeometry(1, 40, 25);
-    sphereGeometry.translate(0.0, 4, 0.4);
-    const cylinderGeometry = new THREE.CylinderGeometry(1, 1, 5, 32);
-    cylinderGeometry.rotateZ(Math.PI * 0.5);
-    cylinderGeometry.translate(0.0, 4, 0.4);
-    const boxGeometry = new THREE.BoxGeometry(1, 1, 6.5, 32, 32, 32);
-    boxGeometry.rotateY(Math.PI * 0.5);
-    boxGeometry.translate(-1.8, 3.8, 0.1);
-    createSoftVolume(boxGeometry, volumeMass, pressure, this.scene, this.physics.physicsWorld);
+    // const volumeMass = 15;
+    // const pressure = 400;
+    // const sphereGeometry = new THREE.SphereGeometry(1, 40, 25);
+    // sphereGeometry.translate(0.0, 4, 0.4);
+    // const cylinderGeometry = new THREE.CylinderGeometry(1, 1, 5, 32);
+    // cylinderGeometry.rotateZ(Math.PI * 0.5);
+    // cylinderGeometry.translate(0.0, 4, 0.4);
+    // const boxGeometry = new THREE.BoxGeometry(1, 1, 6.5, 32, 32, 32);
+    // boxGeometry.rotateY(Math.PI * 0.48);
+    // boxGeometry.translate(-1.8, 3.8, -0.1);
+    // createSoftVolume(boxGeometry, volumeMass, pressure, this.scene, this.physics.physicsWorld);
 
     {
       const actor = await createActor(projectSettings, videos.video1, { // BLOK 1
@@ -303,6 +310,114 @@ export default class Scene extends MainScene {
         { time: STEP_DURATION * 10, vec3: new THREE.Vector3(0, -0.75, 0) },
         { time: STEP_DURATION * 12, vec3: new THREE.Vector3(0.2, -0.75, 0) },
         { time: STEP_DURATION * 14, vec3: new THREE.Vector3(0, -0.75, 0) },
+        { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
+      ]);
+      actors.push(actor);
+    }
+
+    {
+      const actor = await createActor(projectSettings, videos.video1, { // BLOK 2
+        box: { d: 0.3 },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok2.svg' },
+        video: { start: 25.7, duration: 0 },
+        matrix4: getMatrix4({ x: toVP3d(985), y: toVP3d(355, false), z: 0.7 }),
+        tween: { position: 0, duration: 0 },
+      });
+      tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
+        { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 4, vec3: new THREE.Vector3(0, 0.97, 0) },
+        { time: STEP_DURATION * 8, vec3: new THREE.Vector3(0, 0.97, 0) },
+        { time: STEP_DURATION * 12, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
+      ]);
+      actors.push(actor);
+    }
+
+    {
+      const actor = await createActor(projectSettings, videos.wall, { // BLOK 3
+        box: { d: 0.3 },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok3.svg' },
+        video: { start: 25.7, duration: 0 },
+        matrix4: getMatrix4({ x: toVP3d(1000), y: toVP3d(570, false), z: -0.5 }),
+        tween: { position: 0, duration: 0 },
+      });
+      tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
+        { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 2, vec3: new THREE.Vector3(0.25, 0, 0) },
+        { time: STEP_DURATION * 13, vec3: new THREE.Vector3(0.25, 0, 0) },
+        { time: STEP_DURATION * 14, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
+      ]);
+      actors.push(actor);
+    }
+
+    {
+      const actor = await createActor(projectSettings, videos.video1, { // BLOK 4
+        box: { d: 0.3 },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok4.svg' },
+        video: { start: 25.7, duration: 0 },
+        matrix4: getMatrix4({ x: toVP3d(460), y: toVP3d(470, false), z: 0.0 }),
+        tween: { position: 0, duration: 0 },
+      });
+      tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
+        { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 2, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 14, vec3: new THREE.Vector3(1, 0, 0) },
+        { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
+      ]);
+      actors.push(actor);
+    }
+
+    {
+      const actor = await createActor(projectSettings, videos.video1, { // BLOK 5
+        box: { d: 0.3 },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok5.svg' },
+        video: { start: 25.7, duration: 0 },
+        matrix4: getMatrix4({ x: toVP3d(625), y: toVP3d(710, false), z: 0.0 }),
+        tween: { position: 0, duration: 0 },
+      });
+      tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
+        { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 4, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 8, vec3: new THREE.Vector3(0, 0.6, 0) },
+        { time: STEP_DURATION * 14, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
+      ]);
+      actors.push(actor);
+    }
+
+    {
+      const actor = await createActor(projectSettings, videos.video1, { // BLOK 6
+        box: { d: 0.3 },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok6.svg' },
+        video: { start: 25.7, duration: 0 },
+        matrix4: getMatrix4({ x: toVP3d(600), y: toVP3d(470, false), z: 0.0 }),
+        tween: { position: 0, duration: 0 },
+      });
+      tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
+        { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 6, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 8, vec3: new THREE.Vector3(0, -0.6, 0) },
+        { time: STEP_DURATION * 14, vec3: new THREE.Vector3(0, -0.6, 0) },
+        { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
+      ]);
+      actors.push(actor);
+    }
+
+    {
+      const actor = await createActor(projectSettings, videos.video1, { // BLOK 7
+        box: { d: 0.3 },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok7.svg' },
+        video: { start: 25.7, duration: 0 },
+        matrix4: getMatrix4({ x: toVP3d(770), y: toVP3d(580, false), z: 0.3 }),
+        tween: { position: 0, duration: 0 },
+      });
+      tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
+        { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 1, vec3: new THREE.Vector3(0, 0, 0) },
+        { time: STEP_DURATION * 3, vec3: new THREE.Vector3(-0.4, 0, 0) },
+        { time: STEP_DURATION * 8, vec3: new THREE.Vector3(-0.4, 0, 0) },
+        { time: STEP_DURATION * 10, vec3: new THREE.Vector3(0, 0, 0) },
         { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
       ]);
       actors.push(actor);
