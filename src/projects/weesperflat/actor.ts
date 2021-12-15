@@ -166,14 +166,14 @@ export async function createActor(
       },
       onUpdate: async (progress: number) => {
         if (endPosition !== startPosition) {
-          mesh.position.lerp(endPosition, progress);
+          mesh.position.lerpVectors(startPosition, endPosition, progress);
         }
         if (loadVideoFrame && videoDuration > 0) {
           await loadVideoFrame(progress);
           texture.needsUpdate = true;
         }
         if (imageTexture && endPosition !== startPosition) {
-          imageTexture.offset.lerp(endOffset, progress);
+          imageTexture.offset.lerpVectors(startOffset, endOffset, progress);
         }
       },
       onComplete: () => {
