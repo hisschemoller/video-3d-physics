@@ -181,15 +181,12 @@ export default class Scene extends MainScene {
       },
       matrix4: getMatrix4({
         x: toVP3d(1048),
-        y: toVP3d(640, false),
+        y: toVP3d(710, false),
         z: -0.9,
         sx: 1.1,
-        sy: 0.7,
+        sy: 1.1 * (videos.video2.height / this.height),
       }),
-      tween: {
-        position: 0,
-        duration: PATTERN_DURATION,
-      },
+      tween: { position: 0, duration: PATTERN_DURATION },
     }));
 
     actors.push(await createActor(projectSettings, videos.video1, { // DE FLAT
@@ -462,69 +459,43 @@ export default class Scene extends MainScene {
       actors.push(actor);
     }
 
-    // actors.push(await createActor(projectSettings, videos.video2, { // FIETSER WEG
-    //   box: { w: 400, h: 270 },
-    //   video: { start: 25.7, duration: STEP_DURATION * 15 },
-    //   matrix4: getMatrix4({
-    //     x: toVP3d(1800),
-    //     y: toVP3d(650, false),
-    //     z: -0.9,
-    //   }),
-    //   tween: {
-    //     position: STEP_DURATION * 3,
-    //     duration: STEP_DURATION * 15,
-    //     matrix4End: getMatrix4({
-    //       x: toVP3d(1400),
-    //       y: toVP3d(650, false),
-    //       z: -0.9,
-    //     }),
-    //   },
-    // }));
+    actors.push(await createActor(projectSettings, videos.video1, { // WACHTENDE VROUW MET FIETS
+      box: { w: 200, h: 400 },
+      video: {
+        start: 25.5,
+        duration: PATTERN_DURATION,
+        alignWithViewport: false,
+        x: 702,
+        y: 60,
+      },
+      matrix4: getMatrix4({
+        x: toVP3d(740),
+        y: toVP3d(655, false),
+        z: 1,
+        sx: 0.85,
+        sy: 0.85,
+      }),
+      tween: { position: 0, duration: PATTERN_DURATION },
+    }));
 
-    // TREEs
-    // actors.push(await createTree(projectSettings, videos.video1, { // BOOMVORM 1
-    //   svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/boomvorm1.svg' },
-    //   video: {
-    //     start: 25.7,
-    //     duration: PATTERN_DURATION,
-    //     alignWithViewport: false,
-    //     x: 1200,
-    //     y: 180,
-    //   },
-    //   matrix4: getMatrix4({
-    //     x: toVP3d(1500),
-    //     y: toVP3d(150, false),
-    //     z: -0.9,
-    //   }),
-    //   tween: { position: 0, duration: PATTERN_DURATION },
-    // },
-    // {
-    //   phase: 0,
-    //   xAmount: 0.04,
-    //   yAmount: 0.07,
-    // }));
-
-    // actors.push(await createTree(projectSettings, videos.video2, { // BOOMVORM 2
-    //   svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/boomvorm2.svg' },
-    //   video: {
-    //     start: 25.7,
-    //     duration: PATTERN_DURATION,
-    //     alignWithViewport: false,
-    //     x: 1500,
-    //     y: 80,
-    //   },
-    //   matrix4: getMatrix4({
-    //     x: toVP3d(1250),
-    //     y: toVP3d(1, false),
-    //     z: -1.1,
-    //   }),
-    //   tween: { position: 0, duration: PATTERN_DURATION },
-    // },
-    // {
-    //   phase: 0.4,
-    //   xAmount: 0.00,
-    //   yAmount: 0.00,
-    // }));
+    actors.push(await createActor(projectSettings, videos.video1, { // WACHTENDE MAN MET FIETS
+      box: { w: 203, h: 400, d: 0.001 },
+      video: {
+        start: 25.5,
+        duration: PATTERN_DURATION,
+        alignWithViewport: false,
+        x: 302,
+        y: 120,
+      },
+      matrix4: getMatrix4({
+        x: toVP3d(380),
+        y: toVP3d(600, false),
+        z: 1,
+        sx: 0.85,
+        sy: 0.85,
+      }),
+      tween: { position: 0, duration: PATTERN_DURATION },
+    }));
 
     // actors.push(await createActor(projectSettings, videos.video1, { // BOX TEST
     //   box: { w: 500, h: 270 },
