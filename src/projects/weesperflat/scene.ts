@@ -6,7 +6,6 @@ import { getMatrix4 } from '@app/utils';
 import { Actor, createActor } from './actor';
 import createPole from './pole';
 // import createSphere from './sphere';
-import tweenBlock from './block';
 import { createSoftVolume, updateSoftVolumes } from './softbody';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
@@ -333,22 +332,37 @@ export default class Scene extends MainScene {
     // boxGeometry.translate(-1.8, 3.8, -0.1);
     // createSoftVolume(boxGeometry, volumeMass, pressure, this.scene, this.physics.physicsWorld);
 
-    createPole(projectSettings, {
-      box: {
-        x: toVP3d(1017),
-        y: toVP3d(584, false) - 0.3,
-        z: 0,
-        w: to3d(76),
-        h: to3d(94),
-        d: 0.5,
-      },
-      connector: { radius: 0.1, height: 2 },
-      pivotBlock: { x: to3d(76/2), y: 0, z: 0.15 },
-      pivotConnectorToBlock: { x: 0, y: 2 / 2, z: 0 },
-      tween: { axis: 'y', distance: -0.3 },
-      position: 0,
-      duration: PATTERN_DURATION,
+    const ground = this.physics.add.box({
+      y: -2.5, width: 0.1, height: 0.1, depth: 0.1, mass: 0,
     });
+
+    {
+      const connLength = 1.3;
+      const poleLength = 3;
+      createPole(projectSettings, {
+        ground,
+        box: {
+          x: toVP3d(1017),
+          y: toVP3d(584, false) - 0.3,
+          z: 0,
+          w: to3d(76),
+          h: to3d(94),
+          d: 0.5,
+        },
+        connector: { radius: 0.05, height: connLength },
+        pivotBlock: { x: to3d(76 / 2), y: 0, z: 0.15 },
+        pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
+        pole: { radius: 0.05, height: poleLength },
+        pivotPoleToConnector: { x: 0, y: 0, z: 0 },
+        pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
+        pivotPoleToGround: { x: 0, y: -3 / 2, z: 0 },
+        pivotGroundToPole: { x: toVP3d(1017) + 1.5, y: 0, z: 0 },
+        hingePoleToGroundAxis: { x: 0, y: 0, z: 1 },
+        tween: { axis: 'y', distance: -0.3 },
+        position: 0,
+        duration: PATTERN_DURATION,
+      });
+    }
 
     // {
     //   const actor = await createActor(projectSettings, videos.video1, { // BLOK 1

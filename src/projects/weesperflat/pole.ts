@@ -1,8 +1,9 @@
-import { ExtendedObject3D, Types } from 'enable3d';
+import { ExtendedObject3D, THREE, Types } from 'enable3d';
 import createTween from '@app/tween';
 import { ProjectSettings } from '@app/interfaces';
 
 interface PoleArgs {
+  ground: ExtendedObject3D,
   box: {
     x: number,
     y: number,
@@ -14,6 +15,12 @@ interface PoleArgs {
   connector: { radius: number, height: number },
   pivotBlock: Types.XYZ,
   pivotConnectorToBlock: Types.XYZ,
+  pole: { radius: number, height: number },
+  pivotPoleToConnector: Types.XYZ,
+  pivotConnectorToPole: Types.XYZ,
+  pivotPoleToGround: Types.XYZ,
+  pivotGroundToPole: Types.XYZ,
+  hingePoleToGroundAxis: Types.XYZ,
   tween: { axis: 'x' | 'y' | 'z', distance: number },
   position: number,
   duration: number,
@@ -27,6 +34,7 @@ export default function createPole(
     timeline,
   }: ProjectSettings,
   {
+    ground,
     box: {
       x,
       y,
@@ -38,6 +46,12 @@ export default function createPole(
     connector: connData,
     pivotBlock,
     pivotConnectorToBlock,
+    pole: poleData,
+    pivotPoleToConnector,
+    pivotConnectorToPole,
+    pivotPoleToGround,
+    pivotGroundToPole,
+    hingePoleToGroundAxis,
     tween: {
       axis,
       distance,
@@ -69,8 +83,18 @@ export default function createPole(
   timeline.add(tween);
 
   // CONNECTOR
+  const connectorPos = new THREE.Vector3().lerpVectors(
+    new THREE.Vector3(x, y, z),
+    new THREE.Vector3(pivotGroundToPole.x, pivotPoleToGround.y, pivotGroundToPole.z),
+    0.5,
+  );
   const connector = scene3d.physics.add.cylinder({
-    radiusBottom: connData.radius, radiusTop: connData.radius, height: connData.height,
+    x: connectorPos.x,
+    y: connectorPos.y,
+    z: connectorPos.z,
+    radiusBottom: connData.radius,
+    radiusTop: connData.radius,
+    height: connData.height,
   }, { custom: yellowMaterial });
 
   // POINT_TO_POINT CONNECTOR TO BLOCK
@@ -78,5 +102,29 @@ export default function createPole(
     // the offset from the center of each object
     pivotA: { ...pivotBlock },
     pivotB: { ...pivotConnectorToBlock },
+  });
+
+  // POLE
+  const pole = scene3d.physics.add.cylinder({
+    x: pivotGroundToPole.x || 0,
+    y: pivotPoleToGround.y || 0,
+    z: pivotGroundToPole.z || 0,
+    radiusBottom: poleData.radius,
+    radiusTop: poleData.radius,
+    height: poleData.height,
+  }, { custom: yellowMaterial });
+
+  // POINT_TO_POINT POLE TO CONNECTOR
+  scene3d.physics.add.constraints.pointToPoint(pole.body, connector.body, {
+    pivotA: { ...pivotPoleToConnector },
+    pivotB: { ...pivotConnectorToPole },
+  });
+
+  // HINGE POLE TO GROUND
+  scene3d.physics.add.constraints.hinge(pole.body, ground.body, {
+    pivotA: { ...pivotPoleToGround },
+    pivotB: { ...pivotGroundToPole },
+    axisA: { ...hingePoleToGroundAxis },
+    axisB: { ...hingePoleToGroundAxis },
   });
 }
