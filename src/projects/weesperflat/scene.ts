@@ -335,15 +335,16 @@ export default class Scene extends MainScene {
 
     createPole(projectSettings, {
       box: {
-        x: toVP3d(979 + (76 / 2)),
-        y: toVP3d(534 + (94 / 2), false),
-        z: -0.4 + (0.5 / 2),
+        x: toVP3d(1017),
+        y: toVP3d(584, false) - 0.3,
+        z: 0,
         w: to3d(76),
         h: to3d(94),
         d: 0.5,
       },
-      tween: [0, -0.75, 0],
-      duration: 0,
+      tween: { axis: 'y', distance: -0.3 },
+      position: 0,
+      duration: PATTERN_DURATION,
     });
 
     // {
