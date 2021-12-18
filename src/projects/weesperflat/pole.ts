@@ -115,6 +115,18 @@ export default function createPole(
     height: poleData.height,
   }, { custom: yellowMaterial });
 
+  // POLE TOP
+  const sphereRadius = 0.15;
+  const sphere = scene3d.physics.add.sphere({
+    x: pivotGroundToPole.x || 0,
+    y: (pivotPoleToGround.y || 0) + (poleData.height / 2) + (sphereRadius / 2),
+    z: pivotGroundToPole.z || 0,
+    radius: sphereRadius,
+  }, { custom: yellowMaterial });
+
+  // LOCK SPHERE TO POLE
+  scene3d.physics.add.constraints.lock(pole.body, sphere.body);
+
   // POINT_TO_POINT POLE TO CONNECTOR
   scene3d.physics.add.constraints.pointToPoint(pole.body, connector.body, {
     pivotA: { ...pivotPoleToConnector },
