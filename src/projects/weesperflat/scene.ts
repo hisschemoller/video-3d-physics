@@ -320,6 +320,7 @@ export default class Scene extends MainScene {
     //   duration: STEP_DURATION * 15,
     // });
 
+    // SOFTBODY
     // const volumeMass = 15;
     // const pressure = 400;
     // const sphereGeometry = new THREE.SphereGeometry(1, 40, 25);
@@ -336,52 +337,67 @@ export default class Scene extends MainScene {
       y: -2.5, width: 0.1, height: 0.1, depth: 0.1, mass: 0,
     });
 
-    {
-      const connLength = 1.3;
-      const poleLength = 3;
+    { // BLOK 1
+      const blockX = toVP3d(1017);
+      const blockZ = 0;
+      const blockW = to3d(76);
+      const connLength = 1.2;
+      const poleLength = 5.5;
       createPole(projectSettings, {
         ground,
-        box: {
-          x: toVP3d(1017),
+        block: {
+          x: blockX,
           y: toVP3d(584, false) - 0.3,
-          z: 0,
-          w: to3d(76),
+          z: blockZ,
+          w: blockW,
           h: to3d(94),
           d: 0.5,
         },
         connector: { radius: 0.05, height: connLength },
-        pivotBlock: { x: to3d(76 / 2), y: 0, z: 0.15 },
+        pivotBlockToConnector: { x: blockW / 2, y: 0, z: 0 },
         pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
         pole: { radius: 0.05, height: poleLength },
-        pivotPoleToConnector: { x: 0, y: 0, z: 0 },
+        pivotPoleToConnector: { x: 0, y: -1.2, z: 0 },
         pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
-        pivotPoleToGround: { x: 0, y: -3 / 2, z: 0 },
-        pivotGroundToPole: { x: toVP3d(1017) + 1.5, y: 0, z: 0 },
         hingePoleToGroundAxis: { x: 0, y: 0, z: 1 },
+        pivotPoleToGround: { x: 0, y: poleLength / -2, z: -0 },
+        pivotGroundToPole: { x: blockX + (blockW / 2) + connLength, y: 0, z: blockZ },
         tween: { axis: 'y', distance: -0.3 },
         position: 0,
         duration: PATTERN_DURATION,
       });
     }
 
-    // {
-    //   const actor = await createActor(projectSettings, videos.video1, { // BLOK 1
-    //     box: { d: 0.5 },
-    //     svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok1.svg' },
-    //     video: { start: 25.7, duration: 0 },
-    //     matrix4: getMatrix4({ x: toVP3d(979), y: toVP3d(534, false), z: -0.4 }),
-    //     tween: { position: 0, duration: 0 },
-    //   });
-    //   tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
-    //     { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 8, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 10, vec3: new THREE.Vector3(0, -0.75, 0) },
-    //     { time: STEP_DURATION * 12, vec3: new THREE.Vector3(0.2, -0.75, 0) },
-    //     { time: STEP_DURATION * 14, vec3: new THREE.Vector3(0, -0.75, 0) },
-    //     { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
-    //   ]);
-    //   actors.push(actor);
-    // }
+    { // BLOK 2
+      const blockX = toVP3d(985) + 0.6;
+      const blockW = to3d(93);
+      const blockZ = -0.7;
+      const connLength = 1;
+      const poleLength = 5;
+      createPole(projectSettings, {
+        ground,
+        block: {
+          x: blockX,
+          y: toVP3d(600, false),
+          z: blockZ,
+          w: blockW,
+          h: to3d(62),
+          d: 0.4,
+        },
+        connector: { radius: 0.05, height: connLength },
+        pivotBlockToConnector: { x: blockW / 2, y: 0, z: 0 },
+        pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
+        pole: { radius: 0.05, height: poleLength },
+        pivotPoleToConnector: { x: 0, y: -0.5, z: 0 },
+        pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
+        hingePoleToGroundAxis: { x: 0, y: 0, z: 1 },
+        pivotPoleToGround: { x: 0, y: poleLength / -2, z: 0 },
+        pivotGroundToPole: { x: blockX + (blockW / 2) + connLength, y: 0, z: blockZ },
+        tween: { axis: 'x', distance: 0.3 },
+        position: 0,
+        duration: PATTERN_DURATION,
+      });
+    }
 
     // {
     //   const actor = await createActor(projectSettings, videos.video1, { // BLOK 2

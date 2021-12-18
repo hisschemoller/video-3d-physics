@@ -4,7 +4,7 @@ import { ProjectSettings } from '@app/interfaces';
 
 interface PoleArgs {
   ground: ExtendedObject3D,
-  box: {
+  block: {
     x: number,
     y: number,
     z: number,
@@ -13,7 +13,7 @@ interface PoleArgs {
     d: number,
   },
   connector: { radius: number, height: number },
-  pivotBlock: Types.XYZ,
+  pivotBlockToConnector: Types.XYZ,
   pivotConnectorToBlock: Types.XYZ,
   pole: { radius: number, height: number },
   pivotPoleToConnector: Types.XYZ,
@@ -35,7 +35,7 @@ export default function createPole(
   }: ProjectSettings,
   {
     ground,
-    box: {
+    block: {
       x,
       y,
       z,
@@ -44,7 +44,7 @@ export default function createPole(
       d: depth,
     },
     connector: connData,
-    pivotBlock,
+    pivotBlockToConnector,
     pivotConnectorToBlock,
     pole: poleData,
     pivotPoleToConnector,
@@ -72,11 +72,12 @@ export default function createPole(
   const phase = 0;
   const startPositionOnAxis = block.position[axis];
   const tween = createTween({
+    delay: position,
     duration,
     onUpdate: (progress: number) => {
       const phasedProgress = (progress + phase) % 1;
       const currentDistance = Math.sin(phasedProgress * DOUBLE_PI) * distance;
-      block.position.y = startPositionOnAxis + currentDistance;
+      block.position[axis] = startPositionOnAxis + currentDistance;
       block.body.needUpdate = true;
     },
   });
@@ -100,7 +101,7 @@ export default function createPole(
   // POINT_TO_POINT CONNECTOR TO BLOCK
   scene3d.physics.add.constraints.pointToPoint(block.body, connector.body, {
     // the offset from the center of each object
-    pivotA: { ...pivotBlock },
+    pivotA: { ...pivotBlockToConnector },
     pivotB: { ...pivotConnectorToBlock },
   });
 
