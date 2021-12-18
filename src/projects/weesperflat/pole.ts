@@ -21,7 +21,7 @@ interface PoleArgs {
   pivotPoleToGround: Types.XYZ,
   pivotGroundToPole: Types.XYZ,
   hingePoleToGroundAxis: Types.XYZ,
-  tween: { axis: 'x' | 'y' | 'z', distance: number },
+  tween: { axis: 'x' | 'y' | 'z', distance: number, phase?: number },
   position: number,
   duration: number,
 }
@@ -55,6 +55,7 @@ export default function createPole(
     tween: {
       axis,
       distance,
+      phase = 0,
     },
     position,
     duration,
@@ -69,7 +70,6 @@ export default function createPole(
   }, { custom: yellowMaterial });
 
   // BLOCK TWEEN
-  const phase = 0;
   const startPositionOnAxis = block.position[axis];
   const tween = createTween({
     delay: position,

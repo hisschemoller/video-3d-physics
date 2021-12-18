@@ -393,119 +393,135 @@ export default class Scene extends MainScene {
         hingePoleToGroundAxis: { x: 0, y: 0, z: 1 },
         pivotPoleToGround: { x: 0, y: poleLength / -2, z: 0 },
         pivotGroundToPole: { x: blockX + (blockW / 2) + connLength, y: 0, z: blockZ },
-        tween: { axis: 'x', distance: 0.3 },
+        tween: { axis: 'x', distance: 0.3, phase: 0.3 },
         position: 0,
         duration: PATTERN_DURATION,
       });
     }
 
-    // {
-    //   const actor = await createActor(projectSettings, videos.video1, { // BLOK 2
-    //     box: { d: 0.3 },
-    //     svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok2.svg' },
-    //     video: { start: 25.7, duration: 0 },
-    //     matrix4: getMatrix4({ x: toVP3d(985), y: toVP3d(355, false), z: 0.7 }),
-    //     tween: { position: 0, duration: 0 },
-    //   });
-    //   tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
-    //     { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 4, vec3: new THREE.Vector3(0, 0.94, 0) },
-    //     { time: STEP_DURATION * 8, vec3: new THREE.Vector3(0, 0.94, 0) },
-    //     { time: STEP_DURATION * 12, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
-    //   ]);
-    //   actors.push(actor);
-    // }
+    { // BLOK 3
+      const blockX = toVP3d(1018);
+      const blockW = to3d(65);
+      const blockZ = 0.85;
+      const connLength = 3;
+      const poleLength = 5;
+      createPole(projectSettings, {
+        ground,
+        block: {
+          x: blockX,
+          y: toVP3d(315, false),
+          z: blockZ,
+          w: blockW,
+          h: to3d(31),
+          d: 0.3,
+        },
+        connector: { radius: 0.05, height: connLength },
+        pivotBlockToConnector: { x: blockW / 2, y: 0, z: 0 },
+        pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
+        pole: { radius: 0.05, height: poleLength },
+        pivotPoleToConnector: { x: 0, y: 1.5, z: 0 },
+        pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
+        hingePoleToGroundAxis: { x: 0, y: 0, z: 1 },
+        pivotPoleToGround: { x: 0, y: poleLength / -2, z: 0 },
+        pivotGroundToPole: { x: blockX + (blockW / 2) + connLength, y: 0, z: blockZ },
+        tween: { axis: 'y', distance: 0.45  , phase: 0.6 },
+        position: 0,
+        duration: PATTERN_DURATION,
+      });
+    }
 
-    // {
-    //   const actor = await createActor(projectSettings, videos.wall, { // BLOK 3
-    //     box: { d: 0.3 },
-    //     svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok3.svg' },
-    //     video: { start: 25.7, duration: 0 },
-    //     matrix4: getMatrix4({ x: toVP3d(970), y: toVP3d(550, false), z: -0.5 }),
-    //     tween: { position: 0, duration: 0 },
-    //   });
-    //   tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
-    //     { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 2, vec3: new THREE.Vector3(0.45, 0, 0) },
-    //     { time: STEP_DURATION * 13, vec3: new THREE.Vector3(0.45, 0, 0) },
-    //     { time: STEP_DURATION * 14, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
-    //   ]);
-    //   actors.push(actor);
-    // }
+    { // BLOK 4
+      const blockX = toVP3d(680);
+      const blockW = to3d(44);
+      const blockZ = 0.2;
+      const connLength = 1.3;
+      const poleLength = 4.2;
+      createPole(projectSettings, {
+        ground,
+        block: {
+          x: blockX,
+          y: toVP3d(500, false),
+          z: blockZ,
+          w: blockW,
+          h: to3d(50),
+          d: 0.3,
+        },
+        connector: { radius: 0.05, height: connLength },
+        pivotBlockToConnector: { x: 0, y: 0, z: 0.15 },
+        pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
+        pole: { radius: 0.05, height: poleLength },
+        pivotPoleToConnector: { x: 0, y: 0.8, z: 0 },
+        pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
+        hingePoleToGroundAxis: { x: 1, y: 0, z: 0 },
+        pivotPoleToGround: { x: 0, y: poleLength / -2, z: 0 },
+        pivotGroundToPole: { x: blockX, y: 0, z: blockZ + connLength + 0.15 },
+        tween: { axis: 'z', distance: 0.3, phase: 0.6 },
+        position: 0,
+        duration: PATTERN_DURATION,
+      });
+    }
 
-    // {
-    //   const actor = await createActor(projectSettings, videos.video1, { // BLOK 4
-    //     box: { d: 0.3 },
-    //     svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok4.svg' },
-    //     video: { start: 25.7, duration: 0 },
-    //     matrix4: getMatrix4({ x: toVP3d(460), y: toVP3d(470, false), z: 0.0 }),
-    //     tween: { position: 0, duration: 0 },
-    //   });
-    //   tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
-    //     { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 2, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 14, vec3: new THREE.Vector3(1, 0, 0) },
-    //     { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
-    //   ]);
-    //   actors.push(actor);
-    // }
+    { // BLOK 5
+      const blockX = toVP3d(580);
+      const blockW = to3d(44);
+      const blockZ = 0.2;
+      const connLength = 1.3;
+      const poleLength = 4.2;
+      createPole(projectSettings, {
+        ground,
+        block: {
+          x: blockX,
+          y: toVP3d(500, false),
+          z: blockZ,
+          w: blockW,
+          h: to3d(50),
+          d: 0.3,
+        },
+        connector: { radius: 0.05, height: connLength },
+        pivotBlockToConnector: { x: 0, y: 0, z: 0.15 },
+        pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
+        pole: { radius: 0.05, height: poleLength },
+        pivotPoleToConnector: { x: 0, y: 0.8, z: 0 },
+        pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
+        hingePoleToGroundAxis: { x: 1, y: 0, z: 0 },
+        pivotPoleToGround: { x: 0, y: poleLength / -2, z: 0 },
+        pivotGroundToPole: { x: blockX, y: 0, z: blockZ + connLength + 0.15 },
+        tween: { axis: 'z', distance: 0.3, phase: 0.2 },
+        position: 0,
+        duration: PATTERN_DURATION,
+      });
+    }
 
-    // {
-    //   const actor = await createActor(projectSettings, videos.video1, { // BLOK 5
-    //     box: { d: 0.3 },
-    //     svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok5.svg' },
-    //     video: { start: 25.7, duration: 0 },
-    //     matrix4: getMatrix4({ x: toVP3d(625), y: toVP3d(710, false), z: 0.0 }),
-    //     tween: { position: 0, duration: 0 },
-    //   });
-    //   tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
-    //     { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 4, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 8, vec3: new THREE.Vector3(0, 0.6, 0) },
-    //     { time: STEP_DURATION * 14, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
-    //   ]);
-    //   actors.push(actor);
-    // }
-
-    // {
-    //   const actor = await createActor(projectSettings, videos.video1, { // BLOK 6
-    //     box: { d: 0.3 },
-    //     svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok6.svg' },
-    //     video: { start: 25.7, duration: 0 },
-    //     matrix4: getMatrix4({ x: toVP3d(600), y: toVP3d(470, false), z: 0.0 }),
-    //     tween: { position: 0, duration: 0 },
-    //   });
-    //   tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
-    //     { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 6, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 8, vec3: new THREE.Vector3(0, -0.6, 0) },
-    //     { time: STEP_DURATION * 14, vec3: new THREE.Vector3(0, -0.6, 0) },
-    //     { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
-    //   ]);
-    //   actors.push(actor);
-    // }
-
-    // {
-    //   const actor = await createActor(projectSettings, videos.video1, { // BLOK 7
-    //     box: { d: 0.3 },
-    //     svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/blok7.svg' },
-    //     video: { start: 25.7, duration: 0 },
-    //     matrix4: getMatrix4({ x: toVP3d(770), y: toVP3d(580, false), z: 0.3 }),
-    //     tween: { position: 0, duration: 0 },
-    //   });
-    //   tweenBlock(this.timeline, PATTERN_DURATION, actor.getMesh(), [
-    //     { time: STEP_DURATION * 0, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 1, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 3, vec3: new THREE.Vector3(-0.4, 0, 0) },
-    //     { time: STEP_DURATION * 8, vec3: new THREE.Vector3(-0.4, 0, 0) },
-    //     { time: STEP_DURATION * 10, vec3: new THREE.Vector3(0, 0, 0) },
-    //     { time: STEP_DURATION * 16, vec3: new THREE.Vector3(0, 0, 0) },
-    //   ]);
-    //   actors.push(actor);
-    // }
+    { // BLOK 6
+      const blockX = toVP3d(890);
+      const blockW = to3d(44);
+      const blockZ = 0.1;
+      const connLength = 1.3;
+      const poleLength = 2.7;
+      createPole(projectSettings, {
+        ground,
+        block: {
+          x: blockX,
+          y: toVP3d(610, false),
+          z: blockZ,
+          w: blockW,
+          h: to3d(50),
+          d: 0.3,
+        },
+        connector: { radius: 0.05, height: connLength },
+        pivotBlockToConnector: { x: 0, y: 0, z: 0.15 },
+        pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
+        pole: { radius: 0.05, height: poleLength },
+        pivotPoleToConnector: { x: 0, y: 0.7, z: 0 },
+        pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
+        hingePoleToGroundAxis: { x: 0, y: 0, z: 1 },
+        pivotPoleToGround: { x: 0, y: poleLength / -2, z: 0 },
+        pivotGroundToPole: { x: blockX, y: 0, z: blockZ + connLength + 0.15 },
+        tween: { axis: 'x', distance: 0.1, phase: 0.8 },
+        position: 0,
+        duration: PATTERN_DURATION,
+      });
+    }
 
     actors.push(await createActor(projectSettings, videos.video1, { // WACHTENDE VROUW MET FIETS
       box: { w: 200, h: 400 },
