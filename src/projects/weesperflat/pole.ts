@@ -21,6 +21,7 @@ interface PoleArgs {
   pivotPoleToGround: Types.XYZ,
   pivotGroundToPole: Types.XYZ,
   hingePoleToGroundAxis: Types.XYZ,
+  blockTexture?: string,
   tween: { axis: 'x' | 'y' | 'z', distance: number, phase?: number },
   position: number,
   duration: number,
@@ -52,6 +53,7 @@ export default function createPole(
     pivotPoleToGround,
     pivotGroundToPole,
     hingePoleToGroundAxis,
+    blockTexture = 'assets/projects/weesperflat/texture-lightest.jpg',
     tween: {
       axis,
       distance,
@@ -61,13 +63,26 @@ export default function createPole(
     duration,
   }: PoleArgs,
 ) {
-  // BLOCK
   const yellowMaterial = scene3d.add.material(
-    { lambert: { color: 'yellow', transparent: true, opacity: 0.5 } },
+    { lambert: { color: 0x8f7c63, transparent: false, opacity: 1 } },
+  );
+  // const mapHeight = new THREE.TextureLoader().load('assets/projects/weesperflat/bumpmap1.jpg');
+  // const bumpMaterial = new THREE.MeshPhongMaterial({
+  //   color: 0x8f7c63,
+  //   specular: 0xcccccc,
+  //   shininess: 1,
+  //   bumpMap: mapHeight,
+  //   bumpScale: 1,
+  // });
+
+  // BLOCK
+  const texture = new THREE.TextureLoader().load(blockTexture);
+  const blockMaterial = scene3d.add.material(
+    { lambert: { map: texture } },
   );
   const block = scene3d.physics.add.box({
     x, y, z, width, height, depth, collisionFlags: 2,
-  }, { custom: yellowMaterial });
+  }, { custom: blockMaterial });
 
   // BLOCK TWEEN
   const startPositionOnAxis = block.position[axis];
@@ -116,16 +131,27 @@ export default function createPole(
   }, { custom: yellowMaterial });
 
   // POLE TOP
-  const sphereRadius = 0.15;
-  const sphere = scene3d.physics.add.sphere({
+  // const sphereRadius = 0.15;
+  // const sphere = scene3d.physics.add.sphere({
+  //   x: pivotGroundToPole.x || 0,
+  //   y: (pivotPoleToGround.y || 0) + (poleData.height / 2) + (sphereRadius / 2),
+  //   z: pivotGroundToPole.z || 0,
+  //   radius: sphereRadius,
+  // }, { custom: yellowMaterial });
+  const bottomRadius = 0.2;
+  const topRadius = 0.2;
+  const topheight = 0.2;
+  const top = scene3d.physics.add.cylinder({
     x: pivotGroundToPole.x || 0,
-    y: (pivotPoleToGround.y || 0) + (poleData.height / 2) + (sphereRadius / 2),
+    y: (pivotPoleToGround.y || 0) + (poleData.height / 2) + (topheight / 2),
     z: pivotGroundToPole.z || 0,
-    radius: sphereRadius,
+    radiusBottom: bottomRadius,
+    radiusTop: topRadius,
+    height: topheight,
   }, { custom: yellowMaterial });
 
   // LOCK SPHERE TO POLE
-  scene3d.physics.add.constraints.lock(pole.body, sphere.body);
+  scene3d.physics.add.constraints.lock(pole.body, top.body);
 
   // POINT_TO_POINT POLE TO CONNECTOR
   scene3d.physics.add.constraints.pointToPoint(pole.body, connector.body, {

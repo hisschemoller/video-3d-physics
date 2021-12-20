@@ -9,12 +9,12 @@ import createPole from './pole';
 import { createSoftVolume, updateSoftVolumes } from './softbody';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 114;
-const STEPS = 16;
+const BPM = 129;
+// const STEPS = 16;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
 const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
-const STEP_DURATION = PATTERN_DURATION / STEPS;
+// const STEP_DURATION = PATTERN_DURATION / STEPS;
 const actors: (Actor)[] = [];
 
 export default class Scene extends MainScene {
@@ -279,23 +279,6 @@ export default class Scene extends MainScene {
       tween: { position: 0, duration: PATTERN_DURATION },
     }));
 
-    actors.push(await createActor(projectSettings, videos.video1, { // IETS OP BALKON
-      svg: { scale: SVG_SCALE, url: '../assets/projects/weesperflat/balkonvorm.svg' },
-      video: {
-        start: 25.7,
-        duration: PATTERN_DURATION,
-        alignWithViewport: false,
-        x: 1200,
-        y: 180,
-      },
-      matrix4: getMatrix4({
-        x: toVP3d(630),
-        y: toVP3d(290, false),
-        z: 0.8,
-      }),
-      tween: { position: 0, duration: PATTERN_DURATION },
-    }));
-
     this.physics.add.box({ // DAK
       x: -3.2, y: 2.63, z: -0.02, mass: 0, height: 0.3, width: 8, depth: 2,
     }, { phong: { color: 0x434b52 } });
@@ -333,6 +316,10 @@ export default class Scene extends MainScene {
     // boxGeometry.translate(-1.8, 3.8, -0.1);
     // createSoftVolume(boxGeometry, volumeMass, pressure, this.scene, this.physics.physicsWorld);
 
+    const CONNECTOR_RADIUS = 0.04;
+
+    const POLE_RADIUS = 0.05;
+
     const ground = this.physics.add.box({
       y: -2.5, width: 0.1, height: 0.1, depth: 0.1, mass: 0,
     });
@@ -353,10 +340,11 @@ export default class Scene extends MainScene {
           h: to3d(94),
           d: 0.5,
         },
-        connector: { radius: 0.05, height: connLength },
+        blockTexture: 'assets/projects/weesperflat/texture-middark.jpg',
+        connector: { radius: CONNECTOR_RADIUS, height: connLength },
         pivotBlockToConnector: { x: blockW / 2, y: 0, z: 0 },
         pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
-        pole: { radius: 0.05, height: poleLength },
+        pole: { radius: POLE_RADIUS, height: poleLength },
         pivotPoleToConnector: { x: 0, y: -1.2, z: 0 },
         pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
         hingePoleToGroundAxis: { x: 0, y: 0, z: 1 },
@@ -369,10 +357,10 @@ export default class Scene extends MainScene {
     }
 
     { // BLOK 2
-      const blockX = toVP3d(985) + 0.6;
+      const blockX = toVP3d(995) + 0.6;
       const blockW = to3d(93);
       const blockZ = -0.7;
-      const connLength = 1;
+      const connLength = 1.5;
       const poleLength = 5;
       createPole(projectSettings, {
         ground,
@@ -384,16 +372,16 @@ export default class Scene extends MainScene {
           h: to3d(62),
           d: 0.4,
         },
-        connector: { radius: 0.05, height: connLength },
+        connector: { radius: CONNECTOR_RADIUS, height: connLength },
         pivotBlockToConnector: { x: blockW / 2, y: 0, z: 0 },
         pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
-        pole: { radius: 0.05, height: poleLength },
+        pole: { radius: POLE_RADIUS, height: poleLength },
         pivotPoleToConnector: { x: 0, y: -0.5, z: 0 },
         pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
         hingePoleToGroundAxis: { x: 0, y: 0, z: 1 },
         pivotPoleToGround: { x: 0, y: poleLength / -2, z: 0 },
         pivotGroundToPole: { x: blockX + (blockW / 2) + connLength, y: 0, z: blockZ },
-        tween: { axis: 'x', distance: 0.3, phase: 0.3 },
+        tween: { axis: 'x', distance: 0.25, phase: 0.3 },
         position: 0,
         duration: PATTERN_DURATION,
       });
@@ -415,16 +403,16 @@ export default class Scene extends MainScene {
           h: to3d(31),
           d: 0.3,
         },
-        connector: { radius: 0.05, height: connLength },
+        connector: { radius: CONNECTOR_RADIUS, height: connLength },
         pivotBlockToConnector: { x: blockW / 2, y: 0, z: 0 },
         pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
-        pole: { radius: 0.05, height: poleLength },
+        pole: { radius: POLE_RADIUS, height: poleLength },
         pivotPoleToConnector: { x: 0, y: 1.5, z: 0 },
         pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
         hingePoleToGroundAxis: { x: 0, y: 0, z: 1 },
         pivotPoleToGround: { x: 0, y: poleLength / -2, z: 0 },
         pivotGroundToPole: { x: blockX + (blockW / 2) + connLength, y: 0, z: blockZ },
-        tween: { axis: 'y', distance: 0.45  , phase: 0.6 },
+        tween: { axis: 'y', distance: 0.45, phase: 0.9 },
         position: 0,
         duration: PATTERN_DURATION,
       });
@@ -446,10 +434,11 @@ export default class Scene extends MainScene {
           h: to3d(50),
           d: 0.3,
         },
-        connector: { radius: 0.05, height: connLength },
+        blockTexture: 'assets/projects/weesperflat/texture-brown.jpg',
+        connector: { radius: CONNECTOR_RADIUS, height: connLength },
         pivotBlockToConnector: { x: 0, y: 0, z: 0.15 },
         pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
-        pole: { radius: 0.05, height: poleLength },
+        pole: { radius: POLE_RADIUS, height: poleLength },
         pivotPoleToConnector: { x: 0, y: 0.8, z: 0 },
         pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
         hingePoleToGroundAxis: { x: 1, y: 0, z: 0 },
@@ -477,10 +466,11 @@ export default class Scene extends MainScene {
           h: to3d(50),
           d: 0.3,
         },
-        connector: { radius: 0.05, height: connLength },
+        blockTexture: 'assets/projects/weesperflat/texture-brown.jpg',
+        connector: { radius: CONNECTOR_RADIUS, height: connLength },
         pivotBlockToConnector: { x: 0, y: 0, z: 0.15 },
         pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
-        pole: { radius: 0.05, height: poleLength },
+        pole: { radius: POLE_RADIUS, height: poleLength },
         pivotPoleToConnector: { x: 0, y: 0.8, z: 0 },
         pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
         hingePoleToGroundAxis: { x: 1, y: 0, z: 0 },
@@ -492,36 +482,36 @@ export default class Scene extends MainScene {
       });
     }
 
-    { // BLOK 6
-      const blockX = toVP3d(890);
-      const blockW = to3d(44);
-      const blockZ = 0.1;
-      const connLength = 1.3;
-      const poleLength = 2.7;
-      createPole(projectSettings, {
-        ground,
-        block: {
-          x: blockX,
-          y: toVP3d(610, false),
-          z: blockZ,
-          w: blockW,
-          h: to3d(50),
-          d: 0.3,
-        },
-        connector: { radius: 0.05, height: connLength },
-        pivotBlockToConnector: { x: 0, y: 0, z: 0.15 },
-        pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
-        pole: { radius: 0.05, height: poleLength },
-        pivotPoleToConnector: { x: 0, y: 0.7, z: 0 },
-        pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
-        hingePoleToGroundAxis: { x: 0, y: 0, z: 1 },
-        pivotPoleToGround: { x: 0, y: poleLength / -2, z: 0 },
-        pivotGroundToPole: { x: blockX, y: 0, z: blockZ + connLength + 0.15 },
-        tween: { axis: 'x', distance: 0.1, phase: 0.8 },
-        position: 0,
-        duration: PATTERN_DURATION,
-      });
-    }
+    // { // BLOK 6
+    //   const blockX = toVP3d(890);
+    //   const blockW = to3d(44);
+    //   const blockZ = 0.1;
+    //   const connLength = 1.3;
+    //   const poleLength = 2.7;
+    //   createPole(projectSettings, {
+    //     ground,
+    //     block: {
+    //       x: blockX,
+    //       y: toVP3d(610, false),
+    //       z: blockZ,
+    //       w: blockW,
+    //       h: to3d(50),
+    //       d: 0.3,
+    //     },
+    //     connector: { radius: CONNECTOR_RADIUS, height: connLength },
+    //     pivotBlockToConnector: { x: 0, y: 0, z: 0.15 },
+    //     pivotConnectorToBlock: { x: 0, y: connLength / 2, z: 0 },
+    //     pole: { radius: POLE_RADIUS, height: poleLength },
+    //     pivotPoleToConnector: { x: 0, y: 0.7, z: 0 },
+    //     pivotConnectorToPole: { x: 0, y: connLength / -2, z: 0 },
+    //     hingePoleToGroundAxis: { x: 0, y: 0, z: 1 },
+    //     pivotPoleToGround: { x: 0, y: poleLength / -2, z: 0 },
+    //     pivotGroundToPole: { x: blockX, y: 0, z: blockZ + connLength + 0.15 },
+    //     tween: { axis: 'x', distance: 0.1, phase: 0.8 },
+    //     position: 0,
+    //     duration: PATTERN_DURATION,
+    //   });
+    // }
 
     actors.push(await createActor(projectSettings, videos.video1, { // WACHTENDE VROUW MET FIETS
       box: { w: 200, h: 400 },
