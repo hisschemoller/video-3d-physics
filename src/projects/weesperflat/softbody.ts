@@ -96,7 +96,7 @@ export function createSoftVolume(
   scene.add(volume);
 
   const textureLoader = new THREE.TextureLoader();
-  textureLoader.load('../assets/projects/weesperflat/weesperflat-d_frame_120.png', (texture: THREE.Texture) => {
+  textureLoader.load('../assets/projects/weesperflat/texture-painted2a-small.jpg', (texture: THREE.Texture) => {
     volume.material.map = texture;
     volume.material.needsUpdate = true;
   });

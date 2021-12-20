@@ -304,17 +304,17 @@ export default class Scene extends MainScene {
     // });
 
     // SOFTBODY
-    // const volumeMass = 15;
-    // const pressure = 400;
-    // const sphereGeometry = new THREE.SphereGeometry(1, 40, 25);
-    // sphereGeometry.translate(0.0, 4, 0.4);
-    // const cylinderGeometry = new THREE.CylinderGeometry(1, 1, 5, 32);
-    // cylinderGeometry.rotateZ(Math.PI * 0.5);
-    // cylinderGeometry.translate(0.0, 4, 0.4);
-    // const boxGeometry = new THREE.BoxGeometry(1, 1, 6.5, 32, 32, 32);
-    // boxGeometry.rotateY(Math.PI * 0.48);
-    // boxGeometry.translate(-1.8, 3.8, -0.1);
-    // createSoftVolume(boxGeometry, volumeMass, pressure, this.scene, this.physics.physicsWorld);
+    const volumeMass = 15;
+    const pressure = 400;
+    const sphereGeometry = new THREE.SphereGeometry(1, 40, 25);
+    sphereGeometry.translate(0.0, 4, 0.4);
+    const cylinderGeometry = new THREE.CylinderGeometry(1, 1, 5, 32);
+    cylinderGeometry.rotateZ(Math.PI * 0.5);
+    cylinderGeometry.translate(0.0, 4, 0.4);
+    const boxGeometry = new THREE.BoxGeometry(1, 1, 6.5, 32, 32, 32);
+    boxGeometry.rotateY(Math.PI * 0.48);
+    boxGeometry.translate(-1.8, 3.8, -0.1);
+    createSoftVolume(boxGeometry, volumeMass, pressure, this.scene, this.physics.physicsWorld);
 
     const CONNECTOR_RADIUS = 0.04;
 
