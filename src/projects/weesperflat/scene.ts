@@ -34,7 +34,7 @@ export default class Scene extends MainScene {
     this.fps = 15;
     this.captureFps = 30;
     this.captureThrottle = 15;
-    this.captureDuration = PATTERN_DURATION * 2;
+    this.captureDuration = PATTERN_DURATION * 5;
   }
 
   async create() {
@@ -419,7 +419,7 @@ export default class Scene extends MainScene {
     }
 
     { // BLOK 4
-      const blockX = toVP3d(680);
+      const blockX = toVP3d(665);
       const blockW = to3d(44);
       const blockZ = 0.2;
       const connLength = 1.3;
@@ -432,7 +432,7 @@ export default class Scene extends MainScene {
           z: blockZ,
           w: blockW,
           h: to3d(50),
-          d: 0.3,
+          d: 0.5,
         },
         blockTexture: 'assets/projects/weesperflat/texture-brown.jpg',
         connector: { radius: CONNECTOR_RADIUS, height: connLength },
@@ -451,7 +451,7 @@ export default class Scene extends MainScene {
     }
 
     { // BLOK 5
-      const blockX = toVP3d(580);
+      const blockX = toVP3d(565);
       const blockW = to3d(44);
       const blockZ = 0.2;
       const connLength = 1.3;

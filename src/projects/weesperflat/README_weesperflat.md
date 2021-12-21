@@ -40,4 +40,23 @@ ffmpeg -i weesperflat-2a.mov '/Volumes/Samsung_X5/weesperflat2/frames/frame_%05d
 ffmpeg -i weesperflat-2a.mov -vf scale=480:-1 weesperflat-2a_preview.mov
 // convert preview to png sequence
 ffmpeg -i weesperflat-2a_preview.mov '/Volumes/Samsung_X5/weesperflat2/frames_preview/frame_%05d.png'
-``` 
+
+// png to mp4 (from index 225)
+ffmpeg -framerate 30 -start_number 225 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p weesperflat-video-x1.mp4
+// repeat 32 times, 56 frames, video alleen
+ffmpeg -i weesperflat-video-x1.mp4 -filter_complex "loop=loop=32:size=56:start=0" weesperflat-video-x32.mp4
+// repeat 32, audio alleen
+ffmpeg -stream_loop 32 -i "weesperflat-audio-x1.wav" -c copy weesperflat-audio-x32.wav
+// video en audio samenvoegen
+ffmpeg -i weesperflat-video-x32.mp4 -i weesperflat-audio-x32.wav -vcodec copy weesperflat-x32.mp4
+```
+
+## Berekeningen
+
+* Digitakt 12 als muziek gebruiken.
+* Audio is 129 BPM.
+* Audio is (60 / 129) * 4 = 1.8604651162790697 seconden lang.
+* Video is 30 FPS.
+* Video is 1.8604651162790697 * 30 = 55.81395348837209 frames lang.
+* Video is 56 frames lang, afgerond.
+* Video is 56 / 30 = 1.8666666666666667 seconden voor een maat.
