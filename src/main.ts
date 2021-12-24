@@ -1,5 +1,5 @@
 import MainScene from '@app/mainscene';
 import setup from '@app/app';
-import scene from '@projects/weesperflat/scene';
+import scene from '@projects/stamfordroad/scene';
 
 setup(scene as unknown as MainScene);
