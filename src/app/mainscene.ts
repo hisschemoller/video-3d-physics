@@ -16,6 +16,10 @@ export default class MainScene extends Scene3D {
 
   height: number;
 
+  width3d: number;
+
+  height3d: number;
+
   captureFps: number;
 
   captureThrottle: number;
@@ -278,5 +282,15 @@ export default class MainScene extends Scene3D {
     }).catch(() => {});
 
     this.frameCount += 1;
+  }
+
+  to3d(size: number, isWidth = true) {
+    return isWidth
+      ? (size / this.width) * this.width3d
+      : (size / this.height) * this.height3d * -1;
+  }
+
+  toVP3d(size: number, isWidth = true) {
+    return this.to3d(size, isWidth) + (isWidth ? (this.width3d * -0.5) : (this.height3d * 0.5));
   }
 }

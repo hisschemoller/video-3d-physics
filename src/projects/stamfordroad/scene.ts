@@ -83,13 +83,8 @@ export default class Scene extends MainScene {
   }
 
   async createActors(projectSettings: ProjectSettings, videos: { [key: string]: VideoData }) {
-    const to3d = (size: number, isWidth = true) => (isWidth
-      ? (size / this.width) * this.width3d
-      : (size / this.height) * this.height3d * -1);
-
-    const toVP3d = (size: number, isWidth = true) => (
-      to3d(size, isWidth) + (isWidth ? (this.width3d * -0.5) : (this.height3d * 0.5)));
-
+    const to3d = this.to3d.bind(this);
+    const toVP3d = this.toVP3d.bind(this);
     const SVG_SCALE = this.width3d / this.width;
 
     actors.push(await createActor(projectSettings, videos.main, { // ACHTERGROND
