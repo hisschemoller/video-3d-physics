@@ -7,11 +7,11 @@ import { Actor, createActor } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 101;
-const STEPS = 16;
+// const STEPS = 16;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
 const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
-const STEP_DURATION = PATTERN_DURATION / STEPS;
+// const STEP_DURATION = PATTERN_DURATION / STEPS;
 const actors: Actor[] = [];
 
 export default class Scene extends MainScene {
@@ -53,8 +53,8 @@ export default class Scene extends MainScene {
     const videos = {
       main: {
         fps: 25,
-        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
         height: this.height,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
         width: this.width,
         imgSrcPath: isPreview
           ? '../assets/projects/stamfordroad/stamfordroad-main_frames_preview/frame_#FRAME#.png'
@@ -85,12 +85,12 @@ export default class Scene extends MainScene {
   async createActors(projectSettings: ProjectSettings, videos: { [key: string]: VideoData }) {
     const to3d = this.to3d.bind(this);
     const toVP3d = this.toVP3d.bind(this);
-    const SVG_SCALE = this.width3d / this.width;
+    // const SVG_SCALE = this.width3d / this.width;
 
     actors.push(await createActor(projectSettings, videos.main, { // ACHTERGROND
       box: { w: this.width, h: this.height },
       matrix4: getMatrix4({ x: toVP3d(0), y: toVP3d(0, false) }),
-      video: { start: 59.5, duration: PATTERN_DURATION },
+      video: { start: 59.2, duration: PATTERN_DURATION },
       tween: { position: 0, duration: PATTERN_DURATION },
     }));
 
@@ -100,5 +100,22 @@ export default class Scene extends MainScene {
       video: { start: 54.5, duration: PATTERN_DURATION },
       tween: { position: 0, duration: PATTERN_DURATION },
     }));
+
+    const rotationMatrix4 = getMatrix4({ rx: (Math.PI * -0.5) + 0.2, ry: -0.011, rz: 0.05 });
+
+    {
+      const texture = new THREE.TextureLoader().load('../assets/projects/stamfordroad/stoep.jpg');
+      const blockMaterial = this.add.material({ lambert: { map: texture } });
+      const box = this.add.box({
+        x: 0,
+        y: toVP3d(960, false),
+        z: 0.3,
+        width: to3d(1920),
+        height: to3d(200),
+        depth: 0.1,
+      }, { custom: blockMaterial });
+      box.setRotationFromMatrix(rotationMatrix4);
+      this.physics.add.existing(box, { collisionFlags: 2, mass: 0 });
+    }
   }
 }
