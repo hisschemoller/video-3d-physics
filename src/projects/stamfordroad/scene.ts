@@ -101,11 +101,11 @@ export default class Scene extends MainScene {
       tween: { position: 0, duration: PATTERN_DURATION },
     }));
 
-    const rotationMatrix4 = getMatrix4({ rx: (Math.PI * -0.5) + 0.2, ry: -0.011, rz: 0.05 });
+    const rotationHMatrix4 = getMatrix4({ rx: (Math.PI * -0.5) + 0.2, ry: -0.011, rz: 0.05 });
+    const rotationVMatrix4 = getMatrix4({ rx: 0, ry: 0.047, rz: 0.02 });
 
     {
       const texture = new THREE.TextureLoader().load('../assets/projects/stamfordroad/stoep.jpg');
-      const blockMaterial = this.add.material({ lambert: { map: texture } });
       const box = this.add.box({
         x: 0,
         y: toVP3d(960, false),
@@ -113,9 +113,55 @@ export default class Scene extends MainScene {
         width: to3d(1920),
         height: to3d(200),
         depth: 0.1,
-      }, { custom: blockMaterial });
-      box.setRotationFromMatrix(rotationMatrix4);
+      }, { lambert: { map: texture } });
+      box.setRotationFromMatrix(rotationHMatrix4);
       this.physics.add.existing(box, { collisionFlags: 2, mass: 0 });
     }
+
+    {
+      const texture = new THREE.TextureLoader().load('../assets/projects/stamfordroad/stoeprand.jpg');
+      const box = this.add.box({
+        x: 0,
+        y: toVP3d(987, false),
+        z: 1.078,
+        width: to3d(1920),
+        height: to3d(24),
+        depth: 0.1,
+      }, { lambert: { map: texture } });
+      box.setRotationFromMatrix(rotationVMatrix4);
+      this.physics.add.existing(box, { collisionFlags: 2, mass: 0 });
+    }
+
+    {
+      const texture = new THREE.TextureLoader().load('../assets/projects/stamfordroad/straat1.jpg');
+      const box = this.add.box({
+        x: 0,
+        y: toVP3d(1043, false),
+        z: 2.7,
+        width: to3d(1820),
+        height: to3d(400),
+        depth: 0.1,
+      }, { lambert: { map: texture } });
+      box.setRotationFromMatrix(rotationHMatrix4);
+      this.physics.add.existing(box, { collisionFlags: 2, mass: 0 });
+    }
+
+    {
+      const texture = new THREE.TextureLoader().load('../assets/projects/stamfordroad/straat2.jpg');
+      const box = this.add.box({
+        x: 0.15,
+        y: toVP3d(1105, false),
+        z: 5.22,
+        width: to3d(1270),
+        height: to3d(220),
+        depth: 0.1,
+      }, { lambert: { map: texture } });
+      box.setRotationFromMatrix(rotationHMatrix4);
+      this.physics.add.existing(box, { collisionFlags: 2, mass: 0 });
+    }
+
+    // this.physics.add.sphere({
+    //   y: 3, z: 0.5, radius: 0.2,
+    // }, { lambert: { color: 0x999999 } });
   }
 }
