@@ -19,6 +19,7 @@ export function createRectangle(
     // move registration point to left top corner
     geometry.translate(width * 0.5, height * -0.5, 0);
     geometry.groups.forEach((group, index) => {
+      // set index so that only the front has index 1
       /* eslint-disable no-param-reassign */
       group.materialIndex = index === 4 ? 1 : 0;
     });

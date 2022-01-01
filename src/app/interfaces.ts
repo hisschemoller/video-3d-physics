@@ -2,13 +2,15 @@ import MainScene from '@app/mainscene';
 import { Timeline } from '@app/timeline';
 
 export interface ProjectSettings {
+  height: number,
+  height3d: number,
   scene3d: MainScene,
   scene: THREE.Scene,
+  isPreview: boolean,
+  previewScale: number,
   timeline: Timeline,
   width: number,
-  height: number,
   width3d: number,
-  height3d: number,
 }
 
 export interface MediaData {

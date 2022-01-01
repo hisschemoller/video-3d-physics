@@ -4,6 +4,7 @@ import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
 import { Actor, createActor } from './actor';
+import { createActor2 } from './actor2';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 101;
@@ -63,16 +64,19 @@ export default class Scene extends MainScene {
     };
 
     const projectSettings: ProjectSettings = {
-      scene3d: this,
+      height: this.height,
+      height3d: this.height3d,
+      isPreview,
+      previewScale: PROJECT_PREVIEW_SCALE,
       scene: this.scene,
+      scene3d: this,
       timeline: this.timeline,
       width: this.width,
-      height: this.height,
       width3d: this.width3d,
-      height3d: this.height3d,
     };
 
     await this.createActors(projectSettings, videos);
+    await this.createActors2(projectSettings, videos);
 
     this.postCreate();
   }
@@ -82,10 +86,31 @@ export default class Scene extends MainScene {
     super.updateAsync(time, delta);
   }
 
+  async createActors2(projectSettings: ProjectSettings, videos: { [key: string]: VideoData }) {
+    const to3d = this.to3d.bind(this);
+    const toVP3d = this.toVP3d.bind(this);
+
+    actors.push(await createActor2(projectSettings, videos.main, {
+      box: { w: to3d(300), h: to3d(600), d: 0.02 },
+      imageRect: {
+        x: 1410, y: 670, w: 300, h: 600,
+      },
+      matrix4: getMatrix4({
+        x: toVP3d(1410), y: toVP3d(670, false), z: 3.7, sx: 0.72, sy: 0.72,
+      }),
+      video: { start: 73.8, duration: PATTERN_DURATION },
+      tween: {
+        delay: 0,
+        duration: PATTERN_DURATION,
+        toMatrix4: getMatrix4({ x: toVP3d(750 + 200), y: toVP3d(670, false), z: 4.0 }),
+        toImagePosition: { x: 750, y: 680 },
+      },
+    }));
+  }
+
   async createActors(projectSettings: ProjectSettings, videos: { [key: string]: VideoData }) {
     const to3d = this.to3d.bind(this);
     const toVP3d = this.toVP3d.bind(this);
-    // const SVG_SCALE = this.width3d / this.width;
 
     actors.push(await createActor(projectSettings, videos.main, { // ACHTERGROND
       box: { w: this.width, h: this.height },
@@ -159,9 +184,5 @@ export default class Scene extends MainScene {
       box.setRotationFromMatrix(rotationHMatrix4);
       this.physics.add.existing(box, { collisionFlags: 2, mass: 0 });
     }
-
-    // this.physics.add.sphere({
-    //   y: 3, z: 0.5, radius: 0.2,
-    // }, { lambert: { color: 0x999999 } });
   }
 }
