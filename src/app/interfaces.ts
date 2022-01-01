@@ -11,12 +11,16 @@ export interface ProjectSettings {
   height3d: number,
 }
 
-export interface VideoData {
-  fps: number,
-  scale: number,
+export interface MediaData {
   height: number,
-  imgSrcPath: string,
   width: number,
-  x: number;
-  y: number;
+}
+
+export interface ImageData extends MediaData {
+  imgSrc: string,
+}
+
+export interface VideoData extends MediaData {
+  fps: number,
+  imgSrcPath: string,
 }

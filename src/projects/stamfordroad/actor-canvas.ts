@@ -1,12 +1,47 @@
-import { ProjectSettings, VideoData } from '@app/interfaces';
+import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
+
+function createCanvas(width: number, height: number) {
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const canvasCtx = canvas.getContext('2d');
+  if (canvasCtx) {
+    canvasCtx.fillStyle = '#6c645f';
+    canvasCtx.fillRect(0, 0, width, height);
+  }
+  return { canvas, canvasCtx };
+}
 
 export interface ImageCanvas {
   canvas: HTMLCanvasElement;
-  loadImage?: () => Promise<boolean>;
-  loadVideoFrame?: (progress: number) => Promise<boolean>;
 }
 
-export default function addImageCanvas(
+export interface VideoFrameCanvas {
+  canvas: HTMLCanvasElement;
+  loadVideoFrame: (progress: number) => Promise<boolean>;
+}
+
+export function addImageCanvas(
+  projectSettings: ProjectSettings,
+  imageData: ImageData,
+): ImageCanvas {
+  const { imgSrc, height, width } = imageData;
+  const { canvas, canvasCtx } = createCanvas(width, height);
+  const img = new Image();
+  img.onload = () => {
+    if (canvasCtx) {
+      canvasCtx.drawImage(img, 0, 0, width, height);
+      // texture.needsUpdate = true;
+    }
+  };
+  img.src = imgSrc;
+
+  return {
+    canvas,
+  };
+}
+
+export function addVideoFrameCanvas(
   projectSettings: ProjectSettings,
   {
     fps,
@@ -20,16 +55,8 @@ export default function addImageCanvas(
       duration = 0,
     },
   },
-): ImageCanvas {
-  // CANVAS
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-  const canvasCtx = canvas.getContext('2d');
-  if (canvasCtx) {
-    canvasCtx.fillStyle = '#6c645f';
-    canvasCtx.fillRect(0, 0, width, height);
-  }
+): VideoFrameCanvas {
+  const { canvas, canvasCtx } = createCanvas(width, height);
 
   // IMAGE
   const img = new Image();
@@ -53,10 +80,6 @@ export default function addImageCanvas(
         .join((imgNr <= 99999) ? (`0000${Math.round(imgNr)}`).slice(-5) : '99999');
     })
   );
-
-  if (duration === 0) {
-    loadVideoFrame(0);
-  }
 
   return {
     canvas,
