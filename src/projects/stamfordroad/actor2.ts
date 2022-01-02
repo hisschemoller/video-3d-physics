@@ -82,6 +82,7 @@ export async function createActor2(
   mesh.applyMatrix4(matrix4);
   mesh.castShadow = true;
   mesh.receiveShadow = true;
+  mesh.visible = false;
   scene.add(mesh);
   const getMesh = () => mesh;
 
@@ -95,7 +96,6 @@ export async function createActor2(
     easeAmount,
     onStart: () => {
       mesh.visible = true;
-      mesh.position.lerp(startPosition, 1);
     },
     onUpdate: async (progress: number) => {
       if (endPosition !== startPosition) {

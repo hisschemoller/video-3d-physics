@@ -208,7 +208,7 @@ export default class MainScene extends Scene3D {
 
     this.update.call(this, parseFloat(this.time.toFixed(3)), parseInt(this.delta.toString(), 10));
     await this.updateAsync.call(
-      this, parseFloat(this.time.toFixed(3)), parseInt(this.delta.toString(), 10),
+      this, parseFloat(this.time.toFixed(3)), parseFloat(this.delta.toString()),
     );
     this.physics?.update(this.delta * 1000 * 0.7);
     this.physics?.updateDebugger();

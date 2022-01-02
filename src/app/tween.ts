@@ -1,6 +1,7 @@
 export interface Tween {
   isActive: boolean;
-  update: (timelinePosition: number, progress?: number) => Promise<void> | void | undefined;
+  update: (
+    time: number, delta: number, timelineDuration: number) => Promise<void> | void | undefined;
 }
 
 interface TweenParams {
@@ -39,23 +40,31 @@ export default function createTween({
 }: TweenParams): Tween {
   const easeFunction = getEasefunction(easeAmount);
   let isActive = false;
-  let progressOffset = 0;
+  let startPosition = 0;
+  let currentPosition = 0;
 
-  const update = (timelinePosition: number): Promise<void> | void | undefined => {
+  const update = (
+    time: number, delta: number, timelineDuration: number,
+  ): Promise<void> | void | undefined => {
     let result: Promise<void> | void | undefined;
-    const wasActive = isActive;
-    isActive = timelinePosition > delay && timelinePosition <= delay + duration;
-    // TODO: start en complete als tween de hele tijd duurt
-    if (onStart && !wasActive && isActive) {
-      progressOffset = (timelinePosition - delay) / duration;
+    const localTime = time % timelineDuration;
+    const localEnd = (delay + duration) % timelineDuration;
+    const isStart = localTime >= delay && localTime - delta < delay;
+    const isComplete = localTime >= localEnd && localTime - delta < localEnd;
+    if (onComplete && isComplete) {
+      isActive = false;
+      onComplete();
+    }
+    if (onStart && isStart) {
+      isActive = true;
+      startPosition = time;
+      currentPosition = time;
       onStart();
     }
     if (onUpdate && isActive) {
-      const progress = easeFunction(((timelinePosition - delay) / duration) - progressOffset);
+      currentPosition += delta;
+      const progress = easeFunction((currentPosition - startPosition) / duration);
       result = onUpdate(progress);
-    }
-    if (onComplete && wasActive && !isActive) {
-      onComplete();
     }
     return result;
   };

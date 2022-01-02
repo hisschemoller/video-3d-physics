@@ -82,7 +82,7 @@ export default class Scene extends MainScene {
   }
 
   async updateAsync(time: number, delta: number) {
-    await this.timeline.update(time);
+    await this.timeline.update(time, delta);
     super.updateAsync(time, delta);
   }
 
