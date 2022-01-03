@@ -93,51 +93,51 @@ export default class Scene extends MainScene {
     actors.push(await createActor2(projectSettings, videos.main, { // MAN 1
       box: { w: to3d(300), h: to3d(600), d: 0.02 },
       imageRect: {
-        x: 1410, y: 670, w: 300, h: 600,
+        x: 1410, y: 680, w: 300, h: 600,
       },
       matrix4: getMatrix4({
-        x: toVP3d(1410), y: toVP3d(670, false), z: 3.7, sx: 0.72, sy: 0.72,
+        x: toVP3d(1710), y: toVP3d(670, false), z: 3.7, sx: 0.72, sy: 0.72,
       }),
       video: { start: 73.8, duration: PATTERN_DURATION },
       tween: {
-        delay: STEP_DURATION * 2,
+        delay: STEP_DURATION * 0,
         duration: PATTERN_DURATION,
-        toMatrix4: getMatrix4({ x: toVP3d(850), y: toVP3d(670, false), z: 4.0 }),
-        toImagePosition: { x: 750, y: 680 },
+        toMatrix4: getMatrix4({ x: toVP3d(1150), y: toVP3d(670, false), z: 4.0 }),
+        toImagePosition: { x: 750, y: 690 },
       },
     }));
 
     actors.push(await createActor2(projectSettings, videos.main, { // MAN 2
-      box: { w: to3d(300), h: to3d(700), d: 0.02 },
+      box: { w: to3d(350), h: to3d(700), d: 0.02 },
       imageRect: {
         x: 1510, y: 500, w: 400, h: 850,
       },
       matrix4: getMatrix4({
-        x: toVP3d(1410 - 300), y: toVP3d(600, false), z: 4.7, sx: 0.73, sy: 0.73,
+        x: toVP3d(1285), y: toVP3d(600, false), z: 4.7, sx: 0.73, sy: 0.73,
       }),
       video: { start: 50.3, duration: PATTERN_DURATION },
       tween: {
-        delay: STEP_DURATION * 0,
+        delay: STEP_DURATION * 2,
         duration: PATTERN_DURATION,
-        toMatrix4: getMatrix4({ x: toVP3d(850 - 300), y: toVP3d(600, false), z: 5 }),
-        toImagePosition: { x: 500, y: 520 },
+        toMatrix4: getMatrix4({ x: toVP3d(775), y: toVP3d(600, false), z: 5 }),
+        toImagePosition: { x: 470, y: 520 },
       },
     }));
 
     actors.push(await createActor2(projectSettings, videos.main, { // MAN 3
       box: { w: to3d(300), h: to3d(700), d: 0.02 },
       imageRect: {
-        x: 1510, y: 570, w: 350, h: 750,
+        x: 600, y: 570, w: 350, h: 750,
       },
       matrix4: getMatrix4({
-        x: toVP3d(1410), y: toVP3d(600, false), z: 4.3, sx: 0.72, sy: 0.72,
+        x: toVP3d(750), y: toVP3d(600, false), z: 4.5, sx: 0.70, sy: 0.70,
       }),
-      video: { start: 27.7, duration: PATTERN_DURATION },
+      video: { start: 30.2, duration: PATTERN_DURATION },
       tween: {
-        delay: STEP_DURATION * 11,
+        delay: STEP_DURATION * 10,
         duration: PATTERN_DURATION,
-        toMatrix4: getMatrix4({ x: toVP3d(850), y: toVP3d(600, false), z: 4.5 }),
-        toImagePosition: { x: 650, y: 590 },
+        toMatrix4: getMatrix4({ x: toVP3d(100), y: toVP3d(600, false), z: 4.5 }),
+        toImagePosition: { x: -400, y: 590 },
       },
     }));
   }
