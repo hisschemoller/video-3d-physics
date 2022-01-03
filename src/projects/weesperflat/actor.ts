@@ -43,9 +43,9 @@ export async function createActor(
     width3d,
     height3d,
   } = projectSettings;
+  const videoX = 0;
+  const videoY = 0;
   const {
-    x: videoX = 0,
-    y: videoY = 0,
     height: videoHeight,
     width: videoWidth,
   } = videoData;

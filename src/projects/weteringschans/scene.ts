@@ -93,7 +93,7 @@ export default class Scene extends MainScene {
   }
 
   async updateAsync(time: number, delta: number) {
-    this.timeline.update(time);
+    this.timeline.update(time, delta);
     await Promise.all(videoActors.map((actor) => actor.loadVideoFrame()));
     super.updateAsync(time, delta);
   }

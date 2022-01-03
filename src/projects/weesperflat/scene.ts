@@ -90,6 +90,8 @@ export default class Scene extends MainScene {
     };
 
     const projectSettings: ProjectSettings = {
+      isPreview,
+      previewScale: PROJECT_PREVIEW_SCALE,
       scene3d: this,
       scene: this.scene,
       timeline: this.timeline,
@@ -110,7 +112,7 @@ export default class Scene extends MainScene {
   }
 
   async updateAsync(time: number, delta: number) {
-    await this.timeline.update(time);
+    await this.timeline.update(time, delta);
     super.updateAsync(time, delta);
   }
 
