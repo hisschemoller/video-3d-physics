@@ -7,12 +7,12 @@ import { Actor, createActor } from './actor';
 import { createActor2 } from './actor2';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 101;
+const BPM = 96;
 const STEPS = 16;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
-const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
-const STEP_DURATION = PATTERN_DURATION / STEPS;
+const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT * 2;
+const STEP_DURATION = PATTERN_DURATION / (STEPS * 2);
 const actors: Actor[] = [];
 
 export default class Scene extends MainScene {
@@ -93,51 +93,51 @@ export default class Scene extends MainScene {
     actors.push(await createActor2(projectSettings, videos.main, { // MAN 3
       box: { w: to3d(300), h: to3d(700), d: 0.02 },
       imageRect: {
-        x: 600, y: 570, w: 350, h: 750,
+        x: 1400, y: 570, w: 350, h: 750,
       },
       matrix4: getMatrix4({
-        x: toVP3d(750), y: toVP3d(600, false), z: 4.5, sx: 0.70, sy: 0.70,
+        x: toVP3d(1600), y: toVP3d(600, false), z: 4.5, sx: 0.70, sy: 0.70,
       }),
-      video: { start: 30.2, duration: PATTERN_DURATION },
+      video: { start: 28, duration: PATTERN_DURATION },
       tween: {
-        delay: STEP_DURATION * 0,
+        delay: STEP_DURATION * 1,
         duration: PATTERN_DURATION,
-        toMatrix4: getMatrix4({ x: toVP3d(750 - 650), y: toVP3d(600, false), z: 4.5 }),
-        toImagePosition: { x: -400, y: 590 },
+        toMatrix4: getMatrix4({ x: toVP3d(0), y: toVP3d(600, false), z: 4.5 }),
+        toImagePosition: { x: -380, y: 590 },
       },
     }));
 
     actors.push(await createActor2(projectSettings, videos.main, { // MAN 2
       box: { w: to3d(350), h: to3d(700), d: 0.02 },
       imageRect: {
-        x: 1510, y: 500, w: 400, h: 850,
+        x: 1700, y: 500, w: 400, h: 850,
       },
       matrix4: getMatrix4({
-        x: toVP3d(1710), y: toVP3d(600, false), z: 4.7, sx: 0.73, sy: 0.73,
+        x: toVP3d(1610), y: toVP3d(600, false), z: 4.7, sx: 0.73, sy: 0.73,
       }),
-      video: { start: 50.3, duration: PATTERN_DURATION },
+      video: { start: 50.0, duration: PATTERN_DURATION },
       tween: {
-        delay: STEP_DURATION * 10,
+        delay: STEP_DURATION * 11.66,
         duration: PATTERN_DURATION,
-        toMatrix4: getMatrix4({ x: toVP3d(1710 - 650), y: toVP3d(600, false), z: 5 }),
-        toImagePosition: { x: 470, y: 520 },
+        toMatrix4: getMatrix4({ x: toVP3d(0), y: toVP3d(600, false), z: 5 }),
+        toImagePosition: { x: -480, y: 520 },
       },
     }));
 
     actors.push(await createActor2(projectSettings, videos.main, { // MAN 1
       box: { w: to3d(300), h: to3d(600), d: 0.02 },
       imageRect: {
-        x: 1370, y: 680, w: 300, h: 600,
+        x: 1720, y: 680, w: 300, h: 600,
       },
       matrix4: getMatrix4({
-        x: toVP3d(1285), y: toVP3d(670, false), z: 3.7, sx: 0.72, sy: 0.72,
+        x: toVP3d(1600), y: toVP3d(670, false), z: 3.7, sx: 0.72, sy: 0.72,
       }),
-      video: { start: 73.8, duration: PATTERN_DURATION },
+      video: { start: 72.4, duration: PATTERN_DURATION },
       tween: {
-        delay: STEP_DURATION * 8,
+        delay: STEP_DURATION * 22.33,
         duration: PATTERN_DURATION,
-        toMatrix4: getMatrix4({ x: toVP3d(1285 - 650), y: toVP3d(670, false), z: 4.0 }),
-        toImagePosition: { x: 750, y: 690 },
+        toMatrix4: getMatrix4({ x: toVP3d(0), y: toVP3d(670, false), z: 4.0 }),
+        toImagePosition: { x: 400, y: 690 },
       },
     }));
   }
