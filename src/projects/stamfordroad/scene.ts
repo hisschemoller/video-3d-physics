@@ -100,7 +100,7 @@ export default class Scene extends MainScene {
       }),
       video: { start: 28, duration: PATTERN_DURATION },
       tween: {
-        delay: STEP_DURATION * 1,
+        delay: STEP_DURATION * 0,
         duration: PATTERN_DURATION,
         toMatrix4: getMatrix4({ x: toVP3d(0), y: toVP3d(600, false), z: 4.5 }),
         toImagePosition: { x: -380, y: 590 },
@@ -117,7 +117,7 @@ export default class Scene extends MainScene {
       }),
       video: { start: 50.0, duration: PATTERN_DURATION },
       tween: {
-        delay: STEP_DURATION * 11.66,
+        delay: STEP_DURATION * 10.66,
         duration: PATTERN_DURATION,
         toMatrix4: getMatrix4({ x: toVP3d(0), y: toVP3d(600, false), z: 5 }),
         toImagePosition: { x: -480, y: 520 },
@@ -134,7 +134,7 @@ export default class Scene extends MainScene {
       }),
       video: { start: 72.4, duration: PATTERN_DURATION },
       tween: {
-        delay: STEP_DURATION * 22.33,
+        delay: STEP_DURATION * 21.33,
         duration: PATTERN_DURATION,
         toMatrix4: getMatrix4({ x: toVP3d(0), y: toVP3d(670, false), z: 4.0 }),
         toImagePosition: { x: 400, y: 690 },

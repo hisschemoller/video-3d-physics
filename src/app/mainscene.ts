@@ -203,8 +203,8 @@ export default class MainScene extends Scene3D {
       return;
     }
 
-    this.delta = this.secondsPerFrame;
     this.time += this.delta;
+    this.delta = this.secondsPerFrame;
 
     this.update.call(this, parseFloat(this.time.toFixed(3)), parseInt(this.delta.toString(), 10));
     await this.updateAsync.call(
