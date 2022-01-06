@@ -1,11 +1,13 @@
 import { ExtendedMesh, THREE } from 'enable3d';
+import { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { createRectangle } from './actor-mesh';
 import { addImageCanvas as addImageCanvas2, addVideoFrameCanvas as addVideoFrameCanvas2 } from './actor-canvas2';
 
 export interface Actor2 {
-  getMesh: () => ExtendedMesh;
+  addTween: (tweenData: TweenData) => void,
+  getMesh: () => ExtendedMesh,
 }
 
 interface ActorData2 {
@@ -22,6 +24,71 @@ interface ActorData2 {
   video?: { start: number, duration: number },
 }
 
+interface ActorTweenData {
+  delay: number,
+  duration: number,
+  easeAmount?: number,
+  timeline: Timeline,
+  mesh: THREE.Mesh,
+  texture: THREE.Texture,
+  fromMatrix4: THREE.Matrix4,
+  toMatrix4: THREE.Matrix4,
+  imagePositionTween: (progress: number) => void,
+  loadVideoFrame: (progress: number) => Promise<boolean>,
+}
+
+interface TweenData {
+  delay: number,
+  duration: number,
+  easeAmount?: number,
+  fromMatrix4: THREE.Matrix4,
+  toMatrix4: THREE.Matrix4,
+}
+
+function addActorTween({
+  delay,
+  duration,
+  easeAmount = 0,
+  mesh,
+  texture,
+  fromMatrix4,
+  toMatrix4,
+  timeline,
+  imagePositionTween,
+  loadVideoFrame,
+}: ActorTweenData) {
+  const startPosition = new THREE.Vector3().setFromMatrixPosition(fromMatrix4);
+  const endPosition = new THREE.Vector3().setFromMatrixPosition(toMatrix4);
+
+  const tween = createTween({
+    delay,
+    duration,
+    easeAmount,
+    onStart: () => {
+      // eslint-disable-next-line no-param-reassign
+      mesh.visible = true;
+    },
+    onUpdate: async (progress: number) => {
+      if (endPosition !== startPosition) {
+        mesh.position.lerpVectors(startPosition, endPosition, progress);
+      }
+      if (loadVideoFrame) {
+        await loadVideoFrame(progress);
+      }
+      if (imagePositionTween) {
+        imagePositionTween(progress);
+      }
+      // eslint-disable-next-line no-param-reassign
+      texture.needsUpdate = true;
+    },
+    onComplete: () => {
+      // eslint-disable-next-line no-param-reassign
+      mesh.visible = false;
+    },
+  });
+  timeline.add(tween);
+}
+
 /**
  * Create an actor, an - optionally - animating 3d object.
  */
@@ -33,12 +100,12 @@ export async function createActor2(
   const { scene, timeline } = projectSettings;
   const {
     box: { w: boxWidth = 1, h: boxHeight = 1, d: boxDepth = 0.02 },
-    matrix4,
+    matrix4: fromMatrix4,
     tween: {
       delay = 0,
       duration = 0,
       easeAmount = 0,
-      toMatrix4 = matrix4,
+      toMatrix4 = fromMatrix4,
     },
     video = { start: 0, duration: 0 },
   } = actorData;
@@ -79,7 +146,7 @@ export async function createActor2(
 
   // MESH
   const mesh = await createRectangle(boxWidth, boxHeight || 1, texture, boxDepth);
-  mesh.applyMatrix4(matrix4);
+  mesh.applyMatrix4(fromMatrix4);
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   mesh.visible = false;
@@ -87,33 +154,39 @@ export async function createActor2(
   const getMesh = () => mesh;
 
   // TWEEN
-  const startPosition = new THREE.Vector3().setFromMatrixPosition(matrix4);
-  const endPosition = new THREE.Vector3().setFromMatrixPosition(toMatrix4);
+  const addTween = ({
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    delay,
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    duration,
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    easeAmount = 0,
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    fromMatrix4,
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    toMatrix4,
+  }: TweenData) => {
+    addActorTween({
+      delay,
+      duration,
+      easeAmount,
+      mesh,
+      texture,
+      fromMatrix4,
+      toMatrix4,
+      timeline,
+      imagePositionTween,
+      loadVideoFrame,
+    });
+  };
 
-  const tween = createTween({
+  addTween({
     delay,
     duration,
     easeAmount,
-    onStart: () => {
-      mesh.visible = true;
-    },
-    onUpdate: async (progress: number) => {
-      if (endPosition !== startPosition) {
-        mesh.position.lerpVectors(startPosition, endPosition, progress);
-      }
-      if (loadVideoFrame) {
-        await loadVideoFrame(progress);
-      }
-      if (imagePositionTween) {
-        imagePositionTween(progress);
-      }
-      texture.needsUpdate = true;
-    },
-    onComplete: () => {
-      mesh.visible = false;
-    },
+    fromMatrix4,
+    toMatrix4,
   });
-  timeline.add(tween);
 
-  return { getMesh };
+  return { addTween, getMesh };
 }
