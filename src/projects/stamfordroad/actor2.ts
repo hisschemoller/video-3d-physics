@@ -5,11 +5,17 @@ import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { createRectangle } from './actor-mesh';
 import { addImageCanvas as addImageCanvas2, addVideoFrameCanvas as addVideoFrameCanvas2 } from './actor-canvas2';
 
+/**
+ * Actor API, returned by createActor().
+ */
 export interface Actor2 {
   addTween: (tweenData: TweenData) => void,
   getMesh: () => ExtendedMesh,
 }
 
+/**
+ * Actor config data, the third argument in createActor().
+ */
 interface ActorData2 {
   box: { w?: number, h?: number, d?: number, },
   imageRect: { x: number, y: number, w: number, h: number },
@@ -24,6 +30,9 @@ interface ActorData2 {
   video?: { start: number, duration: number },
 }
 
+/**
+ * Actor tween config data, passed as argument to createActorTween().
+ */
 interface ActorTweenData {
   delay: number,
   duration: number,
@@ -37,6 +46,9 @@ interface ActorTweenData {
   loadVideoFrame: (progress: number) => Promise<boolean>,
 }
 
+/**
+ * Actor tween config data, passed as argument to addTween().
+ */
 interface TweenData {
   delay: number,
   duration: number,
@@ -45,6 +57,9 @@ interface TweenData {
   toMatrix4: THREE.Matrix4,
 }
 
+/**
+ * Creates a tween for an actor..
+ */
 function addActorTween({
   delay,
   duration,
@@ -59,6 +74,8 @@ function addActorTween({
 }: ActorTweenData) {
   const startPosition = new THREE.Vector3().setFromMatrixPosition(fromMatrix4);
   const endPosition = new THREE.Vector3().setFromMatrixPosition(toMatrix4);
+  const startQuaternion = new THREE.Quaternion().setFromRotationMatrix(fromMatrix4);
+  const endQuaternion = new THREE.Quaternion().setFromRotationMatrix(toMatrix4);
 
   const tween = createTween({
     delay,
@@ -69,8 +86,9 @@ function addActorTween({
       mesh.visible = true;
     },
     onUpdate: async (progress: number) => {
-      if (endPosition !== startPosition) {
+      if (fromMatrix4 !== toMatrix4) {
         mesh.position.lerpVectors(startPosition, endPosition, progress);
+        mesh.quaternion.slerpQuaternions(startQuaternion, endQuaternion, progress);
       }
       if (loadVideoFrame) {
         await loadVideoFrame(progress);
