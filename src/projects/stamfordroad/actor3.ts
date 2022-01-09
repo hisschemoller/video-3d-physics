@@ -12,6 +12,7 @@ import {
 export interface Actor3 {
   addTween: (tweenData: TweenData) => void,
   getMesh: () => ExtendedMesh,
+  setStaticPosition: (matrix4: THREE.Matrix4) => void,
 }
 
 /**
@@ -137,8 +138,15 @@ export async function createActor3(
     timeline.add(tween);
   };
 
+  const setStaticPosition = (matrix4: THREE.Matrix4) => {
+    mesh.position.setFromMatrixPosition(matrix4);
+  };
+
   return {
     addTween,
     getMesh: () => mesh,
+    setStaticPosition,
+  };
+}
   };
 }
