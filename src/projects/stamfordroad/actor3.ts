@@ -148,5 +148,55 @@ export async function createActor3(
     setStaticPosition,
   };
 }
+
+export function createTweenGroup(
+  { scene, timeline }: ProjectSettings,
+) {
+  const group = new THREE.Group();
+  group.visible = false;
+  scene.add(group);
+
+  // TWEEN
+  const addTween = ({
+    delay,
+    duration,
+    easeAmount = 0,
+    fromMatrix4,
+    toMatrix4,
+  }: {
+    delay: number,
+    duration: number,
+    easeAmount?: number,
+    fromMatrix4: THREE.Matrix4,
+    toMatrix4: THREE.Matrix4,
+  }) => {
+    const startPosition = new THREE.Vector3().setFromMatrixPosition(fromMatrix4);
+    const endPosition = new THREE.Vector3().setFromMatrixPosition(toMatrix4);
+    const startQuaternion = new THREE.Quaternion().setFromRotationMatrix(fromMatrix4);
+    const endQuaternion = new THREE.Quaternion().setFromRotationMatrix(toMatrix4);
+
+    const tween = createTween({
+      delay,
+      duration,
+      easeAmount,
+      onStart: () => {
+        group.visible = true;
+      },
+      onUpdate: async (progress: number) => {
+        if (fromMatrix4 !== toMatrix4) {
+          group.position.lerpVectors(startPosition, endPosition, progress);
+          group.quaternion.slerpQuaternions(startQuaternion, endQuaternion, progress);
+        }
+      },
+      onComplete: () => {
+        group.visible = false;
+      },
+    });
+    timeline.add(tween);
+  };
+
+  return {
+    addTween,
+    getMesh: () => group,
   };
 }
