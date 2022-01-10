@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { ExtendedMesh, THREE } from 'enable3d';
 import createTween from '@app/tween';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
@@ -31,8 +32,8 @@ interface TweenData {
   duration: number,
   easeAmount?: number,
   videoStart: number,
-  fromMatrix4: THREE.Matrix4,
-  toMatrix4: THREE.Matrix4,
+  fromMatrix4?: THREE.Matrix4,
+  toMatrix4?: THREE.Matrix4,
   fromImagePosition: THREE.Vector2,
   toImagePosition: THREE.Vector2,
 }
@@ -78,10 +79,10 @@ export async function createActor3(
     fromImagePosition,
     toImagePosition: toImagePositionBeforeClone,
   }: TweenData) => {
-    const startPosition = new THREE.Vector3().setFromMatrixPosition(fromMatrix4);
-    const endPosition = new THREE.Vector3().setFromMatrixPosition(toMatrix4);
-    const startQuaternion = new THREE.Quaternion().setFromRotationMatrix(fromMatrix4);
-    const endQuaternion = new THREE.Quaternion().setFromRotationMatrix(toMatrix4);
+    const startPosition = fromMatrix4 ? new THREE.Vector3().setFromMatrixPosition(fromMatrix4) : undefined;
+    const endPosition = toMatrix4 ? new THREE.Vector3().setFromMatrixPosition(toMatrix4) : undefined;
+    const startQuaternion = fromMatrix4 ? new THREE.Quaternion().setFromRotationMatrix(fromMatrix4) : undefined;
+    const endQuaternion = toMatrix4 ? new THREE.Quaternion().setFromRotationMatrix(toMatrix4) : undefined;
 
     const toImagePosition = toImagePositionBeforeClone.clone();
     if (projectSettings.isPreview) {
@@ -119,7 +120,7 @@ export async function createActor3(
         mesh.visible = true;
       },
       onUpdate: async (progress: number) => {
-        if (fromMatrix4 !== toMatrix4) {
+        if (startPosition && endPosition && startQuaternion && endQuaternion) {
           mesh.position.lerpVectors(startPosition, endPosition, progress);
           mesh.quaternion.slerpQuaternions(startQuaternion, endQuaternion, progress);
         }
@@ -140,6 +141,7 @@ export async function createActor3(
 
   const setStaticPosition = (matrix4: THREE.Matrix4) => {
     mesh.position.setFromMatrixPosition(matrix4);
+    mesh.quaternion.setFromRotationMatrix(matrix4);
   };
 
   return {
@@ -149,6 +151,9 @@ export async function createActor3(
   };
 }
 
+/**
+ * Create tweening THREE.Group object to add actors to for combined tweens.
+ */
 export function createTweenGroup(
   { scene, timeline }: ProjectSettings,
 ) {
