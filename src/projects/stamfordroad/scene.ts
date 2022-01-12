@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable object-curly-newline */
 import { THREE } from 'enable3d';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
@@ -9,10 +11,10 @@ import { createActor3, createTweenGroup } from './actor3';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 96;
-const STEPS = 16;
+const STEPS = 32;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
-const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
+const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT * 2;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
 const actors: Actor[] = [];
 
@@ -77,8 +79,9 @@ export default class Scene extends MainScene {
     };
 
     await this.createActors(projectSettings, videos);
-    // await this.createActors2(projectSettings, videos);
-    await this.createActorsGroup1(projectSettings, videos);
+    // await this.createActorsGroup1(projectSettings, videos);
+    // await this.createActorsGroup2(projectSettings, videos);
+    await this.createActorsGroups(projectSettings, videos);
 
     this.postCreate();
   }
@@ -88,12 +91,210 @@ export default class Scene extends MainScene {
     super.updateAsync(time, delta);
   }
 
+  /**
+   * Actor group.
+   */
+  async createActorsGroups(projectSettings: ProjectSettings, videos: { [key: string]: VideoData }) {
+    const to3d = this.to3d.bind(this);
+    const toVP3d = this.toVP3d.bind(this);
+
+    const y = toVP3d(1100, false);
+    const z = 3.6;
+    const x1 = 3;
+    const x2 = 1;
+    const x3 = -1;
+    const x4 = -3;
+    const m1 = getMatrix4({ x: x1, y, z, ry: Math.PI * 0.03 });
+    const m2 = getMatrix4({ x: x2, y, z, ry: Math.PI * 0.03 });
+    const m3 = getMatrix4({ x: x3, y, z, ry: Math.PI * -0.47 });
+    const m4 = getMatrix4({ x: x4, y, z, ry: Math.PI * -0.47 });
+    const m5 = getMatrix4({ x: x4, y, z, ry: Math.PI * -0.97 });
+    const m6 = getMatrix4({ x: x3, y, z, ry: Math.PI * -0.97 });
+    const m7 = getMatrix4({ x: x2, y, z, ry: Math.PI * -1.47 });
+    const m8 = getMatrix4({ x: x1, y, z, ry: Math.PI * -1.47 });
+    const m9 = getMatrix4({ x: x1, y, z, ry: Math.PI * -1.97 });
+
+    let actor1: Actor;
+    let actor2: Actor;
+    let actor3: Actor;
+    let actor4: Actor;
+    const actorWidth = 240;
+    const aW3d = to3d(actorWidth);
+    const S = STEP_DURATION;
+
+    { // ACTOR 1
+      const h = 560;
+      const actor = await createActor3(projectSettings, videos.main, {
+        box: { w: aW3d, h: to3d(h), d: 0.02 },
+        imageRect: { w: actorWidth, h },
+      });
+      actor.setStaticPosition(getMatrix4({ x: aW3d / 2, y: to3d(h), z: aW3d / 2, ry: Math.PI / 2 }));
+      actor1 = actor;
+    }
+
+    { // ACTOR 2
+      const h = 500;
+      const actor = await createActor3(projectSettings, videos.main, {
+        box: { w: aW3d, h: to3d(h), d: 0.02 },
+        imageRect: { w: actorWidth, h },
+      });
+      actor.setStaticPosition(getMatrix4({ x: aW3d / -2, y: to3d(h), z: aW3d / 2 }));
+      actor2 = actor;
+    }
+
+    { // ACTOR 3
+      const h = 560;
+      const actor = await createActor3(projectSettings, videos.main, {
+        box: { w: aW3d, h: to3d(h), d: 0.02 },
+        imageRect: { w: actorWidth, h },
+      });
+      actor.setStaticPosition(getMatrix4({ x: aW3d / 2, y: to3d(h), z: aW3d / 2, ry: Math.PI / 2 }));
+      actor3 = actor;
+    }
+
+    { // ACTOR 4
+      const h = 500;
+      const actor = await createActor3(projectSettings, videos.main, {
+        box: { w: aW3d, h: to3d(h), d: 0.02 },
+        imageRect: { w: actorWidth, h },
+      });
+      actor.setStaticPosition(getMatrix4({ x: aW3d / -2, y: to3d(h), z: aW3d / 2 }));
+      actor4 = actor;
+    }
+
+    { // GROUP 1
+      const group = createTweenGroup(projectSettings);
+      group.setStaticPosition(getMatrix4({ x: -1, y: toVP3d(1100, false), z: 3 }));
+      group.getMesh().add(actor1.getMesh());
+      group.getMesh().add(actor2.getMesh());
+      // group.getMesh().add(new THREE.GridHelper());
+      group.addTween({ delay: S * 0, duration: S * 5, fromMatrix4: m1, toMatrix4: m2 });
+      group.addTween({ delay: S * 5, duration: S * 3, fromMatrix4: m2, toMatrix4: m3 });
+      group.addTween({ delay: S * 8, duration: S * 5, fromMatrix4: m3, toMatrix4: m4 });
+      group.addTween({ delay: S * 13, duration: S * 3, fromMatrix4: m4, toMatrix4: m5 });
+      group.addTween({ delay: S * 16, duration: S * 5, fromMatrix4: m5, toMatrix4: m6 });
+      group.addTween({ delay: S * 21, duration: S * 3, fromMatrix4: m6, toMatrix4: m7 });
+      group.addTween({ delay: S * 24, duration: S * 5, fromMatrix4: m7, toMatrix4: m8 });
+      group.addTween({ delay: S * 29, duration: S * 2.5, fromMatrix4: m8, toMatrix4: m9 });
+    }
+
+    { // GROUP 2
+      const group = createTweenGroup(projectSettings);
+      group.setStaticPosition(getMatrix4({ x: -1, y: toVP3d(1100, false), z: 3 }));
+      group.getMesh().add(actor3.getMesh());
+      group.getMesh().add(actor4.getMesh());
+      // group.getMesh().add(new THREE.GridHelper());
+      group.addTween({ delay: S * 0, duration: S * 5, fromMatrix4: m5, toMatrix4: m6 });
+      group.addTween({ delay: S * 5, duration: S * 3, fromMatrix4: m6, toMatrix4: m7 });
+      group.addTween({ delay: S * 8, duration: S * 5, fromMatrix4: m7, toMatrix4: m8 });
+      group.addTween({ delay: S * 13, duration: S * 3, fromMatrix4: m8, toMatrix4: m9 });
+      group.addTween({ delay: S * 16, duration: S * 5, fromMatrix4: m1, toMatrix4: m2 });
+      group.addTween({ delay: S * 21, duration: S * 3, fromMatrix4: m2, toMatrix4: m3 });
+      group.addTween({ delay: S * 24, duration: S * 5, fromMatrix4: m3, toMatrix4: m4 });
+      group.addTween({ delay: S * 29, duration: S * 2.5, fromMatrix4: m4, toMatrix4: m5 });
+    }
+  }
+
+  /**
+   * @param projectSettings
+   * @param videos
+   */
+  async createActorsGroup2(projectSettings: ProjectSettings, videos: { [key: string]: VideoData }) {
+    const to3d = this.to3d.bind(this);
+    const toVP3d = this.toVP3d.bind(this);
+
+    let actor1: Actor;
+    let actor2: Actor;
+
+    { // MOEDER EN KIND?
+      const imagePositionA = new THREE.Vector2(470, 680);
+      const imagePositionB = new THREE.Vector2(1020, 680);
+      const actor = await createActor3(projectSettings, videos.main, {
+        box: { w: to3d(380 * 0.7), h: to3d(600 * 0.7), d: 0.02 },
+        imageRect: { w: 380, h: 600 },
+      });
+      // actor.setStaticPosition(getMatrix4({ x: 2, y: toVP3d(680, false), z: 4 }));
+      actor.setStaticPosition(getMatrix4({ x: 0, y: to3d(600 * 0.7), ry: Math.PI * 0.5 }));
+      actor.addTween({
+        delay: STEP_DURATION * 0,
+        duration: STEP_DURATION * 14,
+        videoStart: 53,
+        fromImagePosition: imagePositionA,
+        toImagePosition: imagePositionB,
+      });
+      actor1 = actor;
+    }
+
+    { // MAN MET WANDELSTOK
+      const height = 660;
+      const imagePositionA = new THREE.Vector2(70, 550);
+      const imagePositionB = new THREE.Vector2(690, 550);
+      const actor = await createActor3(projectSettings, videos.main, {
+        box: { w: to3d(300 * 0.72), h: to3d(height * 0.72), d: 0.02 },
+        imageRect: { w: 300 * 1.25, h: height * 1.25 },
+      });
+      // actor.setStaticPosition(getMatrix4({ x: -1, y: toVP3d(630, false), z: 4 }));
+      actor.setStaticPosition(getMatrix4({ x: to3d(300 * -0.72), y: to3d(height * 0.72) }));
+      actor.addTween({
+        delay: STEP_DURATION * 0,
+        duration: STEP_DURATION * 12,
+        videoStart: 41.0,
+        fromImagePosition: imagePositionA,
+        toImagePosition: imagePositionB,
+      });
+      actor2 = actor;
+    }
+
+    { // GROUP
+      const matrix4a = getMatrix4({
+        x: toVP3d(800), y: toVP3d(1100, false), z: 3.6, ry: Math.PI * 0.03,
+      });
+      const matrix4b = getMatrix4({
+        x: toVP3d(1000), y: toVP3d(1100, false), z: 3.4, ry: Math.PI * 0.03,
+      });
+      const matrix4c = getMatrix4({
+        x: toVP3d(1100), y: toVP3d(1100, false), z: 3.3, ry: Math.PI * -0.47,
+      });
+      const matrix4d = getMatrix4({
+        x: toVP3d(1200), y: toVP3d(1100, false), z: 3.0, ry: Math.PI * -0.47,
+      });
+      const group = createTweenGroup(projectSettings);
+      // group.setStaticPosition(getMatrix4({ x: -1, y: toVP3d(1100, false), z: 4 }));
+      const delayAdd = STEP_DURATION * 0;
+      group.getMesh().add(actor1.getMesh());
+      group.getMesh().add(actor2.getMesh());
+      group.addTween({
+        delay: (STEP_DURATION * 0) + delayAdd,
+        duration: STEP_DURATION * 6,
+        fromMatrix4: matrix4a,
+        toMatrix4: matrix4b,
+      });
+      group.addTween({
+        delay: (STEP_DURATION * 6) + delayAdd,
+        duration: STEP_DURATION * 4,
+        fromMatrix4: matrix4b,
+        toMatrix4: matrix4c,
+      });
+      group.addTween({
+        delay: (STEP_DURATION * 10) + delayAdd,
+        duration: STEP_DURATION * 4,
+        fromMatrix4: matrix4c,
+        toMatrix4: matrix4d,
+      });
+    }
+  }
+
+  /**
+   * 
+   * @param projectSettings 
+   * @param videos 
+   */
   async createActorsGroup1(projectSettings: ProjectSettings, videos: { [key: string]: VideoData }) {
     const to3d = this.to3d.bind(this);
     const toVP3d = this.toVP3d.bind(this);
 
-    let actorMan1: Actor;
-    let actorMan2: Actor;
+    let actor1: Actor;
+    let actor2: Actor;
 
     { // MAN 1
       const imagePositionA = new THREE.Vector2(1400, 690);
@@ -111,7 +312,7 @@ export default class Scene extends MainScene {
         fromImagePosition: imagePositionA,
         toImagePosition: imagePositionB,
       });
-      actorMan1 = actor;
+      actor1 = actor;
     }
 
     { // MAN 2
@@ -130,7 +331,7 @@ export default class Scene extends MainScene {
         fromImagePosition: imagePositionA,
         toImagePosition: imagePositionB,
       });
-      actorMan2 = actor;
+      actor2 = actor;
     }
 
     { // GROUP
@@ -141,15 +342,15 @@ export default class Scene extends MainScene {
         x: toVP3d(1200), y: toVP3d(1100, false), z: 4.0, ry: Math.PI * 0.03,
       });
       const matrix4c = getMatrix4({
-        x: toVP3d(1000), y: toVP3d(1100, false), z: 4.0, ry: Math.PI * -0.47,
+        x: toVP3d(1000), y: toVP3d(1100, false), z: 4.1, ry: Math.PI * -0.47,
       });
       const matrix4d = getMatrix4({
-        x: toVP3d(800), y: toVP3d(1100, false), z: 4.0, ry: Math.PI * -0.47,
+        x: toVP3d(800), y: toVP3d(1100, false), z: 4.3, ry: Math.PI * -0.47,
       });
       const group = createTweenGroup(projectSettings);
-      group.getMesh().add(actorMan1.getMesh());
-      group.getMesh().add(actorMan2.getMesh());
-      group.getMesh().add(new THREE.GridHelper());
+      group.getMesh().add(actor1.getMesh());
+      group.getMesh().add(actor2.getMesh());
+      // group.getMesh().add(new THREE.GridHelper());
       group.addTween({
         delay: STEP_DURATION * 0,
         duration: STEP_DURATION * 6,
@@ -158,13 +359,13 @@ export default class Scene extends MainScene {
       });
       group.addTween({
         delay: STEP_DURATION * 6,
-        duration: STEP_DURATION * 2,
+        duration: STEP_DURATION * 4,
         fromMatrix4: matrix4b,
         toMatrix4: matrix4c,
       });
       group.addTween({
-        delay: STEP_DURATION * 8,
-        duration: STEP_DURATION * 6,
+        delay: STEP_DURATION * 10,
+        duration: STEP_DURATION * 4,
         fromMatrix4: matrix4c,
         toMatrix4: matrix4d,
       });
