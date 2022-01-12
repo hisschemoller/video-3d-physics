@@ -140,6 +140,7 @@ export async function createActor3(
   };
 
   const setStaticPosition = (matrix4: THREE.Matrix4) => {
+    mesh.visible = true;
     mesh.position.setFromMatrixPosition(matrix4);
     mesh.quaternion.setFromRotationMatrix(matrix4);
   };
@@ -200,8 +201,15 @@ export function createTweenGroup(
     timeline.add(tween);
   };
 
+  const setStaticPosition = (matrix4: THREE.Matrix4) => {
+    group.visible = true;
+    group.position.setFromMatrixPosition(matrix4);
+    group.quaternion.setFromRotationMatrix(matrix4);
+  };
+
   return {
     addTween,
     getMesh: () => group,
+    setStaticPosition,
   };
 }
