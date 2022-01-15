@@ -103,20 +103,23 @@ export default class Scene extends MainScene {
     const toVP3d = this.toVP3d.bind(this);
 
     const y = toVP3d(1100, false);
-    const z = 3.6;
     const x1 = 2;
     const x2 = 0.75;
-    const x3 = -0.76;
+    const x3 = -0.75;
     const x4 = -2;
-    const m1 = getMatrix4({ x: x1, y, z, ry: Math.PI * 0.03 });
-    const m2 = getMatrix4({ x: x2, y, z, ry: Math.PI * 0.03 });
-    const m3 = getMatrix4({ x: x3, y, z, ry: Math.PI * -0.47 });
-    const m4 = getMatrix4({ x: x4, y, z, ry: Math.PI * -0.47 });
-    const m5 = getMatrix4({ x: x4, y, z, ry: Math.PI * -0.97 });
-    const m6 = getMatrix4({ x: x3, y, z, ry: Math.PI * -0.97 });
-    const m7 = getMatrix4({ x: x2, y, z, ry: Math.PI * -1.47 });
-    const m8 = getMatrix4({ x: x1, y, z, ry: Math.PI * -1.47 });
-    const m9 = getMatrix4({ x: x1, y, z, ry: Math.PI * -1.97 });
+    const z1 = 3.6;
+    const z2 = 3.7;
+    const z3 = 3.8;
+    const z4 = 3.9;
+    const m1 = getMatrix4({ x: x1, y, z: z1, ry: Math.PI * 0.03 });
+    const m2 = getMatrix4({ x: x2, y, z: z2, ry: Math.PI * 0.03 });
+    const m3 = getMatrix4({ x: x3, y, z: z3, ry: Math.PI * -0.47 });
+    const m4 = getMatrix4({ x: x4, y, z: z4, ry: Math.PI * -0.47 });
+    const m5 = getMatrix4({ x: x4, y, z: z4, ry: Math.PI * -0.97 });
+    const m6 = getMatrix4({ x: x3, y, z: z3, ry: Math.PI * -0.97 });
+    const m7 = getMatrix4({ x: x2, y, z: z2, ry: Math.PI * -1.47 });
+    const m8 = getMatrix4({ x: x1, y, z: z1, ry: Math.PI * -1.47 });
+    const m9 = getMatrix4({ x: x1, y, z: z1, ry: Math.PI * -1.97 });
 
     let panel1: Actor;
     let panel2: Actor;
