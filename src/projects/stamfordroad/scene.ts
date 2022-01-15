@@ -92,7 +92,7 @@ export default class Scene extends MainScene {
   }
 
   /**
-   * Actor group.
+   * Actor groups.
    */
   async createActorsGroups(projectSettings: ProjectSettings, videos: { [key: string]: VideoData }) {
     const to3d = this.to3d.bind(this);
@@ -164,34 +164,30 @@ export default class Scene extends MainScene {
 
     { // GROUP 1
       const group = createTweenGroup(projectSettings);
-      group.setStaticPosition(getMatrix4({ x: -1, y: toVP3d(1100, false), z: 3 }));
       group.getMesh().add(actor1.getMesh());
       group.getMesh().add(actor2.getMesh());
-      // group.getMesh().add(new THREE.GridHelper());
-      group.addTween({ delay: S * 0, duration: S * 5, fromMatrix4: m1, toMatrix4: m2 });
-      group.addTween({ delay: S * 5, duration: S * 3, fromMatrix4: m2, toMatrix4: m3 });
-      group.addTween({ delay: S * 8, duration: S * 5, fromMatrix4: m3, toMatrix4: m4 });
+      group.addTween({ delay: S * 0, duration: S * 4.5, fromMatrix4: m1, toMatrix4: m2 });
+      group.addTween({ delay: S * 4.5, duration: S * 4, fromMatrix4: m2, toMatrix4: m3 });
+      group.addTween({ delay: S * 8.5, duration: S * 4.5, fromMatrix4: m3, toMatrix4: m4 });
       group.addTween({ delay: S * 13, duration: S * 3, fromMatrix4: m4, toMatrix4: m5 });
-      group.addTween({ delay: S * 16, duration: S * 5, fromMatrix4: m5, toMatrix4: m6 });
-      group.addTween({ delay: S * 21, duration: S * 3, fromMatrix4: m6, toMatrix4: m7 });
-      group.addTween({ delay: S * 24, duration: S * 5, fromMatrix4: m7, toMatrix4: m8 });
-      group.addTween({ delay: S * 29, duration: S * 2.5, fromMatrix4: m8, toMatrix4: m9 });
+      group.addTween({ delay: S * 16, duration: S * 4.5, fromMatrix4: m5, toMatrix4: m6 });
+      group.addTween({ delay: S * 20.5, duration: S * 4, fromMatrix4: m6, toMatrix4: m7 });
+      group.addTween({ delay: S * 24.5, duration: S * 4.5, fromMatrix4: m7, toMatrix4: m8 });
+      group.addTween({ delay: S * 29, duration: S * 3, fromMatrix4: m8, toMatrix4: m9 });
     }
 
     { // GROUP 2
       const group = createTweenGroup(projectSettings);
-      group.setStaticPosition(getMatrix4({ x: -1, y: toVP3d(1100, false), z: 3 }));
       group.getMesh().add(actor3.getMesh());
       group.getMesh().add(actor4.getMesh());
-      // group.getMesh().add(new THREE.GridHelper());
-      group.addTween({ delay: S * 0, duration: S * 5, fromMatrix4: m5, toMatrix4: m6 });
-      group.addTween({ delay: S * 5, duration: S * 3, fromMatrix4: m6, toMatrix4: m7 });
-      group.addTween({ delay: S * 8, duration: S * 5, fromMatrix4: m7, toMatrix4: m8 });
+      group.addTween({ delay: S * 0, duration: S * 4.5, fromMatrix4: m5, toMatrix4: m6 });
+      group.addTween({ delay: S * 4.5, duration: S * 4, fromMatrix4: m6, toMatrix4: m7 });
+      group.addTween({ delay: S * 8.5, duration: S * 4.5, fromMatrix4: m7, toMatrix4: m8 });
       group.addTween({ delay: S * 13, duration: S * 3, fromMatrix4: m8, toMatrix4: m9 });
-      group.addTween({ delay: S * 16, duration: S * 5, fromMatrix4: m1, toMatrix4: m2 });
-      group.addTween({ delay: S * 21, duration: S * 3, fromMatrix4: m2, toMatrix4: m3 });
-      group.addTween({ delay: S * 24, duration: S * 5, fromMatrix4: m3, toMatrix4: m4 });
-      group.addTween({ delay: S * 29, duration: S * 2.5, fromMatrix4: m4, toMatrix4: m5 });
+      group.addTween({ delay: S * 16, duration: S * 4.5, fromMatrix4: m1, toMatrix4: m2 });
+      group.addTween({ delay: S * 20.5, duration: S * 4, fromMatrix4: m2, toMatrix4: m3 });
+      group.addTween({ delay: S * 24.5, duration: S * 4.5, fromMatrix4: m3, toMatrix4: m4 });
+      group.addTween({ delay: S * 29, duration: S * 3, fromMatrix4: m4, toMatrix4: m5 });
     }
   }
 

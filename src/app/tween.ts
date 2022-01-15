@@ -1,5 +1,4 @@
 export interface Tween {
-  isActive: boolean;
   update: (
     time: number, delta: number, timelineDuration: number) => Promise<void> | void | undefined;
 }
@@ -51,7 +50,13 @@ export default function createTween({
     const localEnd = (delay + duration) % timelineDuration;
     const isStart = localTime >= delay && localTime - delta < delay;
     const isComplete = localTime >= localEnd && localTime - delta < localEnd;
-    if (onComplete && isComplete) {
+    const shouldComplete = isStart && !isComplete;
+    // if the tween end (localEnd) is close to timelineDuration, then it can happen that localTime
+    // jumps back to the start of the tween before the end is detected
+    const restartBeforeComplete = isActive
+      && localTime >= localEnd - timelineDuration
+      && localTime - delta < localEnd - timelineDuration;
+    if (onComplete && (isComplete || shouldComplete || restartBeforeComplete)) {
       isActive = false;
       onComplete();
     }
@@ -69,5 +74,5 @@ export default function createTween({
     return result;
   };
 
-  return { isActive, update };
+  return { update };
 }

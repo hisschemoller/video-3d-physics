@@ -189,13 +189,15 @@ export function createTweenGroup(
         group.visible = true;
       },
       onUpdate: async (progress: number) => {
+        group.visible = true;
         if (fromMatrix4 !== toMatrix4) {
           group.position.lerpVectors(startPosition, endPosition, progress);
           group.quaternion.slerpQuaternions(startQuaternion, endQuaternion, progress);
         }
       },
       onComplete: () => {
-        group.visible = false;
+        // FIXME: this is only for Stamford Road
+        // group.visible = false;
       },
     });
     timeline.add(tween);
