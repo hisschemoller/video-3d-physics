@@ -3,9 +3,20 @@ export interface Tween {
     time: number, delta: number, timelineDuration: number) => Promise<void> | void | undefined;
 }
 
+/**
+ * @link https://easings.net/
+ */
+export const Ease = {
+  linear: (value: number) => value,
+  sineIn: (value: number) => 1 - Math.cos((Math.PI * value) / 2),
+  sineInOut: (value: number) => -(Math.cos(Math.PI * value) - 1) / 2,
+  sineOut: (value: number) => Math.sin((Math.PI * value) / 2),
+};
+
 interface TweenParams {
   delay?: number;
   duration: number;
+  ease?: keyof typeof Ease,
   easeAmount?: number;
   onComplete?: () => void | undefined;
   onStart?: () => void | undefined;
@@ -18,26 +29,26 @@ interface TweenParams {
  * @param {Number} amount A value from -1 (ease in) to 1 (ease out) indicating the strength and
  * direction of the ease.
  */
-const getEasefunction = (amount: number) => {
-  const eAmount = Math.max(-1, Math.min(amount, 1));
-  if (eAmount === 0) {
-    return (t: number) => t;
-  }
-  if (eAmount < 0) {
-    return (t: number) => t * (t * -amount + 1 + amount);
-  }
-  return (t: number) => t * ((2 - t) * amount + (1 - amount));
-};
+// const getEasefunction = (amount: number) => {
+//   const eAmount = Math.max(-1, Math.min(amount, 1));
+//   if (eAmount === 0) {
+//     return (t: number) => t;
+//   }
+//   if (eAmount < 0) {
+//     return (t: number) => t * (t * -amount + 1 + amount);
+//   }
+//   return (t: number) => t * ((2 - t) * amount + (1 - amount));
+// };
 
 export default function createTween({
   delay = 0,
   duration = 1,
-  easeAmount = 0,
+  ease,
   onComplete,
   onStart,
   onUpdate,
 }: TweenParams): Tween {
-  const easeFunction = getEasefunction(easeAmount);
+  const easeFunction = ease ? Ease[ease] : Ease.linear;
   let isActive = false;
   let startPosition = 0;
   let currentPosition = 0;

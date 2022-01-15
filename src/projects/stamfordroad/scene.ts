@@ -175,13 +175,13 @@ export default class Scene extends MainScene {
       group.getMesh().add(panel1.getMesh());
       group.getMesh().add(panel2.getMesh());
       group.addTween({ delay: S * 0, duration: S * 4.5, fromMatrix4: m1, toMatrix4: m2 });
-      group.addTween({ delay: S * 4.5, duration: S * 4, fromMatrix4: m2, toMatrix4: m3 });
+      group.addTween({ delay: S * 4.5, duration: S * 4, fromMatrix4: m2, toMatrix4: m3, ease: 'sineInOut' });
       group.addTween({ delay: S * 8.5, duration: S * 4.5, fromMatrix4: m3, toMatrix4: m4 });
-      group.addTween({ delay: S * 13, duration: S * 3, fromMatrix4: m4, toMatrix4: m5 });
+      group.addTween({ delay: S * 13, duration: S * 3, fromMatrix4: m4, toMatrix4: m5, ease: 'sineInOut' });
       group.addTween({ delay: S * 16, duration: S * 4.5, fromMatrix4: m5, toMatrix4: m6 });
-      group.addTween({ delay: S * 20.5, duration: S * 4, fromMatrix4: m6, toMatrix4: m7 });
+      group.addTween({ delay: S * 20.5, duration: S * 4, fromMatrix4: m6, toMatrix4: m7, ease: 'sineInOut' });
       group.addTween({ delay: S * 24.5, duration: S * 4.5, fromMatrix4: m7, toMatrix4: m8 });
-      group.addTween({ delay: S * 29, duration: S * 3, fromMatrix4: m8, toMatrix4: m9 });
+      group.addTween({ delay: S * 29, duration: S * 3, fromMatrix4: m8, toMatrix4: m9, ease: 'sineInOut' });
     }
 
     { // GROUP 2
@@ -189,13 +189,13 @@ export default class Scene extends MainScene {
       group.getMesh().add(panel3.getMesh());
       group.getMesh().add(panel4.getMesh());
       group.addTween({ delay: S * 0, duration: S * 4.5, fromMatrix4: m5, toMatrix4: m6 });
-      group.addTween({ delay: S * 4.5, duration: S * 4, fromMatrix4: m6, toMatrix4: m7 });
+      group.addTween({ delay: S * 4.5, duration: S * 4, fromMatrix4: m6, toMatrix4: m7, ease: 'sineInOut' });
       group.addTween({ delay: S * 8.5, duration: S * 4.5, fromMatrix4: m7, toMatrix4: m8 });
-      group.addTween({ delay: S * 13, duration: S * 3, fromMatrix4: m8, toMatrix4: m9 });
+      group.addTween({ delay: S * 13, duration: S * 3, fromMatrix4: m8, toMatrix4: m9, ease: 'sineInOut' });
       group.addTween({ delay: S * 16, duration: S * 4.5, fromMatrix4: m1, toMatrix4: m2 });
-      group.addTween({ delay: S * 20.5, duration: S * 4, fromMatrix4: m2, toMatrix4: m3 });
+      group.addTween({ delay: S * 20.5, duration: S * 4, fromMatrix4: m2, toMatrix4: m3, ease: 'sineInOut' });
       group.addTween({ delay: S * 24.5, duration: S * 4.5, fromMatrix4: m3, toMatrix4: m4 });
-      group.addTween({ delay: S * 29, duration: S * 3, fromMatrix4: m4, toMatrix4: m5 });
+      group.addTween({ delay: S * 29, duration: S * 3, fromMatrix4: m4, toMatrix4: m5, ease: 'sineInOut' });
     }
 
     await Scene.addManWithCane(projectSettings, videos.main, panel1, aW3d, to3d(560), actorWidth, 13, 16, 3, 13);

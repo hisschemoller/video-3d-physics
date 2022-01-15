@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { ExtendedMesh, THREE } from 'enable3d';
-import createTween from '@app/tween';
+import createTween, { Ease } from '@app/tween';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { createRectangle } from './actor-mesh';
 import {
@@ -171,13 +171,13 @@ export function createTweenGroup(
   const addTween = ({
     delay,
     duration,
-    easeAmount = 0,
+    ease,
     fromMatrix4,
     toMatrix4,
   }: {
     delay: number,
     duration: number,
-    easeAmount?: number,
+    ease?: keyof typeof Ease,
     fromMatrix4: THREE.Matrix4,
     toMatrix4: THREE.Matrix4,
   }) => {
@@ -189,7 +189,7 @@ export function createTweenGroup(
     const tween = createTween({
       delay,
       duration,
-      easeAmount,
+      ease,
       onStart: () => {
         group.visible = true;
       },
