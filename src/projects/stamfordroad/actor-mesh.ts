@@ -25,7 +25,7 @@ export function createRectangle(
     });
     const materials = [
       new THREE.MeshPhongMaterial({ color: BASE_COLOR, side: THREE.FrontSide }),
-      new THREE.MeshPhongMaterial({ map: texture, side: THREE.FrontSide }),
+      new THREE.MeshPhongMaterial({ map: texture, side: THREE.FrontSide, shininess: 0 }),
     ];
     const mesh = new ExtendedMesh(geometry, materials);
     resolve(mesh);

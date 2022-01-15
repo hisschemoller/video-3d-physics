@@ -31,7 +31,7 @@ export default class Scene extends MainScene {
     this.height = 1440;
     this.width3d = 16;
     this.height3d = 12;
-    this.fps = 15;
+    this.fps = 25;
     this.captureFps = 25;
     this.captureThrottle = 15;
     this.captureDuration = PATTERN_DURATION * 1;
@@ -44,6 +44,13 @@ export default class Scene extends MainScene {
 
     // CAMERA
     this.pCamera.position.set(0, 0, 12.8);
+
+    // AMBIENT LIGHT
+    this.ambientLight.intensity = 0.6;
+
+    // DIRECTIONAL LIGHT
+    this.directionalLight.position.set(15, 5, 10);
+    this.directionalLight.intensity = 0.9;
 
     // RENDERER
     this.renderer.setClearColor(0xeeeeee);
@@ -78,8 +85,6 @@ export default class Scene extends MainScene {
     };
 
     await this.createActors(projectSettings, videos);
-    // await this.createActorsGroup1(projectSettings, videos);
-    // await this.createActorsGroup2(projectSettings, videos);
     await this.createActorsGroups(projectSettings, videos);
 
     this.postCreate();
@@ -99,10 +104,10 @@ export default class Scene extends MainScene {
 
     const y = toVP3d(1100, false);
     const z = 3.6;
-    const x1 = 3;
-    const x2 = 1;
-    const x3 = -1;
-    const x4 = -3;
+    const x1 = 2;
+    const x2 = 0.75;
+    const x3 = -0.76;
+    const x4 = -2;
     const m1 = getMatrix4({ x: x1, y, z, ry: Math.PI * 0.03 });
     const m2 = getMatrix4({ x: x2, y, z, ry: Math.PI * 0.03 });
     const m3 = getMatrix4({ x: x3, y, z, ry: Math.PI * -0.47 });
@@ -127,7 +132,7 @@ export default class Scene extends MainScene {
         box: { w: aW3d, h: to3d(h), d: 0.02 },
         imageRect: { w: actorWidth, h },
       });
-      // actor.setStaticPosition(getMatrix4({ x: aW3d * -1, y: 2.2, z: 3 }));
+      // actor.setStaticPosition(getMatrix4({ x: aW3d * -1, y: 2.2, z: 3, ry: Math.PI   }));
       actor.setStaticPosition(getMatrix4({ x: aW3d / 2, y: to3d(h), z: aW3d / 2, ry: Math.PI / 2 }));
       panel1 = actor;
     }
@@ -138,7 +143,7 @@ export default class Scene extends MainScene {
         box: { w: aW3d, h: to3d(h), d: 0.02 },
         imageRect: { w: actorWidth, h },
       });
-      // actor.setStaticPosition(getMatrix4({ x: aW3d * -2, y: 1.7, z: 3 }));
+      // actor.setStaticPosition(getMatrix4({ x: aW3d * -2, y: 1.7, z: 3, ry: Math.PI }));
       actor.setStaticPosition(getMatrix4({ x: aW3d / -2, y: to3d(h), z: aW3d / 2 }));
       panel2 = actor;
     }
@@ -149,6 +154,7 @@ export default class Scene extends MainScene {
         box: { w: aW3d, h: to3d(h), d: 0.02 },
         imageRect: { w: actorWidth, h },
       });
+      // actor.setStaticPosition(getMatrix4({ x: aW3d * 1, y: 2.2, z: 3, ry: Math.PI }));
       actor.setStaticPosition(getMatrix4({ x: aW3d / 2, y: to3d(h), z: aW3d / 2, ry: Math.PI / 2 }));
       panel3 = actor;
     }
@@ -159,6 +165,7 @@ export default class Scene extends MainScene {
         box: { w: aW3d, h: to3d(h), d: 0.02 },
         imageRect: { w: actorWidth, h },
       });
+      // actor.setStaticPosition(getMatrix4({ x: aW3d * 2, y: 1.7, z: 3, ry: Math.PI }));
       actor.setStaticPosition(getMatrix4({ x: aW3d / -2, y: to3d(h), z: aW3d / 2 }));
       panel4 = actor;
     }
@@ -191,11 +198,20 @@ export default class Scene extends MainScene {
       group.addTween({ delay: S * 29, duration: S * 3, fromMatrix4: m4, toMatrix4: m5 });
     }
 
-    await Scene.addActor2(projectSettings, videos.main, panel2, aW3d, to3d(500), actorWidth, 29, 0, 3, 13);
-    await Scene.addActor2(projectSettings, videos.main, panel4, aW3d, to3d(500), actorWidth, 13, 16, 3, 13);
+    await Scene.addManWithCane(projectSettings, videos.main, panel1, aW3d, to3d(560), actorWidth, 13, 16, 3, 13);
+    await Scene.addManWithCane(projectSettings, videos.main, panel3, aW3d, to3d(560), actorWidth, 29, 0, 3, 13);
+    await Scene.addWomanAndChild(projectSettings, videos.main, panel2, aW3d, to3d(500), actorWidth, 13, 16, 3, 13);
+    await Scene.addWomanAndChild(projectSettings, videos.main, panel4, aW3d, to3d(500), actorWidth, 29, 0, 3, 13);
+    await Scene.addTallMan(projectSettings, videos.main, panel1, aW3d, to3d(560), actorWidth, 4.5, 10.5);
+    await Scene.addTallMan(projectSettings, videos.main, panel3, aW3d, to3d(560), actorWidth, 20.5, 10.5);
+    await Scene.addMan(projectSettings, videos.main, panel2, aW3d, to3d(500), actorWidth, 29, 0, 3, 13);
+    await Scene.addMan(projectSettings, videos.main, panel4, aW3d, to3d(500), actorWidth, 13, 16, 3, 13);
   }
 
-  static async addActor2(
+  /**
+   * addManWithCane
+   */
+  static async addManWithCane(
     projectSettings: ProjectSettings,
     video: VideoData,
     panel: Actor,
@@ -207,12 +223,128 @@ export default class Scene extends MainScene {
     duration1: number,
     duration2: number,
   ) {
-    const h = 500;
-    const imgDistanceX = 1400 - 800;
+    const h = 500 * 1.6;
+    const w = imgW * 1.6;
+    const imgDistanceX = 850 - 220;
+    const matrix4 = getMatrix4({ x: boxW, ry: Math.PI });
+    const actor = await createActor3(projectSettings, video, {
+      box: { w: boxW, h: boxH, d: 0.02 },
+      imageRect: { w, h },
+    });
+    actor.addTween({
+      delay: STEP_DURATION * delay1,
+      duration: STEP_DURATION * duration1,
+      videoStart: 41.3,
+      fromMatrix4: matrix4,
+      fromImagePosition: new THREE.Vector2(220, 570),
+      toImagePosition: new THREE.Vector2(220 + (imgDistanceX * (duration1 / (duration1 + duration2))), 570),
+    });
+    actor.addTween({
+      delay: STEP_DURATION * delay2,
+      duration: STEP_DURATION * duration2,
+      videoStart: 41.3 + (STEP_DURATION * duration1),
+      fromMatrix4: matrix4,
+      fromImagePosition: new THREE.Vector2(220 + (imgDistanceX * (duration1 / (duration1 + duration2))), 570),
+      toImagePosition: new THREE.Vector2(850, 570),
+    });
+    panel.getMesh().add(actor.getMesh());
+  }
+
+  /**
+   * addWomanAndChild
+   */
+  static async addWomanAndChild(
+    projectSettings: ProjectSettings,
+    video: VideoData,
+    panel: Actor,
+    boxW: number,
+    boxH: number,
+    imgW: number,
+    delay1: number,
+    delay2: number,
+    duration1: number,
+    duration2: number,
+  ) {
+    const h = 500 * 1.4;
+    const w = imgW * 1.4;
+    const imgDistanceX = 1200 - 500;
+    const matrix4 = getMatrix4({ x: boxW, ry: Math.PI });
+    const actor = await createActor3(projectSettings, video, {
+      box: { w: boxW, h: boxH, d: 0.02 },
+      imageRect: { w, h },
+    });
+    actor.addTween({
+      delay: STEP_DURATION * delay1,
+      duration: STEP_DURATION * duration1,
+      videoStart: 53,
+      fromMatrix4: matrix4,
+      fromImagePosition: new THREE.Vector2(500, 680),
+      toImagePosition: new THREE.Vector2(500 + (imgDistanceX * (duration1 / (duration1 + duration2))), 680),
+    });
+    actor.addTween({
+      delay: STEP_DURATION * delay2,
+      duration: STEP_DURATION * duration2,
+      videoStart: 53 + (STEP_DURATION * duration1),
+      fromMatrix4: matrix4,
+      fromImagePosition: new THREE.Vector2(500 + (imgDistanceX * (duration1 / (duration1 + duration2))), 680),
+      toImagePosition: new THREE.Vector2(1200, 680),
+    });
+    panel.getMesh().add(actor.getMesh());
+  }
+
+  /**
+   * addTallMan
+   */
+  static async addTallMan(
+    projectSettings: ProjectSettings,
+    video: VideoData,
+    panel: Actor,
+    boxW: number,
+    boxH: number,
+    imgW: number,
+    delay1: number,
+    duration1: number,
+  ) {
+    const h = 560 * 1.4;
+    const w = imgW * 1.4;
     const matrix4 = getMatrix4({ z: 0 });
     const actor = await createActor3(projectSettings, video, {
       box: { w: boxW, h: boxH, d: 0.02 },
-      imageRect: { w: imgW, h },
+      imageRect: { w, h },
+    });
+    actor.addTween({
+      delay: STEP_DURATION * delay1,
+      duration: STEP_DURATION * duration1,
+      videoStart: 50.0,
+      fromMatrix4: matrix4,
+      fromImagePosition: new THREE.Vector2(1700, 530),
+      toImagePosition: new THREE.Vector2(980, 530),
+    });
+    panel.getMesh().add(actor.getMesh());
+  }
+
+  /**
+   * addMan2
+   */
+  static async addMan(
+    projectSettings: ProjectSettings,
+    video: VideoData,
+    panel: Actor,
+    boxW: number,
+    boxH: number,
+    imgW: number,
+    delay1: number,
+    delay2: number,
+    duration1: number,
+    duration2: number,
+  ) {
+    const h = 500 * 1.2;
+    const w = imgW * 1.2;
+    const imgDistanceX = 1400 - 720;
+    const matrix4 = getMatrix4({ z: 0 });
+    const actor = await createActor3(projectSettings, video, {
+      box: { w: boxW, h: boxH, d: 0.02 },
+      imageRect: { w, h },
     });
     actor.addTween({
       delay: STEP_DURATION * delay1,
@@ -228,11 +360,14 @@ export default class Scene extends MainScene {
       videoStart: 73.8 + (STEP_DURATION * duration1),
       fromMatrix4: matrix4,
       fromImagePosition: new THREE.Vector2(1400 - (imgDistanceX * (duration1 / (duration1 + duration2))), 690),
-      toImagePosition: new THREE.Vector2(880, 690),
+      toImagePosition: new THREE.Vector2(720, 690),
     });
     panel.getMesh().add(actor.getMesh());
   }
 
+  /**
+   * createActors
+   */
   async createActors(projectSettings: ProjectSettings, videos: { [key: string]: VideoData }) {
     const to3d = this.to3d.bind(this);
     const toVP3d = this.toVP3d.bind(this);

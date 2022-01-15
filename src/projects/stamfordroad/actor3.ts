@@ -84,6 +84,11 @@ export async function createActor3(
     const startQuaternion = fromMatrix4 ? new THREE.Quaternion().setFromRotationMatrix(fromMatrix4) : undefined;
     const endQuaternion = toMatrix4 ? new THREE.Quaternion().setFromRotationMatrix(toMatrix4) : undefined;
 
+    if (fromMatrix4) {
+      mesh.position.setFromMatrixPosition(fromMatrix4);
+      mesh.quaternion.setFromRotationMatrix(fromMatrix4);
+    }
+
     const toImagePosition = toImagePositionBeforeClone.clone();
     if (projectSettings.isPreview) {
       fromImagePosition.multiplyScalar(projectSettings.previewScale);
