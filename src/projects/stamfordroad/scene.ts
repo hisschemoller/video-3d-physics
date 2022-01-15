@@ -305,8 +305,8 @@ export default class Scene extends MainScene {
     delay1: number,
     duration1: number,
   ) {
-    const h = 560 * 1.4;
-    const w = imgW * 1.4;
+    const h = 560 * 1.5;
+    const w = imgW * 1.5;
     const matrix4 = getMatrix4({ z: 0 });
     const actor = await createActor3(projectSettings, video, {
       box: { w: boxW, h: boxH, d: 0.02 },
@@ -317,14 +317,14 @@ export default class Scene extends MainScene {
       duration: STEP_DURATION * duration1,
       videoStart: 50.0,
       fromMatrix4: matrix4,
-      fromImagePosition: new THREE.Vector2(1700, 530),
-      toImagePosition: new THREE.Vector2(980, 530),
+      fromImagePosition: new THREE.Vector2(1700, 470),
+      toImagePosition: new THREE.Vector2(980, 470),
     });
     panel.getMesh().add(actor.getMesh());
   }
 
   /**
-   * addMan2
+   * addMan
    */
   static async addMan(
     projectSettings: ProjectSettings,
@@ -338,8 +338,8 @@ export default class Scene extends MainScene {
     duration1: number,
     duration2: number,
   ) {
-    const h = 500 * 1.2;
-    const w = imgW * 1.2;
+    const h = 500 * 1.3;
+    const w = imgW * 1.3;
     const imgDistanceX = 1400 - 720;
     const matrix4 = getMatrix4({ z: 0 });
     const actor = await createActor3(projectSettings, video, {
@@ -351,16 +351,16 @@ export default class Scene extends MainScene {
       duration: STEP_DURATION * duration1,
       videoStart: 73.8,
       fromMatrix4: matrix4,
-      fromImagePosition: new THREE.Vector2(1400, 690),
-      toImagePosition: new THREE.Vector2(1400 - (imgDistanceX * (duration1 / (duration1 + duration2))), 690),
+      fromImagePosition: new THREE.Vector2(1400, 600),
+      toImagePosition: new THREE.Vector2(1400 - (imgDistanceX * (duration1 / (duration1 + duration2))), 620),
     });
     actor.addTween({
       delay: STEP_DURATION * delay2,
       duration: STEP_DURATION * duration2,
       videoStart: 73.8 + (STEP_DURATION * duration1),
       fromMatrix4: matrix4,
-      fromImagePosition: new THREE.Vector2(1400 - (imgDistanceX * (duration1 / (duration1 + duration2))), 690),
-      toImagePosition: new THREE.Vector2(720, 690),
+      fromImagePosition: new THREE.Vector2(1400 - (imgDistanceX * (duration1 / (duration1 + duration2))), 620),
+      toImagePosition: new THREE.Vector2(720, 600),
     });
     panel.getMesh().add(actor.getMesh());
   }
@@ -382,8 +382,8 @@ export default class Scene extends MainScene {
     actors.push(await createActor(projectSettings, videos.main, { // HIDE CHILDREN
       box: { w: 570, h: 320 },
       matrix4: getMatrix4({ x: toVP3d(120), y: toVP3d(690, false), z: 0.001 }),
-      video: { start: 54.5, duration: PATTERN_DURATION },
-      tween: { position: 0, duration: PATTERN_DURATION },
+      video: { start: 54.5, duration: STEP_DURATION * 16 },
+      tween: { position: 0, duration: STEP_DURATION * 16 },
     }));
 
     const rotationHMatrix4 = getMatrix4({ rx: (Math.PI * -0.5) + 0.2, ry: -0.011, rz: 0.05 });
