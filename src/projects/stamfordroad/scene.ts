@@ -223,11 +223,8 @@ export default class Scene extends MainScene {
     boxH: number,
     imgW: number,
   ) {
-    const duration1 = 19;
-    const duration2 = 16;
-    const h = 500 * 1.6;
-    const w = imgW * 1.6;
-    const imgDistanceX = 1700 - 300;
+    const h = 500 * 1.9;
+    const w = imgW * 1.9;
     const matrix4 = getMatrix4({ x: boxW, ry: Math.PI, z: -0.01 });
     const actor = await createActor3(projectSettings, video, {
       box: { w: boxW, h: boxH, d: 0.02 },
@@ -236,11 +233,11 @@ export default class Scene extends MainScene {
     actor.setMirrored(true);
     actor.addTween({
       delay: STEP_DURATION * 13,
-      duration: STEP_DURATION * duration1,
+      duration: STEP_DURATION * 19,
       videoStart: 50.0,
       fromMatrix4: matrix4,
       fromImagePosition: new THREE.Vector2(1700, 470),
-      toImagePosition: new THREE.Vector2(1700 - (imgDistanceX * (duration1 / (duration1 + duration2))), 470),
+      toImagePosition: new THREE.Vector2(350, 520),
       isMirrored: true,
     });
     actor.addTween({
@@ -249,7 +246,7 @@ export default class Scene extends MainScene {
       videoStart: 50.0,
       fromMatrix4: matrix4,
       fromImagePosition: new THREE.Vector2(1700, 470),
-      toImagePosition: new THREE.Vector2(1700 - (imgDistanceX * (duration1 / (duration1 + duration2))), 470),
+      toImagePosition: new THREE.Vector2(1000, 520),
       isMirrored: true,
     });
     panel.getMesh().add(actor.getMesh());
@@ -279,8 +276,8 @@ export default class Scene extends MainScene {
       duration: STEP_DURATION * 19,
       videoStart: 73.8,
       fromMatrix4: matrix4,
-      fromImagePosition: new THREE.Vector2(1400, 600),
-      toImagePosition: new THREE.Vector2(720, 600),
+      fromImagePosition: new THREE.Vector2(1400, 650),
+      toImagePosition: new THREE.Vector2(520, 650),
       isMirrored: true,
     });
     panel.getMesh().add(actor.getMesh());
@@ -297,11 +294,8 @@ export default class Scene extends MainScene {
     boxH: number,
     imgW: number,
   ) {
-    const duration1 = 3;
-    const duration2 = 24.5;
     const h = 500 * 1.6;
     const w = imgW * 1.6;
-    const imgDistanceX = 700 - 0;
     const matrix4 = getMatrix4({ x: boxW, ry: Math.PI, z: -0.01 });
     const actor = await createActor3(projectSettings, video, {
       box: { w: boxW, h: boxH, d: 0.02 },
@@ -310,20 +304,20 @@ export default class Scene extends MainScene {
     actor.setMirrored(true);
     actor.addTween({
       delay: STEP_DURATION * 29,
-      duration: STEP_DURATION * duration1,
+      duration: STEP_DURATION * 3,
       videoStart: 30.0,
       fromMatrix4: matrix4,
-      fromImagePosition: new THREE.Vector2(700, 500),
-      toImagePosition: new THREE.Vector2(700 - (imgDistanceX * (duration1 / (duration1 + duration2))), 500),
+      fromImagePosition: new THREE.Vector2(700, 550),
+      toImagePosition: new THREE.Vector2(450, 550),
       isMirrored: true,
     });
     actor.addTween({
       delay: STEP_DURATION * 0,
-      duration: STEP_DURATION * duration2,
-      videoStart: 30.0,
+      duration: STEP_DURATION * 24.5,
+      videoStart: 27.6,
       fromMatrix4: matrix4,
-      fromImagePosition: new THREE.Vector2(700, 500),
-      toImagePosition: new THREE.Vector2(700 - (imgDistanceX * (duration1 / (duration1 + duration2))), 500),
+      fromImagePosition: new THREE.Vector2(1600, 550),
+      toImagePosition: new THREE.Vector2(50, 550),
       isMirrored: true,
     });
     panel.getMesh().add(actor.getMesh());
@@ -340,11 +334,8 @@ export default class Scene extends MainScene {
     boxH: number,
     imgW: number,
   ) {
-    const duration1 = 3;
-    const duration2 = 20.5;
-    const h = 500 * 1.6;
-    const w = imgW * 1.6;
-    const imgDistanceX = 1400 - 500;
+    const h = 500 * 1.9;
+    const w = imgW * 1.9;
     const matrix4 = getMatrix4({ x: boxW, ry: Math.PI, z: -0.01 });
     const actor = await createActor3(projectSettings, video, {
       box: { w: boxW, h: boxH, d: 0.02 },
@@ -353,20 +344,20 @@ export default class Scene extends MainScene {
     actor.setMirrored(true);
     actor.addTween({
       delay: STEP_DURATION * 29,
-      duration: STEP_DURATION * duration1,
+      duration: STEP_DURATION * 3,
       videoStart: 25.5,
       fromMatrix4: matrix4,
-      fromImagePosition: new THREE.Vector2(1400, 550),
-      toImagePosition: new THREE.Vector2(1400 - (imgDistanceX * (duration1 / (duration1 + duration2))), 550),
+      fromImagePosition: new THREE.Vector2(1550, 650),
+      toImagePosition: new THREE.Vector2(1350, 650),
       isMirrored: true,
     });
     actor.addTween({
       delay: STEP_DURATION * 0,
-      duration: STEP_DURATION * duration2,
+      duration: STEP_DURATION * 20.5,
       videoStart: 25.5,
       fromMatrix4: matrix4,
-      fromImagePosition: new THREE.Vector2(1400, 550),
-      toImagePosition: new THREE.Vector2(1400 - (imgDistanceX * (duration1 / (duration1 + duration2))), 550),
+      fromImagePosition: new THREE.Vector2(1550, 650),
+      toImagePosition: new THREE.Vector2(100, 650),
       isMirrored: true,
     });
     panel.getMesh().add(actor.getMesh());
