@@ -13,6 +13,7 @@ import {
 export interface Actor3 {
   addTween: (tweenData: TweenData) => void,
   getMesh: () => ExtendedMesh,
+  setMirrored: (mirrored: boolean) => void,
   setStaticPosition: (matrix4: THREE.Matrix4) => void,
 }
 
@@ -31,6 +32,7 @@ interface TweenData {
   delay: number,
   duration: number,
   easeAmount?: number,
+  isMirrored?: boolean,
   videoStart: number,
   fromMatrix4?: THREE.Matrix4,
   toMatrix4?: THREE.Matrix4,
@@ -73,6 +75,7 @@ export async function createActor3(
     delay,
     duration,
     easeAmount = 0,
+    isMirrored = false,
     videoStart,
     fromMatrix4,
     toMatrix4,
@@ -113,6 +116,7 @@ export async function createActor3(
           imageRect.w,
           imageRect.h,
           videoFrameTween.getImage(),
+          isMirrored,
         );
       }
     }
@@ -144,6 +148,12 @@ export async function createActor3(
     timeline.add(tween);
   };
 
+  const setMirrored = (mirrored: boolean) => {
+    if (context) {
+      context.scale(mirrored ? -1 : 1, 1);
+    }
+  };
+
   const setStaticPosition = (matrix4: THREE.Matrix4) => {
     mesh.visible = true;
     mesh.position.setFromMatrixPosition(matrix4);
@@ -153,6 +163,7 @@ export async function createActor3(
   return {
     addTween,
     getMesh: () => mesh,
+    setMirrored,
     setStaticPosition,
   };
 }

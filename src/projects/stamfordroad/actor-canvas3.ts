@@ -38,12 +38,14 @@ export function addImagePositionTween(
   width: number,
   height: number,
   img: HTMLImageElement,
+  isMirrored: boolean,
 ): ImagePositionTween {
+  const dx = isMirrored ? -width : 0;
   const currentPosition = new THREE.Vector2();
   const tweenPosition = async (progress: number) => {
     currentPosition.lerpVectors(fromImagePosition, toImagePosition, progress);
     context.drawImage(
-      img, currentPosition.x, currentPosition.y, width, height, 0, 0, width, height,
+      img, currentPosition.x, currentPosition.y, width, height, dx, 0, width, height,
     );
     // Remember: texture.needsUpdate = true;
   };
