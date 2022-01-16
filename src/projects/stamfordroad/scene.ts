@@ -31,7 +31,7 @@ export default class Scene extends MainScene {
     this.height = 1440;
     this.width3d = 16;
     this.height3d = 12;
-    this.fps = 25;
+    this.fps = 15;
     this.captureFps = 25;
     this.captureThrottle = 15;
     this.captureDuration = PATTERN_DURATION * 1;
@@ -135,8 +135,8 @@ export default class Scene extends MainScene {
         box: { w: aW3d, h: to3d(h), d: 0.02 },
         imageRect: { w: actorWidth, h },
       });
-      // actor.setStaticPosition(getMatrix4({ x: aW3d * -1, y: 2.2, z: 3, ry: Math.PI   }));
       actor.setStaticPosition(getMatrix4({ x: aW3d / 2, y: to3d(h), z: aW3d / 2, ry: Math.PI / 2 }));
+      // actor.setStaticPosition(getMatrix4({ x: aW3d * -1, y: 2.2, z: 3, ry: Math.PI * 1 }));
       panel1 = actor;
     }
 
@@ -146,8 +146,8 @@ export default class Scene extends MainScene {
         box: { w: aW3d, h: to3d(h), d: 0.02 },
         imageRect: { w: actorWidth, h },
       });
-      // actor.setStaticPosition(getMatrix4({ x: aW3d * -2, y: 1.7, z: 3, ry: Math.PI }));
       actor.setStaticPosition(getMatrix4({ x: aW3d / -2, y: to3d(h), z: aW3d / 2 }));
+      // actor.setStaticPosition(getMatrix4({ x: aW3d * -2, y: 1.7, z: 3, ry: Math.PI * 1 }));
       panel2 = actor;
     }
 
@@ -157,8 +157,8 @@ export default class Scene extends MainScene {
         box: { w: aW3d, h: to3d(h), d: 0.02 },
         imageRect: { w: actorWidth, h },
       });
-      // actor.setStaticPosition(getMatrix4({ x: aW3d * 1, y: 2.2, z: 3, ry: Math.PI }));
       actor.setStaticPosition(getMatrix4({ x: aW3d / 2, y: to3d(h), z: aW3d / 2, ry: Math.PI / 2 }));
+      // actor.setStaticPosition(getMatrix4({ x: aW3d * 1, y: 2.2, z: 3, ry: Math.PI * 1 }));
       panel3 = actor;
     }
 
@@ -168,8 +168,8 @@ export default class Scene extends MainScene {
         box: { w: aW3d, h: to3d(h), d: 0.02 },
         imageRect: { w: actorWidth, h },
       });
-      // actor.setStaticPosition(getMatrix4({ x: aW3d * 2, y: 1.7, z: 3, ry: Math.PI }));
       actor.setStaticPosition(getMatrix4({ x: aW3d / -2, y: to3d(h), z: aW3d / 2 }));
+      // actor.setStaticPosition(getMatrix4({ x: aW3d * 2, y: 1.7, z: 3, ry: Math.PI * 1 }));
       panel4 = actor;
     }
 
@@ -205,10 +205,15 @@ export default class Scene extends MainScene {
     await Scene.addManWithCane(projectSettings, videos.main, panel3, aW3d, to3d(560), actorWidth, 29, 0, 3, 13);
     await Scene.addWomanAndChild(projectSettings, videos.main, panel2, aW3d, to3d(500), actorWidth, 13, 16, 3, 13);
     await Scene.addWomanAndChild(projectSettings, videos.main, panel4, aW3d, to3d(500), actorWidth, 29, 0, 3, 13);
+
+    // await Scene.addTallMan(projectSettings, videos.main, panel1, aW3d, to3d(560), actorWidth, 4.5, 10.5, true);
+
     await Scene.addTallMan(projectSettings, videos.main, panel1, aW3d, to3d(560), actorWidth, 4.5, 10.5);
-    await Scene.addTallMan(projectSettings, videos.main, panel3, aW3d, to3d(560), actorWidth, 20.5, 10.5);
+    // await Scene.addTallMan(projectSettings, videos.main, panel3, aW3d, to3d(560), actorWidth, 20.5, 10.5);
+    await Scene.addManWithCase(projectSettings, videos.main, panel3, aW3d, to3d(560), actorWidth, 20.5, 10.5);
     await Scene.addMan(projectSettings, videos.main, panel2, aW3d, to3d(500), actorWidth, 29, 0, 3, 13);
-    await Scene.addMan(projectSettings, videos.main, panel4, aW3d, to3d(500), actorWidth, 13, 16, 3, 13);
+    // await Scene.addMan(projectSettings, videos.main, panel4, aW3d, to3d(500), actorWidth, 13, 16, 3, 13);
+    await Scene.addManOpenJacket(projectSettings, videos.main, panel4, aW3d, to3d(500), actorWidth, 13, 16, 3, 13);
   }
 
   /**
@@ -296,9 +301,9 @@ export default class Scene extends MainScene {
   }
 
   /**
-   * addTallMan
+   * addManWithCase
    */
-  static async addTallMan(
+  static async addManWithCase(
     projectSettings: ProjectSettings,
     video: VideoData,
     panel: Actor,
@@ -318,10 +323,84 @@ export default class Scene extends MainScene {
     actor.addTween({
       delay: STEP_DURATION * delay1,
       duration: STEP_DURATION * duration1,
+      videoStart: 30.0,
+      fromMatrix4: matrix4,
+      fromImagePosition: new THREE.Vector2(700, 500),
+      toImagePosition: new THREE.Vector2(0, 500),
+    });
+    panel.getMesh().add(actor.getMesh());
+  }
+
+  /**
+   * addTallMan
+   */
+  static async addTallMan(
+    projectSettings: ProjectSettings,
+    video: VideoData,
+    panel: Actor,
+    boxW: number,
+    boxH: number,
+    imgW: number,
+    delay1: number,
+    duration1: number,
+    isFlippedY?: boolean,
+  ) {
+    const h = 560 * 1.5;
+    const w = imgW * 1.5;
+    const matrix4 = getMatrix4(isFlippedY ? { x: boxW, ry: Math.PI } : {});
+    const actor = await createActor3(projectSettings, video, {
+      box: { w: boxW, h: boxH, d: 0.02 },
+      imageRect: { w, h },
+    });
+    actor.addTween({
+      delay: STEP_DURATION * delay1,
+      duration: STEP_DURATION * duration1,
       videoStart: 50.0,
       fromMatrix4: matrix4,
       fromImagePosition: new THREE.Vector2(1700, 470),
       toImagePosition: new THREE.Vector2(980, 470),
+    });
+    panel.getMesh().add(actor.getMesh());
+  }
+
+  /**
+   * addManOpenJacket
+   */
+  static async addManOpenJacket(
+    projectSettings: ProjectSettings,
+    video: VideoData,
+    panel: Actor,
+    boxW: number,
+    boxH: number,
+    imgW: number,
+    delay1: number,
+    delay2: number,
+    duration1: number,
+    duration2: number,
+  ) {
+    const h = 500 * 1.7;
+    const w = imgW * 1.7;
+    const imgDistanceX = 1400 - 720;
+    const matrix4 = getMatrix4({ z: 0 });
+    const actor = await createActor3(projectSettings, video, {
+      box: { w: boxW, h: boxH, d: 0.02 },
+      imageRect: { w, h },
+    });
+    actor.addTween({
+      delay: STEP_DURATION * delay1,
+      duration: STEP_DURATION * duration1,
+      videoStart: 25.5,
+      fromMatrix4: matrix4,
+      fromImagePosition: new THREE.Vector2(1450, 550),
+      toImagePosition: new THREE.Vector2(1450 - (imgDistanceX * (duration1 / (duration1 + duration2))), 550),
+    });
+    actor.addTween({
+      delay: STEP_DURATION * delay2,
+      duration: STEP_DURATION * duration2,
+      videoStart: 25.5 + (STEP_DURATION * duration1),
+      fromMatrix4: matrix4,
+      fromImagePosition: new THREE.Vector2(1450 - (imgDistanceX * (duration1 / (duration1 + duration2))), 550),
+      toImagePosition: new THREE.Vector2(500, 550),
     });
     panel.getMesh().add(actor.getMesh());
   }
