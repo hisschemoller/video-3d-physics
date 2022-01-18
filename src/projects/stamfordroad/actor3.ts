@@ -212,7 +212,7 @@ export function createTweenGroup(
         }
       },
       onComplete: () => {
-        // FIXME: this is only for Stamford Road
+        // FIXME: removed only for Stamford Road
         // group.visible = false;
       },
     });

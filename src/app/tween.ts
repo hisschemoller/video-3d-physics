@@ -7,10 +7,10 @@ export interface Tween {
  * @link https://easings.net/
  */
 export const Ease = {
-  linear: (value: number) => value,
-  sineIn: (value: number) => 1 - Math.cos((Math.PI * value) / 2),
-  sineInOut: (value: number) => -(Math.cos(Math.PI * value) - 1) / 2,
-  sineOut: (value: number) => Math.sin((Math.PI * value) / 2),
+  linear: (progress: number) => progress,
+  sineIn: (progress: number) => 1 - Math.cos((Math.PI * progress) / 2),
+  sineInOut: (progress: number) => -(Math.cos(Math.PI * progress) - 1) / 2,
+  sineOut: (progress: number) => Math.sin((Math.PI * progress) / 2),
 };
 
 interface TweenParams {
@@ -24,7 +24,7 @@ interface TweenParams {
 }
 
 /**
- * Mimics the simple -100 to 100 easing in Adobe Flash/Animate.
+ * Mimics the simple -100 to 100 easing in Macromedia / Adobe Flash / Animate.
  * @link https://github.com/CreateJS/TweenJS/blob/master/src/tweenjs/Ease.js
  * @param {Number} amount A value from -1 (ease in) to 1 (ease out) indicating the strength and
  * direction of the ease.

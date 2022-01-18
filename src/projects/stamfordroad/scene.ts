@@ -31,7 +31,7 @@ export default class Scene extends MainScene {
     this.height = 1440;
     this.width3d = 16;
     this.height3d = 12;
-    this.fps = 15;
+    this.fps = 25;
     this.captureFps = 25;
     this.captureThrottle = 15;
     this.captureDuration = PATTERN_DURATION * 1;
@@ -613,6 +613,13 @@ export default class Scene extends MainScene {
       matrix4: getMatrix4({ x: toVP3d(120), y: toVP3d(690, false), z: 0.001 }),
       video: { start: 54.5, duration: STEP_DURATION * 16 },
       tween: { position: 0, duration: STEP_DURATION * 16 },
+    }));
+
+    actors.push(await createActor(projectSettings, videos.main, { // HIDE CHILDREN 2
+      box: { w: 570, h: 320 },
+      matrix4: getMatrix4({ x: toVP3d(400), y: toVP3d(690, false), z: 0.001 }),
+      video: { start: 57, duration: STEP_DURATION * 16 },
+      tween: { position: STEP_DURATION * 16, duration: STEP_DURATION * 16 },
     }));
 
     const rotationHMatrix4 = getMatrix4({ rx: (Math.PI * -0.5) + 0.2, ry: -0.011, rz: 0.05 });

@@ -126,6 +126,7 @@ export async function createActor(
   mesh.applyMatrix4(matrix4);
   mesh.castShadow = true;
   mesh.receiveShadow = true;
+  mesh.visible = false;
   scene.add(mesh);
   const getMesh = () => mesh;
 
