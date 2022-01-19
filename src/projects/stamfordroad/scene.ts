@@ -9,7 +9,7 @@ import { Actor, createActor } from './actor';
 import { createActor3, createTweenGroup } from './actor3';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 96;
+const BPM = 95.8;
 const STEPS = 32;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
@@ -33,8 +33,8 @@ export default class Scene extends MainScene {
     this.height3d = 12;
     this.fps = 25;
     this.captureFps = 25;
-    this.captureThrottle = 15;
-    this.captureDuration = PATTERN_DURATION * 1;
+    this.captureThrottle = 10;
+    this.captureDuration = PATTERN_DURATION * 2;
   }
 
   async create() {
