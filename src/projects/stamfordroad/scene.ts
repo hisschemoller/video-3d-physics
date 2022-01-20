@@ -305,10 +305,10 @@ export default class Scene extends MainScene {
     actor.addTween({
       delay: STEP_DURATION * 29,
       duration: STEP_DURATION * 3,
-      videoStart: 30.0,
+      videoStart: 27.6 - (STEP_DURATION * 3),
       fromMatrix4: matrix4,
-      fromImagePosition: new THREE.Vector2(700, 550),
-      toImagePosition: new THREE.Vector2(450, 550),
+      fromImagePosition: new THREE.Vector2(1850, 550),
+      toImagePosition: new THREE.Vector2(1600, 550),
       isMirrored: true,
     });
     actor.addTween({
@@ -345,10 +345,10 @@ export default class Scene extends MainScene {
     actor.addTween({
       delay: STEP_DURATION * 29,
       duration: STEP_DURATION * 3,
-      videoStart: 25.5,
+      videoStart: 25.5 - (STEP_DURATION * 3),
       fromMatrix4: matrix4,
-      fromImagePosition: new THREE.Vector2(1550, 650),
-      toImagePosition: new THREE.Vector2(1350, 650),
+      fromImagePosition: new THREE.Vector2(1750, 650),
+      toImagePosition: new THREE.Vector2(1550, 650),
       isMirrored: true,
     });
     actor.addTween({
