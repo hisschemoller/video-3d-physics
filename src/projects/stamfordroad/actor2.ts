@@ -25,9 +25,9 @@ interface ActorData2 {
     duration: number,
     easeAmount?: number,
     toMatrix4?: THREE.Matrix4,
-    toImagePosition?: { x: number, y: number },
+    toImagePosition?: THREE.Vector2,
   },
-  video?: { start: number, duration: number },
+  video?: { start: number },
 }
 
 /**
@@ -37,11 +37,14 @@ interface ActorTweenData {
   delay: number,
   duration: number,
   easeAmount?: number,
+  videoStart: number,
   timeline: Timeline,
   mesh: THREE.Mesh,
   texture: THREE.Texture,
   fromMatrix4: THREE.Matrix4,
   toMatrix4: THREE.Matrix4,
+  fromImagePosition: THREE.Vector2,
+  toImagePosition: THREE.Vector2,
   imagePositionTween: (progress: number) => void,
   loadVideoFrame: (progress: number) => Promise<boolean>,
 }
@@ -53,8 +56,11 @@ interface TweenData {
   delay: number,
   duration: number,
   easeAmount?: number,
+  videoStart: number,
   fromMatrix4: THREE.Matrix4,
   toMatrix4: THREE.Matrix4,
+  fromImagePosition: THREE.Vector2,
+  toImagePosition: THREE.Vector2,
 }
 
 /**
@@ -64,10 +70,13 @@ function addActorTween({
   delay,
   duration,
   easeAmount = 0,
+  videoStart,
   mesh,
   texture,
   fromMatrix4,
   toMatrix4,
+  fromImagePosition,
+  toImagePosition,
   timeline,
   imagePositionTween,
   loadVideoFrame,
@@ -124,8 +133,9 @@ export async function createActor2(
       duration = 0,
       easeAmount = 0,
       toMatrix4 = fromMatrix4,
+      toImagePosition = new THREE.Vector2(actorData.imageRect.x, actorData.imageRect.y),
     },
-    video = { start: 0, duration: 0 },
+    video = { start: 0 },
   } = actorData;
 
   // IMAGE & CANVAS
@@ -147,7 +157,7 @@ export async function createActor2(
     const videoFrameCanvas = addVideoFrameCanvas2(
       projectSettings,
       mediaData as VideoData,
-      video,
+      { start: video.start, duration },
       actorData.imageRect,
       actorData.tween.toImagePosition,
     );
@@ -172,26 +182,11 @@ export async function createActor2(
   const getMesh = () => mesh;
 
   // TWEEN
-  const addTween = ({
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    delay,
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    duration,
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    easeAmount = 0,
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    fromMatrix4,
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    toMatrix4,
-  }: TweenData) => {
+  const addTween = (tweenData: TweenData) => {
     addActorTween({
-      delay,
-      duration,
-      easeAmount,
+      ...tweenData,
       mesh,
       texture,
-      fromMatrix4,
-      toMatrix4,
       timeline,
       imagePositionTween,
       loadVideoFrame,
@@ -201,9 +196,12 @@ export async function createActor2(
   addTween({
     delay,
     duration,
+    videoStart: video.start,
     easeAmount,
     fromMatrix4,
     toMatrix4,
+    fromImagePosition: new THREE.Vector2(actorData.imageRect.x, actorData.imageRect.y),
+    toImagePosition,
   });
 
   return { addTween, getMesh };

@@ -37,11 +37,12 @@ ffmpeg -i stamfordroad-main_preview.mp4 '/Volumes/Samsung_X5/stamfordroad-main/f
 
 // png to mp4 (from index 127) met 25 FPS
 ffmpeg -framerate 25 -start_number 127 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p stamfordroad-video-x1.mp4
-// repeat 32 times, 56 frames, video alleen
-ffmpeg -i stamfordroad-video-x1.mp4 -filter_complex "loop=loop=32:size=56:start=0" stamfordroad-video-x32.mp4
+// repeat 32 times, 125 frames, video alleen
+ffmpeg -i stamfordroad-video-x1.mp4 -filter_complex "loop=loop=32:size=125:start=0" stamfordroad-video-x32.mp4
 ```
 
 ## Berekeningen
+
 Video duurt 124 frames.
 Video duurt 124 / 25 FPS = 4.96 seconden.
 Een beat duurt 60 / 96 BPM = 0.625 seconden.

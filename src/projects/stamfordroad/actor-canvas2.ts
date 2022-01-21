@@ -4,7 +4,7 @@ import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 function convertToPreview(
   previewScale: number,
   imageRect: { x: number, y: number, w: number, h: number },
-  toImagePosition?: { x: number, y: number },
+  toImagePosition?: THREE.Vector2,
 ) {
   // eslint-disable-next-line no-param-reassign
   imageRect.x *= previewScale;
@@ -110,7 +110,7 @@ export function addVideoFrameCanvas(
   { fps, imgSrcPath }: VideoData,
   video: { start: number, duration: number },
   imageRect: { x: number, y: number, w: number, h: number },
-  toImagePosition?: { x: number, y: number },
+  toImagePosition?: THREE.Vector2,
 ): VideoFrameCanvas {
   if (isPreview) {
     convertToPreview(previewScale, imageRect, toImagePosition);
