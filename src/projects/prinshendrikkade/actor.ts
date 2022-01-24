@@ -1,0 +1,232 @@
+/* eslint-disable max-len */
+import { ExtendedMesh, THREE } from 'enable3d';
+import createTween, { Ease } from '@app/tween';
+import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
+import { createRectangle } from './actor-mesh';
+import {
+  addImagePositionTween, addVideoFrameTween, createCanvas, ImagePositionTween, VideoFrameTween,
+} from './actor-canvas';
+
+/**
+ * Actor API, returned by createActor().
+ */
+export interface Actor {
+  addTween: (tweenData: TweenData) => void,
+  getMesh: () => ExtendedMesh,
+  setMirrored: (mirrored: boolean) => void,
+  setStaticPosition: (matrix4: THREE.Matrix4) => void,
+}
+
+/**
+ * Actor config data, the third argument in createActor().
+ */
+interface ActorData {
+  box: { w: number, h: number, d: number, },
+  imageRect: { w: number, h: number, },
+}
+
+/**
+ * Actor tween config data, passed as argument to addTween().
+ */
+interface TweenData {
+  delay: number,
+  duration: number,
+  easeAmount?: number,
+  isMirrored?: boolean,
+  videoStart: number,
+  fromMatrix4?: THREE.Matrix4,
+  toMatrix4?: THREE.Matrix4,
+  fromImagePosition: THREE.Vector2,
+  toImagePosition: THREE.Vector2,
+}
+
+/**
+ * Create an actor, an - optionally - animating 3d object.
+ */
+export async function createActor(
+  projectSettings: ProjectSettings,
+  mediaData: ImageData | VideoData,
+  actorData: ActorData,
+): Promise<Actor> {
+  const { scene, timeline } = projectSettings;
+  const { box, imageRect } = actorData;
+
+  if (projectSettings.isPreview) {
+    imageRect.w *= projectSettings.previewScale;
+    imageRect.h *= projectSettings.previewScale;
+  }
+
+  // CANVAS
+  const canvas = createCanvas(imageRect.w, imageRect.h);
+  const context = canvas.getContext();
+
+  // TEXTURE
+  const texture = new THREE.CanvasTexture(canvas.getCanvas());
+
+  // MESH
+  const mesh = await createRectangle(box.w, box.h, texture, box.d);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  mesh.visible = false;
+  scene.add(mesh);
+
+  // TWEEN
+  const addTween = ({
+    delay,
+    duration,
+    easeAmount = 0,
+    isMirrored = false,
+    videoStart,
+    fromMatrix4,
+    toMatrix4,
+    fromImagePosition,
+    toImagePosition: toImagePositionBeforeClone,
+  }: TweenData) => {
+    const startPosition = fromMatrix4 ? new THREE.Vector3().setFromMatrixPosition(fromMatrix4) : undefined;
+    const endPosition = toMatrix4 ? new THREE.Vector3().setFromMatrixPosition(toMatrix4) : undefined;
+    const startQuaternion = fromMatrix4 ? new THREE.Quaternion().setFromRotationMatrix(fromMatrix4) : undefined;
+    const endQuaternion = toMatrix4 ? new THREE.Quaternion().setFromRotationMatrix(toMatrix4) : undefined;
+
+    if (fromMatrix4) {
+      mesh.position.setFromMatrixPosition(fromMatrix4);
+      mesh.quaternion.setFromRotationMatrix(fromMatrix4);
+    }
+
+    const toImagePosition = toImagePositionBeforeClone.clone();
+    if (projectSettings.isPreview) {
+      fromImagePosition.multiplyScalar(projectSettings.previewScale);
+      toImagePosition.multiplyScalar(projectSettings.previewScale);
+    }
+
+    let videoFrameTween: VideoFrameTween;
+    let imagePositionTween: ImagePositionTween;
+    if ('imgSrc' in mediaData) {
+      // TODO
+    } else {
+      videoFrameTween = addVideoFrameTween(
+        mediaData,
+        videoStart,
+        duration,
+      );
+      if (context !== null) {
+        imagePositionTween = addImagePositionTween(
+          fromImagePosition,
+          toImagePosition,
+          context,
+          imageRect.w,
+          imageRect.h,
+          videoFrameTween.getImage(),
+          isMirrored,
+        );
+      }
+    }
+
+    const tween = createTween({
+      delay,
+      duration,
+      easeAmount,
+      onStart: () => {
+        mesh.visible = true;
+      },
+      onUpdate: async (progress: number) => {
+        if (startPosition && endPosition && startQuaternion && endQuaternion) {
+          mesh.position.lerpVectors(startPosition, endPosition, progress);
+          mesh.quaternion.slerpQuaternions(startQuaternion, endQuaternion, progress);
+        }
+        if (videoFrameTween) {
+          await videoFrameTween.loadVideoFrame(progress);
+        }
+        if (imagePositionTween) {
+          imagePositionTween.tweenPosition(progress);
+        }
+        texture.needsUpdate = true;
+      },
+      onComplete: () => {
+        mesh.visible = false;
+      },
+    });
+    timeline.add(tween);
+  };
+
+  const setMirrored = (mirrored: boolean) => {
+    if (context) {
+      context.scale(mirrored ? -1 : 1, 1);
+    }
+  };
+
+  const setStaticPosition = (matrix4: THREE.Matrix4) => {
+    mesh.visible = true;
+    mesh.position.setFromMatrixPosition(matrix4);
+    mesh.quaternion.setFromRotationMatrix(matrix4);
+  };
+
+  return {
+    addTween,
+    getMesh: () => mesh,
+    setMirrored,
+    setStaticPosition,
+  };
+}
+
+/**
+ * Create tweening THREE.Group object to add actors to for combined tweens.
+ */
+export function createTweenGroup(
+  { scene, timeline }: ProjectSettings,
+) {
+  const group = new THREE.Group();
+  group.visible = false;
+  scene.add(group);
+
+  // TWEEN
+  const addTween = ({
+    delay,
+    duration,
+    ease,
+    fromMatrix4,
+    toMatrix4,
+  }: {
+    delay: number,
+    duration: number,
+    ease?: keyof typeof Ease,
+    fromMatrix4: THREE.Matrix4,
+    toMatrix4: THREE.Matrix4,
+  }) => {
+    const startPosition = new THREE.Vector3().setFromMatrixPosition(fromMatrix4);
+    const endPosition = new THREE.Vector3().setFromMatrixPosition(toMatrix4);
+    const startQuaternion = new THREE.Quaternion().setFromRotationMatrix(fromMatrix4);
+    const endQuaternion = new THREE.Quaternion().setFromRotationMatrix(toMatrix4);
+
+    const tween = createTween({
+      delay,
+      duration,
+      ease,
+      onStart: () => {
+        group.visible = true;
+      },
+      onUpdate: async (progress: number) => {
+        group.visible = true;
+        if (fromMatrix4 !== toMatrix4) {
+          group.position.lerpVectors(startPosition, endPosition, progress);
+          group.quaternion.slerpQuaternions(startQuaternion, endQuaternion, progress);
+        }
+      },
+      onComplete: () => {
+        group.visible = false;
+      },
+    });
+    timeline.add(tween);
+  };
+
+  const setStaticPosition = (matrix4: THREE.Matrix4) => {
+    group.visible = true;
+    group.position.setFromMatrixPosition(matrix4);
+    group.quaternion.setFromRotationMatrix(matrix4);
+  };
+
+  return {
+    addTween,
+    getMesh: () => group,
+    setStaticPosition,
+  };
+}
