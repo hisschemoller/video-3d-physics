@@ -39,6 +39,10 @@ ffmpeg -i stamfordroad-main_preview.mp4 '/Volumes/Samsung_X5/stamfordroad-main/f
 ffmpeg -framerate 25 -start_number 127 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p stamfordroad-video-x1.mp4
 // repeat 32 times, 125 frames, video alleen
 ffmpeg -i stamfordroad-video-x1.mp4 -filter_complex "loop=loop=32:size=125:start=0" stamfordroad-video-x32.mp4
+// repeat 32, audio alleen
+ffmpeg -stream_loop 32 -i "stamfordroad-audio-x1.wav" -c copy "stamfordroad-audio-x32.wav"
+// video en audio samenvoegen
+ffmpeg -i stamfordroad-video-x32.mp4 -i stamfordroad-audio-x32.wav -vcodec copy stamfordroad-x32.mp4
 ```
 
 ## Berekeningen
