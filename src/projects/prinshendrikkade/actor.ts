@@ -158,6 +158,7 @@ export async function createActor(
     mesh.visible = true;
     mesh.position.setFromMatrixPosition(matrix4);
     mesh.quaternion.setFromRotationMatrix(matrix4);
+    mesh.scale.setFromMatrixScale(matrix4);
   };
 
   return {
@@ -222,6 +223,7 @@ export function createTweenGroup(
     group.visible = true;
     group.position.setFromMatrixPosition(matrix4);
     group.quaternion.setFromRotationMatrix(matrix4);
+    group.scale.setFromMatrixScale(matrix4);
   };
 
   return {
