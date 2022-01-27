@@ -38,18 +38,14 @@ export default class Scene extends MainScene {
 
     const isPreview = true && !this.scene.userData.isCapture;
 
-    // CAMERA
-    this.pCamera.position.set(0, 0, 12.8);
-
-    // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.6;
-
-    // DIRECTIONAL LIGHT
-    this.directionalLight.position.set(15, 5, 10);
-    this.directionalLight.intensity = 0.9;
-
-    // RENDERER
-    this.renderer.setClearColor(0xeeeeee);
+    // CAMERA & ORBIT_CONTROLS
+    this.cameraTarget.set(0, 2, 0);
+    this.pCamera.position.set(0, 0, 8.3);
+    this.pCamera.lookAt(this.cameraTarget);
+    this.pCamera.updateProjectionMatrix();
+    this.orbitControls.target = this.cameraTarget;
+    this.orbitControls.update();
+    this.orbitControls.saveState();
 
     // TWEENS
     this.timeline = createTimeline({

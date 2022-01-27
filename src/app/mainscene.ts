@@ -1,4 +1,5 @@
 import { Scene3D, THREE } from 'enable3d';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { dataURIToBlob, defaultFileName } from '@app/utils';
 
 const RAF_RATE = 60;
@@ -30,9 +31,13 @@ export default class MainScene extends Scene3D {
 
   protected pCamera: THREE.PerspectiveCamera;
 
+  cameraTarget: THREE.Vector3;
+
   ambientLight: THREE.AmbientLight;
 
   directionalLight: THREE.DirectionalLight;
+
+  orbitControls: OrbitControls;
 
   count = 0;
 
@@ -56,9 +61,10 @@ export default class MainScene extends Scene3D {
     this.framesPerDraw = RAF_RATE / this.fps;
     this.secondsPerFrame = 1 / this.fps;
 
-    const cameraTarget = new THREE.Vector3(0, 0, 0);
+    this.cameraTarget = new THREE.Vector3(0, 0, 0);
 
-    const { orbitControls } = await this.warpSpeed('orbitControls');
+    const { orbitControls: oc } = await this.warpSpeed('orbitControls');
+    this.orbitControls = oc as OrbitControls;
 
     // RENDERER
     this.renderer.setSize(this.width, this.height);
@@ -71,7 +77,7 @@ export default class MainScene extends Scene3D {
     this.pCamera = this.camera as THREE.PerspectiveCamera;
     this.pCamera.aspect = this.width / this.height;
     this.pCamera.position.set(0, 0, 9.6);
-    this.pCamera.lookAt(cameraTarget);
+    this.pCamera.lookAt(this.cameraTarget);
     this.pCamera.updateProjectionMatrix();
 
     // AMBIENT LIGHT
@@ -128,7 +134,7 @@ export default class MainScene extends Scene3D {
 
     // GRID HELPER
     const gridHelper = new THREE.GridHelper(20, 20, 20);
-    gridHelper.position.set(0, 0, 0);
+    gridHelper.position.set(0, -1, 0);
     document.getElementById('grid-helper')?.addEventListener('click', (e) => {
       if ((e.target as HTMLInputElement).checked) {
         this.scene.add(gridHelper);
@@ -148,13 +154,11 @@ export default class MainScene extends Scene3D {
     });
 
     // ORBIT CONTROLS
-    if (orbitControls) {
-      orbitControls.target = cameraTarget;
-      orbitControls.update();
-      orbitControls.saveState();
-    }
+    this.orbitControls.target = this.cameraTarget;
+    this.orbitControls.update();
+    this.orbitControls.saveState();
     document.getElementById('reset-orbitcontrols')?.addEventListener('click', () => {
-      orbitControls?.reset();
+      this.orbitControls.reset();
     });
 
     // SAVE IMAGE
