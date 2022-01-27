@@ -127,6 +127,13 @@ ffmpeg -i input.avi -vf scale=320:240 output.avi
 ffmpeg -i input.jpg -vf scale=320:-1 output_320.png
 ```
 
+Scale by multiplication or division
+
+```
+ffmpeg -i input.mp4 -vf "scale=iw*.5:ih*.5" input_-_halfsize.mp4
+ffmpeg -i input.mp4 -vf "scale=iw/2:ih/2" input_-_halfsize.mp4
+```
+
 ## Crop video with the crop filter.
 out_w and out_h are width and height of the output rectangle.
 out_x and out_y are the left top corner of the output rectangle.
