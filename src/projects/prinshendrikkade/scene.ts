@@ -139,16 +139,24 @@ export default class Scene extends MainScene {
     }
 
     { // GREENLIGHT PANCAKES ROOF
+      const imagePos = new THREE.Vector2(1450, 0);
       const actor = await createActor(projectSettings, videos.main, {
         box: { w: to3d(360), h: to3d(400), d: 0.01 },
         imageRect: { w: 335, h: 380 },
       });
       actor.setStaticPosition(getMatrix4({ x: to3d(1565), y: -1.5, z: 0.008, sx: SCALE2, sy: SCALE2 }));
-      actor.addTween({
-        ...tweenData,
-        fromImagePosition: new THREE.Vector2(1450, 0),
-        toImagePosition: new THREE.Vector2(1450, 0),
+      actor.addTween({ ...tweenData, fromImagePosition: imagePos, toImagePosition: imagePos });
+      group.getMesh().add(actor.getMesh());
+    }
+
+    { // HIDE FOREGROUND PEOPLE
+      const imagePos = new THREE.Vector2(757, 616);
+      const actor = await createActor(projectSettings, videos.main, {
+        box: { w: to3d(390), h: to3d(200), d: 0.01 },
+        imageRect: { w: 390, h: 200 },
       });
+      actor.setStaticPosition(getMatrix4({ x: to3d(843), y: to3d(-746), z: 0.008, sx: SCALE2, sy: SCALE2 }));
+      actor.addTween({ ...tweenData, fromImagePosition: imagePos, toImagePosition: imagePos, videoStart: 124 });
       group.getMesh().add(actor.getMesh());
     }
   }
