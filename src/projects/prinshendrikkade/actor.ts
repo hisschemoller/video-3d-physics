@@ -14,6 +14,7 @@ export interface Actor {
   addTween: (tweenData: TweenData) => void,
   getMesh: () => ExtendedMesh,
   setMirrored: (mirrored: boolean) => void,
+  setStaticImage: (imgUrl: string, x: number, y: number) => void,
   setStaticPosition: (matrix4: THREE.Matrix4) => void,
 }
 
@@ -154,6 +155,21 @@ export async function createActor(
     }
   };
 
+  /**
+   * Loads and shows one single image.
+   */
+  const setStaticImage = (imgUrl: string, x: number, y: number) => {
+    if (context) {
+      const img = new Image();
+      img.src = imgUrl;
+      img.onload = () => {
+        const { width, height } = canvas.getCanvas();
+        context.drawImage(img, x, y, width, height);
+        texture.needsUpdate = true;
+      };
+    }
+  };
+
   const setStaticPosition = (matrix4: THREE.Matrix4) => {
     mesh.visible = true;
     mesh.position.setFromMatrixPosition(matrix4);
@@ -165,6 +181,7 @@ export async function createActor(
     addTween,
     getMesh: () => mesh,
     setMirrored,
+    setStaticImage,
     setStaticPosition,
   };
 }

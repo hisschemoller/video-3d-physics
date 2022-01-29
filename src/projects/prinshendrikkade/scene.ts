@@ -114,7 +114,9 @@ export default class Scene extends MainScene {
         box: { w: this.width3d, h: this.height3d, d: 0.02 },
         imageRect: { w: this.width, h: this.height },
       });
-      actor.addTween(tweenData);
+      // actor.addTween(tweenData);
+      actor.setStaticPosition(getMatrix4({ sx: SCALE2, sy: SCALE2 }));
+      actor.setStaticImage('../assets/projects/prinshendrikkade/prinshendrikkade_frame_00030_edited.png', 0, 0);
       group.getMesh().add(actor.getMesh());
     }
 
