@@ -5,15 +5,15 @@ import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
-import { Actor, createActor, createTweenGroup } from './actor';
+import { createActor, createTweenGroup } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 107;
-const STEPS = 16;
+// const STEPS = 16;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
 const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
-const STEP_DURATION = PATTERN_DURATION / STEPS;
+// const STEP_DURATION = PATTERN_DURATION / STEPS;
 
 export default class Scene extends MainScene {
   timeline: Timeline;
@@ -116,6 +116,8 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: 1.25, y: -0.05, z: 0, sx: 1.02 / SCALE2, sy: 1.02 / SCALE2 }));
       actor.setStaticImage('../assets/projects/prinshendrikkade/prinshendrikkade_frame_00030_edited.png', 0, 0);
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
       group.getMesh().add(actor.getMesh());
     }
 
@@ -126,6 +128,8 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: 0, y: -0.5, z: -0.001, sx: SCALE2, sy: SCALE2 }));
       actor.addTween(tweenData);
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
       group.getMesh().add(actor.getMesh());
     }
 
@@ -136,6 +140,8 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: 0, y: -0.9, z: 0.008, sx: SCALE2, sy: SCALE2 }));
       actor.addTween(tweenData);
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
       group.getMesh().add(actor.getMesh());
     }
 
@@ -147,6 +153,8 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: to3d(1565), y: -1.5, z: 0.008, sx: SCALE2, sy: SCALE2 }));
       actor.addTween({ ...tweenData, fromImagePosition: imagePos, toImagePosition: imagePos });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
       group.getMesh().add(actor.getMesh());
     }
 
@@ -158,6 +166,8 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: to3d(843), y: to3d(-746), z: 0.008, sx: SCALE2, sy: SCALE2 }));
       actor.addTween({ ...tweenData, fromImagePosition: imagePos, toImagePosition: imagePos, videoStart: 124 });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
       group.getMesh().add(actor.getMesh());
     }
   }
