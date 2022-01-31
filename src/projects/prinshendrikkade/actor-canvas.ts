@@ -21,8 +21,9 @@ export function createCanvas(width: number, height: number): Canvas {
   canvas.height = height;
   const canvasCtx = canvas.getContext('2d');
   if (canvasCtx) {
-    canvasCtx.fillStyle = '#6c645f';
-    canvasCtx.fillRect(0, 0, width, height);
+    // remove for transparent canvas
+    // canvasCtx.fillStyle = '#6c645f';
+    // canvasCtx.fillRect(0, 0, width, height);
   }
 
   return {

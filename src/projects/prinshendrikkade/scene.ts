@@ -114,8 +114,7 @@ export default class Scene extends MainScene {
         box: { w: this.width3d, h: this.height3d, d: 0.02 },
         imageRect: { w: this.width, h: this.height },
       });
-      // actor.addTween(tweenData);
-      actor.setStaticPosition(getMatrix4({ sx: SCALE2, sy: SCALE2 }));
+      actor.setStaticPosition(getMatrix4({ x: 1.25, y: -0.05, z: 0, sx: 1.02 / SCALE2, sy: 1.02 / SCALE2 }));
       actor.setStaticImage('../assets/projects/prinshendrikkade/prinshendrikkade_frame_00030_edited.png', 0, 0);
       group.getMesh().add(actor.getMesh());
     }
@@ -125,7 +124,7 @@ export default class Scene extends MainScene {
         box: { w: this.width3d, h: this.height3d, d: 0.02 },
         imageRect: { w: this.width, h: this.height },
       });
-      actor.setStaticPosition(getMatrix4({ x: 0, y: -0.5, z: 0.001, sx: SCALE2, sy: SCALE2 }));
+      actor.setStaticPosition(getMatrix4({ x: 0, y: -0.5, z: -0.001, sx: SCALE2, sy: SCALE2 }));
       actor.addTween(tweenData);
       group.getMesh().add(actor.getMesh());
     }

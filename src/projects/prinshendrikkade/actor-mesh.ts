@@ -24,8 +24,19 @@ export function createRectangle(
       group.materialIndex = index === 4 ? 1 : 0;
     });
     const materials = [
-      new THREE.MeshPhongMaterial({ color: BASE_COLOR, side: THREE.FrontSide }),
-      new THREE.MeshPhongMaterial({ map: texture, side: THREE.FrontSide, shininess: 0 }),
+      new THREE.MeshPhongMaterial({
+        color: BASE_COLOR,
+        opacity: 0,
+        transparent: true,
+        side: THREE.FrontSide,
+      }),
+      new THREE.MeshPhongMaterial({
+        map: texture,
+        opacity: 1,
+        transparent: true,
+        side: THREE.FrontSide,
+        shininess: 0,
+      }),
     ];
     const mesh = new ExtendedMesh(geometry, materials);
     resolve(mesh);
