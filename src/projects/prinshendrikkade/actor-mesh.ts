@@ -61,8 +61,18 @@ export function createSVG(
 
           paths.forEach((path) => {
             const materials = [
-              new THREE.MeshPhongMaterial({ color: BASE_COLOR, side: THREE.BackSide }),
-              new THREE.MeshPhongMaterial({ map: texture, side: THREE.BackSide }),
+              new THREE.MeshPhongMaterial({
+                color: BASE_COLOR,
+                opacity: 0,
+                transparent: true,
+                side: THREE.BackSide,
+              }),
+              new THREE.MeshPhongMaterial({
+                map: texture,
+                opacity: 1,
+                transparent: true,
+                side: THREE.BackSide,
+              }),
             ];
 
             const shapes = SVGLoader.createShapes(path);

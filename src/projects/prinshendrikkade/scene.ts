@@ -15,6 +15,16 @@ const SECONDS_PER_BEAT = 60 / BPM;
 const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
 // const STEP_DURATION = PATTERN_DURATION / STEPS;
 
+const SCALE2 = 1.115;
+
+const tweenData = {
+  delay: 0,
+  duration: PATTERN_DURATION,
+  videoStart: 130.5,
+  fromImagePosition: new THREE.Vector2(0, 0),
+  toImagePosition: new THREE.Vector2(0, 0),
+};
+
 export default class Scene extends MainScene {
   timeline: Timeline;
 
@@ -78,7 +88,13 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-    await this.createBackgroundActors(projectSettings, videos);
+    const toVP3d = this.toVP3d.bind(this);
+    const group = createTweenGroup(projectSettings); // GROUP
+    // group.setStaticPosition(getMatrix4({ x: toVP3d(0), y: toVP3d(-255, false), rx: 0.23 }));
+    group.setStaticPosition(getMatrix4({ x: toVP3d(-170), y: toVP3d(-265, false), rx: 0.23, sx: 1.1, sy: 1.1 }));
+
+    await this.createBackgroundActors(projectSettings, videos, group.getMesh());
+    await this.createBuildingActors(projectSettings, videos, group.getMesh());
 
     this.postCreate();
   }
@@ -89,36 +105,29 @@ export default class Scene extends MainScene {
   }
 
   /**
-   * createActors
+   * createBackgroundActors
    */
-  async createBackgroundActors(projectSettings: ProjectSettings, videos: { [key: string]: VideoData }) {
+  async createBackgroundActors(
+    projectSettings: ProjectSettings,
+    videos: { [key: string]: VideoData },
+    group: THREE.Group,
+  ) {
     const to3d = this.to3d.bind(this);
-    const toVP3d = this.toVP3d.bind(this);
-
-    const tweenData = {
-      delay: 0,
-      duration: PATTERN_DURATION,
-      videoStart: 130.5,
-      fromImagePosition: new THREE.Vector2(0, 0),
-      toImagePosition: new THREE.Vector2(0, 0),
-    };
-
-    const SCALE2 = 1.115;
-
-    const group = createTweenGroup(projectSettings); // GROUP
-    // group.setStaticPosition(getMatrix4({ x: toVP3d(0), y: toVP3d(-255, false), rx: 0.23 }));
-    group.setStaticPosition(getMatrix4({ x: toVP3d(-170), y: toVP3d(-265, false), rx: 0.23, sx: 1.1, sy: 1.1 }));
 
     { // BACKGROUND
-      const actor = await createActor(projectSettings, videos.main, {
+      const actor = await createActor(projectSettings, {
+        imgSrc: '../assets/projects/prinshendrikkade/prinshendrikkade_frame_00030_edited.png',
+        height: 1080,
+        width: 1920,
+      }, {
         box: { w: this.width3d, h: this.height3d, d: 0.02 },
         imageRect: { w: this.width, h: this.height },
       });
       actor.setStaticPosition(getMatrix4({ x: 1.25, y: -0.05, z: 0, sx: 1.02 / SCALE2, sy: 1.02 / SCALE2 }));
-      actor.setStaticImage('../assets/projects/prinshendrikkade/prinshendrikkade_frame_00030_edited.png', 0, 0);
+      actor.setStaticImage(0, 0);
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
-      group.getMesh().add(actor.getMesh());
+      group.add(actor.getMesh());
     }
 
     { // BG ENLARGED
@@ -130,7 +139,7 @@ export default class Scene extends MainScene {
       actor.addTween(tweenData);
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
-      group.getMesh().add(actor.getMesh());
+      group.add(actor.getMesh());
     }
 
     { // ST NICOLAASKERK ROOF
@@ -142,7 +151,7 @@ export default class Scene extends MainScene {
       actor.addTween(tweenData);
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
-      group.getMesh().add(actor.getMesh());
+      group.add(actor.getMesh());
     }
 
     { // GREENLIGHT PANCAKES ROOF
@@ -155,7 +164,7 @@ export default class Scene extends MainScene {
       actor.addTween({ ...tweenData, fromImagePosition: imagePos, toImagePosition: imagePos });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
-      group.getMesh().add(actor.getMesh());
+      group.add(actor.getMesh());
     }
 
     { // HIDE FOREGROUND PEOPLE
@@ -168,7 +177,33 @@ export default class Scene extends MainScene {
       actor.addTween({ ...tweenData, fromImagePosition: imagePos, toImagePosition: imagePos, videoStart: 124 });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
-      group.getMesh().add(actor.getMesh());
+      group.add(actor.getMesh());
+    }
+  }
+
+  /**
+   * createBuildingActors
+   */
+  async createBuildingActors(
+    projectSettings: ProjectSettings,
+    videos: { [key: string]: VideoData },
+    group: THREE.Group,
+  ) {
+    const to3d = this.to3d.bind(this);
+
+    const SVG_SCALE = this.width3d / this.width;
+
+    { // LEFT BOTTOM
+      const p = new THREE.Vector2(676, 243);
+      const actor = await createActor(projectSettings, videos.main, {
+        imageRect: { w: 314, h: 214 },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/prinshendrikkade/building-leftbottom.svg' },
+      });
+      actor.setStaticPosition(getMatrix4({ x: to3d(765), y: to3d(-465), z: 0.1 }));
+      actor.addTween({ ...tweenData, fromImagePosition: p, toImagePosition: p });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
     }
   }
 }

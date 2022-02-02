@@ -2,7 +2,7 @@
 import { ExtendedMesh, THREE } from 'enable3d';
 import createTween, { Ease } from '@app/tween';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
-import { createRectangle } from './actor-mesh';
+import { createRectangle, createSVG } from './actor-mesh';
 import {
   addImagePositionTween, addVideoFrameTween, createCanvas, ImagePositionTween, VideoFrameTween,
 } from './actor-canvas';
@@ -14,7 +14,7 @@ export interface Actor {
   addTween: (tweenData: TweenData) => void,
   getMesh: () => ExtendedMesh,
   setMirrored: (mirrored: boolean) => void,
-  setStaticImage: (imgUrl: string, x: number, y: number) => void,
+  setStaticImage: (x: number, y: number) => void,
   setStaticPosition: (matrix4: THREE.Matrix4) => void,
 }
 
@@ -22,8 +22,9 @@ export interface Actor {
  * Actor config data, the third argument in createActor().
  */
 interface ActorData {
-  box: { w: number, h: number, d: number, },
+  box?: { w: number, h: number, d: number, },
   imageRect: { w: number, h: number, },
+  svg?: { url: string, scale: number, depth: number },
 }
 
 /**
@@ -50,9 +51,10 @@ export async function createActor(
   actorData: ActorData,
 ): Promise<Actor> {
   const { scene, timeline } = projectSettings;
-  const { box, imageRect } = actorData;
+  const { box, imageRect, svg } = actorData;
 
-  if (projectSettings.isPreview) {
+  // if video then use preview size
+  if (projectSettings.isPreview && 'imgSrcPath' in mediaData) {
     imageRect.w *= projectSettings.previewScale;
     imageRect.h *= projectSettings.previewScale;
   }
@@ -63,9 +65,27 @@ export async function createActor(
 
   // TEXTURE
   const texture = new THREE.CanvasTexture(canvas.getCanvas());
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
 
   // MESH
-  const mesh = await createRectangle(box.w, box.h, texture, box.d);
+  let mesh: ExtendedMesh;
+  if (box) {
+    mesh = await createRectangle(box.w, box.h, texture, box.d);
+  } else if (svg) {
+    mesh = await createSVG(svg.url, svg.scale, texture, svg.depth);
+
+    // the canvas should exactly cover the SVG extrude front
+    const sizeVector = new THREE.Vector3();
+    mesh.geometry.computeBoundingBox();
+    mesh.geometry.boundingBox?.getSize(sizeVector);
+    const wRepeat = (1 / sizeVector.x) * svg.scale;
+    const hRepeat = (1 / sizeVector.y) * svg.scale * -1;
+    texture.offset = new THREE.Vector2(0, 1);
+    texture.repeat = new THREE.Vector2(wRepeat, hRepeat);
+  } else {
+    mesh = await createRectangle(1, 1, texture, 1);
+  }
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   mesh.visible = false;
@@ -158,13 +178,13 @@ export async function createActor(
   /**
    * Loads and shows one single image.
    */
-  const setStaticImage = (imgUrl: string, x: number, y: number) => {
-    if (context) {
+  const setStaticImage = (x: number, y: number) => {
+    if (context && 'imgSrc' in mediaData) {
       const img = new Image();
-      img.src = imgUrl;
+      img.src = mediaData.imgSrc;
       img.onload = () => {
         const { width, height } = canvas.getCanvas();
-        context.drawImage(img, x, y, width, height);
+        context.drawImage(img, x, y, width, height, 0, 0, width, height);
         texture.needsUpdate = true;
       };
     }

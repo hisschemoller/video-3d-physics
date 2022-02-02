@@ -1,5 +1,15 @@
 # Prins Hendrikkade
 
+## Image texture on SVG (or rectangle box)
+
+* Create a canvas with the same width / height ratio as the box (or svg) but in the desired pixel
+resulution of course.
+* The canvas should completely cover the front of the box or the SVG extrude.
+  * In a box the default texture repeat of '1' will take care of that.
+  * In an SVG extrude this has to be calculated.
+* The correct part of the image must be drawn on the canvas with the context.drawImage parameters.
+
+
 ## FFMPEG
 
 ```
