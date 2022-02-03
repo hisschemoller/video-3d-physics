@@ -107,10 +107,13 @@ export async function createActor(
     const endPosition = toMatrix4 ? new THREE.Vector3().setFromMatrixPosition(toMatrix4) : undefined;
     const startQuaternion = fromMatrix4 ? new THREE.Quaternion().setFromRotationMatrix(fromMatrix4) : undefined;
     const endQuaternion = toMatrix4 ? new THREE.Quaternion().setFromRotationMatrix(toMatrix4) : undefined;
+    const startScale = fromMatrix4 ? new THREE.Vector3().setFromMatrixScale(fromMatrix4) : undefined;
+    const endScale = toMatrix4 ? new THREE.Vector3().setFromMatrixScale(toMatrix4) : undefined;
 
     if (fromMatrix4) {
       mesh.position.setFromMatrixPosition(fromMatrix4);
       mesh.quaternion.setFromRotationMatrix(fromMatrix4);
+      mesh.scale.setFromMatrixScale(fromMatrix4);
     }
 
     const toImagePosition = toImagePositionBeforeClone.clone();
@@ -150,9 +153,10 @@ export async function createActor(
         mesh.visible = true;
       },
       onUpdate: async (progress: number) => {
-        if (startPosition && endPosition && startQuaternion && endQuaternion) {
+        if (startPosition && endPosition && startQuaternion && endQuaternion && startScale && endScale) {
           mesh.position.lerpVectors(startPosition, endPosition, progress);
           mesh.quaternion.slerpQuaternions(startQuaternion, endQuaternion, progress);
+          mesh.scale.lerpVectors(startScale, endScale, progress);
         }
         if (videoFrameTween) {
           await videoFrameTween.loadVideoFrame(progress);
