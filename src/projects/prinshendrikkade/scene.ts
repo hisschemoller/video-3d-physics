@@ -9,12 +9,13 @@ import { createActor, createTweenGroup } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 107;
-// const STEPS = 16;
+const STEPS = 16;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
 const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
-// const STEP_DURATION = PATTERN_DURATION / STEPS;
+const STEP_DURATION = PATTERN_DURATION / STEPS;
 
+const S = STEP_DURATION;
 const SCALE2 = 1.115;
 
 const tweenData = {
@@ -233,13 +234,20 @@ export default class Scene extends MainScene {
     }
 
     { // RIGHT
+      const m1 = getMatrix4({ x: to3d(1275), y: to3d(-220), z: 0.1, sx: SCALE2, sy: SCALE2 });
+      const m2 = getMatrix4({ x: to3d(1190), y: to3d(-220), z: 0.1, sx: SCALE2, sy: SCALE2 });
       const p = new THREE.Vector2(1149, 147);
+      const tween = () => ({ fromImagePosition: p.clone(), toImagePosition: p.clone() });
       const actor = await createActor(projectSettings, videos.main, {
         imageRect: { w: 138, h: 409 },
-        svg: { depth: 0.04, scale: SVG_SCALE, url: '../assets/projects/prinshendrikkade/building-right.svg' },
+        svg: { depth: 0.03, scale: SVG_SCALE, url: '../assets/projects/prinshendrikkade/building-right.svg' },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(1275), y: to3d(-220), z: 0.1, sx: SCALE2, sy: SCALE2 }));
-      actor.addTween({ ...tweenData, fromImagePosition: p, toImagePosition: p });
+      // actor.setStaticPosition(getMatrix4({ x: to3d(1275), y: to3d(-220), z: 0.1, sx: SCALE2, sy: SCALE2 }));
+      // actor.addTween({ ...tweenData, fromImagePosition: p, toImagePosition: p });
+      actor.addTween({ delay: S * 0, duration: S * 4, videoStart: 130.5, fromMatrix4: m1, toMatrix4: m1, ...tween(), ease: 'sineInOut' });
+      actor.addTween({ delay: S * 4, duration: S * 1, videoStart: 130.5, fromMatrix4: m1, toMatrix4: m2, ...tween(), ease: 'sineInOut' });
+      actor.addTween({ delay: S * 5, duration: S * 9, videoStart: 130.5, fromMatrix4: m2, toMatrix4: m2, ...tween(), ease: 'sineInOut' });
+      actor.addTween({ delay: S * 14, duration: S * 1.9, videoStart: 130.5, fromMatrix4: m2, toMatrix4: m1, ...tween(), ease: 'sineInOut' });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());

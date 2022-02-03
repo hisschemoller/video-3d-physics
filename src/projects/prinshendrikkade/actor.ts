@@ -33,7 +33,7 @@ interface ActorData {
 interface TweenData {
   delay: number,
   duration: number,
-  easeAmount?: number,
+  ease?: keyof typeof Ease,
   isMirrored?: boolean,
   videoStart: number,
   fromMatrix4?: THREE.Matrix4,
@@ -95,7 +95,7 @@ export async function createActor(
   const addTween = ({
     delay,
     duration,
-    easeAmount = 0,
+    ease,
     isMirrored = false,
     videoStart,
     fromMatrix4,
@@ -148,7 +148,7 @@ export async function createActor(
     const tween = createTween({
       delay,
       duration,
-      easeAmount,
+      ease,
       onStart: () => {
         mesh.visible = true;
       },
@@ -167,7 +167,8 @@ export async function createActor(
         texture.needsUpdate = true;
       },
       onComplete: () => {
-        mesh.visible = false;
+        // FIXME: removed only for Prins Hendrikkade
+        // group.visible = false;
       },
     });
     timeline.add(tween);
