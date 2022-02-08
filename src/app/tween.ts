@@ -8,6 +8,10 @@ export interface Tween {
  */
 export const Ease = {
   linear: (progress: number) => progress,
+  cubicIn: (progress: number) => 1 - progress * progress * progress,
+  cubicInOut: (progress: number) => (
+    progress < 0.5 ? 4 * progress * progress * progress : 1 - ((-2 * progress + 2) ** 3) / 2),
+  cubicOut: (progress: number) => 1 - ((1 - progress) ** 3),
   sineIn: (progress: number) => 1 - Math.cos((Math.PI * progress) / 2),
   sineInOut: (progress: number) => -(Math.cos(Math.PI * progress) - 1) / 2,
   sineOut: (progress: number) => Math.sin((Math.PI * progress) / 2),
