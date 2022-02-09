@@ -263,18 +263,16 @@ export default class Scene extends MainScene {
       }
     }
 
-    { // TOWER
-      const m1 = getMatrix4({ x: to3d(1090), y: to3d(-57), z: 0.2, sx: SCALE2, sy: SCALE2 });
-      const m2 = getMatrix4({ x: to3d(1090 + 120), y: to3d(-57 - 112), z: 0.2, sx: SCALE2, sy: SCALE2 });
-      const m3 = getMatrix4({ x: to3d(1090 + 100), y: to3d(-57 - 112), z: 0.2, sx: SCALE2, sy: SCALE2 });
-      const p = new THREE.Vector2(974, 1);
+    { // TOWER BOTTOM
+      const m1 = getMatrix4({ x: to3d(1085), y: to3d(-415), z: 0.2, sx: SCALE2, sy: SCALE2 });
+      const m2 = getMatrix4({ x: to3d(1085 + 120), y: to3d(-415), z: 0.2, sx: SCALE2, sy: SCALE2 });
+      const m3 = getMatrix4({ x: to3d(1085 + 100), y: to3d(-415), z: 0.2, sx: SCALE2, sy: SCALE2 });
+      const p = new THREE.Vector2(974, 325);
       const tween = () => ({ fromImagePosition: p.clone(), toImagePosition: p.clone() });
       const actor = await createActor(projectSettings, videos.main, {
-        imageRect: { w: 96, h: 554 },
-        svg: { depth: 0.04, scale: SVG_SCALE, url: '../assets/projects/prinshendrikkade/building-tower.svg' },
+        imageRect: { w: 85, h: 230 },
+        svg: { depth: 0.04, scale: SVG_SCALE, url: '../assets/projects/prinshendrikkade/building-tower-bottom.svg' },
       });
-      // actor.setStaticPosition(getMatrix4({ x: to3d(1090), y: to3d(-57), z: 0.1, sx: SCALE2, sy: SCALE2 }));
-      // actor.addTween({ ...tweenData, fromImagePosition: p, toImagePosition: p });
       actor.addTween({ delay: S * 0, duration: S * 4, videoStart: 130.5, fromMatrix4: m1, toMatrix4: m1, ...tween() });
       actor.addTween({ delay: S * 4, duration: S * 4, videoStart: 130.5, fromMatrix4: m1, toMatrix4: m2, ...tween(), ease });
       actor.addTween({ delay: S * 8, duration: S * 4, videoStart: 130.5, fromMatrix4: m2, toMatrix4: m3, ...tween(), ease });
@@ -282,6 +280,24 @@ export default class Scene extends MainScene {
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
+
+      { // TOWER TOP
+        const mm1 = getMatrix4({ x: to3d(0), y: to3d(325), z: 0.1 });
+        const mm2 = getMatrix4({ x: to3d(0), y: to3d(325 - 110), z: 0.1 });
+        const p2 = new THREE.Vector2(975, 1);
+        const tween2 = () => ({ fromImagePosition: p2.clone(), toImagePosition: p2.clone() });
+        const actor2 = await createActor(projectSettings, videos.main, {
+          imageRect: { w: 95, h: 328 },
+          svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/prinshendrikkade/building-tower-top.svg' },
+        });
+        actor2.addTween({ delay: S * 0, duration: S * 4, videoStart: 130.5, fromMatrix4: mm1, toMatrix4: mm1, ...tween2() });
+        actor2.addTween({ delay: S * 4, duration: S * 4, videoStart: 130.5, fromMatrix4: mm1, toMatrix4: mm2, ...tween2(), ease });
+        actor2.addTween({ delay: S * 8, duration: S * 4, videoStart: 130.5, fromMatrix4: mm2, toMatrix4: mm2, ...tween2() });
+        actor2.addTween({ delay: S * 12, duration: S * 4, videoStart: 130.5, fromMatrix4: mm2, toMatrix4: mm1, ...tween2(), ease });
+        actor2.getMesh().castShadow = false;
+        actor2.getMesh().receiveShadow = false;
+        actor.getMesh().add(actor2.getMesh());
+      }
     }
 
     return;
