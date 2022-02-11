@@ -28,4 +28,14 @@ ffmpeg -i prinshendrikkade-b.mov -r 25 -vf yadif '/Volumes/Samsung_X5/prinshendr
 ffmpeg -i prinshendrikkade-b.mov -vf scale=480:-1 prinshendrikkade-b_preview.mov
 // deinterlace and convert to image sequence and use 25 FPS
 ffmpeg -i prinshendrikkade-b_preview.mov -r 25 -vf yadif '/Volumes/Samsung_X5/prinshendrikkade/frames_preview/frame_%05d.png'
+
+// png to mp4 (from index 57) met 25 FPS
+ffmpeg -framerate 25 -start_number 57 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p prinshendrikkade-video-x1.mp4
+// repeat 32 times, 57 frames, video alleen
+ffmpeg -i prinshendrikkade-video-x1.mp4 -filter_complex "loop=loop=32:size=57:start=0" prinshendrikkade-video-x32.mp4
 ```
+
+Video duurt 57 frames.
+Video duurt 57 / 25 FPS = 2.28 seconden.
+Een beat duurt 2.28 / 4 = 0.57 seconden.
+Het tempo is 60 / 0.57 = 105.26315789473685 BPM

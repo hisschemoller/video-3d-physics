@@ -91,7 +91,6 @@ export default class Scene extends MainScene {
 
     const toVP3d = this.toVP3d.bind(this);
     const group = createTweenGroup(projectSettings); // GROUP
-    // group.setStaticPosition(getMatrix4({ x: toVP3d(0), y: toVP3d(-255, false), rx: 0.23 }));
     group.setStaticPosition(getMatrix4({ x: toVP3d(-170), y: toVP3d(-265, false), rx: 0.23, sx: 1.1, sy: 1.1 }));
 
     await this.createBackgroundActors(projectSettings, videos, group.getMesh());
@@ -196,17 +195,15 @@ export default class Scene extends MainScene {
 
     const SVG_SCALE = this.width3d / this.width;
 
-    { // LEFT BOTTOM LEFT
-      const m1 = getMatrix4({ x: to3d(755), y: to3d(-438), z: 0.08, sx: SCALE2, sy: SCALE2 });
-      const m2 = getMatrix4({ x: to3d(755 + 278), y: to3d(-440), z: 0.08, sx: SCALE2, sy: SCALE2 });
-      const p = new THREE.Vector2(676, 342);
+    { // LEFT BOTTOM BOTTOM
+      const m1 = getMatrix4({ x: to3d(755), y: to3d(-438 - 120), z: 0.08, sx: SCALE2, sy: SCALE2 });
+      const m2 = getMatrix4({ x: to3d(755 + 282), y: to3d(-438 - 120), z: 0.08, sx: SCALE2, sy: SCALE2 });
+      const p = new THREE.Vector2(676, 449);
       const tween = () => ({ fromImagePosition: p.clone(), toImagePosition: p.clone() });
       const actor = await createActor(projectSettings, videos.main, {
-        imageRect: { w: 256, h: 214 },
-        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/prinshendrikkade/building-leftbottom-left.svg' },
+        imageRect: { w: 324, h: 105 },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/prinshendrikkade/building-leftbottom-bottom.svg' },
       });
-      // actor.setStaticPosition(getMatrix4({ x: to3d(755), y: to3d(-436), z: 0.1, sx: SCALE2, sy: SCALE2 }));
-      // actor.addTween({ ...tweenData, fromImagePosition: p, toImagePosition: p });
       actor.addTween({ delay: S * 0, duration: S * 4, videoStart: 130.5, fromMatrix4: m1, toMatrix4: m1, ...tween() });
       actor.addTween({ delay: S * 4, duration: S * 4, videoStart: 130.5, fromMatrix4: m1, toMatrix4: m2, ...tween(), ease });
       actor.addTween({ delay: S * 8, duration: S * 4, videoStart: 130.5, fromMatrix4: m2, toMatrix4: m1, ...tween(), ease });
@@ -215,14 +212,14 @@ export default class Scene extends MainScene {
       actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
 
-      { // LEFT BOTTOM RIGHT
-        const mm1 = getMatrix4({ x: to3d(246), z: -0.05 });
-        const mm2 = getMatrix4({ x: to3d(110), z: -0.05 });
-        const p2 = new THREE.Vector2(925, 342);
+      { // LEFT BOTTOM TOP
+        const mm1 = getMatrix4({ x: to3d(0), y: to3d(110), z: -0.05 });
+        const mm2 = getMatrix4({ x: to3d(0), y: to3d(5), z: -0.05 });
+        const p2 = new THREE.Vector2(677, 342);
         const tween2 = () => ({ fromImagePosition: p2.clone(), toImagePosition: p2.clone() });
         const actor2 = await createActor(projectSettings, videos.main, {
-          imageRect: { w: 66, h: 212 },
-          svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/prinshendrikkade/building-leftbottom-right.svg' },
+          imageRect: { w: 324, h: 116 },
+          svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/prinshendrikkade/building-leftbottom-top.svg' },
         });
         actor2.addTween({ delay: S * 0, duration: S * 4, videoStart: 130.5, fromMatrix4: mm1, toMatrix4: mm1, ...tween2() });
         actor2.addTween({ delay: S * 4, duration: S * 4, videoStart: 130.5, fromMatrix4: mm1, toMatrix4: mm2, ...tween2(), ease });
@@ -234,15 +231,15 @@ export default class Scene extends MainScene {
       }
     }
 
-    { // LEFT TOP LEFT
+    { // LEFT TOP
       const m1 = getMatrix4({ x: to3d(744), y: to3d(-212), z: 0.1, sx: SCALE2, sy: SCALE2 });
       const m2 = getMatrix4({ x: to3d(744), y: to3d(-333), z: 0.1, sx: SCALE2, sy: SCALE2 });
-      const m3 = getMatrix4({ x: to3d(744 + 278), y: to3d(-333 - 110), z: 0.1, sx: SCALE2, sy: SCALE2 });
+      const m3 = getMatrix4({ x: to3d(744 + 278), y: to3d(-333 - 120), z: 0.1, sx: SCALE2, sy: SCALE2 });
       const p = new THREE.Vector2(665, 146);
       const tween = () => ({ fromImagePosition: p.clone(), toImagePosition: p.clone() });
       const actor = await createActor(projectSettings, videos.main, {
-        imageRect: { w: 268, h: 212 },
-        svg: { depth: 0.03, scale: SVG_SCALE, url: '../assets/projects/prinshendrikkade/building-lefttop-left.svg' },
+        imageRect: { w: 326, h: 205 },
+        svg: { depth: 0.03, scale: SVG_SCALE, url: '../assets/projects/prinshendrikkade/building-lefttop.svg' },
       });
       actor.addTween({ delay: S * 0, duration: S * 4, videoStart: 130.5, fromMatrix4: m1, toMatrix4: m2, ...tween(), ease });
       actor.addTween({ delay: S * 4, duration: S * 4, videoStart: 130.5, fromMatrix4: m2, toMatrix4: m3, ...tween(), ease });
@@ -253,8 +250,8 @@ export default class Scene extends MainScene {
       group.add(actor.getMesh());
 
       { // LEFT TOP RIGHT
-        const mm1 = getMatrix4({ x: to3d(256), z: -0.05 });
-        const mm2 = getMatrix4({ x: to3d(256 - 136), z: -0.05 });
+        const mm1 = getMatrix4({ x: to3d(256 + 60), z: 0.05 });
+        const mm2 = getMatrix4({ x: to3d(256), z: 0.05 });
         const p2 = new THREE.Vector2(927, 146);
         const tween2 = () => ({ fromImagePosition: p2.clone(), toImagePosition: p2.clone() });
         const actor2 = await createActor(projectSettings, videos.main, {
@@ -272,7 +269,7 @@ export default class Scene extends MainScene {
     }
 
     { // MID BOTTOM
-      const m1 = getMatrix4({ x: to3d(1170), y: to3d(-418), z: 0.2, sx: SCALE2, sy: SCALE2 });
+      const m1 = getMatrix4({ x: to3d(1160), y: to3d(-418), z: 0.2, sx: SCALE2, sy: SCALE2 });
       const m2 = getMatrix4({ x: to3d(1115), y: to3d(-418), z: 0.2, sx: SCALE2, sy: SCALE2 });
       const m3 = getMatrix4({ x: to3d(1235), y: to3d(-418), z: 0.2, sx: SCALE2, sy: SCALE2 });
       const p = new THREE.Vector2(1047, 325);
@@ -290,8 +287,8 @@ export default class Scene extends MainScene {
       group.add(actor.getMesh());
 
       { // MID TOP
-        const mm1 = getMatrix4({ x: to3d(0), y: to3d(175), z: 0.1 });
-        const mm2 = getMatrix4({ x: to3d(0), y: to3d(175 - 105), z: 0.1 });
+        const mm1 = getMatrix4({ x: to3d(0), y: to3d(179), z: 0.1 });
+        const mm2 = getMatrix4({ x: to3d(0), y: to3d(179 - 105), z: 0.1 });
         const p2 = new THREE.Vector2(1047, 144);
         const tween2 = () => ({ fromImagePosition: p2.clone(), toImagePosition: p2.clone() });
         const actor2 = await createActor(projectSettings, videos.main, {
@@ -309,9 +306,9 @@ export default class Scene extends MainScene {
     }
 
     { // RIGHT BOTTOM
-      const m1 = getMatrix4({ x: to3d(1275), y: to3d(-422), z: 0.1, sx: SCALE2, sy: SCALE2 });
-      const m2 = getMatrix4({ x: to3d(1190), y: to3d(-422), z: 0.1, sx: SCALE2, sy: SCALE2 });
-      const m3 = getMatrix4({ x: to3d(1275), y: to3d(-422), z: 0.1, sx: SCALE2, sy: SCALE2 });
+      const m1 = getMatrix4({ x: to3d(1275), y: to3d(-423), z: 0.15, sx: SCALE2, sy: SCALE2 });
+      const m2 = getMatrix4({ x: to3d(1190), y: to3d(-423), z: 0.15, sx: SCALE2, sy: SCALE2 });
+      const m3 = getMatrix4({ x: to3d(1275), y: to3d(-423), z: 0.15, sx: SCALE2, sy: SCALE2 });
       const p = new THREE.Vector2(1149, 329);
       const tween = () => ({ fromImagePosition: p.clone(), toImagePosition: p.clone() });
       const actor = await createActor(projectSettings, videos.main, {
@@ -327,8 +324,8 @@ export default class Scene extends MainScene {
       group.add(actor.getMesh());
 
       { // RIGHT TOP
-        const mm1 = getMatrix4({ x: to3d(-4), y: to3d(175), z: 0.1 });
-        const mm2 = getMatrix4({ x: to3d(-4), y: to3d(175 - 105), z: 0.1 });
+        const mm1 = getMatrix4({ x: to3d(-4), y: to3d(184), z: 0.1 });
+        const mm2 = getMatrix4({ x: to3d(-4), y: to3d(184 - 105), z: 0.1 });
         const p2 = new THREE.Vector2(1149, 146);
         const tween2 = () => ({ fromImagePosition: p2.clone(), toImagePosition: p2.clone() });
         const actor2 = await createActor(projectSettings, videos.main, {
@@ -346,9 +343,9 @@ export default class Scene extends MainScene {
     }
 
     { // TOWER BOTTOM
-      const m1 = getMatrix4({ x: to3d(1085), y: to3d(-415), z: 0.2, sx: SCALE2, sy: SCALE2 });
-      const m2 = getMatrix4({ x: to3d(1085 + 120), y: to3d(-415), z: 0.5, sx: SCALE2, sy: SCALE2 });
-      const m3 = getMatrix4({ x: to3d(1085 + 80), y: to3d(-415), z: 0.5, sx: SCALE2, sy: SCALE2 });
+      const m1 = getMatrix4({ x: to3d(1082), y: to3d(-415), z: 0.4, sx: SCALE2, sy: SCALE2 });
+      const m2 = getMatrix4({ x: to3d(1082 + 120), y: to3d(-415), z: 0.5, sx: SCALE2, sy: SCALE2 });
+      const m3 = getMatrix4({ x: to3d(1082 + 80), y: to3d(-415), z: 0.5, sx: SCALE2, sy: SCALE2 });
       const p = new THREE.Vector2(974, 325);
       const tween = () => ({ fromImagePosition: p.clone(), toImagePosition: p.clone() });
       const actor = await createActor(projectSettings, videos.main, {
@@ -364,7 +361,7 @@ export default class Scene extends MainScene {
       group.add(actor.getMesh());
 
       { // TOWER TOP
-        const mm1 = getMatrix4({ x: to3d(0), y: to3d(325), z: 0.1 });
+        const mm1 = getMatrix4({ x: to3d(0), y: to3d(325), z: 0.2 });
         const mm2 = getMatrix4({ x: to3d(0), y: to3d(325 - 110), z: 0.1 });
         const p2 = new THREE.Vector2(975, 1);
         const tween2 = () => ({ fromImagePosition: p2.clone(), toImagePosition: p2.clone() });
@@ -418,8 +415,8 @@ export default class Scene extends MainScene {
       }
 
       { // TOWER WALL BOTTOM
-        const mm1 = getMatrix4({ x: to3d(0), y: to3d(-20), z: -0.1 });
-        const mm2 = getMatrix4({ x: to3d(isWallLeft ? -70 : 80), y: to3d(-20), z: -0.1 });
+        const mm1 = getMatrix4({ x: to3d(0), y: to3d(-20), z: -0.05 });
+        const mm2 = getMatrix4({ x: to3d(isWallLeft ? -70 : 80), y: to3d(-20), z: -0.05 });
         const p2 = new THREE.Vector2(903, 342);
         const tween2 = () => ({ fromImagePosition: p2.clone(), toImagePosition: p2.clone() });
         const actor2 = await createActor(projectSettings, videos.main, {
@@ -435,9 +432,9 @@ export default class Scene extends MainScene {
       }
 
       { // TOWER WALL TOP
-        const mm1 = getMatrix4({ x: to3d(0), y: to3d(75), z: -0.05 });
-        const mm2 = getMatrix4({ x: to3d(isWallLeft ? -70 : 80), y: to3d(75), z: -0.05 });
-        const mm3 = getMatrix4({ x: to3d(isWallLeft ? -70 : 80), y: to3d(175), z: -0.05 });
+        const mm1 = getMatrix4({ x: to3d(0), y: to3d(75), z: 0.05 });
+        const mm2 = getMatrix4({ x: to3d(isWallLeft ? -70 : 80), y: to3d(75), z: 0.05 });
+        const mm3 = getMatrix4({ x: to3d(isWallLeft ? -70 : 80), y: to3d(175), z: 0.05 });
         const p2 = new THREE.Vector2(904, 146);
         const tween2 = () => ({ fromImagePosition: p2.clone(), toImagePosition: p2.clone() });
         const actor2 = await createActor(projectSettings, videos.main, {
