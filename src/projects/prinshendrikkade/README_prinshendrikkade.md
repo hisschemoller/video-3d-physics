@@ -33,6 +33,10 @@ ffmpeg -i prinshendrikkade-b_preview.mov -r 25 -vf yadif '/Volumes/Samsung_X5/pr
 ffmpeg -framerate 25 -start_number 57 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p prinshendrikkade-video-x1.mp4
 // repeat 32 times, 57 frames, video alleen
 ffmpeg -i prinshendrikkade-video-x1.mp4 -filter_complex "loop=loop=32:size=57:start=0" prinshendrikkade-video-x32.mp4
+// repeat 32, audio alleen
+ffmpeg -stream_loop 32 -i "prinshendrikkade-audio-x1.wav" -c copy prinshendrikkade-audio-x32.wav
+// video en audio samenvoegen
+ffmpeg -i prinshendrikkade-video-x32.mp4 -i prinshendrikkade-audio-x32.wav -vcodec copy prinshendrikkade-x32.mp4
 ```
 
 Video duurt 57 frames.
