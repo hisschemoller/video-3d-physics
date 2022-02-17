@@ -34,10 +34,36 @@ ffmpeg -i robertmosesplaza-b.mp4 -vf scale=1920:-1 robertmosesplaza-c.mp4
 
 // convert to png sequence
 ffmpeg -i robertmosesplaza-c.mp4 '/Volumes/Samsung_X5/robertmosesplaza/frames/frame_%05d.png'
-ffmpeg -i robertmosesplaza-c.mp4 'frames/frame_%05d.png'
 // scale to 25%, 1920 * 0.25 = 480 (x 371, but should be divisible by 2, so 372)
 ffmpeg -i robertmosesplaza-c.mp4 -vf scale=480:372 robertmosesplaza-c_preview.mp4
 // convert preview to png sequence
 ffmpeg -i robertmosesplaza-c_preview.mp4 '/Volumes/Samsung_X5/robertmosesplaza/frames_preview/frame_%05d.png'
-ffmpeg -i robertmosesplaza-c_preview.mp4 'frames_preview/frame_%05d.png'
+```
+
+## Top view
+
+* 2:13 - 3:12
+* 4:04 - 6:04
+* 7:18 - 8:44
+
+## FFMPEG Top view
+
+```
+// extract 2:13 - 3:12
+ffmpeg -ss 00:02:13.0 -i robertmosesplaza-a.mp4 -c copy -t 00:00:59.0 robertmosesplaza-top-b.mp4
+// scale to 960 * 742
+ffmpeg -i robertmosesplaza-top-b.mp4 -vf scale=960:742 robertmosesplaza-top-c.mp4
+// extract frame op 0:11 = 11 * 25 = 275 as an image
+ffmpeg -i robertmosesplaza-top-c.mp4 -vf "select=eq(n\,274)" -vframes 1 robertmosesplaza-top-c_frame_275.png
+// perspective correction filter
+ffmpeg -hide_banner -i robertmosesplaza-top-c.mp4 -lavfi "perspective=x0=0:y0=21:x1=960:y1=0:x2=-70:y2=742:x3=1052:y3=728:interpolation=linear" robertmosesplaza-top-d.mp4
+// extract frame op 0:11 = 11 * 25 = 275 as an image
+ffmpeg -i robertmosesplaza-top-d.mp4 -vf "select=eq(n\,274)" -vframes 1 robertmosesplaza-top-d_frame_275.png
+
+// convert to png sequence
+ffmpeg -i robertmosesplaza-top-d.mp4 '/Volumes/Samsung_X5/robertmosesplaza-top/frames/frame_%05d.png'
+// scale to 25%, 960 * 0.25 = 240 * 186 (hoogte afgerond)
+ffmpeg -i robertmosesplaza-top-d.mp4 -vf scale=240:186 robertmosesplaza-top-d_preview.mp4
+// convert preview to png sequence
+ffmpeg -i robertmosesplaza-top-d_preview.mp4 '/Volumes/Samsung_X5/robertmosesplaza-top/frames_preview/frame_%05d.png'
 ```

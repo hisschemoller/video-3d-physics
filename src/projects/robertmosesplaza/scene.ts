@@ -49,8 +49,8 @@ export default class Scene extends MainScene {
     const isPreview = true && !this.scene.userData.isCapture;
 
     // CAMERA & ORBIT_CONTROLS
-    this.cameraTarget.set(0, 0, 0);
-    this.pCamera.position.set(0, 0, 13.3);
+    this.cameraTarget.set(0, 2.8, 0);
+    this.pCamera.position.set(0, 0, 12);
     this.pCamera.lookAt(this.cameraTarget);
     this.pCamera.updateProjectionMatrix();
     this.orbitControls.target = this.cameraTarget;
@@ -72,6 +72,15 @@ export default class Scene extends MainScene {
           ? '../assets/projects/robertmosesplaza/frames_preview/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/robertmosesplaza/frames/&img=frame_#FRAME#.png',
       },
+      top: {
+        fps: 25,
+        height: 742,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 960,
+        imgSrcPath: isPreview
+          ? '../assets/projects/robertmosesplaza/frames-top_preview/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/robertmosesplaza-top/frames/&img=frame_#FRAME#.png',
+      },
     };
 
     const projectSettings: ProjectSettings = {
@@ -86,9 +95,8 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-    const toVP3d = this.toVP3d.bind(this);
     const group = createTweenGroup(projectSettings); // GROUP
-    group.setStaticPosition(getMatrix4({ x: toVP3d(0), y: toVP3d(0, false), rx: 0, sx: 1, sy: 1 }));
+    group.setStaticPosition(getMatrix4({ x: -8.4, y: 9.45, rx: 0.227, sx: 1.05, sy: 1.05 }));
 
     await this.createBackgroundActors(projectSettings, videos, group.getMesh());
 
