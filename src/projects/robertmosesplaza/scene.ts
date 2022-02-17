@@ -57,6 +57,9 @@ export default class Scene extends MainScene {
     this.orbitControls.update();
     this.orbitControls.saveState();
 
+    this.directionalLight.position.set(12, 12, 12);
+    this.directionalLight.intensity = 1.9;
+
     // TWEENS
     this.timeline = createTimeline({
       duration: PATTERN_DURATION,
@@ -99,6 +102,7 @@ export default class Scene extends MainScene {
     group.setStaticPosition(getMatrix4({ x: -8.4, y: 9.45, rx: 0.227, sx: 1.05, sy: 1.05 }));
 
     await this.createBackgroundActors(projectSettings, videos, group.getMesh());
+    await this.createGroundActors(projectSettings, videos, group.getMesh());
 
     this.postCreate();
   }
@@ -117,15 +121,14 @@ export default class Scene extends MainScene {
     group: THREE.Group,
   ) {
     const to3d = this.to3d.bind(this);
-    const toVP3d = this.toVP3d.bind(this);
 
     const S = STEP_DURATION;
     const y = to3d(-860);
 
     { // BACKGROUND
       const actor = await createActor(projectSettings, videos.main, {
-        box: { w: this.width3d, h: this.height3d, d: 0.02 },
-        imageRect: { w: this.width, h: this.height },
+        box: { w: this.width3d, h: to3d(1160), d: 0.02 },
+        imageRect: { w: this.width, h: 1160 },
       });
       actor.setStaticPosition(getMatrix4({ }));
       actor.addTween(tweenData);
@@ -184,6 +187,65 @@ export default class Scene extends MainScene {
       actor.setStaticPosition(getMatrix4({ x: to3d(0), y, z: 0.02 }));
       actor.addTween({ delay: S * 0, duration: S * 16, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone(), videoStart: 30 });
       actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
+    }
+  }
+
+  /**
+   * createBackgroundActors
+   */
+  async createGroundActors(
+    projectSettings: ProjectSettings,
+    videos: { [key: string]: VideoData },
+    group: THREE.Group,
+  ) {
+    const to3d = this.to3d.bind(this);
+
+    { // RIGHT FRONT
+      const imagePos = new THREE.Vector2(172, 398);
+      const actor = await createActor(projectSettings, videos.top, {
+        box: { w: 8, h: 4, d: 0.01 },
+        imageRect: { w: 311, h: 266 },
+      });
+      actor.setStaticPosition(getMatrix4({ x: 8, y: -10.3, z: 2, rx: Math.PI * -0.55 }));
+      actor.addTween({ ...tweenData, videoStart: 41, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
+      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
+    }
+
+    { // LEFT FRONT
+      const imagePos = new THREE.Vector2(172, 398);
+      const actor = await createActor(projectSettings, videos.top, {
+        box: { w: 8, h: 4, d: 0.01 },
+        imageRect: { w: 311, h: 266 },
+      });
+      actor.setStaticPosition(getMatrix4({ x: 0.1, y: -10.3, z: 2, rx: Math.PI * -0.55 }));
+      actor.addTween({ ...tweenData, videoStart: 42, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
+      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
+    }
+
+    { // RIGHT 2
+      const imagePos = new THREE.Vector2(172, 398);
+      const actor = await createActor(projectSettings, videos.top, {
+        box: { w: 9, h: 5, d: 0.01 },
+        imageRect: { w: 311, h: 266 },
+      });
+      actor.setStaticPosition(getMatrix4({ x: 7.9, y: -11.12, z: -3, rx: Math.PI * -0.55 }));
+      actor.addTween({ ...tweenData, videoStart: 44, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
+      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
+    }
+
+    { // LEFT 2
+      const imagePos = new THREE.Vector2(172, 398);
+      const actor = await createActor(projectSettings, videos.top, {
+        box: { w: 9, h: 5, d: 0.01 },
+        imageRect: { w: 311, h: 266 },
+      });
+      actor.setStaticPosition(getMatrix4({ x: -0.8, y: -11.12, z: -3, rx: Math.PI * -0.55 }));
+      actor.addTween({ ...tweenData, videoStart: 47, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
       actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
     }

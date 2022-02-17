@@ -26,7 +26,7 @@ export function createRectangle(
     const materials = [
       new THREE.MeshPhongMaterial({
         color: BASE_COLOR,
-        opacity: 0,
+        opacity: 1,
         transparent: true,
         side: THREE.FrontSide,
       }),
@@ -64,13 +64,13 @@ export function createSVG(
               new THREE.MeshPhongMaterial({
                 color: BASE_COLOR,
                 opacity: 0,
-                transparent: true,
+                transparent: false,
                 side: THREE.BackSide,
               }),
               new THREE.MeshPhongMaterial({
                 map: texture,
                 opacity: 1,
-                transparent: true,
+                transparent: false,
                 side: THREE.BackSide,
               }),
             ];
