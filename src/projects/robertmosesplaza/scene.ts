@@ -57,8 +57,10 @@ export default class Scene extends MainScene {
     this.orbitControls.update();
     this.orbitControls.saveState();
 
+    this.ambientLight.intensity = 0.55;
+
     this.directionalLight.position.set(12, 12, 12);
-    this.directionalLight.intensity = 1.9;
+    this.directionalLight.intensity = 1.2;
 
     // TWEENS
     this.timeline = createTimeline({
@@ -103,6 +105,7 @@ export default class Scene extends MainScene {
 
     await this.createBackgroundActors(projectSettings, videos, group.getMesh());
     await this.createGroundActors(projectSettings, videos, group.getMesh());
+    await this.createActors(projectSettings, videos, group.getMesh());
 
     this.postCreate();
   }
@@ -203,14 +206,13 @@ export default class Scene extends MainScene {
     const to3d = this.to3d.bind(this);
 
     { // RIGHT FRONT
-      const imagePos = new THREE.Vector2(172, 398);
+      const imagePos = new THREE.Vector2(482, 398);
       const actor = await createActor(projectSettings, videos.top, {
         box: { w: 8, h: 4, d: 0.01 },
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: 8, y: -10.3, z: 2, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenData, videoStart: 41, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
-      actor.getMesh().receiveShadow = false;
+      actor.addTween({ ...tweenData, videoStart: 40, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
       group.add(actor.getMesh());
     }
 
@@ -222,19 +224,17 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: 0.1, y: -10.3, z: 2, rx: Math.PI * -0.55 }));
       actor.addTween({ ...tweenData, videoStart: 42, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
-      actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
     }
 
     { // RIGHT 2
-      const imagePos = new THREE.Vector2(172, 398);
+      const imagePos = new THREE.Vector2(178, 114);
       const actor = await createActor(projectSettings, videos.top, {
         box: { w: 9, h: 5, d: 0.01 },
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: 7.9, y: -11.12, z: -3, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenData, videoStart: 44, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
-      actor.getMesh().receiveShadow = false;
+      actor.addTween({ ...tweenData, videoStart: 3, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
       group.add(actor.getMesh());
     }
 
@@ -246,19 +246,17 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: 16.4, y: -11.12, z: -3, rx: Math.PI * -0.55 }));
       actor.addTween({ ...tweenData, videoStart: 44, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
-      actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
     }
 
     { // LEFT 2
-      const imagePos = new THREE.Vector2(172, 398);
+      const imagePos = new THREE.Vector2(476, 398);
       const actor = await createActor(projectSettings, videos.top, {
         box: { w: 9, h: 5, d: 0.01 },
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: -0.8, y: -11.12, z: -3, rx: Math.PI * -0.55 }));
       actor.addTween({ ...tweenData, videoStart: 47, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
-      actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
     }
 
@@ -270,19 +268,17 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: -9.3, y: -11.12, z: -3, rx: Math.PI * -0.55 }));
       actor.addTween({ ...tweenData, videoStart: 47, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
-      actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
     }
 
     { // RIGHT 3
-      const imagePos = new THREE.Vector2(172, 398);
+      const imagePos = new THREE.Vector2(482, 398);
       const actor = await createActor(projectSettings, videos.top, {
         box: { w: 9, h: 5, d: 0.01 },
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: 7.95, y: -11.95, z: -8, rx: Math.PI * -0.55 }));
       actor.addTween({ ...tweenData, videoStart: 44, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
-      actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
     }
 
@@ -294,19 +290,17 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: -0.8, y: -11.95, z: -8, rx: Math.PI * -0.55 }));
       actor.addTween({ ...tweenData, videoStart: 47, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
-      actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
     }
 
     { // LEFT LEFT 3
-      const imagePos = new THREE.Vector2(172, 398);
+      const imagePos = new THREE.Vector2(174, 110);
       const actor = await createActor(projectSettings, videos.top, {
         box: { w: 9, h: 5, d: 0.01 },
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: -9.3, y: -11.95, z: -8, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenData, videoStart: 47, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
-      actor.getMesh().receiveShadow = false;
+      actor.addTween({ ...tweenData, videoStart: 3, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
       group.add(actor.getMesh());
     }
 
@@ -318,7 +312,35 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: 16.4, y: -11.95, z: -8, rx: Math.PI * -0.55 }));
       actor.addTween({ ...tweenData, videoStart: 44, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
-      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
+    }
+  }
+
+  /**
+   * createBackgroundActors
+   */
+  async createActors(
+    projectSettings: ProjectSettings,
+    videos: { [key: string]: VideoData },
+    group: THREE.Group,
+  ) {
+    const to3d = this.to3d.bind(this);
+
+    const SVG_SCALE = this.width3d / this.width;
+    const S = STEP_DURATION;
+    const ease = 'sineInOut';
+
+    { // CIRCLE
+      const mm1 = getMatrix4({ x: to3d(927), y: to3d(-750), z: 0.5 });
+      const mm2 = getMatrix4({ x: to3d(500), y: to3d(-750), z: 4 });
+      const p1 = new THREE.Vector2(927, 750 + 100);
+      const p2 = new THREE.Vector2(500, 750 + 100);
+      const actor = await createActor(projectSettings, videos.main, {
+        imageRect: { w: 400, h: 400 },
+        svg: { depth: 0.1, scale: SVG_SCALE * 4, url: '../assets/projects/robertmosesplaza/circle.svg' },
+      });
+      actor.addTween({ delay: S * 0, duration: S * 8, videoStart: 25, ease, fromMatrix4: mm1, toMatrix4: mm2, fromImagePosition: p1.clone(), toImagePosition: p2.clone() });
+      actor.addTween({ delay: S * 8, duration: S * 8, videoStart: 25 + (S * 8), ease, fromMatrix4: mm2, toMatrix4: mm1, fromImagePosition: p2.clone(), toImagePosition: p1.clone() });
       group.add(actor.getMesh());
     }
   }
