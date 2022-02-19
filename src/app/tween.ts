@@ -24,7 +24,7 @@ interface TweenParams {
   easeAmount?: number;
   onComplete?: () => void | undefined;
   onStart?: () => void | undefined;
-  onUpdate?: (progress: number) => (Promise<void> | void) | undefined;
+  onUpdate?: (progress: number, percentage: number) => (Promise<void> | void) | undefined;
 }
 
 /**
@@ -83,8 +83,9 @@ export default function createTween({
     }
     if (onUpdate && isActive) {
       currentPosition += delta;
-      const progress = easeFunction((currentPosition - startPosition) / duration);
-      result = onUpdate(progress);
+      const percentage = (currentPosition - startPosition) / duration;
+      const progress = easeFunction(percentage);
+      result = onUpdate(progress, percentage);
     }
     return result;
   };

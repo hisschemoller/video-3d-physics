@@ -152,14 +152,14 @@ export async function createActor(
       onStart: () => {
         mesh.visible = true;
       },
-      onUpdate: async (progress: number) => {
+      onUpdate: async (progress: number, percentage: number) => {
         if (startPosition && endPosition && startQuaternion && endQuaternion && startScale && endScale) {
           mesh.position.lerpVectors(startPosition, endPosition, progress);
           mesh.quaternion.slerpQuaternions(startQuaternion, endQuaternion, progress);
           mesh.scale.lerpVectors(startScale, endScale, progress);
         }
         if (videoFrameTween) {
-          await videoFrameTween.loadVideoFrame(progress);
+          await videoFrameTween.loadVideoFrame(percentage);
         }
         if (imagePositionTween) {
           imagePositionTween.tweenPosition(progress);
@@ -167,8 +167,8 @@ export async function createActor(
         texture.needsUpdate = true;
       },
       onComplete: () => {
-        // FIXME: removed only for Prins Hendrikkade
-        // group.visible = false;
+        // FIXME: removed for Prins Hendrikkade
+        // mesh.visible = false;
       },
     });
     timeline.add(tween);
