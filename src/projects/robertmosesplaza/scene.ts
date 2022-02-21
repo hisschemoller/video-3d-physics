@@ -9,15 +9,15 @@ import { createActor, createTweenGroup } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 103;
-const STEPS = 16;
+const STEPS = 32;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
-const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
+const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT * 2;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
 
 const tweenData = {
   delay: 0,
-  duration: PATTERN_DURATION,
+  duration: SECONDS_PER_BEAT * 4,
   videoStart: 0,
   fromImagePosition: new THREE.Vector2(0, 0),
   toImagePosition: new THREE.Vector2(0, 0),
@@ -128,13 +128,26 @@ export default class Scene extends MainScene {
     const S = STEP_DURATION;
     const y = to3d(-860);
 
+    const tweenConfig = (
+      videoStart: number,
+      imagePos: THREE.Vector2,
+      delay: number,
+      duration: number,
+    ) => ({
+      videoStart,
+      delay: STEP_DURATION * delay,
+      duration: STEP_DURATION * duration,
+      fromImagePosition: imagePos.clone(),
+      toImagePosition: imagePos.clone(),
+    });
+
     { // BACKGROUND
       const actor = await createActor(projectSettings, videos.main, {
         box: { w: this.width3d, h: to3d(1160), d: 0.02 },
         imageRect: { w: this.width, h: 1160 },
       });
       actor.setStaticPosition(getMatrix4({ }));
-      actor.addTween(tweenData);
+      actor.addTween({ ...tweenConfig(2, new THREE.Vector2(0, 0), 0, 32) });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
@@ -147,8 +160,10 @@ export default class Scene extends MainScene {
         imageRect: { w: 480, h: 320 },
       });
       actor.setStaticPosition(getMatrix4({ x: to3d(1426), y, z: 0.01 }));
-      actor.addTween({ delay: S * 0, duration: S * 8, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone(), videoStart: 2 });
-      actor.addTween({ delay: S * 8, duration: S * 8, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone(), videoStart: 2 });
+      actor.addTween({ ...tweenConfig(2, imagePos, 0, 8) });
+      actor.addTween({ ...tweenConfig(2, imagePos, 8, 8) });
+      actor.addTween({ ...tweenConfig(2, imagePos, 16, 8) });
+      actor.addTween({ ...tweenConfig(2, imagePos, 24, 8) });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
@@ -161,8 +176,10 @@ export default class Scene extends MainScene {
         imageRect: { w: 520, h: 320 },
       });
       actor.setStaticPosition(getMatrix4({ x: to3d(940), y, z: 0.02 }));
-      actor.addTween({ delay: S * 0, duration: S * 8, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone(), videoStart: 30 });
-      actor.addTween({ delay: S * 8, duration: S * 8, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone(), videoStart: 30 });
+      actor.addTween({ ...tweenConfig(30, imagePos, 0, 8) });
+      actor.addTween({ ...tweenConfig(30, imagePos, 8, 8) });
+      actor.addTween({ ...tweenConfig(30, imagePos, 16, 8) });
+      actor.addTween({ ...tweenConfig(30, imagePos, 24, 8) });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
@@ -175,7 +192,8 @@ export default class Scene extends MainScene {
         imageRect: { w: 630, h: 320 },
       });
       actor.setStaticPosition(getMatrix4({ x: to3d(330), y, z: 0.01 }));
-      actor.addTween({ delay: S * 0, duration: S * 16, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone(), videoStart: 18 });
+      actor.addTween({ ...tweenConfig(18, imagePos, 0, 16) });
+      actor.addTween({ ...tweenConfig(18, imagePos, 16, 16) });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
@@ -188,7 +206,8 @@ export default class Scene extends MainScene {
         imageRect: { w: 340, h: 320 },
       });
       actor.setStaticPosition(getMatrix4({ x: to3d(0), y: y + 0.02, z: 0.02 }));
-      actor.addTween({ delay: S * 0, duration: S * 16, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone(), videoStart: 30 });
+      actor.addTween({ ...tweenConfig(30, imagePos, 0, 16) });
+      actor.addTween({ ...tweenConfig(30, imagePos, 16, 16) });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
@@ -205,6 +224,19 @@ export default class Scene extends MainScene {
   ) {
     const to3d = this.to3d.bind(this);
 
+    const tweenConfig = (
+      videoStart: number,
+      imagePos: THREE.Vector2,
+      delay: number,
+      duration: number,
+    ) => ({
+      videoStart,
+      delay: STEP_DURATION * delay,
+      duration: STEP_DURATION * duration,
+      fromImagePosition: imagePos.clone(),
+      toImagePosition: imagePos.clone(),
+    });
+
     { // RIGHT FRONT
       const imagePos = new THREE.Vector2(482, 398);
       const actor = await createActor(projectSettings, videos.top, {
@@ -212,7 +244,8 @@ export default class Scene extends MainScene {
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: 8, y: -10.3, z: 2, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenData, videoStart: 40, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
+      actor.addTween({ ...tweenConfig(40, imagePos, 0, 16) });
+      actor.addTween({ ...tweenConfig(40, imagePos, 16, 16) });
       group.add(actor.getMesh());
     }
 
@@ -223,7 +256,8 @@ export default class Scene extends MainScene {
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: 0.1, y: -10.3, z: 2, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenData, videoStart: 42, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
+      actor.addTween({ ...tweenConfig(42, imagePos, 0, 16) });
+      actor.addTween({ ...tweenConfig(42, imagePos, 16, 16) });
       group.add(actor.getMesh());
     }
 
@@ -234,7 +268,8 @@ export default class Scene extends MainScene {
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: 7.9, y: -11.12, z: -3, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenData, videoStart: 3, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
+      actor.addTween({ ...tweenConfig(3, imagePos, 0, 16) });
+      actor.addTween({ ...tweenConfig(3, imagePos, 16, 16) });
       group.add(actor.getMesh());
     }
 
@@ -245,7 +280,8 @@ export default class Scene extends MainScene {
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: 16.4, y: -11.12, z: -3, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenData, videoStart: 44, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
+      actor.addTween({ ...tweenConfig(44, imagePos, 0, 16) });
+      actor.addTween({ ...tweenConfig(44, imagePos, 16, 16) });
       group.add(actor.getMesh());
     }
 
@@ -256,7 +292,8 @@ export default class Scene extends MainScene {
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: -0.8, y: -11.12, z: -3, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenData, videoStart: 47, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
+      actor.addTween({ ...tweenConfig(47, imagePos, 0, 16) });
+      actor.addTween({ ...tweenConfig(47, imagePos, 16, 16) });
       group.add(actor.getMesh());
     }
 
@@ -267,7 +304,8 @@ export default class Scene extends MainScene {
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: -9.3, y: -11.12, z: -3, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenData, videoStart: 47, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
+      actor.addTween({ ...tweenConfig(47, imagePos, 0, 16) });
+      actor.addTween({ ...tweenConfig(47, imagePos, 16, 16) });
       group.add(actor.getMesh());
     }
 
@@ -278,7 +316,8 @@ export default class Scene extends MainScene {
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: 7.95, y: -11.95, z: -8, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenData, videoStart: 44, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
+      actor.addTween({ ...tweenConfig(44, imagePos, 0, 16) });
+      actor.addTween({ ...tweenConfig(44, imagePos, 16, 16) });
       group.add(actor.getMesh());
     }
 
@@ -289,7 +328,8 @@ export default class Scene extends MainScene {
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: -0.8, y: -11.95, z: -8, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenData, videoStart: 47, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
+      actor.addTween({ ...tweenConfig(47, imagePos, 0, 16) });
+      actor.addTween({ ...tweenConfig(47, imagePos, 16, 16) });
       group.add(actor.getMesh());
     }
 
@@ -300,7 +340,8 @@ export default class Scene extends MainScene {
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: -9.3, y: -11.95, z: -8, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenData, videoStart: 3, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
+      actor.addTween({ ...tweenConfig(3, imagePos, 0, 16) });
+      actor.addTween({ ...tweenConfig(3, imagePos, 16, 16) });
       group.add(actor.getMesh());
     }
 
@@ -311,7 +352,8 @@ export default class Scene extends MainScene {
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: 16.4, y: -11.95, z: -8, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenData, videoStart: 44, fromImagePosition: imagePos.clone(), toImagePosition: imagePos.clone() });
+      actor.addTween({ ...tweenConfig(44, imagePos, 0, 16) });
+      actor.addTween({ ...tweenConfig(44, imagePos, 16, 16) });
       group.add(actor.getMesh());
     }
   }
@@ -330,17 +372,36 @@ export default class Scene extends MainScene {
     const S = STEP_DURATION;
     const ease = 'sineInOut';
 
+    const tweenConfig = (
+      m4From: THREE.Matrix4,
+      m4To: THREE.Matrix4,
+      imgFrom: THREE.Vector2,
+      imgTo: THREE.Vector2,
+      delay: number,
+      duration: number,
+    ) => ({
+      delay: S * delay,
+      duration: S * duration,
+      fromMatrix4: m4From,
+      toMatrix4: m4To,
+      fromImagePosition: imgFrom.clone(),
+      toImagePosition: imgTo.clone(),
+    });
+
     { // CIRCLE
       const mm1 = getMatrix4({ x: to3d(927), y: to3d(-750), z: 0.5 });
-      const mm2 = getMatrix4({ x: to3d(500), y: to3d(-750), z: 4 });
+      const mm2 = getMatrix4({ x: to3d(400), y: to3d(-750), z: 4 });
+      const mm3 = getMatrix4({ x: to3d(1200), y: to3d(-750), z: 3 });
       const p1 = new THREE.Vector2(927, 750 + 100);
-      const p2 = new THREE.Vector2(500, 750 + 100);
+      const p2 = new THREE.Vector2(400, 750 + 100);
+      const p3 = new THREE.Vector2(1200, 750 + 100);
       const actor = await createActor(projectSettings, videos.main, {
         imageRect: { w: 400, h: 400 },
         svg: { depth: 0.1, scale: SVG_SCALE * 4, url: '../assets/projects/robertmosesplaza/circle.svg' },
       });
-      actor.addTween({ delay: S * 0, duration: S * 8, videoStart: 25, ease, fromMatrix4: mm1, toMatrix4: mm2, fromImagePosition: p1.clone(), toImagePosition: p2.clone() });
-      actor.addTween({ delay: S * 8, duration: S * 8, videoStart: 25 + (S * 8), ease, fromMatrix4: mm2, toMatrix4: mm1, fromImagePosition: p2.clone(), toImagePosition: p1.clone() });
+      actor.addTween({ ...tweenConfig(mm1, mm2, p1, p2, 0, 10), videoStart: 25, ease });
+      actor.addTween({ ...tweenConfig(mm2, mm3, p2, p3, 10, 10), videoStart: 25 + (S * 10), ease });
+      actor.addTween({ ...tweenConfig(mm3, mm1, p3, p1, 20, 12), videoStart: 25 + (S * 20), ease });
       group.add(actor.getMesh());
     }
   }
