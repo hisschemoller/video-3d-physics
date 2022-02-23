@@ -398,24 +398,7 @@ export default class Scene extends MainScene {
       toImagePosition: imgTo.clone(),
     });
 
-    // { // CIRCLE 1
-    //   const mm1 = getMatrix4({ x: to3d(927), y: to3d(-750), z: 0.5 });
-    //   const mm2 = getMatrix4({ x: to3d(400), y: to3d(-750), z: 4 });
-    //   const mm3 = getMatrix4({ x: to3d(1200), y: to3d(-550), z: 3 });
-    //   const p1 = new THREE.Vector2(927, 750 + 100);
-    //   const p2 = new THREE.Vector2(400, 750 + 100);
-    //   const p3 = new THREE.Vector2(1200, 550 + 100);
-    //   const actor = await createActor(projectSettings, videos.main, {
-    //     imageRect: { w: 100 * 3, h: 100 * 3 },
-    //     svg: { depth: 0.1, scale: SVG_SCALE * 3, url: '../assets/projects/robertmosesplaza/circle.svg' },
-    //   });
-    //   actor.addTween({ ...tweenConfig(mm1, mm2, p1, p2, 0, 10), videoStart: V + (S * 0), ease });
-    //   actor.addTween({ ...tweenConfig(mm2, mm3, p2, p3, 10, 10), videoStart: V + (S * 10), ease });
-    //   actor.addTween({ ...tweenConfig(mm3, mm1, p3, p1, 20, 12), videoStart: V + (S * 20), ease });
-    //   group.add(actor.getMesh());
-    // }
-
-    { // CIRCLE 2
+    { // CIRCLE 1
       const mm1 = getMatrix4({ x: to3d(600), y: to3d(-750), z: 0.5 });
       const mm2 = getMatrix4({ x: to3d(400), y: to3d(-750), z: 4 });
       const mm3 = getMatrix4({ x: to3d(1200), y: to3d(-750), z: 3 });
@@ -429,6 +412,40 @@ export default class Scene extends MainScene {
       actor.addTween({ ...tweenConfig(mm1, mm2, p1, p2, 0, 16), videoStart: V + (S * 0), ease });
       actor.addTween({ ...tweenConfig(mm2, mm3, p2, p3, 16, 16), videoStart: V + (S * 16), ease });
       actor.addTween({ ...tweenConfig(mm3, mm1, p3, p1, 32, 16), videoStart: V + (S * 32), ease });
+      group.add(actor.getMesh());
+    }
+
+    { // CIRCLE 2
+      const mm1 = getMatrix4({ x: to3d(600), y: to3d(-750), z: 5 });
+      const mm2 = getMatrix4({ x: to3d(200), y: to3d(-750), z: 0.5 });
+      const mm3 = getMatrix4({ x: to3d(1200), y: to3d(-800), z: 5 });
+      const p1 = new THREE.Vector2(600, 750 + 100);
+      const p2 = new THREE.Vector2(200, 750 + 100);
+      const p3 = new THREE.Vector2(1200, 800 + 100);
+      const actor = await createActor(projectSettings, videos.main, {
+        imageRect: { w: 100 * 3, h: 100 * 3 },
+        svg: { depth: 0.1, scale: SVG_SCALE * 3, url: '../assets/projects/robertmosesplaza/circle.svg' },
+      });
+      actor.addTween({ ...tweenConfig(mm2, mm3, p2, p3, 7, 17), videoStart: V + (S * 7), ease });
+      actor.addTween({ ...tweenConfig(mm3, mm1, p3, p1, 24, 14), videoStart: V + (S * 24), ease });
+      actor.addTween({ ...tweenConfig(mm1, mm2, p1, p2, 38, 17), videoStart: V + (S * 38), ease });
+      group.add(actor.getMesh());
+    }
+
+    { // CIRCLE 3
+      const mm1 = getMatrix4({ x: to3d(1150), y: to3d(-750), z: 5 });
+      const mm2 = getMatrix4({ x: to3d(1000), y: to3d(-750), z: 0.5 });
+      const mm3 = getMatrix4({ x: to3d(300), y: to3d(-750), z: 1.5 });
+      const p1 = new THREE.Vector2(1150, 750 + 100);
+      const p2 = new THREE.Vector2(1000, 750 + 100);
+      const p3 = new THREE.Vector2(300, 750 + 100);
+      const actor = await createActor(projectSettings, videos.main, {
+        imageRect: { w: 100 * 4, h: 100 * 4 },
+        svg: { depth: 0.1, scale: SVG_SCALE * 4, url: '../assets/projects/robertmosesplaza/circle.svg' },
+      });
+      actor.addTween({ ...tweenConfig(mm1, mm2, p1, p2, 7, 14), videoStart: V + (S * 7), ease });
+      actor.addTween({ ...tweenConfig(mm2, mm3, p2, p3, 21, 14), videoStart: V + (S * 21), ease });
+      actor.addTween({ ...tweenConfig(mm3, mm1, p3, p1, 35, 20), videoStart: V + (S * 35), ease });
       group.add(actor.getMesh());
     }
   }
