@@ -66,4 +66,18 @@ ffmpeg -i robertmosesplaza-top-d.mp4 '/Volumes/Samsung_X5/robertmosesplaza-top/f
 ffmpeg -i robertmosesplaza-top-d.mp4 -vf scale=240:186 robertmosesplaza-top-d_preview.mp4
 // convert preview to png sequence
 ffmpeg -i robertmosesplaza-top-d_preview.mp4 '/Volumes/Samsung_X5/robertmosesplaza-top/frames_preview/frame_%05d.png'
+
+// png to mp4 (from index 430) met 25 FPS
+ffmpeg -framerate 25 -start_number 430 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p robertmosesplaza-video-x1.mp4
+// repeat 32 times, 212 frames, video alleen
+ffmpeg -i robertmosesplaza-video-x1.mp4 -filter_complex "loop=loop=32:size=212:start=0" robertmosesplaza-video-x32.mp4
+
+
+ffmpeg -i "Babette Mangolte, Lucinda Childs - Calico Mingling, 1973.m4v" -vn -acodec pcm_s16le -ar 44100 -ac 2 robertmosesplaza-sound.wav
 ```
+
+Video duurt 212 frames.
+Video duurt 212 / 25 FPS = 8.48 seconden.
+Video duurt 4 maten van 4 beats = 16 beats.
+Een beat duurt 8.48 / 16 = 0.53 seconden.
+Het tempo is 60 / 0.53 = 113.20754716981132 BPM

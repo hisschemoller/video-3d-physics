@@ -32,7 +32,7 @@ export default class Scene extends MainScene {
     this.fps = 12.5;
     this.captureFps = 25;
     this.captureThrottle = 10;
-    this.captureDuration = PATTERN_DURATION * 2;
+    this.captureDuration = PATTERN_DURATION * 3;
   }
 
   async create() {
@@ -53,6 +53,7 @@ export default class Scene extends MainScene {
 
     this.directionalLight.position.set(12, 12, 12);
     this.directionalLight.intensity = 1.2;
+    this.directionalLight.color.setHSL(0.1, 0.5, 0.95);
 
     // TWEENS
     this.timeline = createTimeline({
@@ -117,7 +118,6 @@ export default class Scene extends MainScene {
   ) {
     const to3d = this.to3d.bind(this);
 
-    const S = STEP_DURATION;
     const y = to3d(-860);
 
     const tweenConfig = (
@@ -243,7 +243,7 @@ export default class Scene extends MainScene {
         imageRect: { w: 311, h: 266 },
       });
       actor.setStaticPosition(getMatrix4({ x: 8, y: -10.3, z: 2, rx: Math.PI * -0.55 }));
-      actor.addTween({ ...tweenConfig(40, imagePos, 0, 16) });
+      actor.addTween({ ...tweenConfig(40, imagePos, to3d(0), 16) });
       actor.addTween({ ...tweenConfig(40, imagePos, 16, 16) });
       actor.addTween({ ...tweenConfig(40, imagePos, 32, 16) });
       group.add(actor.getMesh());
