@@ -73,11 +73,22 @@ ffmpeg -framerate 25 -start_number 430 -i rendered/frame_%05d.png -f mp4 -vcodec
 ffmpeg -i robertmosesplaza-video-x1.mp4 -filter_complex "loop=loop=32:size=212:start=0" robertmosesplaza-video-x32.mp4
 
 
+// extract audio
 ffmpeg -i "Babette Mangolte, Lucinda Childs - Calico Mingling, 1973.m4v" -vn -acodec pcm_s16le -ar 44100 -ac 2 robertmosesplaza-sound.wav
 ```
 
-Video duurt 212 frames.
-Video duurt 212 / 25 FPS = 8.48 seconden.
-Video duurt 4 maten van 4 beats = 16 beats.
-Een beat duurt 8.48 / 16 = 0.53 seconden.
+Video duurt 212 frames.<br>
+Video duurt 212 / 25 FPS = 8.48 seconden.<br>
+Video duurt 4 maten van 4 beats = 16 beats.<br>
+Een beat duurt 8.48 / 16 = 0.53 seconden.<br>
 Het tempo is 60 / 0.53 = 113.20754716981132 BPM
+
+Door per ongeluk de patroon lengte van 3 naar 4 maten (van 4 beats) te verhogen zonder de steps van
+48 in 64 te veranderen, draait de animatie te langzaam terwijl de video op normale snelheid 
+afspeelt. Daardoor kloppen de overgangen natuurlijk niet meer, maar toch is het geheel onbedoeld
+beter. Dus ik laat het zo. Maar het tempo veranderd er door. 
+
+Video duurt 48 steps.<br>
+Video duurt 48 / 4 = 12 beats.<br>
+Een beat duurt 8.48 / 12 = 0.706666666667 seconden.<br>
+Het tempo is 60 / 0.706666666667 = 84.9056603773 BPM

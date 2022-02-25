@@ -12,7 +12,7 @@ const BPM = 112.5;
 const STEPS = 48;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
-const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT * 3;
+const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT * 4;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
 
 export default class Scene extends MainScene {
