@@ -71,6 +71,10 @@ ffmpeg -i robertmosesplaza-top-d_preview.mp4 '/Volumes/Samsung_X5/robertmosespla
 ffmpeg -framerate 25 -start_number 430 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p robertmosesplaza-video-x1.mp4
 // repeat 32 times, 212 frames, video alleen
 ffmpeg -i robertmosesplaza-video-x1.mp4 -filter_complex "loop=loop=32:size=212:start=0" robertmosesplaza-video-x32.mp4
+// repeat 32, audio alleen
+ffmpeg -stream_loop 32 -i "robertmosesplaza-audio-x1.wav" -c copy robertmosesplaza-audio-x32.wav
+// video en audio samenvoegen
+ffmpeg -i robertmosesplaza-video-x32.mp4 -i robertmosesplaza-audio-x32.wav -vcodec copy robertmosesplaza-x32.mp4
 
 
 // extract audio
