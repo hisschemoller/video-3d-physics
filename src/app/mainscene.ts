@@ -51,6 +51,8 @@ export default class MainScene extends Scene3D {
 
   nextFramePosition = 0;
 
+  clearColor = 0xbbddff;
+
   constructor() {
     super({ key: 'MainScene' });
   }
@@ -71,7 +73,7 @@ export default class MainScene extends Scene3D {
     this.renderer.autoClear = true;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFShadowMap; // PCFSoftShadowMap
-    this.renderer.setClearColor(0xbbddff);
+    this.renderer.setClearColor(this.clearColor);
 
     // CAMERA
     this.pCamera = this.camera as THREE.PerspectiveCamera;
