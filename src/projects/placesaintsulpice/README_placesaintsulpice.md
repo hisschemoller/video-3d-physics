@@ -17,6 +17,8 @@ ffmpeg -i placestsulpice-1613-b.mov -vf "select=eq(n\,299)" -vframes 1 img_1613_
 ffmpeg -i placestsulpice-1613-b.mov -filter:v "crop=1920:700:0:0" placestsulpice-1613-c.mov
 // time slice 0:58 1:10 minuut
 ffmpeg -ss 00:00:58.0 -i placestsulpice-1613-c.mov -c copy -t 00:01:10.0 placestsulpice-1613-d.mov
+// extract frame from IMG_1613 op 0:10 = 10 * 30 = 300 as an image
+ffmpeg -i placestsulpice-1613-d.mov -vf "select=eq(n\,299)" -vframes 1 placestsulpice-1613-d_frame_299.png
 
 // convert to png sequence
 ffmpeg -i placestsulpice-1613-d.mov '/Volumes/Samsung_X5/placesaintsulpice-1613/frames/frame_%05d.png'
@@ -40,6 +42,8 @@ ffmpeg -i placestsulpice-1615-b.mov -vf "select=eq(n\,299)" -vframes 1 img_1615_
 ffmpeg -i placestsulpice-1615-b.mov -filter:v "crop=1920:730:0:0" placestsulpice-1615-c.mov
 // time slice 0:00 1:04 minuut
 ffmpeg -ss 00:00:00.0 -i placestsulpice-1615-c.mov -c copy -t 00:01:04.0 placestsulpice-1615-d.mov
+// extract frame from IMG_1613 op 0:10 = 10 * 30 = 300 as an image
+ffmpeg -i placestsulpice-1615-d.mov -vf "select=eq(n\,299)" -vframes 1 placestsulpice-1615-d_frame_299.png
 
 // convert to png sequence
 ffmpeg -i placestsulpice-1615-d.mov '/Volumes/Samsung_X5/placesaintsulpice-1615/frames/frame_%05d.png'
