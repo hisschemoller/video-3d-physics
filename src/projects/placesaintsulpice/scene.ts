@@ -122,8 +122,9 @@ export default class Scene extends MainScene {
   ) {
     const to3d = this.to3d.bind(this);
 
-    const L_SCALE = 1.55;
+    const L_SCALE = 1.51;
     const R_SCALE = 1.55;
+    const SVG_SCALE = this.width3d / this.width;
 
     { // ROOF LEFT
       const actor = await createActor(projectSettings, videos.right, {
@@ -146,7 +147,7 @@ export default class Scene extends MainScene {
         box: { w: to3d(400), h: to3d(700), d: 0.02 },
         imageRect: { w: 400, h: 700 },
       });
-      actor.setStaticPosition(getMatrix4({ x: 0, y: to3d(-80), z: 0, sx: L_SCALE, sy: L_SCALE }));
+      actor.setStaticPosition(getMatrix4({ x: 0, y: to3d(-80), z: 0, sx: R_SCALE, sy: R_SCALE }));
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION,
@@ -157,50 +158,50 @@ export default class Scene extends MainScene {
       group.add(actor.getMesh());
     }
 
-    { // BG LEFT MID
+    { // CORNER RIGHT 1615
       const actor = await createActor(projectSettings, videos.right, {
-        box: { w: to3d(255), h: to3d(690), d: 0.02 },
-        imageRect: { w: 255, h: 690 },
+        imageRect: { w: 298, h: 730 },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/corner-right-1615.svg' },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(500), y: to3d(-65), z: 0.01, sx: L_SCALE, sy: L_SCALE }));
+      actor.setStaticPosition(getMatrix4({ x: to3d(1475), z: 0, sx: R_SCALE, sy: R_SCALE }));
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION,
         videoStart: 50,
-        fromImagePosition: new THREE.Vector2(0, 40),
-        toImagePosition: new THREE.Vector2(0, 40),
+        fromImagePosition: new THREE.Vector2(1275, 0),
+        toImagePosition: new THREE.Vector2(1275, 0),
       });
       group.add(actor.getMesh());
     }
 
-    { // BG RIGHT MID
+    { // FRON RIGHT MID 1615
       const actor = await createActor(projectSettings, videos.right, {
-        box: { w: to3d(416), h: to3d(730), d: 0.02 },
-        imageRect: { w: 416, h: 730 },
+        imageRect: { w: 359, h: 730 },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/front-right-mid-1615.svg' },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(830), y: 0, z: 0, sx: R_SCALE, sy: R_SCALE }));
+      actor.setStaticPosition(getMatrix4({ x: to3d(920), z: 0, sx: R_SCALE, sy: R_SCALE }));
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION,
         videoStart: 50,
-        fromImagePosition: new THREE.Vector2(458, 0),
-        toImagePosition: new THREE.Vector2(458, 0),
+        fromImagePosition: new THREE.Vector2(513, 0),
+        toImagePosition: new THREE.Vector2(513, 0),
       });
       group.add(actor.getMesh());
     }
 
-    { // BG RIGHT
+    { // FRON LEFT 1613
       const actor = await createActor(projectSettings, videos.right, {
-        box: { w: to3d(286), h: to3d(730), d: 0.02 },
-        imageRect: { w: 286, h: 730 },
+        imageRect: { w: 406, h: 730 },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/front-left-1615.svg' },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(1475), y: 0, z: 0, sx: R_SCALE, sy: R_SCALE }));
+      actor.setStaticPosition(getMatrix4({ x: to3d(460), z: 0, sx: R_SCALE, sy: R_SCALE }));
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION,
         videoStart: 50,
-        fromImagePosition: new THREE.Vector2(1288, 0),
-        toImagePosition: new THREE.Vector2(1288, 0),
+        fromImagePosition: new THREE.Vector2(0, 0),
+        toImagePosition: new THREE.Vector2(0, 0),
       });
       group.add(actor.getMesh());
     }
