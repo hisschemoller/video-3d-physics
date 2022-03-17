@@ -122,38 +122,38 @@ export default class Scene extends MainScene {
   ) {
     const to3d = this.to3d.bind(this);
 
-    const L_SCALE = 1.51;
+    const L_SCALE = 1.55;
     const R_SCALE = 1.55;
     const SVG_SCALE = this.width3d / this.width;
 
-    { // ROOF LEFT
+    { // ROOF LEFT 1615
       const actor = await createActor(projectSettings, videos.right, {
-        box: { w: to3d(620), h: to3d(110), d: 0.02 },
-        imageRect: { w: 620, h: 110 },
+        imageRect: { w: 506, h: 77 },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/roof-left-1615.svg' },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(160), y: 0, z: -0.01, sx: R_SCALE, sy: R_SCALE }));
+      actor.setStaticPosition(getMatrix4({ x: to3d(160), z: -0.001, sx: R_SCALE, sy: R_SCALE }));
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION,
-        videoStart: 45,
+        videoStart: 50,
         fromImagePosition: new THREE.Vector2(0, 0),
         toImagePosition: new THREE.Vector2(0, 0),
       });
       group.add(actor.getMesh());
     }
 
-    { // BG LEFT
+    { // LEFT 1613
       const actor = await createActor(projectSettings, videos.left, {
-        box: { w: to3d(400), h: to3d(700), d: 0.02 },
-        imageRect: { w: 400, h: 700 },
+        imageRect: { w: 395, h: 700 },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/left-1613.svg' },
       });
-      actor.setStaticPosition(getMatrix4({ x: 0, y: to3d(-80), z: 0, sx: R_SCALE, sy: R_SCALE }));
+      actor.setStaticPosition(getMatrix4({ x: 0, y: to3d(-80), z: 0.001, sx: L_SCALE, sy: L_SCALE }));
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION,
-        videoStart: 45,
-        fromImagePosition: new THREE.Vector2(340, 0),
-        toImagePosition: new THREE.Vector2(340, 0),
+        videoStart: 62,
+        fromImagePosition: new THREE.Vector2(332, 0),
+        toImagePosition: new THREE.Vector2(332, 0),
       });
       group.add(actor.getMesh());
     }
@@ -190,7 +190,7 @@ export default class Scene extends MainScene {
       group.add(actor.getMesh());
     }
 
-    { // FRON LEFT 1613
+    { // FRONT LEFT 1615
       const actor = await createActor(projectSettings, videos.right, {
         imageRect: { w: 406, h: 730 },
         svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/front-left-1615.svg' },
