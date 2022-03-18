@@ -9,14 +9,15 @@ import { createActor, createTweenGroup } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 98;
-// const STEPS = 16;
+const STEPS = 16 * 2;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
-const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT;
-// const STEP_DURATION = PATTERN_DURATION / STEPS;
+const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT * 2;
+const STEP_DURATION = PATTERN_DURATION / STEPS;
 
 const L_SCALE = 1.55;
 const R_SCALE = 1.55;
+const ease = 'sineInOut';
 
 export default class Scene extends MainScene {
   timeline: Timeline;
@@ -268,17 +269,31 @@ export default class Scene extends MainScene {
     }
 
     { // PILLAR 5 6 1613
+      const p = new THREE.Vector2(873, 0);
       const actor = await createActor(projectSettings, videos.left, {
         imageRect: { w: 621, h: 700 },
-        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/pillar-8-9-1813.svg' },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/pillar-5-6-1813.svg' },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(100), y: to3d(-70), z: -1.5, sx: L_SCALE, sy: L_SCALE }));
+      // actor.setStaticPosition(getMatrix4({ x: to3d(100), y: to3d(-70), z: -1.5, sx: L_SCALE, sy: L_SCALE }));
       actor.addTween({
         delay: 0,
-        duration: PATTERN_DURATION,
+        duration: STEP_DURATION * 16,
         videoStart: 50,
-        fromImagePosition: new THREE.Vector2(873, 0),
-        toImagePosition: new THREE.Vector2(873, 0),
+        fromImagePosition: p.clone(),
+        toImagePosition: p.clone(),
+        fromMatrix4: getMatrix4({ x: to3d(100), y: to3d(-70), z: -1.5, sx: L_SCALE, sy: L_SCALE }),
+        toMatrix4: getMatrix4({ x: to3d(200), y: to3d(-70), z: -1.5, sx: L_SCALE, sy: L_SCALE }),
+        ease,
+      });
+      actor.addTween({
+        delay: STEP_DURATION * 16,
+        duration: STEP_DURATION * 16,
+        videoStart: 50,
+        fromImagePosition: p.clone(),
+        toImagePosition: p.clone(),
+        fromMatrix4: getMatrix4({ x: to3d(200), y: to3d(-70), z: -1.5, sx: L_SCALE, sy: L_SCALE }),
+        toMatrix4: getMatrix4({ x: to3d(100), y: to3d(-70), z: -1.5, sx: L_SCALE, sy: L_SCALE }),
+        ease,
       });
       group.add(actor.getMesh());
     }
