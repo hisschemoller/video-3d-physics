@@ -5,14 +5,14 @@ import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
-import { createActor, createTweenGroup } from './actor';
+import { Actor, createActor, createTweenGroup } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 98;
-const STEPS = 16 * 2;
+const STEPS = 16 * 3;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
-const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT * 2;
+const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT * 3;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
 
 const L_SCALE = 1.55;
@@ -108,6 +108,7 @@ export default class Scene extends MainScene {
 
     await this.createFrontActors(projectSettings, videos, group.getMesh());
     await this.createSecondRowActors(projectSettings, videos, group.getMesh());
+    await this.createThirdRowActors(projectSettings, videos, group.getMesh());
 
     this.postCreate();
   }
@@ -185,7 +186,7 @@ export default class Scene extends MainScene {
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION,
-        videoStart: 50,
+        videoStart: 52,
         fromImagePosition: new THREE.Vector2(513, 0),
         toImagePosition: new THREE.Vector2(513, 0),
       });
@@ -219,6 +220,39 @@ export default class Scene extends MainScene {
   ) {
     const to3d = this.to3d.bind(this);
     const SVG_SCALE = this.width3d / this.width;
+
+    const addPillarTweens = (
+      actor: Actor,
+      videoStart: number,
+      p: THREE.Vector2,
+      x1: number,
+      x2: number,
+      y: number,
+      z: number,
+      scale: number,
+      times: number[],
+    ) => {
+      actor.addTween({
+        delay: STEP_DURATION * times[0],
+        duration: STEP_DURATION * times[1],
+        videoStart,
+        fromImagePosition: p.clone(),
+        toImagePosition: p.clone(),
+        fromMatrix4: getMatrix4({ x: to3d(x1), y: to3d(y), z, sx: scale, sy: scale }),
+        toMatrix4: getMatrix4({ x: to3d(x2), y: to3d(y), z, sx: scale, sy: scale }),
+        ease,
+      });
+      actor.addTween({
+        delay: STEP_DURATION * (times[0] + times[1]),
+        duration: STEP_DURATION * times[2],
+        videoStart: videoStart + STEP_DURATION * times[1],
+        fromImagePosition: p.clone(),
+        toImagePosition: p.clone(),
+        fromMatrix4: getMatrix4({ x: to3d(x2), y: to3d(y), z, sx: scale, sy: scale }),
+        toMatrix4: getMatrix4({ x: to3d(x1), y: to3d(y), z, sx: scale, sy: scale }),
+        ease,
+      });
+    };
 
     { // PILLAR 4 1615
       const actor = await createActor(projectSettings, videos.right, {
@@ -257,44 +291,158 @@ export default class Scene extends MainScene {
         imageRect: { w: 502, h: 700 },
         svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/pillar-8-9-1813.svg' },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(720), y: to3d(-70), z: -1, sx: L_SCALE, sy: L_SCALE }));
-      actor.addTween({
-        delay: 0,
-        duration: PATTERN_DURATION,
-        videoStart: 50,
-        fromImagePosition: new THREE.Vector2(1418, 0),
-        toImagePosition: new THREE.Vector2(1418, 0),
-      });
+      addPillarTweens(
+        actor,
+        50,
+        new THREE.Vector2(1418, 0),
+        720,
+        720 + 70,
+        -70,
+        -1,
+        L_SCALE,
+        [14, 24, 24],
+      );
       group.add(actor.getMesh());
     }
 
     { // PILLAR 5 6 1613
-      const p = new THREE.Vector2(873, 0);
       const actor = await createActor(projectSettings, videos.left, {
         imageRect: { w: 621, h: 700 },
         svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/pillar-5-6-1813.svg' },
       });
-      // actor.setStaticPosition(getMatrix4({ x: to3d(100), y: to3d(-70), z: -1.5, sx: L_SCALE, sy: L_SCALE }));
+      addPillarTweens(
+        actor,
+        50,
+        new THREE.Vector2(873, 0),
+        100,
+        100 + 100,
+        -70,
+        -1.5,
+        L_SCALE,
+        [0, 24, 24],
+      );
+      group.add(actor.getMesh());
+    }
+
+    { // PILLAR 6 7 1613
+      const actor = await createActor(projectSettings, videos.left, {
+        imageRect: { w: 721, h: 700 },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/pillar-6-7-1813.svg' },
+      });
+      addPillarTweens(
+        actor,
+        50,
+        new THREE.Vector2(1108, 0),
+        300,
+        300 + 150,
+        -70,
+        -1.8,
+        L_SCALE,
+        [8, 24, 24],
+      );
+      group.add(actor.getMesh());
+    }
+
+    { // PILLAR 2 3 1615
+      const actor = await createActor(projectSettings, videos.right, {
+        imageRect: { w: 618, h: 730 },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/pillar-2-3-1815.svg' },
+      });
+      addPillarTweens(
+        actor,
+        30,
+        new THREE.Vector2(65, 0),
+        1050,
+        1050 + 150,
+        0,
+        -1.9,
+        R_SCALE,
+        [17, 20, 20],
+      );
+      group.add(actor.getMesh());
+    }
+
+    { // PILLAR 5 6 1615
+      const actor = await createActor(projectSettings, videos.right, {
+        imageRect: { w: 375, h: 730 },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/pillar-5-6-1815.svg' },
+      });
+      addPillarTweens(
+        actor,
+        40,
+        new THREE.Vector2(697, 0),
+        800,
+        800 + 100,
+        0,
+        -2.1,
+        R_SCALE,
+        [12, 16, 16],
+      );
+      group.add(actor.getMesh());
+    }
+  }
+
+  /**
+   * createSecondRowActors
+   */
+  async createThirdRowActors(
+    projectSettings: ProjectSettings,
+    videos: { [key: string]: VideoData },
+    group: THREE.Group,
+  ) {
+    const to3d = this.to3d.bind(this);
+    const SVG_SCALE = this.width3d / this.width;
+
+    const addPillarTweens = (
+      actor: Actor,
+      videoStart: number,
+      p: THREE.Vector2,
+      x1: number,
+      x2: number,
+      y: number,
+      z: number,
+      scale: number,
+      times: number[],
+    ) => {
+      actor.setStaticImage(p.x, p.y);
       actor.addTween({
-        delay: 0,
-        duration: STEP_DURATION * 16,
-        videoStart: 50,
-        fromImagePosition: p.clone(),
-        toImagePosition: p.clone(),
-        fromMatrix4: getMatrix4({ x: to3d(100), y: to3d(-70), z: -1.5, sx: L_SCALE, sy: L_SCALE }),
-        toMatrix4: getMatrix4({ x: to3d(200), y: to3d(-70), z: -1.5, sx: L_SCALE, sy: L_SCALE }),
+        delay: STEP_DURATION * times[0],
+        duration: STEP_DURATION * times[1],
+        videoStart,
+        fromMatrix4: getMatrix4({ x: to3d(x1), y: to3d(y), z, sx: scale, sy: scale }),
+        toMatrix4: getMatrix4({ x: to3d(x2), y: to3d(y), z, sx: scale, sy: scale }),
         ease,
       });
       actor.addTween({
-        delay: STEP_DURATION * 16,
-        duration: STEP_DURATION * 16,
-        videoStart: 50,
-        fromImagePosition: p.clone(),
-        toImagePosition: p.clone(),
-        fromMatrix4: getMatrix4({ x: to3d(200), y: to3d(-70), z: -1.5, sx: L_SCALE, sy: L_SCALE }),
-        toMatrix4: getMatrix4({ x: to3d(100), y: to3d(-70), z: -1.5, sx: L_SCALE, sy: L_SCALE }),
+        delay: STEP_DURATION * (times[0] + times[1]),
+        duration: STEP_DURATION * times[2],
+        videoStart: videoStart + STEP_DURATION * times[1],
+        fromMatrix4: getMatrix4({ x: to3d(x2), y: to3d(y), z, sx: scale, sy: scale }),
+        toMatrix4: getMatrix4({ x: to3d(x1), y: to3d(y), z, sx: scale, sy: scale }),
         ease,
       });
+    };
+
+    { // PILLAR 8 9 1613
+      const actor = await createActor(projectSettings, {
+        height: 700,
+        width: 1920,
+        imgSrc: '../assets/projects/placesaintsulpice/placestsulpice-1613-d_frame_299.png',
+      }, {
+        imageRect: { w: 502, h: 700 },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/pillar-8-9-1813.svg' },
+      });
+      addPillarTweens(
+        actor,
+        50,
+        new THREE.Vector2(1418, 0),
+        720,
+        720 + 70,
+        -70,
+        -2.5,
+        L_SCALE,
+        [0, 24, 24],
+      );
       group.add(actor.getMesh());
     }
   }
