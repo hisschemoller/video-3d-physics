@@ -54,11 +54,15 @@ export default class Scene extends MainScene {
     this.orbitControls.update();
     this.orbitControls.saveState();
 
-    // this.ambientLight.intensity = 0.55;
-
-    // this.directionalLight.position.set(12, 12, 12);
-    // this.directionalLight.intensity = 1.2;
-    // this.directionalLight.color.setHSL(0.1, 0.5, 0.95);
+    // DIRECTIONAL LIGHT
+    const SHADOW_SIZE = 8;
+    this.directionalLight.position.set(20, 8, 10);
+    this.directionalLight.shadow.camera.left = -SHADOW_SIZE;
+    this.directionalLight.shadow.camera.right = SHADOW_SIZE;
+    this.directionalLight.shadow.camera.top = SHADOW_SIZE;
+    this.directionalLight.shadow.camera.bottom = -SHADOW_SIZE;
+    this.directionalLight.target.position.set(0, 4, -4);
+    this.scene.add(this.directionalLight.target);
 
     // TWEENS
     this.timeline = createTimeline({
@@ -107,6 +111,7 @@ export default class Scene extends MainScene {
     group.getMesh().add(axesHelper);
 
     await this.createFrontActors(projectSettings, videos, group.getMesh());
+    await this.createFurtherStageActors(projectSettings, videos, group.getMesh());
     await this.createSecondRowActors(projectSettings, videos, group.getMesh());
     await this.createThirdRowActors(projectSettings, videos, group.getMesh());
 
@@ -211,6 +216,67 @@ export default class Scene extends MainScene {
   }
 
   /**
+   * createFrontActors
+   */
+  async createFurtherStageActors(
+    projectSettings: ProjectSettings,
+    videos: { [key: string]: VideoData },
+    group: THREE.Group,
+  ) {
+    const to3d = this.to3d.bind(this);
+
+    { // ROOF
+      const actor = await createActor(projectSettings, videos.right, {
+        box: { w: 14, h: 8, d: 0.01 },
+        imageRect: { w: 1, h: 1 },
+      });
+      actor.setStaticPosition(getMatrix4({ x: 1, rx: Math.PI * 0.5 }));
+      group.add(actor.getMesh());
+    }
+
+    { // WALL RIGHT
+      const actor = await createActor(projectSettings, videos.right, {
+        box: { w: 9, h: 8, d: 0.01 },
+        imageRect: { w: 1, h: 1 },
+      });
+      actor.setStaticPosition(getMatrix4({ x: 15, rx: Math.PI * 0.5, ry: Math.PI * -0.5 }));
+      group.add(actor.getMesh());
+    }
+
+    { // BACK
+      const actor = await createActor(projectSettings, videos.right, {
+        box: { w: 14, h: 9, d: 0.01 },
+        imageRect: { w: 955, h: 614 },
+      });
+      actor.setStaticPosition(getMatrix4({ x: 1, z: -8 }));
+      actor.addTween({
+        delay: 0,
+        duration: PATTERN_DURATION,
+        videoStart: 50,
+        fromImagePosition: new THREE.Vector2(74, 0),
+        toImagePosition: new THREE.Vector2(74, 0),
+      });
+      group.add(actor.getMesh());
+    }
+
+    { // WALL LEFT
+      const actor = await createActor(projectSettings, videos.right, {
+        box: { w: 8, h: 9, d: 0.01 },
+        imageRect: { w: 546, h: 614 },
+      });
+      actor.addTween({
+        delay: 0,
+        duration: PATTERN_DURATION,
+        videoStart: 50,
+        fromImagePosition: new THREE.Vector2(74, 0),
+        toImagePosition: new THREE.Vector2(74, 0),
+      });
+      actor.setStaticPosition(getMatrix4({ x: 1, ry: Math.PI * 0.5 }));
+      group.add(actor.getMesh());
+    }
+  }
+
+  /**
    * createSecondRowActors
    */
   async createSecondRowActors(
@@ -259,7 +325,7 @@ export default class Scene extends MainScene {
         imageRect: { w: 343, h: 730 },
         svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/pillar-4-1815.svg' },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(1100), z: -0.5, sx: R_SCALE, sy: R_SCALE }));
+      actor.setStaticPosition(getMatrix4({ x: to3d(1100), z: -1, sx: R_SCALE, sy: R_SCALE }));
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION,
@@ -275,7 +341,7 @@ export default class Scene extends MainScene {
         imageRect: { w: 618, h: 730 },
         svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/pillar-2-3-1815.svg' },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(250), z: -0.5, sx: R_SCALE, sy: R_SCALE }));
+      actor.setStaticPosition(getMatrix4({ x: to3d(250), z: -1, sx: R_SCALE, sy: R_SCALE }));
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION,
@@ -297,8 +363,8 @@ export default class Scene extends MainScene {
         new THREE.Vector2(1418, 0),
         720,
         720 + 70,
-        -70,
-        -1,
+        -80,
+        -2,
         L_SCALE,
         [14, 24, 24],
       );
@@ -316,8 +382,8 @@ export default class Scene extends MainScene {
         new THREE.Vector2(873, 0),
         100,
         100 + 100,
-        -70,
-        -1.5,
+        -80,
+        -3,
         L_SCALE,
         [0, 24, 24],
       );
@@ -335,8 +401,8 @@ export default class Scene extends MainScene {
         new THREE.Vector2(1108, 0),
         300,
         300 + 150,
-        -70,
-        -1.8,
+        -90,
+        -3.6,
         L_SCALE,
         [8, 24, 24],
       );
@@ -354,8 +420,8 @@ export default class Scene extends MainScene {
         new THREE.Vector2(65, 0),
         1050,
         1050 + 150,
-        0,
-        -1.9,
+        -20,
+        -3.8,
         R_SCALE,
         [17, 20, 20],
       );
@@ -373,8 +439,8 @@ export default class Scene extends MainScene {
         new THREE.Vector2(697, 0),
         800,
         800 + 100,
-        0,
-        -2.1,
+        -30,
+        -4.2,
         R_SCALE,
         [12, 16, 16],
       );
@@ -436,12 +502,58 @@ export default class Scene extends MainScene {
         actor,
         50,
         new THREE.Vector2(1418, 0),
-        720,
-        720 + 70,
-        -70,
-        -2.5,
+        500,
+        500 + 120,
+        -120,
+        -5,
         L_SCALE,
-        [0, 24, 24],
+        [20, 24, 24],
+      );
+      group.add(actor.getMesh());
+    }
+
+    { // PILLAR 5 6 1613
+      const actor = await createActor(projectSettings, {
+        height: 700,
+        width: 1920,
+        imgSrc: '../assets/projects/placesaintsulpice/placestsulpice-1613-d_frame_299.png',
+      }, {
+        imageRect: { w: 621, h: 700 },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/pillar-5-6-1813.svg' },
+      });
+      addPillarTweens(
+        actor,
+        55,
+        new THREE.Vector2(873, 0),
+        1300,
+        1300 - 120,
+        -120,
+        -5.6,
+        L_SCALE,
+        [16, 24, 24],
+      );
+      group.add(actor.getMesh());
+    }
+
+    { // PILLAR 5 6 1613
+      const actor = await createActor(projectSettings, {
+        height: 730,
+        width: 1920,
+        imgSrc: '../assets/projects/placesaintsulpice/placestsulpice-1615-d_frame_299.png',
+      }, {
+        imageRect: { w: 618, h: 730 },
+        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/pillar-2-3-1815.svg' },
+      });
+      addPillarTweens(
+        actor,
+        45,
+        new THREE.Vector2(66, 0),
+        0,
+        0 - 120,
+        -30,
+        -6,
+        R_SCALE,
+        [5, 22, 22],
       );
       group.add(actor.getMesh());
     }
