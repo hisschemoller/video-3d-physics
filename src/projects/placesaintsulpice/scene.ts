@@ -223,6 +223,7 @@ export default class Scene extends MainScene {
     videos: { [key: string]: VideoData },
     group: THREE.Group,
   ) {
+    const SVG_SCALE = this.width3d / this.width;
     const to3d = this.to3d.bind(this);
 
     { // ROOF
@@ -230,7 +231,7 @@ export default class Scene extends MainScene {
         box: { w: 14, h: 8, d: 0.01 },
         imageRect: { w: 1, h: 1 },
       });
-      actor.setStaticPosition(getMatrix4({ x: 1, rx: Math.PI * 0.5 }));
+      actor.setStaticPosition(getMatrix4({ x: 1, y: to3d(0), rx: Math.PI * 0.5 }));
       group.add(actor.getMesh());
     }
 
@@ -272,6 +273,28 @@ export default class Scene extends MainScene {
         toImagePosition: new THREE.Vector2(74, 0),
       });
       actor.setStaticPosition(getMatrix4({ x: 1, ry: Math.PI * 0.5 }));
+      group.add(actor.getMesh());
+    }
+
+    { // CLOCK
+      const actor = await createActor(projectSettings, {
+        imgSrc: '../assets/projects/placesaintsulpice/klok.png',
+        height: 387,
+        width: 388,
+      }, {
+        imageRect: { w: 372, h: 373 },
+        svg: { depth: 0.02, scale: SVG_SCALE * 0.3, url: '../assets/projects/placesaintsulpice/klok.svg' },
+      });
+      actor.setStaticImage(6, 8);
+      // actor.addTween({
+      //   delay: 0,
+      //   duration: PATTERN_DURATION,
+      //   videoStart: 50,
+      //   fromImagePosition: new THREE.Vector2(74, 0),
+      //   toImagePosition: new THREE.Vector2(74, 0),
+      // });
+      actor.setStaticPosition(getMatrix4({ x: 7.9, y: -0.4, z: 0.01 }));
+      actor.getMesh().castShadow = false;
       group.add(actor.getMesh());
     }
   }
