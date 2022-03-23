@@ -286,15 +286,41 @@ export default class Scene extends MainScene {
         svg: { depth: 0.02, scale: SVG_SCALE * 0.3, url: '../assets/projects/placesaintsulpice/klok.svg' },
       });
       actor.setStaticImage(6, 8);
-      // actor.addTween({
-      //   delay: 0,
-      //   duration: PATTERN_DURATION,
-      //   videoStart: 50,
-      //   fromImagePosition: new THREE.Vector2(74, 0),
-      //   toImagePosition: new THREE.Vector2(74, 0),
-      // });
       actor.setStaticPosition(getMatrix4({ x: 7.9, y: -0.4, z: 0.01 }));
+      group.add(actor.getMesh());
+    }
+
+    { // CLOCK HAND
+      const actor = await createActor(projectSettings, {
+        imgSrc: '../assets/projects/placesaintsulpice/klok-wijzer.png',
+        height: 197,
+        width: 27,
+      }, {
+        box: { w: to3d(27 * 0.25), h: to3d(197 * 0.25), d: 0.01 },
+        imageRect: { w: 27, h: 197 },
+      });
+      actor.setStaticImage(0, 0);
+      // actor.setStaticPosition(getMatrix4({ x: 8, y: -0.5, z: 0.05 }));
+      actor.addTween({
+        delay: 0,
+        duration: PATTERN_DURATION * 0.5,
+        videoStart: 50,
+        fromMatrix4: getMatrix4({ x: 8.35, y: -0.85, z: 0.05, rz: 0 }),
+        toMatrix4: getMatrix4({ x: 8.35, y: -0.85, z: 0.05, rz: Math.PI * -0.999 }),
+        fromImagePosition: new THREE.Vector2(0, 0),
+        toImagePosition: new THREE.Vector2(0, 0),
+      });
+      actor.addTween({
+        delay: PATTERN_DURATION * 0.5,
+        duration: PATTERN_DURATION * 0.5,
+        videoStart: 50,
+        fromMatrix4: getMatrix4({ x: 8.35, y: -0.85, z: 0.05, rz: Math.PI * 1 }),
+        toMatrix4: getMatrix4({ x: 8.35, y: -0.85, z: 0.05, rz: Math.PI * 0.01 }),
+        fromImagePosition: new THREE.Vector2(0, 0),
+        toImagePosition: new THREE.Vector2(0, 0),
+      });
       actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
     }
   }

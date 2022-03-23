@@ -32,7 +32,7 @@ export function createRectangle(
       }),
       new THREE.MeshPhongMaterial({
         map: texture,
-        opacity: 1,
+        opacity: 0,
         transparent: true,
         side: THREE.FrontSide,
         shininess: 0,
