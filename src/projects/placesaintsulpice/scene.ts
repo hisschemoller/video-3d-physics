@@ -382,6 +382,17 @@ export default class Scene extends MainScene {
         fromImagePosition: new THREE.Vector2(617, 0),
         toImagePosition: new THREE.Vector2(617, 0),
       });
+      // addPillarTweens(
+      //   actor,
+      //   50,
+      //   new THREE.Vector2(617, 0),
+      //   1100,
+      //   1100 - 40,
+      //   0,
+      //   -1,
+      //   R_SCALE,
+      //   [15, 22, 22],
+      // );
       group.add(actor.getMesh());
     }
 
@@ -390,14 +401,17 @@ export default class Scene extends MainScene {
         imageRect: { w: 618, h: 730 },
         svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/pillar-2-3-1815.svg' },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(250), z: -1, sx: R_SCALE, sy: R_SCALE }));
-      actor.addTween({
-        delay: 0,
-        duration: PATTERN_DURATION,
-        videoStart: 50,
-        fromImagePosition: new THREE.Vector2(65, 0),
-        toImagePosition: new THREE.Vector2(65, 0),
-      });
+      addPillarTweens(
+        actor,
+        50,
+        new THREE.Vector2(65, 0),
+        250,
+        250 + 50,
+        0,
+        -1,
+        R_SCALE,
+        [4, 24, 24],
+      );
       group.add(actor.getMesh());
     }
 
