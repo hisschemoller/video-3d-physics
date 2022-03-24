@@ -296,10 +296,10 @@ export default class Scene extends MainScene {
         height: 197,
         width: 27,
       }, {
-        box: { w: to3d(27 * 0.25), h: to3d(197 * 0.25), d: 0.01 },
-        imageRect: { w: 27, h: 197 },
+        imageRect: { w: 23, h: 193 },
+        svg: { depth: 0.02, scale: SVG_SCALE * 0.25, url: '../assets/projects/placesaintsulpice/klok-wijzer.svg' },
       });
-      actor.setStaticImage(0, 0);
+      actor.setStaticImage(2, 1);
       // actor.setStaticPosition(getMatrix4({ x: 8, y: -0.5, z: 0.05 }));
       actor.addTween({
         delay: 0,
