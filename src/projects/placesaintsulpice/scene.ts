@@ -145,7 +145,7 @@ export default class Scene extends MainScene {
         duration: PATTERN_DURATION,
         videoStart: 50,
         fromImagePosition: new THREE.Vector2(0, 0),
-        toImagePosition : new THREE.Vector2(0, 0),
+        toImagePosition: new THREE.Vector2(0, 0),
       });
       group.add(actor.getMesh());
     }
@@ -324,6 +324,25 @@ export default class Scene extends MainScene {
       actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
     }
+
+    // { // SKATER
+    //   const actor = await createActor(projectSettings, videos.right, {
+    //     box: { w: to3d(300), h: to3d(300), d: 0.02 },
+    //     imageRect: { w: 150, h: 150 },
+    //   });
+    //   actor.addTween({
+    //     delay: 0,
+    //     duration: PATTERN_DURATION,
+    //     videoStart: 0,
+    //     fromImagePosition: new THREE.Vector2(1200, 550),
+    //     toImagePosition: new THREE.Vector2(500, 550),
+    //     fromMatrix4: getMatrix4({ x: to3d(1900), y: to3d(-800), z: 0.1 }),
+    //     toMatrix4: getMatrix4({ x: to3d(-200), y: to3d(-800), z: 0.1 }),
+    //     // ease,
+    //   });
+    //   actor.getMesh().castShadow = false;
+    //   group.add(actor.getMesh());
+    // }
   }
 
   /**
