@@ -153,7 +153,7 @@ export default class Scene extends MainScene {
     { // LEFT 1613
       const actor = await createActor(projectSettings, videos.left, {
         imageRect: { w: 395, h: 700 },
-        svg: { depth: 0.02, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/left-1613.svg' },
+        svg: { depth: 0.01, scale: SVG_SCALE, url: '../assets/projects/placesaintsulpice/left-1613.svg' },
       });
       actor.setStaticPosition(getMatrix4({ x: 0, y: to3d(-80), z: 0.001, sx: L_SCALE, sy: L_SCALE }));
       actor.addTween({
@@ -216,7 +216,7 @@ export default class Scene extends MainScene {
   }
 
   /**
-   * createFrontActors
+   * createFurtherStageActors
    */
   async createFurtherStageActors(
     projectSettings: ProjectSettings,
@@ -228,10 +228,10 @@ export default class Scene extends MainScene {
 
     { // ROOF
       const actor = await createActor(projectSettings, videos.right, {
-        box: { w: 14, h: 8, d: 0.01 },
+        box: { w: 13.4, h: 8, d: 0.01 },
         imageRect: { w: 1, h: 1 },
       });
-      actor.setStaticPosition(getMatrix4({ x: 1, y: to3d(0), rx: Math.PI * 0.5 }));
+      actor.setStaticPosition(getMatrix4({ x: 1.6, y: to3d(0), rx: Math.PI * 0.5 }));
       group.add(actor.getMesh());
     }
 
@@ -246,10 +246,10 @@ export default class Scene extends MainScene {
 
     { // BACK
       const actor = await createActor(projectSettings, videos.right, {
-        box: { w: 14, h: 9, d: 0.01 },
+        box: { w: 13.4, h: 9, d: 0.01 },
         imageRect: { w: 955, h: 614 },
       });
-      actor.setStaticPosition(getMatrix4({ x: 1, z: -8 }));
+      actor.setStaticPosition(getMatrix4({ x: 1.6, z: -8 }));
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION,
@@ -272,7 +272,7 @@ export default class Scene extends MainScene {
         fromImagePosition: new THREE.Vector2(74, 0),
         toImagePosition: new THREE.Vector2(74, 0),
       });
-      actor.setStaticPosition(getMatrix4({ x: 1, ry: Math.PI * 0.5 }));
+      actor.setStaticPosition(getMatrix4({ x: 1.6, ry: Math.PI * 0.5 }));
       group.add(actor.getMesh());
     }
 
