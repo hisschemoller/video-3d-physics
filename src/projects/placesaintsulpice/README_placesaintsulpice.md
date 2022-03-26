@@ -51,8 +51,18 @@ ffmpeg -i placestsulpice-1615-d.mov '/Volumes/Samsung_X5/placesaintsulpice-1615/
 ffmpeg -i placestsulpice-1615-d.mov -vf scale=480:182 placestsulpice-1615-d_preview.mov
 // convert preview to png sequence
 ffmpeg -i placestsulpice-1615-d_preview.mov '/Volumes/Samsung_X5/placesaintsulpice-1615/frames_preview/frame_%05d.png'
+
+// png to mp4 (from index 220) met 30 FPS
+ffmpeg -framerate 30 -start_number 220 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p placesaintsulpice-video-x1.mp4
+// repeat 32 times, 220 frames, video alleen
+ffmpeg -i placesaintsulpice-video-x1.mp4 -filter_complex "loop=loop=32:size=220:start=0" placesaintsulpice-video-x32.mp4
 ```
 
 Video 1613: 1920 x 700 px, preview 480 x 176 px<br>
 
 Video 1615: 1920 x 730 px, preview 480 x 182 px<br>
+
+Video duurt 220 frames<br>
+Video duurt 220 / 30 FPS = 7.333333333333333 seconden.<br>
+Een beat duurt 7.333333333333333 / 12 = 0.611111111111111 seconden.<br>
+Het tempo is 60 / 0.611111111111111 = 98.18181818181819 BPM<br>

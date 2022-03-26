@@ -207,7 +207,7 @@ export default class Scene extends MainScene {
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION,
-        videoStart: 50,
+        videoStart: 38,
         fromImagePosition: new THREE.Vector2(0, 0),
         toImagePosition: new THREE.Vector2(0, 0),
       });
