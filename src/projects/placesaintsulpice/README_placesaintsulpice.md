@@ -56,6 +56,12 @@ ffmpeg -i placestsulpice-1615-d_preview.mov '/Volumes/Samsung_X5/placesaintsulpi
 ffmpeg -framerate 30 -start_number 220 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p placesaintsulpice-video-x1.mp4
 // repeat 32 times, 220 frames, video alleen
 ffmpeg -i placesaintsulpice-video-x1.mp4 -filter_complex "loop=loop=32:size=220:start=0" placesaintsulpice-video-x32.mp4
+// repeat 32, audio alleen
+ffmpeg -stream_loop 32 -i placesaintsulpice-audio-x1.wav -c copy placesaintsulpice-audio-x32.wav
+// video en audio samenvoegen
+ffmpeg -i placesaintsulpice-video-x32.mp4 -i placesaintsulpice-audio-x32.wav -vcodec copy placesaintsulpice-x32.mp4
+// half size
+ffmpeg -i placesaintsulpice-x32.mp4 -vf scale=320:240 placesaintsulpice-x32-halfsize.mp4
 ```
 
 Video 1613: 1920 x 700 px, preview 480 x 176 px<br>
