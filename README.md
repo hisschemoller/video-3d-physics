@@ -55,6 +55,13 @@ ffmpeg -i input.avi -vf yadif frames/frame_%05d.png
 ffmpeg -framerate 30 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p output.mp4
 ```
 
+### Batch convert files
+On Mac and Linux only apparently.
+
+```
+for i in *.avi; do ffmpeg -i "$i" "${i%.*}.mp4"; done
+```
+
 ### Grab a single frame from a video
 Get frame 180 as a png image:
 
