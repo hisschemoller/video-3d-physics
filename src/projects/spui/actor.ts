@@ -13,6 +13,7 @@ import {
 export interface Actor {
   addTween: (tweenData: TweenData) => void,
   getMesh: () => ExtendedMesh,
+  setColor: (hexString: string) => void,
   setMirrored: (mirrored: boolean) => void,
   setStaticImage: (x: number, y: number) => void,
   setStaticPosition: (matrix4: THREE.Matrix4) => void,
@@ -47,14 +48,14 @@ interface TweenData {
  */
 export async function createActor(
   projectSettings: ProjectSettings,
-  mediaData: ImageData | VideoData,
+  mediaData: ImageData | VideoData | undefined,
   actorData: ActorData,
 ): Promise<Actor> {
   const { scene, timeline } = projectSettings;
   const { box, imageRect, svg } = actorData;
 
   // if video then use preview size
-  if (projectSettings.isPreview && 'imgSrcPath' in mediaData) {
+  if (projectSettings.isPreview && mediaData && 'imgSrcPath' in mediaData) {
     imageRect.w *= projectSettings.previewScale;
     imageRect.h *= projectSettings.previewScale;
   }
@@ -124,9 +125,7 @@ export async function createActor(
 
     let videoFrameTween: VideoFrameTween;
     let imagePositionTween: ImagePositionTween;
-    if ('imgSrc' in mediaData) {
-      // TODO
-    } else {
+    if (mediaData && 'imgSrcPath' in mediaData) {
       videoFrameTween = addVideoFrameTween(
         mediaData,
         videoStart,
@@ -180,11 +179,19 @@ export async function createActor(
     }
   };
 
+  const setColor = (hexString: string) => {
+    if (context) {
+      context.fillStyle = hexString;
+      context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+      texture.needsUpdate = true;
+    }
+  };
+
   /**
    * Loads and shows one single image.
    */
   const setStaticImage = (x: number, y: number) => {
-    if (context && 'imgSrc' in mediaData) {
+    if (context && mediaData && 'imgSrc' in mediaData) {
       const img = new Image();
       img.src = mediaData.imgSrc;
       img.onload = () => {
@@ -205,6 +212,7 @@ export async function createActor(
   return {
     addTween,
     getMesh: () => mesh,
+    setColor,
     setMirrored,
     setStaticImage,
     setStaticPosition,

@@ -33,13 +33,19 @@ export default class Scene extends MainScene {
     this.captureFps = 30;
     this.captureThrottle = 10;
     this.captureDuration = PATTERN_DURATION * 2;
-    this.clearColor = 0x6ea3df;
+    this.clearColor = 0x9ed3ff;
   }
 
   async create() {
     await super.create();
 
     const isPreview = true && !this.scene.userData.isCapture;
+
+    // CAMERA
+    this.cameraTarget = new THREE.Vector3(0, 1.8, 0);
+    this.pCamera.position.set(0, 1.8, 10);
+    this.pCamera.lookAt(this.cameraTarget);
+    this.pCamera.updateProjectionMatrix();
 
     // TWEENS
     this.timeline = createTimeline({
@@ -62,13 +68,13 @@ export default class Scene extends MainScene {
     };
 
     // GROUP
-    const toVP3d = this.toVP3d.bind(this);
-    const group = createTweenGroup(projectSettings);
-    group.setStaticPosition(getMatrix4({ x: toVP3d(0), y: toVP3d(0, false) }));
-    const axesHelper = new THREE.AxesHelper(25);
-    group.getMesh().add(axesHelper);
+    // const toVP3d = this.toVP3d.bind(this);
+    // const group = createTweenGroup(projectSettings);
+    // group.setStaticPosition(getMatrix4({ x: toVP3d(0), y: toVP3d(0, false) }));
+    // const axesHelper = new THREE.AxesHelper(25);
+    // group.getMesh().add(axesHelper);
 
-    await this.createActors(projectSettings, videos, group.getMesh());
+    await this.createActors(projectSettings, videos);
 
     this.postCreate();
   }
@@ -84,9 +90,17 @@ export default class Scene extends MainScene {
   async createActors(
     projectSettings: ProjectSettings,
     videos: { [key: string]: VideoData },
-    group: THREE.Group,
   ) {
     const to3d = this.to3d.bind(this);
     const SVG_SCALE = this.width3d / this.width;
+
+    { // CAMERA ACTOR
+      const actor = await createActor(projectSettings, undefined, {
+        box: { w: 1, h: 1, d: 1 },
+        imageRect: { w: 10, h: 10 },
+      });
+      actor.setStaticPosition(getMatrix4({ }));
+      actor.setColor('#ff0000');
+    }
   }
 }
