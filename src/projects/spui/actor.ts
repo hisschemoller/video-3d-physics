@@ -36,11 +36,11 @@ interface TweenData {
   duration: number,
   ease?: keyof typeof Ease,
   isMirrored?: boolean,
-  videoStart: number,
+  videoStart?: number,
   fromMatrix4?: THREE.Matrix4,
   toMatrix4?: THREE.Matrix4,
-  fromImagePosition: THREE.Vector2,
-  toImagePosition: THREE.Vector2,
+  fromImagePosition?: THREE.Vector2,
+  toImagePosition?: THREE.Vector2,
 }
 
 /**
@@ -98,7 +98,7 @@ export async function createActor(
     duration,
     ease,
     isMirrored = false,
-    videoStart,
+    videoStart = 0,
     fromMatrix4,
     toMatrix4,
     fromImagePosition,
@@ -117,10 +117,13 @@ export async function createActor(
       mesh.scale.setFromMatrixScale(fromMatrix4);
     }
 
-    const toImagePosition = toImagePositionBeforeClone.clone();
-    if (projectSettings.isPreview) {
-      fromImagePosition.multiplyScalar(projectSettings.previewScale);
-      toImagePosition.multiplyScalar(projectSettings.previewScale);
+    let toImagePosition: THREE.Vector2 | undefined;
+    if (fromImagePosition && toImagePositionBeforeClone) {
+      toImagePosition = toImagePositionBeforeClone.clone();
+      if (projectSettings.isPreview) {
+        fromImagePosition.multiplyScalar(projectSettings.previewScale);
+        toImagePosition.multiplyScalar(projectSettings.previewScale);
+      }
     }
 
     let videoFrameTween: VideoFrameTween;
@@ -131,7 +134,7 @@ export async function createActor(
         videoStart,
         duration,
       );
-      if (context !== null) {
+      if (context !== null && fromImagePosition && toImagePosition) {
         imagePositionTween = addImagePositionTween(
           fromImagePosition,
           toImagePosition,
