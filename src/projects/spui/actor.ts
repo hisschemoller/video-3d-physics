@@ -118,8 +118,12 @@ export async function createActor(
     }
 
     let toImagePosition: THREE.Vector2 | undefined;
-    if (fromImagePosition && toImagePositionBeforeClone) {
-      toImagePosition = toImagePositionBeforeClone.clone();
+    if (fromImagePosition) {
+      if (!toImagePositionBeforeClone) {
+        toImagePosition = fromImagePosition.clone();
+      } else {
+        toImagePosition = toImagePositionBeforeClone.clone();
+      }
       if (projectSettings.isPreview) {
         fromImagePosition.multiplyScalar(projectSettings.previewScale);
         toImagePosition.multiplyScalar(projectSettings.previewScale);
