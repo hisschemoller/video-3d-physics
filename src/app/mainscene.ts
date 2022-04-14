@@ -136,7 +136,7 @@ export default class MainScene extends Scene3D {
 
     // GRID HELPER
     const gridHelper = new THREE.GridHelper(20, 20, 20);
-    gridHelper.position.set(0, -1, 0);
+    gridHelper.position.set(0, 0, 0);
     document.getElementById('grid-helper')?.addEventListener('click', (e) => {
       if ((e.target as HTMLInputElement).checked) {
         this.scene.add(gridHelper);
