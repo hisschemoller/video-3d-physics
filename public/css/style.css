@@ -27,14 +27,16 @@ time, mark, audio, video {
 	font-family: sans-serif;
 	vertical-align: baseline;
 }
-button {
+button,
+.button {
   background: #333;
   border: 1px solid #666;
   color: #ccc;
   cursor: pointer;
   padding: 10px 20px;
 }
-button:hover {
+button:hover,
+.button:hover {
   background: #555;
   border-color: #999;
   color: #fff;
@@ -65,8 +67,19 @@ label {
   text-align: center;
   width: 100%;
 }
+#pause-toggle + label:before {
+  content: 'Pause';
+}
+#pause-toggle:checked + label:before {
+  content: 'Continue';
+}
 .control {
   padding: 5px 10px;
+}
+.checkbox-hide {
+  height: 0;
+  opacity: 0;
+  width: 0;
 }
 .display {
   background-color: #eee;

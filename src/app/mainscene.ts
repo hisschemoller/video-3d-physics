@@ -53,6 +53,8 @@ export default class MainScene extends Scene3D {
 
   clearColor = 0xbbddff;
 
+  isPaused = false;
+
   constructor() {
     super({ key: 'MainScene' });
   }
@@ -180,6 +182,15 @@ export default class MainScene extends Scene3D {
       };
       link.click();
     });
+
+    // PAUSE / CONTINUE PLAYBACK
+    document.getElementById('pause-toggle')?.addEventListener('click', () => {
+      const el: HTMLInputElement = document.getElementById('pause-toggle') as HTMLInputElement;
+      this.isPaused = el.checked;
+      if (!this.isPaused) {
+        this.run();
+      }
+    });
   }
 
   postCreate() {
@@ -231,6 +242,10 @@ export default class MainScene extends Scene3D {
    * Play the scene.
    */
   async run() {
+    if (this.isPaused) {
+      return;
+    }
+
     // wait for the next frame to render
     let isWaiting = true;
     if (this.count >= this.nextFramePosition) {
