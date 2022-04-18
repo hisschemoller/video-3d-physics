@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>V3DPh Spui</title>
+		<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+		<div id="app">
+			<div id="overlay">
+				<button type="button" id="overlay__start">Click to start</button>
+				<div class="control">
+					<input type="checkbox" id="play-render-toggle">
+					<label for="play-render-toggle">Render PNG sequence</label>
+				</div>
+			</div>
+			<div style="display:flex;">
+				<div id="canvas-container" style="width:auto; min-height:auto;"></div>
+				<div id="canvas-spui-container">
+					<canvas id="canvas-spui" width="1920" height="1080" style="width:100%; height:100%;"></canvas>
+				</div>
+			</div>
+			<div id="controls">
+				<button type="button" id="save-image">Save image as...</button>
+				<button type="button" id="reset-orbitcontrols">Reset OrbitControls</button>
+				<input type="checkbox" id="pause-toggle" class="checkbox-hide">
+				<label for="pause-toggle" class="button"></label>
+				<!-- <span>time: <span id="info__time"></span></span> -->
+				<div style="display:flex; margin-top: 20px;">
+					<div>
+						<div class="control">
+							<input type="checkbox" id="grid-helper">
+							<label for="grid-helper">Grid Helper</label>
+						</div>
+						<div class="control">
+							<input type="checkbox" id="axes-helper">
+							<label for="axes-helper">Axes Helper</label>
+						</div>
+						<div class="control">
+							<input type="checkbox" id="camera-helper">
+							<label for="camera-helper">Camera Helper</label>
+						</div>
+						<div class="control">
+							<input type="checkbox" id="directional-light-helper">
+							<label for="directional-light-helper">Directional Light Helper</label>
+						</div>
+						<div class="control">
+							<input type="checkbox" id="shadow-camera-helper">
+							<label for="shadow-camera-helper">Shadow Camera Helper</label>
+						</div>
+					</div>
+					<div></div>
+				</div>
+			</div>
+		</div>
+		<script src="js/bundle.js" type="module"></script>
+	</body>
+</html>

@@ -46,6 +46,7 @@ label {
   font-size: 0.8rem;
 }
 #canvas-container {
+  min-height: 300px;
   width: 90vw;
 }
 #canvas-container canvas {
