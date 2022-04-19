@@ -62,6 +62,20 @@ On Mac and Linux only apparently.
 for i in *.avi; do ffmpeg -i "$i" "${i%.*}.mp4"; done
 ```
 
+### Optimiseed MP4 and Webm files 
+
+```
+# H265
+ffmpeg -i input.mp4 -c:v libx265 -crf 23 -tag:v hvc1 -pix_fmt yuv420p -color_primaries 1 -color_trc 1 -colorspace 1 -movflags +faststart -an output.mp4
+
+# VP9
+ffmpeg -i input.mp4 -c:v libvpx-vp9 -crf 30 -speed 3 -pix_fmt yuv420p -color_primaries 1 -color_trc 1 -colorspace 1 -movflags +faststart -an output.webm
+```
+
+ffmpeg -i wouter_hisschemoller_-_place_saint_sulpice_-_2022_halfsize.mp4 -c:v libx265 -crf 23 -tag:v hvc1 -pix_fmt yuv420p -color_primaries 1 -color_trc 1 -colorspace 1 -movflags +faststart -an wouter_hisschemoller_-_place_saint_sulpice_-_2022_halfsize_optimised.mp4
+
+ffmpeg -i wouter_hisschemoller_-_place_saint_sulpice_-_2022_halfsize.mp4 -c:v libvpx-vp9 -crf 30 -speed 3 -pix_fmt yuv420p -color_primaries 1 -color_trc 1 -colorspace 1 -movflags +faststart -an wouter_hisschemoller_-_place_saint_sulpice_-_2022_halfsize_optimised.webm
+
 ### Grab a single frame from a video
 Get frame 180 as a png image:
 
