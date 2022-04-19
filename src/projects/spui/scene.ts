@@ -10,8 +10,8 @@ import { Actor, createActor } from './actor';
 // import { getScene2, renderScene2, setupScene2 } from './scene2';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 130;
-const MEASURES = 3;
+const BPM = 100;
+const MEASURES = 2;
 const STEPS = 16 * MEASURES;
 const STEPS_PER_BEAT = 4;
 const SECONDS_PER_BEAT = 60 / BPM;
@@ -33,7 +33,7 @@ export default class Scene extends MainScene {
 
   clippingPath: Path2D;
 
-  actorGirlBlack: Actor;
+  actorGreenDress: Actor;
 
   actorGirlAtStart: Actor;
 
@@ -116,9 +116,7 @@ export default class Scene extends MainScene {
       // draw the complete canvas for the right half
       this.contextSpui.drawImage(this.contextWebGL.canvas, 0, 0);
 
-      // set the stage for the left half
-      // this.blue.getMesh().visible = false;
-      // this.actorGirlBlack.getMesh().visible = true;
+      this.actorGreenDress.getMesh().visible = true;
       this.actorGirlAtStart.getMesh().visible = false;
 
       // render the scene again
@@ -130,9 +128,7 @@ export default class Scene extends MainScene {
       this.contextSpui.drawImage(this.contextWebGL.canvas, 0, 0);
       this.contextSpui.restore();
 
-      // restore the stage for the right half
-      // this.blue.getMesh().visible = true;
-      // this.actorGirlBlack.getMesh().visible = false;
+      this.actorGreenDress.getMesh().visible = false;
       this.actorGirlAtStart.getMesh().visible = true;
     }
   }
@@ -158,13 +154,13 @@ export default class Scene extends MainScene {
       actor.setStaticPosition(getMatrix4({ x: to3d(-960), y: to3d(540) }));
       actor.addTween({
         delay: 0,
-        duration: STEP_DURATION * 26,
+        duration: STEP_DURATION * 16,
         videoStart: 79,
         fromImagePosition: new THREE.Vector2(0, 0),
       });
       actor.addTween({
-        delay: STEP_DURATION * 26,
-        duration: STEP_DURATION * 22,
+        delay: STEP_DURATION * 16,
+        duration: STEP_DURATION * 16,
         videoStart: 112.7,
         fromImagePosition: new THREE.Vector2(0, 0),
       });
@@ -172,27 +168,26 @@ export default class Scene extends MainScene {
       actor.getMesh().receiveShadow = false;
     }
 
-    // this.actorGirlBlack = await createActor(projectSettings, videos.main, {
-    //   box: { w: to3d(450), h: to3d(780), d: 0.01 },
-    //   imageRect: { w: 450, h: 780 },
-    // });
-    // this.actorGirlBlack.setStaticPosition(getMatrix4({ x: to3d(-960), y: to3d((1080 / 2) - 300), z: 0.01 }));
-    // this.actorGirlBlack.addTween({
-    //   delay: 0,
-    //   duration: 1.9,
-    //   videoStart: 46.5,
-    //   fromMatrix4: getMatrix4({ x: to3d(-960 - 450), y: to3d((1080 / 2) - 300), z: 0.01 }),
-    //   toMatrix4: getMatrix4({ x: to3d(-100), y: to3d((1080 / 2) - 300), z: 0.01 }),
-    //   fromImagePosition: new THREE.Vector2(-400, 300),
-    //   toImagePosition: new THREE.Vector2(1050, 300),
-    // });
+    this.actorGreenDress = await createActor(projectSettings, videos.main, {
+      box: { w: to3d(450), h: to3d(780), d: 0.01 },
+      imageRect: { w: 450, h: 780 },
+    });
+    this.actorGreenDress.addTween({
+      delay: 0,
+      duration: 1.9,
+      videoStart: 124,
+      fromMatrix4: getMatrix4({ x: to3d(-960 - 450), y: to3d((1080 / 2) - 300), z: 0.01 }),
+      toMatrix4: getMatrix4({ x: to3d(-100), y: to3d((1080 / 2) - 300), z: 0.01 }),
+      fromImagePosition: new THREE.Vector2(-400, 300),
+      toImagePosition: new THREE.Vector2(1050, 300),
+    });
 
     this.actorGirlAtStart = await createActor(projectSettings, videos.main, {
       box: { w: to3d(650), h: to3d(800), d: 0.01 },
       imageRect: { w: 650, h: 800 },
     });
     this.actorGirlAtStart.addTween({
-      delay: STEP_DURATION * 4,
+      delay: STEP_DURATION * 7,
       duration: 2,
       videoStart: 0.7,
       fromMatrix4: getMatrix4({ x: toVP3d(140), y: to3d(260), z: 0.01 }),
@@ -200,40 +195,5 @@ export default class Scene extends MainScene {
       fromImagePosition: new THREE.Vector2(240, 280),
       toImagePosition: new THREE.Vector2(1720, 280),
     });
-
-    // { // BLOKJE ROOD
-    //   const actor = await createActor(projectSettings, undefined, {
-    //     box: { w: 4, h: 4, d: 0.02 },
-    //     imageRect: { w: 10, h: 10 },
-    //   });
-    //   actor.setColor('#ff0000');
-    //   actor.setStaticPosition(getMatrix4({ x: -3, y: 2, z: 1 }));
-    //   actor.addTween({
-    //     delay: 0,
-    //     duration: PATTERN_DURATION,
-    //     fromMatrix4: getMatrix4({ x: -4, y: -1, z: -0.1 }),
-    //     toMatrix4: getMatrix4({ x: 0, y: -1, z: -0.1 }),
-    //   });
-    //   // background.getMesh().add(actor.getMesh());
-    //   this.red = actor;
-    // }
-
-    // { // BLOKJE BLAUW
-    //   const actor = await createActor(projectSettings, undefined, {
-    //     box: { w: 4, h: 4, d: 1 },
-    //     imageRect: { w: 10, h: 10 },
-    //   });
-    //   actor.setColor('#0000ff');
-    //   actor.setStaticPosition(getMatrix4({ z: 1 }));
-    //   actor.addTween({
-    //     delay: 0,
-    //     duration: PATTERN_DURATION,
-    //     fromMatrix4: getMatrix4({ x: 0, y: 0, z: -0.1 }),
-    //     toMatrix4: getMatrix4({ x: 6, y: -1, z: -0.1 }),
-    //   });
-    //   // background.getMesh().add(actor.getMesh());
-    //   // getMesh().add(actor.getMesh());
-    //   this.blue = actor;
-    // }
   }
 }
