@@ -169,16 +169,16 @@ export default class Scene extends MainScene {
     }
 
     this.actorGreenDress = await createActor(projectSettings, videos.main, {
-      box: { w: to3d(450), h: to3d(780), d: 0.01 },
-      imageRect: { w: 450, h: 780 },
+      box: { w: to3d(650), h: to3d(780), d: 0.01 },
+      imageRect: { w: 650, h: 780 },
     });
     this.actorGreenDress.addTween({
       delay: 0,
       duration: 1.9,
       videoStart: 124,
-      fromMatrix4: getMatrix4({ x: to3d(-960 - 450), y: to3d((1080 / 2) - 300), z: 0.01 }),
-      toMatrix4: getMatrix4({ x: to3d(-100), y: to3d((1080 / 2) - 300), z: 0.01 }),
-      fromImagePosition: new THREE.Vector2(-400, 300),
+      fromMatrix4: getMatrix4({ x: to3d(-1700), y: to3d(240), z: 0.01 }),
+      toMatrix4: getMatrix4({ x: to3d(-100), y: to3d(240), z: 0.01 }),
+      fromImagePosition: new THREE.Vector2(-650, 300),
       toImagePosition: new THREE.Vector2(1050, 300),
     });
 
