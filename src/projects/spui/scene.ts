@@ -5,9 +5,7 @@ import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
-// import { getMesh, getScene, renderBackground, setupBackground } from '@app/background';
-import { Actor, createActor } from './actor';
-// import { getScene2, renderScene2, setupScene2 } from './scene2';
+import { createActor } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 100;
@@ -24,18 +22,6 @@ export default class Scene extends MainScene {
   width3d: number;
 
   height3d: number;
-
-  scene2: THREE.Scene;
-
-  contextWebGL: WebGLRenderingContext;
-
-  contextSpui: CanvasRenderingContext2D | null;
-
-  clippingPath: Path2D;
-
-  actorGreenDress: Actor;
-
-  actorGirlAtStart: Actor;
 
   constructor() {
     super();
@@ -63,23 +49,6 @@ export default class Scene extends MainScene {
     this.timeline = createTimeline({
       duration: PATTERN_DURATION,
     });
-
-    // CANVAS SPUI
-    const canvas = document.getElementById('canvas-spui') as HTMLCanvasElement;
-    if (canvas) {
-      this.contextSpui = canvas.getContext('2d');
-    }
-    this.contextWebGL = this.renderer.getContext();
-
-    this.clippingPath = new Path2D();
-    this.clippingPath.moveTo(0, 0);
-    this.clippingPath.lineTo(816, 0);
-    this.clippingPath.lineTo(816, 668);
-    this.clippingPath.lineTo(802, 741);
-    this.clippingPath.lineTo(802, 808);
-    this.clippingPath.lineTo(796, 1080);
-    this.clippingPath.lineTo(0, 1080);
-    this.clippingPath.closePath();
 
     // VIDEOS
     const videos = {
@@ -111,28 +80,6 @@ export default class Scene extends MainScene {
     this.postCreate();
   }
 
-  postRender() {
-    if (this.contextSpui) {
-      // draw the complete canvas for the right half
-      this.contextSpui.drawImage(this.contextWebGL.canvas, 0, 0);
-
-      this.actorGreenDress.getMesh().visible = true;
-      this.actorGirlAtStart.getMesh().visible = false;
-
-      // render the scene again
-      this.renderer.render(this.scene, this.camera);
-
-      // draw the left half
-      this.contextSpui.save();
-      this.contextSpui.clip(this.clippingPath);
-      this.contextSpui.drawImage(this.contextWebGL.canvas, 0, 0);
-      this.contextSpui.restore();
-
-      this.actorGreenDress.getMesh().visible = false;
-      this.actorGirlAtStart.getMesh().visible = true;
-    }
-  }
-
   async updateAsync(time: number, delta: number) {
     await this.timeline.update(time, delta);
     super.updateAsync(time, delta);
@@ -145,6 +92,7 @@ export default class Scene extends MainScene {
     videos: { [key: string]: VideoData }) {
     const to3d = this.to3d.bind(this);
     const toVP3d = this.toVP3d.bind(this);
+    const SVG_SCALE = this.width3d / this.width;
 
     { // BACKGROUND
       const actor = await createActor(projectSettings, videos.main, {
@@ -168,32 +116,59 @@ export default class Scene extends MainScene {
       actor.getMesh().receiveShadow = false;
     }
 
-    this.actorGreenDress = await createActor(projectSettings, videos.main, {
-      box: { w: to3d(650), h: to3d(780), d: 0.01 },
-      imageRect: { w: 650, h: 780 },
-    });
-    this.actorGreenDress.addTween({
-      delay: 0,
-      duration: 1.9,
-      videoStart: 124,
-      fromMatrix4: getMatrix4({ x: to3d(-1700), y: to3d(240), z: 0.01 }),
-      toMatrix4: getMatrix4({ x: to3d(-100), y: to3d(240), z: 0.01 }),
-      fromImagePosition: new THREE.Vector2(-650, 300),
-      toImagePosition: new THREE.Vector2(1050, 300),
-    });
+    { // STRAAT 1
+      const actor = await createActor(projectSettings, videos.main, {
+        svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat1.svg' },
+        imageRect: { w: this.width, h: this.height },
+      });
+      actor.setStaticPosition(getMatrix4({
+        x: toVP3d(0),
+        y: -2,
+        rx: Math.PI * -0.5,
+        ry: -0.0188,
+      }));
+    }
 
-    this.actorGirlAtStart = await createActor(projectSettings, videos.main, {
-      box: { w: to3d(650), h: to3d(800), d: 0.01 },
-      imageRect: { w: 650, h: 800 },
-    });
-    this.actorGirlAtStart.addTween({
-      delay: STEP_DURATION * 7,
-      duration: 2,
-      videoStart: 0.7,
-      fromMatrix4: getMatrix4({ x: toVP3d(140), y: to3d(260), z: 0.01 }),
-      toMatrix4: getMatrix4({ x: toVP3d(1920), y: to3d(260), z: 0.01 }),
-      fromImagePosition: new THREE.Vector2(240, 280),
-      toImagePosition: new THREE.Vector2(1720, 280),
-    });
+    { // STRAAT 2
+      const actor = await createActor(projectSettings, videos.main, {
+        svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat2.svg' },
+        imageRect: { w: this.width, h: this.height },
+      });
+      actor.setStaticPosition(getMatrix4({
+        x: toVP3d(0),
+        y: -2,
+        z: 2.6,
+        rx: Math.PI * -0.5,
+        ry: -0.0188,
+      }));
+    }
+
+    { // STRAAT 3
+      const actor = await createActor(projectSettings, videos.main, {
+        svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat3.svg' },
+        imageRect: { w: this.width, h: this.height },
+      });
+      actor.setStaticPosition(getMatrix4({
+        x: toVP3d(0),
+        y: -2,
+        z: 3.58,
+        rx: Math.PI * -0.5,
+        ry: -0.0188,
+      }));
+    }
+
+    { // STRAAT 4
+      const actor = await createActor(projectSettings, videos.main, {
+        svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat4.svg' },
+        imageRect: { w: this.width, h: this.height },
+      });
+      actor.setStaticPosition(getMatrix4({
+        x: toVP3d(0),
+        y: -2,
+        z: 4.55,
+        rx: Math.PI * -0.5,
+        ry: -0.0188,
+      }));
+    }
   }
 }
