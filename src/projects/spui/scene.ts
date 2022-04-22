@@ -45,6 +45,10 @@ export default class Scene extends MainScene {
     // CAMERA
     this.pCamera.position.set(0, 0, 9.6);
 
+    // DIRECTIONAL LIGHT
+    this.directionalLight.position.set(10, 15, 10);
+    this.directionalLight.intensity = 0.98;
+
     // TWEENS
     this.timeline = createTimeline({
       duration: PATTERN_DURATION,
@@ -116,11 +120,18 @@ export default class Scene extends MainScene {
       actor.getMesh().receiveShadow = false;
     }
 
-    { // STRAAT 1
-      const actor = await createActor(projectSettings, videos.main, {
-        svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat1.svg' },
-        imageRect: { w: this.width, h: this.height },
+    const straatImgData = {
+      height: 719,
+      imgSrc: '../assets/projects/spui/straat.jpg',
+      width: 1980,
+    };
+
+    { // STRAAT
+      const actor = await createActor(projectSettings, straatImgData, {
+        box: { w: this.width3d, h: to3d(719), d: 0.02 },
+        imageRect: { w: 1920, h: 719 },
       });
+      actor.setStaticImage(0, 0);
       actor.setStaticPosition(getMatrix4({
         x: toVP3d(0),
         y: -2,
@@ -129,46 +140,61 @@ export default class Scene extends MainScene {
       }));
     }
 
-    { // STRAAT 2
-      const actor = await createActor(projectSettings, videos.main, {
-        svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat2.svg' },
-        imageRect: { w: this.width, h: this.height },
-      });
-      actor.setStaticPosition(getMatrix4({
-        x: toVP3d(0),
-        y: -2,
-        z: 2.6,
-        rx: Math.PI * -0.5,
-        ry: -0.0188,
-      }));
-    }
+    // { // STRAAT 1
+    //   const actor = await createActor(projectSettings, straatImgData, {
+    //     svg: { depth: 0.01, scale: SVG_SCALE, url: '../assets/projects/spui/straat1.svg' },
+    //     imageRect: { w: 1920, h: 478 },
+    //   });
+    //   actor.setStaticImage(0, 0);
+    //   actor.setStaticPosition(getMatrix4({
+    //     x: toVP3d(0),
+    //     y: -2,
+    //     rx: Math.PI * -0.5,
+    //     ry: -0.0188,
+    //   }));
+    // }
 
-    { // STRAAT 3
-      const actor = await createActor(projectSettings, videos.main, {
-        svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat3.svg' },
-        imageRect: { w: this.width, h: this.height },
-      });
-      actor.setStaticPosition(getMatrix4({
-        x: toVP3d(0),
-        y: -2,
-        z: 3.58,
-        rx: Math.PI * -0.5,
-        ry: -0.0188,
-      }));
-    }
+    // { // STRAAT 2
+    //   const actor = await createActor(projectSettings, straatImgData, {
+    //     svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat2.svg' },
+    //     imageRect: { w: 1920, h: 275 },
+    //   });
+    //   actor.setStaticImage(0, 307);
+    //   actor.setStaticPosition(getMatrix4({
+    //     x: toVP3d(0),
+    //     y: -2,
+    //     z: 2.6,
+    //     rx: Math.PI * -0.5,
+    //     ry: -0.0188,
+    //   }));
+    // }
 
-    { // STRAAT 4
-      const actor = await createActor(projectSettings, videos.main, {
-        svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat4.svg' },
-        imageRect: { w: this.width, h: this.height },
-      });
-      actor.setStaticPosition(getMatrix4({
-        x: toVP3d(0),
-        y: -2,
-        z: 4.55,
-        rx: Math.PI * -0.5,
-        ry: -0.0188,
-      }));
+    // { // STRAAT 3
+    //   const actor = await createActor(projectSettings, straatImgData, {
+    //     svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat3.svg' },
+    //     imageRect: { w: this.width, h: this.height },
+    //   });
+    //   actor.setStaticPosition(getMatrix4({
+    //     x: toVP3d(0),
+    //     y: -2,
+    //     z: 3.58,
+    //     rx: Math.PI * -0.5,
+    //     ry: -0.0188,
+    //   }));
+    // }
+
+    // { // STRAAT 4
+    //   const actor = await createActor(projectSettings, videos.main, {
+    //     svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat4.svg' },
+    //     imageRect: { w: this.width, h: this.height },
+    //   });
+    //   actor.setStaticPosition(getMatrix4({
+    //     x: toVP3d(0),
+    //     y: -2,
+    //     z: 4.55,
+    //     rx: Math.PI * -0.5,
+    //     ry: -0.0188,
+    //   }));
     }
   }
 }
