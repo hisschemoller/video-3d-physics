@@ -81,6 +81,8 @@ export default class Scene extends MainScene {
 
     await this.createActors(projectSettings, videos);
 
+    this.createPhysics();
+
     this.postCreate();
   }
 
@@ -96,7 +98,6 @@ export default class Scene extends MainScene {
     videos: { [key: string]: VideoData }) {
     const to3d = this.to3d.bind(this);
     const toVP3d = this.toVP3d.bind(this);
-    const SVG_SCALE = this.width3d / this.width;
 
     { // BACKGROUND
       const actor = await createActor(projectSettings, videos.main, {
@@ -139,62 +140,25 @@ export default class Scene extends MainScene {
         ry: -0.0188,
       }));
     }
+  }
 
-    // { // STRAAT 1
-    //   const actor = await createActor(projectSettings, straatImgData, {
-    //     svg: { depth: 0.01, scale: SVG_SCALE, url: '../assets/projects/spui/straat1.svg' },
-    //     imageRect: { w: 1920, h: 478 },
-    //   });
-    //   actor.setStaticImage(0, 0);
-    //   actor.setStaticPosition(getMatrix4({
-    //     x: toVP3d(0),
-    //     y: -2,
-    //     rx: Math.PI * -0.5,
-    //     ry: -0.0188,
-    //   }));
-    // }
+  createPhysics() {
+    const to3d = this.to3d.bind(this);
 
-    // { // STRAAT 2
-    //   const actor = await createActor(projectSettings, straatImgData, {
-    //     svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat2.svg' },
-    //     imageRect: { w: 1920, h: 275 },
-    //   });
-    //   actor.setStaticImage(0, 307);
-    //   actor.setStaticPosition(getMatrix4({
-    //     x: toVP3d(0),
-    //     y: -2,
-    //     z: 2.6,
-    //     rx: Math.PI * -0.5,
-    //     ry: -0.0188,
-    //   }));
-    // }
+    const ground = this.physics.add.box({
+      y: -2.55, z: to3d(360), width: to3d(1920), height: 1, depth: to3d(720), mass: 0,
+    });
 
-    // { // STRAAT 3
-    //   const actor = await createActor(projectSettings, straatImgData, {
-    //     svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat3.svg' },
-    //     imageRect: { w: this.width, h: this.height },
-    //   });
-    //   actor.setStaticPosition(getMatrix4({
-    //     x: toVP3d(0),
-    //     y: -2,
-    //     z: 3.58,
-    //     rx: Math.PI * -0.5,
-    //     ry: -0.0188,
-    //   }));
-    // }
-
-    // { // STRAAT 4
-    //   const actor = await createActor(projectSettings, videos.main, {
-    //     svg: { depth: 0.001, scale: SVG_SCALE, url: '../assets/projects/spui/straat4.svg' },
-    //     imageRect: { w: this.width, h: this.height },
-    //   });
-    //   actor.setStaticPosition(getMatrix4({
-    //     x: toVP3d(0),
-    //     y: -2,
-    //     z: 4.55,
-    //     rx: Math.PI * -0.5,
-    //     ry: -0.0188,
-    //   }));
-    }
+    const wheelMesh = this.add.cylinder({
+      height: 0.05,
+      radiusBottom: 1.2,
+      radiusSegments: 64,
+      radiusTop: 1.2,
+      x: to3d(-200),
+      z: to3d(425),
+    });
+    wheelMesh.rotation.z = 0.03;
+    wheelMesh.rotation.x = Math.PI * 0.5;
+    this.physics.add.existing(wheelMesh);
   }
 }
