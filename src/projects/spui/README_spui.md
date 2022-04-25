@@ -16,7 +16,6 @@ ffmpeg -i 'Spui 2019-08-24 IMG_0164.MOV' -vf scale=480:270 spui-0164_preview.mov
 ffmpeg -i spui-0164_preview.mov '/Volumes/Samsung_X5/spui-0164/frames_preview/frame_%05d.png'
 ```
 
-
 ## Oud
 
 Video's

@@ -186,3 +186,77 @@ ffprobe -v error -show_entries frame=pkt_pts_time,pict_type -select_streams v -o
 ffprobe -show_streams -count_frames droogbak.mp4
 ffprobe -loglevel panic -select\_streams v -show\_entries "frames" -read\_intervals %+#1 droogbak.mp4
 ffprobe -v error -show_entries frame=pkt_pts_time,pict_type,frame_index -select_streams v -of csv=p=0 droogbak.mp4
+
+
+# Enable3d Physics
+
+## Constraints
+
+### Fixed
+
+Don't understand yet. Doesn't work like lock.
+
+```typescript
+fixed: (
+  bodyA: PhysicsBody,
+  bodyB: PhysicsBody,
+  disableCollisionsBetweenLinkedBodies?: boolean | undefined,
+) => Ammo.btFixedConstraint;
+```
+
+### Hinge
+
+_pivotA_: Hinge point in bodyA's local coordinates.<br>
+_axisA_: Hinge ...<br>
+
+```typescript
+hinge: (bodyA: PhysicsBody, bodyB: PhysicsBody, config: {
+  pivotA?: Types.XYZ | undefined;
+  pivotB?: Types.XYZ | undefined;
+  axisA?: Types.XYZ | undefined;
+  axisB?: Types.XYZ | undefined;
+}, disableCollisionsBetweenLinkedBodies?: boolean | undefined) => Ammo.btHingeConstraint;
+```
+
+### Lock
+
+Lock bodies in their current positions together. So important to first place them in the right
+positions.
+
+```typescript
+lock: (
+  bodyA: PhysicsBody,
+  bodyB: PhysicsBody,
+  disableCollisionsBetweenLinkedBodies?: boolean | undefined
+) => Ammo.btGeneric6DofConstraint;
+```
+
+### Slider
+
+```typescript
+slider: (bodyA: PhysicsBody, bodyB: PhysicsBody, config?: {
+  frameA?: Types.XYZ | undefined;
+  frameB?: Types.XYZ | undefined;
+  linearLowerLimit?: number | undefined;
+  linearUpperLimit?: number | undefined;
+  angularLowerLimit?: number | undefined;
+  angularUpperLimit?: number | undefined;
+}, disableCollisionsBetweenLinkedBodies?: boolean | undefined) => Ammo.btSliderConstraint;
+```
+
+### Spring
+
+```typescript
+spring: (bodyA: PhysicsBody, bodyB: PhysicsBody, config?: {
+    stiffness?: number | undefined;
+    damping?: number | undefined;
+    angularLock?: boolean | undefined;
+    linearLowerLimit?: Types.XYZ | undefined;
+    linearUpperLimit?: Types.XYZ | undefined;
+    angularLowerLimit?: Types.XYZ | undefined;
+    angularUpperLimit?: Types.XYZ | undefined;
+    center?: boolean | undefined;
+    offset?: Types.XYZ | undefined;
+    enableSpring?: boolean | undefined;
+}, disableCollisionsBetweenLinkedBodies?: boolean | undefined) => Ammo.btGeneric6DofSpringConstraint;
+```
