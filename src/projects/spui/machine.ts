@@ -3,13 +3,17 @@ import MainScene from '@app/mainscene';
 
 interface MachineConfig {
   ground: Types.ExtendedObject3D;
+  radiusLarge?: number;
   scene3d: MainScene;
+  x?: number;
   z?: number;
 }
 
 export default function createPhysicsMachine({
   ground,
+  radiusLarge = 1,
   scene3d,
+  x = -1.4,
   z = 3.5,
 }: MachineConfig) {
   // WHEEL_MOTOR
@@ -18,7 +22,7 @@ export default function createPhysicsMachine({
     radiusBottom: 0.5,
     radiusSegments: 64,
     radiusTop: 0.5,
-    x: 2,
+    x: x + 3.4,
     y: 0,
     z,
   });
@@ -30,7 +34,7 @@ export default function createPhysicsMachine({
     depth: 0.05,
     height: 0.05,
     width: 3.4,
-    x: 0.3,
+    x: x + 1.7,
     y: 0.2,
     z: z + 0.11,
   });
@@ -39,11 +43,11 @@ export default function createPhysicsMachine({
   // WHEEL_LARGE
   const wheelLarge = scene3d.add.cylinder({
     height: 0.05,
-    radiusBottom: 1,
+    radiusBottom: radiusLarge,
     radiusSegments: 64,
-    radiusTop: 1,
-    x: -1.4,
-    y: -1,
+    radiusTop: radiusLarge,
+    x,
+    y: ground.position.y + radiusLarge,
     z,
   });
   wheelLarge.rotation.x = Math.PI * 0.5;
@@ -54,7 +58,7 @@ export default function createPhysicsMachine({
     depth: 0.05,
     height: 0.1,
     width: 1,
-    x: -1.4,
+    x,
     y: -1.9,
     z: z - 0.05,
     mass: 0,
@@ -65,14 +69,14 @@ export default function createPhysicsMachine({
     depth: 0.05,
     height: 0.05,
     width: 0.05,
-    x: -2.8,
-    y: -1,
+    x: x - radiusLarge - 0.4,
+    y: ground.position.y + radiusLarge,
     z,
     mass: 0,
   });
 
   // GROUND TO WHEEL_MOTOR: HINGE
-  const pivotOnGround: Types.XYZ = { x: 2, y: 2.2, z: z - ground.position.z };
+  const pivotOnGround: Types.XYZ = { x: x + 3.4, y: 2.2, z: z - ground.position.z };
   const pivotOnWheelM: Types.XYZ = { x: 0, y: 0, z: 0 };
   const hingeGroundAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
   const hingeWheelMAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
@@ -98,7 +102,7 @@ export default function createPhysicsMachine({
 
   { // POLE TO WHEEL_LARGE: HINGE
     const pivotOnPole: Types.XYZ = { x: -1.7, y: 0, z: 0 };
-    const pivotOnWheel: Types.XYZ = { x: 0, y: 0.11, z: -0.95 };
+    const pivotOnWheel: Types.XYZ = { x: 0, y: 0.11, z: -radiusLarge + 0.05 }; // -0.95
     const hingePoleAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
     const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
     scene3d.physics.add.constraints.hinge(pole.body, wheelLarge.body, {

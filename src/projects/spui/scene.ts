@@ -161,6 +161,13 @@ export default class Scene extends MainScene {
       scene3d: this,
       z: 2,
     });
+    createPhysicsMachine({
+      ground,
+      radiusLarge: 1.3,
+      scene3d: this,
+      x: -3,
+      z: 3.5,
+    });
   }
 
   sliderConstraintTest(ground: Types.ExtendedObject3D) {
