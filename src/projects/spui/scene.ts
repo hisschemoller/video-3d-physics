@@ -6,6 +6,7 @@ import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
+import createPhysicsMachine from './machine';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 100;
@@ -80,7 +81,6 @@ export default class Scene extends MainScene {
     };
 
     await this.createActors(projectSettings, videos);
-
     this.createPhysics();
 
     this.postCreate();
@@ -143,14 +143,12 @@ export default class Scene extends MainScene {
   }
 
   createPhysics() {
-    const to3d = this.to3d.bind(this);
-
     if (this.physics.debug) {
       this.physics.debug.enable();
     }
 
     const ground = this.add.box({
-      y: -2.4, z: to3d(360), width: to3d(1920), height: 1, depth: to3d(720),
+      y: -2.4, z: 3, width: 16, height: 1, depth: 6,
     });
     ground.rotation.z = 0.0188;
     this.physics.add.existing(ground, { mass: 0 });
@@ -158,138 +156,14 @@ export default class Scene extends MainScene {
 
     // this.createPhysicsMachine1(ground);
     // this.sliderTest(ground);
-    this.createPhysicsMachine2(ground);
+    createPhysicsMachine({
+      ground,
+      scene3d: this,
+      z: 2,
+    });
   }
 
-  createPhysicsMachine2(ground: Types.ExtendedObject3D) {
-    const Z = 3.5;
-
-    // WHEEL_MOTOR
-    const wheelMotor = this.add.cylinder({
-      height: 0.05,
-      radiusBottom: 0.5,
-      radiusSegments: 64,
-      radiusTop: 0.5,
-      x: 2,
-      y: 0,
-      z: Z,
-    });
-    wheelMotor.rotation.x = Math.PI * 0.5;
-    this.physics.add.existing(wheelMotor, { mass: 10 });
-
-    // POLE
-    const pole = this.add.box({
-      depth: 0.05,
-      height: 0.05,
-      width: 3.4,
-      x: 0.3,
-      y: 0.2,
-      z: Z + 0.11,
-    });
-    this.physics.add.existing(pole, { mass: 0.5 });
-
-    // WHEEL_LARGE
-    const wheelLarge = this.add.cylinder({
-      height: 0.05,
-      radiusBottom: 1,
-      radiusSegments: 64,
-      radiusTop: 1,
-      x: -1.4,
-      y: -1,
-      z: Z,
-    });
-    wheelLarge.rotation.x = Math.PI * 0.5;
-    this.physics.add.existing(wheelLarge, { mass: 0.1 });
-
-    // RAIL
-    this.physics.add.box({
-      depth: 0.05,
-      height: 0.1,
-      width: 1,
-      x: -1.4,
-      y: -1.9,
-      z: Z - 0.05,
-      mass: 0,
-    });
-
-    // STOP
-    this.physics.add.box({
-      depth: 0.05,
-      height: 0.05,
-      width: 0.05,
-      x: -2.8,
-      y: -1,
-      z: Z,
-      mass: 0,
-    });
-
-    // POLE2
-    // const pole2 = this.add.box({
-    //   depth: 0.05,
-    //   height: 0.05,
-    //   width: 1.5,
-    //   x: 0.7,
-    //   y: -1.1,
-    //   z: Z + 0.11,
-    // });
-    // this.physics.add.existing(pole2, { mass: 0.5 });
-
-    // GROUND TO WHEEL_MOTOR: HINGE
-    const pivotOnGround: Types.XYZ = { x: 2, y: 2.2, z: 0.5 };
-    const pivotOnWheelM: Types.XYZ = { x: 0, y: 0, z: 0 };
-    const hingeGroundAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-    const hingeWheelMAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-    const motorHinge = this.physics.add.constraints.hinge(ground.body, wheelMotor.body, {
-      pivotA: { ...pivotOnGround },
-      pivotB: { ...pivotOnWheelM },
-      axisA: { ...hingeGroundAxis },
-      axisB: { ...hingeWheelMAxis },
-    });
-
-    { // WHEEL_MOTOR TO POLE: HINGE
-      const pivotOnWheel: Types.XYZ = { x: 0, y: 0.11, z: 0.45 };
-      const pivotOnPole: Types.XYZ = { x: 1.7, y: 0, z: 0 };
-      const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-      const hingePoleAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-      this.physics.add.constraints.hinge(wheelMotor.body, pole.body, {
-        pivotA: { ...pivotOnWheel },
-        pivotB: { ...pivotOnPole },
-        axisA: { ...hingeWheelAxis },
-        axisB: { ...hingePoleAxis },
-      });
-    }
-
-    { // POLE TO WHEEL_LARGE: HINGE
-      const pivotOnPole: Types.XYZ = { x: -1.7, y: 0, z: 0 };
-      const pivotOnWheel: Types.XYZ = { x: 0, y: 0.11, z: -0.95 };
-      const hingePoleAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-      const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-      this.physics.add.constraints.hinge(pole.body, wheelLarge.body, {
-        pivotA: { ...pivotOnPole },
-        pivotB: { ...pivotOnWheel },
-        axisA: { ...hingePoleAxis },
-        axisB: { ...hingeWheelAxis },
-      });
-    }
-
-    // { // WHEEL_LARGE TO POLE2: HINGE
-    //   const pivotOnWheel: Types.XYZ = { x: 0.8, y: 0.11, z: 0.1 };
-    //   const pivotOnPole: Types.XYZ = { x: -0.8, y: 0, z: 0 };
-    //   const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-    //   const hingePoleAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-    //   this.physics.add.constraints.hinge(wheelLarge.body, pole2.body, {
-    //     pivotA: { ...pivotOnWheel },
-    //     pivotB: { ...pivotOnPole },
-    //     axisA: { ...hingeWheelAxis },
-    //     axisB: { ...hingePoleAxis },
-    //   });
-    // }
-
-    const speed = 2;
-    motorHinge.enableAngularMotor(true, speed, 0.25);
-  }
-
-  sliderTest(ground: Types.ExtendedObject3D) {
+  sliderConstraintTest(ground: Types.ExtendedObject3D) {
     // WHEEL_MOTOR
     const wheelMotor = this.add.cylinder({
       height: 0.05,
@@ -354,152 +228,6 @@ export default class Scene extends MainScene {
         linearUpperLimit: 0.5,
       });
     }
-
-    const speed = 2;
-    motorHinge.enableAngularMotor(true, speed, 0.25);
-  }
-
-  createPhysicsMachine1(ground: Types.ExtendedObject3D) {
-    // WHEEL_BIG
-    const wheelBig = this.add.cylinder({
-      height: 0.05,
-      radiusBottom: 1.2,
-      radiusSegments: 64,
-      radiusTop: 1.2,
-      x: -2,
-      y: -0.7,
-      z: 3.54,
-    });
-    // wheelBig.rotation.z = 0.03;
-    wheelBig.rotation.x = Math.PI * 0.5;
-    this.physics.add.existing(wheelBig);
-
-    // WHEEL_BIG_FIX
-    const wheelBigFix = this.add.cylinder({
-      height: 0.05,
-      radiusBottom: 0.2,
-      radiusSegments: 64,
-      radiusTop: 0.2,
-      x: -2,
-      y: -0.7,
-      z: 3.64,
-    });
-    // wheelBigFix.rotation.z = 0.03;
-    wheelBigFix.rotation.x = Math.PI * 0.5;
-    this.physics.add.existing(wheelBigFix);
-
-    // WHEEL_BIG_SLIDER
-    const wheelBigSlider = this.add.box({
-      depth: 0.05,
-      height: 0.05,
-      width: 1,
-      x: -2,
-      y: -0.7,
-      z: 3.7,
-    });
-    this.physics.add.existing(wheelBigSlider);
-
-    // WHEEL_MOTOR
-    const wheelMotor = this.add.cylinder({
-      height: 0.05,
-      radiusBottom: 0.4,
-      radiusSegments: 64,
-      radiusTop: 0.4,
-      x: 1.6,
-      y: 0,
-      z: 3.54,
-    });
-    wheelMotor.rotation.z = 0.03;
-    wheelMotor.rotation.x = Math.PI * 0.5;
-    this.physics.add.existing(wheelMotor);
-
-    // POLE
-    const pole = this.add.box({
-      depth: 0.05,
-      height: 0.05,
-      width: 3.4,
-      x: -0.3,
-      y: 0.2,
-      z: 3.7,
-    });
-    pole.rotation.z = 0.03;
-    pole.rotation.x = Math.PI * 0.5;
-    this.physics.add.existing(pole);
-
-    { // HINGE GROUND TO WHEEL_BIG_FIX
-      const pivotOnGround: Types.XYZ = { x: -2, y: 1.7, z: 0.65 };
-      const pivotOnWheel: Types.XYZ = { x: 0, y: 0, z: 0 };
-      const hingeGroundAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-      const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-      this.physics.add.constraints.hinge(ground.body, wheelBigFix.body, {
-        pivotA: { ...pivotOnGround },
-        pivotB: { ...pivotOnWheel },
-        axisA: { ...hingeGroundAxis },
-        axisB: { ...hingeWheelAxis },
-      });
-    }
-
-    { // SLIDER WHEEL_BIG_FIX TO WHEEL_BIG_SLIDER
-      const frameA = { x: 0, y: 0, z: 0 };
-      const frameB = { x: 0, y: 0, z: 0 };
-      this.physics.add.constraints.slider(wheelBigFix.body, wheelBigSlider.body, {
-        frameA,
-        frameB,
-        linearLowerLimit: -0.5,
-        linearUpperLimit: 0.5,
-      });
-    }
-
-    { // HINGE WHEEL_BIG_SLIDER TO WHEEL_BIG
-      const pivotOnSlider: Types.XYZ = { x: -0.5, y: 0, z: 0 };
-      const pivotOnWheel: Types.XYZ = { x: 0, y: 0.4, z: 0 };
-      const hingeSliderAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-      const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-      this.physics.add.constraints.hinge(wheelBigSlider.body, wheelBig.body, {
-        pivotA: { ...pivotOnSlider },
-        pivotB: { ...pivotOnWheel },
-        axisA: { ...hingeSliderAxis },
-        axisB: { ...hingeWheelAxis },
-      });
-    }
-
-    // HINGE GROUND TO WHEEL_MOTOR
-    const pivotOnGround: Types.XYZ = { x: 1.6, y: 2.3, z: 0.65 };
-    const pivotOnWheel: Types.XYZ = { x: 0, y: 0, z: 0 };
-    const hingeGroundAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-    const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-    const motorHinge = this.physics.add.constraints.hinge(ground.body, wheelMotor.body, {
-      pivotA: { ...pivotOnGround },
-      pivotB: { ...pivotOnWheel },
-      axisA: { ...hingeGroundAxis },
-      axisB: { ...hingeWheelAxis },
-    });
-
-    { // HINGE WHEEL_MOTOR TO POLE
-      const pivotOnWheel: Types.XYZ = { x: 0, y: 0.11, z: 0.35 };
-      const pivotOnPole: Types.XYZ = { x: 1.7, y: 0, z: 0 };
-      const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-      const hingePoleAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-      this.physics.add.constraints.hinge(wheelMotor.body, pole.body, {
-        pivotA: { ...pivotOnWheel },
-        pivotB: { ...pivotOnPole },
-        axisA: { ...hingeWheelAxis },
-        axisB: { ...hingePoleAxis },
-      });
-    }
-
-    // { // HINGE POLE TO WHEEL_BIG
-    //   const pivotOnPole: Types.XYZ = { x: -1.7, y: 0, z: 0 };
-    //   const pivotOnWheel: Types.XYZ = { x: 0, y: 0.11, z: -1.1 };
-    //   const hingePoleAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-    //   const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-    //   this.physics.add.constraints.hinge(pole.body, wheelBig.body, {
-    //     pivotA: { ...pivotOnPole },
-    //     pivotB: { ...pivotOnWheel },
-    //     axisA: { ...hingePoleAxis },
-    //     axisB: { ...hingeWheelAxis },
-    //   });
-    // }
 
     const speed = 2;
     motorHinge.enableAngularMotor(true, speed, 0.25);
