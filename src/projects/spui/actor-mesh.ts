@@ -49,7 +49,7 @@ export function createRectangle(
 export function createSVG(
   svgUrl: string,
   svgScale: number,
-  texture : THREE.Texture,
+  texture?: THREE.Texture,
   depth: number = 0.02,
 ) {
   return new Promise<ExtendedMesh>(

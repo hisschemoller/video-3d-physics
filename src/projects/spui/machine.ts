@@ -1,5 +1,6 @@
-import { Types } from 'enable3d';
+import { ExtendedObject3D, THREE, Types } from 'enable3d';
 import MainScene from '@app/mainscene';
+import { createSVG } from './actor-mesh';
 
 interface MachineConfig {
   ground: Types.ExtendedObject3D;
@@ -9,7 +10,9 @@ interface MachineConfig {
   z?: number;
 }
 
-export default function createPhysicsMachine({
+const SVG_WHEEL_SIZE = 1000;
+
+export default async function createPhysicsMachine({
   ground,
   radiusLarge = 1,
   scene3d,
@@ -63,18 +66,39 @@ export default function createPhysicsMachine({
   pole.add(capRight);
 
   // WHEEL_LARGE
-  const wheelLarge = scene3d.add.cylinder({
-    height: 0.05,
-    radiusBottom: radiusLarge,
-    radiusSegments: 64,
-    radiusTop: radiusLarge,
-    x,
-    y: ground.position.y + radiusLarge,
-    z,
+  const depth = 0.05;
+  const svgMesh = await createSVG(
+    '../assets/projects/spui/wheel1.svg',
+    (radiusLarge * 2) / SVG_WHEEL_SIZE,
+    undefined,
+    depth,
+  );
+  const geometry = svgMesh.geometry.clone();
+  const material = new THREE.MeshPhongMaterial({ color: 0x999999, side: THREE.BackSide });
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  mesh.position.set(-radiusLarge, radiusLarge, depth * -0.5);
+  const wheelLarge = new ExtendedObject3D();
+  wheelLarge.add(mesh);
+  wheelLarge.position.set(x, ground.position.y + radiusLarge, z);
+  scene3d.scene.add(wheelLarge);
+  scene3d.physics.add.existing(wheelLarge, {
+    shape: 'mesh',
   });
-  wheelLarge.rotation.x = Math.PI * 0.5;
-  scene3d.physics.add.existing(wheelLarge, { mass: 0.01 });
-  wheelLarge.body.setFriction(0.5);
+
+  // const wheelLarge = scene3d.add.cylinder({
+  //   height: 0.05,
+  //   radiusBottom: radiusLarge,
+  //   radiusSegments: 64,
+  //   radiusTop: radiusLarge,
+  //   x,
+  //   y: ground.position.y + radiusLarge,
+  //   z,
+  // });
+  // wheelLarge.rotation.x = Math.PI * 0.5;
+  // scene3d.physics.add.existing(wheelLarge, { mass: 0.01 });
+  // wheelLarge.body.setFriction(0.5);
 
   // RAIL
   scene3d.physics.add.box({
@@ -116,7 +140,7 @@ export default function createPhysicsMachine({
     const pivotOnPole: Types.XYZ = { x: -1.7, y: 0, z: -0.11 };
     const pivotOnWheel: Types.XYZ = { x: 0, y: 0, z: 0 }; // z: -radiusLarge + 0.05
     const hingePoleAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-    const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
+    const hingeWheelAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
     scene3d.physics.add.constraints.hinge(pole.body, wheelLarge.body, {
       pivotA: { ...pivotOnPole },
       pivotB: { ...pivotOnWheel },
