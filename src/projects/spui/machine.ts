@@ -1,21 +1,28 @@
 import { ExtendedObject3D, THREE, Types } from 'enable3d';
 import MainScene from '@app/mainscene';
+import createTween from '@app/tween';
+import { Timeline } from '@app/timeline';
 import { createSVG } from './actor-mesh';
 
 interface MachineConfig {
+  duration: number;
   ground: Types.ExtendedObject3D;
   radiusLarge?: number;
   scene3d: MainScene;
+  timeline: Timeline;
   x?: number;
   z?: number;
 }
 
+const DOUBLE_PI = Math.PI * 2;
 const SVG_WHEEL_SIZE = 1000;
 
 export default async function createPhysicsMachine({
+  duration,
   ground,
   radiusLarge = 1,
   scene3d,
+  timeline,
   x = -1.4,
   z = 3.5,
 }: MachineConfig) {
@@ -25,12 +32,13 @@ export default async function createPhysicsMachine({
     radiusBottom: 0.5,
     radiusSegments: 64,
     radiusTop: 0.5,
-    x: x + 3.4,
-    y: 0,
+    x: x + 3.4 - 0.08,
+    y: 0 - 0.2,
     z,
   });
   wheelMotor.rotation.x = Math.PI * 0.5;
   scene3d.physics.add.existing(wheelMotor, { mass: 10 });
+  wheelMotor.body.setCollisionFlags(2); // make it kinematic
 
   // POLE
   const pole = scene3d.add.box({
@@ -124,8 +132,8 @@ export default async function createPhysicsMachine({
   });
 
   { // WHEEL_MOTOR TO POLE: HINGE
-    const pivotOnWheel: Types.XYZ = { x: 0, y: 0.11, z: 0.45 };
-    const pivotOnPole: Types.XYZ = { x: 1.7, y: 0, z: 0 };
+    const pivotOnWheel: Types.XYZ = { x: 0, y: 0, z: 0.45 };
+    const pivotOnPole: Types.XYZ = { x: 1.7, y: 0, z: -0.11 };
     const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
     const hingePoleAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
     scene3d.physics.add.constraints.hinge(wheelMotor.body, pole.body, {
@@ -149,6 +157,20 @@ export default async function createPhysicsMachine({
     });
   }
 
-  const speed = 2;
-  motorHinge.enableAngularMotor(true, speed, 0.25);
+  // const speed = 2;
+  // motorHinge.enableAngularMotor(true, speed, 0.25);
+
+  // MOTOR HINGE TWEEN
+  const phase = 0;
+  const tween = createTween({
+    delay: 0.1,
+    duration,
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      const phasedProgress = (progress + phase) % 1;
+      wheelMotor.rotation.y = phasedProgress * DOUBLE_PI;
+      wheelMotor.body.needUpdate = true;
+    },
+  });
+  timeline.add(tween);
 }

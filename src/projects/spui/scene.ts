@@ -157,14 +157,18 @@ export default class Scene extends MainScene {
     // this.createPhysicsMachine1(ground);
     // this.sliderTest(ground);
     createPhysicsMachine({
+      duration: PATTERN_DURATION,
       ground,
       scene3d: this,
+      timeline: this.timeline,
       z: 2,
     });
     createPhysicsMachine({
+      duration: PATTERN_DURATION,
       ground,
       radiusLarge: 1.3,
       scene3d: this,
+      timeline: this.timeline,
       x: -3,
       z: 3.5,
     });
