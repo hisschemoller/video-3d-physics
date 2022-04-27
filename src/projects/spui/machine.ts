@@ -35,10 +35,32 @@ export default function createPhysicsMachine({
     height: 0.05,
     width: 3.4,
     x: x + 1.7,
-    y: 0.2,
+    y: 0,
     z: z + 0.11,
   });
   scene3d.physics.add.existing(pole, { mass: 0.5 });
+
+  // POLE CAP LEFT
+  const capLeft = scene3d.add.cylinder({
+    height: 0.08,
+    radiusBottom: 0.07,
+    radiusSegments: 24,
+    radiusTop: 0.07,
+    x: 3.4 * -0.5,
+  });
+  capLeft.rotation.x = Math.PI * 0.5;
+  pole.add(capLeft);
+
+  // POLE CAP RIGHT
+  const capRight = scene3d.add.cylinder({
+    height: 0.08,
+    radiusBottom: 0.05,
+    radiusSegments: 24,
+    radiusTop: 0.05,
+    x: 3.4 * 0.5,
+  });
+  capRight.rotation.x = Math.PI * 0.5;
+  pole.add(capRight);
 
   // WHEEL_LARGE
   const wheelLarge = scene3d.add.cylinder({
@@ -51,7 +73,8 @@ export default function createPhysicsMachine({
     z,
   });
   wheelLarge.rotation.x = Math.PI * 0.5;
-  scene3d.physics.add.existing(wheelLarge, { mass: 0.1 });
+  scene3d.physics.add.existing(wheelLarge, { mass: 0.01 });
+  wheelLarge.body.setFriction(0.5);
 
   // RAIL
   scene3d.physics.add.box({
@@ -61,17 +84,6 @@ export default function createPhysicsMachine({
     x,
     y: -1.9,
     z: z - 0.05,
-    mass: 0,
-  });
-
-  // STOP
-  scene3d.physics.add.box({
-    depth: 0.05,
-    height: 0.05,
-    width: 0.05,
-    x: x - radiusLarge - 0.4,
-    y: ground.position.y + radiusLarge,
-    z,
     mass: 0,
   });
 
@@ -101,8 +113,8 @@ export default function createPhysicsMachine({
   }
 
   { // POLE TO WHEEL_LARGE: HINGE
-    const pivotOnPole: Types.XYZ = { x: -1.7, y: 0, z: 0 };
-    const pivotOnWheel: Types.XYZ = { x: 0, y: 0.11, z: -radiusLarge + 0.05 }; // -0.95
+    const pivotOnPole: Types.XYZ = { x: -1.7, y: 0, z: -0.11 };
+    const pivotOnWheel: Types.XYZ = { x: 0, y: 0, z: 0 }; // z: -radiusLarge + 0.05
     const hingePoleAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
     const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
     scene3d.physics.add.constraints.hinge(pole.body, wheelLarge.body, {
