@@ -13,7 +13,8 @@ interface MachineConfig {
   scene3d: MainScene;
   timeline: Timeline;
   x?: number;
-  z?: number; 
+  yMotor?: number;
+  z?: number;
 }
 
 const DOUBLE_PI = Math.PI * 2;
@@ -28,6 +29,7 @@ export default async function createPhysicsMachine({
   scene3d,
   timeline,
   x = -1.4,
+  yMotor = 1.8,
   z = 3.5,
 }: MachineConfig) {
   // WHEEL_MOTOR
@@ -37,7 +39,7 @@ export default async function createPhysicsMachine({
     radiusSegments: 64,
     radiusTop: radiusMotor,
     x: x + 3.4 - 0.08,
-    y: 0 - 0.2,
+    y: ground.position.y + yMotor,
     z,
   });
   wheelMotor.rotation.x = Math.PI * 0.5;
@@ -124,7 +126,7 @@ export default async function createPhysicsMachine({
   });
 
   // GROUND TO WHEEL_MOTOR: HINGE
-  const pivotOnGround: Types.XYZ = { x: x + 3.4, y: 2.2, z: z - ground.position.z };
+  const pivotOnGround: Types.XYZ = { x: x + 3.4, y: yMotor, z: z - ground.position.z };
   const pivotOnWheelM: Types.XYZ = { x: 0, y: 0, z: 0 };
   const hingeGroundAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
   const hingeWheelMAxis: Types.XYZ = { x: 0, y: 1, z: 0 };

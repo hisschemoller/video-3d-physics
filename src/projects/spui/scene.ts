@@ -159,17 +159,20 @@ export default class Scene extends MainScene {
     createPhysicsMachine({
       duration: PATTERN_DURATION,
       ground,
+      radiusMotor: 0.8,
       scene3d: this,
       timeline: this.timeline,
-      z: 2,
+      z: 2.5,
     });
     createPhysicsMachine({
       duration: PATTERN_DURATION,
       ground,
+      phase: 0.6,
       radiusLarge: 1.3,
       scene3d: this,
       timeline: this.timeline,
       x: -3,
+      yMotor: 2.2,
       z: 3.5,
     });
   }
