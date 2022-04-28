@@ -7,11 +7,13 @@ import { createSVG } from './actor-mesh';
 interface MachineConfig {
   duration: number;
   ground: Types.ExtendedObject3D;
+  phase?: number;
   radiusLarge?: number;
+  radiusMotor?: number;
   scene3d: MainScene;
   timeline: Timeline;
   x?: number;
-  z?: number;
+  z?: number; 
 }
 
 const DOUBLE_PI = Math.PI * 2;
@@ -20,7 +22,9 @@ const SVG_WHEEL_SIZE = 1000;
 export default async function createPhysicsMachine({
   duration,
   ground,
+  phase = 0,
   radiusLarge = 1,
+  radiusMotor = 0.5,
   scene3d,
   timeline,
   x = -1.4,
@@ -29,9 +33,9 @@ export default async function createPhysicsMachine({
   // WHEEL_MOTOR
   const wheelMotor = scene3d.add.cylinder({
     height: 0.05,
-    radiusBottom: 0.5,
+    radiusBottom: radiusMotor,
     radiusSegments: 64,
-    radiusTop: 0.5,
+    radiusTop: radiusMotor,
     x: x + 3.4 - 0.08,
     y: 0 - 0.2,
     z,
@@ -124,7 +128,7 @@ export default async function createPhysicsMachine({
   const pivotOnWheelM: Types.XYZ = { x: 0, y: 0, z: 0 };
   const hingeGroundAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
   const hingeWheelMAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-  const motorHinge = scene3d.physics.add.constraints.hinge(ground.body, wheelMotor.body, {
+  scene3d.physics.add.constraints.hinge(ground.body, wheelMotor.body, {
     pivotA: { ...pivotOnGround },
     pivotB: { ...pivotOnWheelM },
     axisA: { ...hingeGroundAxis },
@@ -132,7 +136,7 @@ export default async function createPhysicsMachine({
   });
 
   { // WHEEL_MOTOR TO POLE: HINGE
-    const pivotOnWheel: Types.XYZ = { x: 0, y: 0, z: 0.45 };
+    const pivotOnWheel: Types.XYZ = { x: 0, y: 0, z: radiusMotor - 0.05 };
     const pivotOnPole: Types.XYZ = { x: 1.7, y: 0, z: -0.11 };
     const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
     const hingePoleAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
@@ -157,11 +161,7 @@ export default async function createPhysicsMachine({
     });
   }
 
-  // const speed = 2;
-  // motorHinge.enableAngularMotor(true, speed, 0.25);
-
   // MOTOR HINGE TWEEN
-  const phase = 0;
   const tween = createTween({
     delay: 0.1,
     duration,
