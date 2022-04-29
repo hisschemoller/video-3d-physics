@@ -50,6 +50,9 @@ export default class Scene extends MainScene {
     this.directionalLight.position.set(10, 15, 10);
     this.directionalLight.intensity = 0.98;
 
+    // AMBIENT LIGHT
+    this.ambientLight.intensity = 0.6;
+
     // TWEENS
     this.timeline = createTimeline({
       duration: PATTERN_DURATION,
@@ -144,7 +147,7 @@ export default class Scene extends MainScene {
 
   createPhysics() {
     if (this.physics.debug) {
-      this.physics.debug.enable();
+      // this.physics.debug.enable();
     }
 
     const ground = this.add.box({
@@ -154,7 +157,6 @@ export default class Scene extends MainScene {
     this.physics.add.existing(ground, { mass: 0 });
     ground.body.setFriction(1);
 
-    // this.createPhysicsMachine1(ground);
     // this.sliderTest(ground);
     createPhysicsMachine({
       duration: PATTERN_DURATION,
@@ -167,11 +169,12 @@ export default class Scene extends MainScene {
     createPhysicsMachine({
       duration: PATTERN_DURATION,
       ground,
+      isFlipped: false,
       phase: 0.6,
       radiusLarge: 1.3,
       scene3d: this,
       timeline: this.timeline,
-      x: -3,
+      x: 0,
       yMotor: 2.2,
       z: 3.5,
     });
