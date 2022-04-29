@@ -151,32 +151,41 @@ export default class Scene extends MainScene {
     }
 
     const ground = this.add.box({
-      y: -2.4, z: 3, width: 16, height: 1, depth: 6,
+      y: -2.4, z: 3, width: 16, height: 0.8, depth: 6,
     });
     ground.rotation.z = 0.0188;
     this.physics.add.existing(ground, { mass: 0 });
     ground.body.setFriction(1);
 
     // this.sliderTest(ground);
-    createPhysicsMachine({
+    const machineBasics = {
       duration: PATTERN_DURATION,
       ground,
-      radiusMotor: 0.8,
       scene3d: this,
       timeline: this.timeline,
+    };
+    createPhysicsMachine({
+      ...machineBasics,
+      radiusMotor: 0.8,
       z: 2.5,
     });
     createPhysicsMachine({
-      duration: PATTERN_DURATION,
-      ground,
-      isFlipped: false,
-      phase: 0.6,
+      ...machineBasics,
+      isFlipped: true,
       radiusLarge: 1.3,
-      scene3d: this,
-      timeline: this.timeline,
-      x: 0,
-      yMotor: 2.2,
+      radiusMotor: 0.5,
+      x: 1,
+      yMotor: 2.3,
       z: 3.5,
+    });
+    createPhysicsMachine({
+      ...machineBasics,
+      radiusLarge: 1.5,
+      radiusMotor: 0.3,
+      x: -2.5,
+      xWheelDistance: 5,
+      yMotor: 3.5,
+      z: 4,
     });
   }
 

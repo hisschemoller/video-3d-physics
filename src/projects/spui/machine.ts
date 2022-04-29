@@ -2,18 +2,19 @@ import { ExtendedObject3D, THREE, Types } from 'enable3d';
 import MainScene from '@app/mainscene';
 import createTween from '@app/tween';
 import { Timeline } from '@app/timeline';
+import { getAngleRadians, getDistance } from '@app/utils';
 import { createSVG } from './actor-mesh';
 
 interface MachineConfig {
   duration: number;
   ground: Types.ExtendedObject3D;
   isFlipped?: boolean;
-  phase?: number;
   radiusLarge?: number;
   radiusMotor?: number;
   scene3d: MainScene;
   timeline: Timeline;
   x?: number;
+  xWheelDistance?: number;
   yMotor?: number;
   z?: number;
 }
@@ -21,25 +22,27 @@ interface MachineConfig {
 const DOUBLE_PI = Math.PI * 2;
 const SVG_WHEEL_SIZE = 1000;
 const DEPTH = 0.05;
+const BAR_WHEEL_MARGIN = 0.05;
 
 export default async function createPhysicsMachine({
   duration,
   ground,
   isFlipped = false,
-  phase = 0,
   radiusLarge = 1,
   radiusMotor = 0.5,
   scene3d,
   timeline,
   x = -1.4,
+  xWheelDistance = 3.4,
   yMotor = 1.8,
   z = 3.5,
 }: MachineConfig) {
   const flip = isFlipped ? -1 : 1;
+  const y = ground.position.y + 0.4;
 
   // WHEEL_MOTOR
   const svgMeshM = await createSVG(
-    '../assets/projects/spui/wheel1.svg',
+    '../assets/projects/spui/wheel2.svg',
     (radiusMotor * 2) / SVG_WHEEL_SIZE,
     undefined,
     DEPTH,
@@ -53,8 +56,8 @@ export default async function createPhysicsMachine({
   const wheelMotor = new ExtendedObject3D();
   wheelMotor.add(meshM);
   wheelMotor.position.set(
-    x + ((3.4 - 0) * flip),
-    ground.position.y + yMotor,
+    x + (xWheelDistance * flip),
+    y + yMotor,
     z,
   );
   scene3d.scene.add(wheelMotor);
@@ -64,38 +67,45 @@ export default async function createPhysicsMachine({
   });
   wheelMotor.body.setCollisionFlags(2); // make it kinematic
 
-  // POLE
-  const pole = scene3d.add.box({
-    depth: 0.05,
-    height: 0.05,
-    width: 3.4,
-    x: x + (1.7 * flip),
-    y: 0,
+  // BAR
+  const barWheelSideY = y + radiusLarge;
+  const barMotorSideY = y + yMotor + radiusMotor - BAR_WHEEL_MARGIN;
+  const barY = Math.min(barWheelSideY, barMotorSideY)
+    + (Math.abs(barWheelSideY - barMotorSideY) / 2);
+  const barRotateZ = getAngleRadians(0, barWheelSideY, xWheelDistance, barMotorSideY) * flip;
+  const barLength = getDistance(0, barWheelSideY, xWheelDistance, barMotorSideY);
+  const bar = scene3d.add.box({
+    depth: DEPTH,
+    height: DEPTH,
+    width: barLength,
+    x: x + ((xWheelDistance / 2) * flip),
+    y: barY,
     z: z + 0.09,
   });
-  scene3d.physics.add.existing(pole, { mass: 0.5 });
+  bar.rotation.z = barRotateZ;
+  scene3d.physics.add.existing(bar, { mass: 0.5 });
 
-  // POLE CAP LEFT
+  // BAR CAP LEFT
   const capLeft = scene3d.add.cylinder({
     height: 0.08,
     radiusBottom: 0.07,
     radiusSegments: 24,
     radiusTop: 0.07,
-    x: (3.4 * -0.5) * flip,
+    x: (barLength / -2) * flip,
   });
   capLeft.rotation.x = Math.PI * 0.5;
-  pole.add(capLeft);
+  bar.add(capLeft);
 
-  // POLE CAP RIGHT
+  // BAR CAP RIGHT
   const capRight = scene3d.add.cylinder({
     height: 0.08,
     radiusBottom: 0.05,
     radiusSegments: 24,
     radiusTop: 0.05,
-    x: (3.4 * 0.5) * flip,
+    x: (barLength / 2) * flip,
   });
   capRight.rotation.x = Math.PI * 0.5;
-  pole.add(capRight);
+  bar.add(capRight);
 
   // WHEEL_LARGE
   const svgMesh = await createSVG(
@@ -112,7 +122,7 @@ export default async function createPhysicsMachine({
   mesh.position.set(-radiusLarge, radiusLarge, DEPTH * -0.5);
   const wheelLarge = new ExtendedObject3D();
   wheelLarge.add(mesh);
-  wheelLarge.position.set(x, ground.position.y + radiusLarge, z);
+  wheelLarge.position.set(x, y + radiusLarge, z);
   scene3d.scene.add(wheelLarge);
   scene3d.physics.add.existing(wheelLarge, {
     mass: 1,
@@ -138,24 +148,14 @@ export default async function createPhysicsMachine({
     height: 0.2,
     width: 1,
     x,
-    y: -1.9,
+    y: ground.position.y + 0.4 + 0.05,
     z: z - 0.05 - (isFlipped ? 0.05 : 0),
     mass: 0,
   });
 
-  // RAIL2
-  // scene3d.physics.add.box({
-  //   depth: 0.05,
-  //   height: 0.2,
-  //   width: 1,
-  //   x,
-  //   y: -1.9,
-  //   z: z + 0.1 + (isFlipped ? 0.05 : 0),
-  //   mass: 0,
-  // });
-
   // GROUND TO WHEEL_MOTOR: HINGE
-  const pivotOnGround: Types.XYZ = { x: x + (3.4 * flip), y: yMotor, z: z - ground.position.z };
+  const pivotOnGround: Types.XYZ = {
+    x: x + (xWheelDistance * flip), y: 0.4 + yMotor, z: z - ground.position.z };
   const pivotOnWheelM: Types.XYZ = { x: 0, y: 0, z: 0 };
   const hingeGroundAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
   const hingeWheelMAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
@@ -166,28 +166,28 @@ export default async function createPhysicsMachine({
     axisB: { ...hingeWheelMAxis },
   });
 
-  { // WHEEL_MOTOR TO POLE: HINGE
-    const pivotOnWheel: Types.XYZ = { x: 0, y: radiusMotor - 0.05, z: 0 };
-    const pivotOnPole: Types.XYZ = { x: (1.7 * flip), y: 0, z: -0.09 };
+  { // WHEEL_MOTOR TO BAR: HINGE
+    const pivotOnWheel: Types.XYZ = { x: 0, y: (radiusMotor - 0.05) * 1, z: 0 };
+    const pivotOnBar: Types.XYZ = { x: (barLength / 2) * flip, y: 0, z: -0.11 };
     const hingeWheelAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-    const hingePoleAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-    scene3d.physics.add.constraints.hinge(wheelMotor.body, pole.body, {
+    const hingeBarAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
+    scene3d.physics.add.constraints.hinge(wheelMotor.body, bar.body, {
       pivotA: { ...pivotOnWheel },
-      pivotB: { ...pivotOnPole },
+      pivotB: { ...pivotOnBar },
       axisA: { ...hingeWheelAxis },
-      axisB: { ...hingePoleAxis },
+      axisB: { ...hingeBarAxis },
     });
   }
 
-  { // POLE TO WHEEL_LARGE: HINGE
-    const pivotOnPole: Types.XYZ = { x: (-1.7 * flip), y: 0, z: -0.09 };
+  { // BAR TO WHEEL_LARGE: HINGE
+    const pivotOnBar: Types.XYZ = { x: (barLength / -2) * flip, y: 0, z: -0.09 };
     const pivotOnWheel: Types.XYZ = { x: 0, y: 0, z: 0 }; // z: -radiusLarge + 0.05
-    const hingePoleAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
+    const hingeBarAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
     const hingeWheelAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-    scene3d.physics.add.constraints.hinge(pole.body, wheelLarge.body, {
-      pivotA: { ...pivotOnPole },
+    scene3d.physics.add.constraints.hinge(bar.body, wheelLarge.body, {
+      pivotA: { ...pivotOnBar },
       pivotB: { ...pivotOnWheel },
-      axisA: { ...hingePoleAxis },
+      axisA: { ...hingeBarAxis },
       axisB: { ...hingeWheelAxis },
     });
   }
@@ -198,8 +198,7 @@ export default async function createPhysicsMachine({
     duration,
     onStart: () => {},
     onUpdate: (progress: number) => {
-      const phasedProgress = (progress + phase) % 1;
-      wheelMotor.rotation.z = phasedProgress * DOUBLE_PI * flip;
+      wheelMotor.rotation.z = progress * DOUBLE_PI * flip;
       wheelMotor.body.needUpdate = true;
     },
   });
