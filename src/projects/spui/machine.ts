@@ -6,6 +6,7 @@ import { getAngleRadians, getDistance } from '@app/utils';
 import { createSVG } from './actor-mesh';
 
 interface MachineConfig {
+  delay?: number;
   duration: number;
   ground: Types.ExtendedObject3D;
   isFlipped?: boolean;
@@ -25,6 +26,7 @@ const DEPTH = 0.05;
 const BAR_WHEEL_MARGIN = 0.05;
 
 export default async function createPhysicsMachine({
+  delay = 0.1,
   duration,
   ground,
   isFlipped = false,
@@ -194,7 +196,7 @@ export default async function createPhysicsMachine({
 
   // MOTOR HINGE TWEEN
   const tween = createTween({
-    delay: 0.1,
+    delay,
     duration,
     onStart: () => {},
     onUpdate: (progress: number) => {

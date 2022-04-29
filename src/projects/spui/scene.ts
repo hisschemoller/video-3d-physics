@@ -171,6 +171,7 @@ export default class Scene extends MainScene {
     });
     createPhysicsMachine({
       ...machineBasics,
+      delay: STEP_DURATION * 10,
       isFlipped: true,
       radiusLarge: 1.3,
       radiusMotor: 0.5,
@@ -180,12 +181,25 @@ export default class Scene extends MainScene {
     });
     createPhysicsMachine({
       ...machineBasics,
+      delay: STEP_DURATION * 20,
       radiusLarge: 1.5,
       radiusMotor: 0.3,
       x: -2.5,
       xWheelDistance: 5,
       yMotor: 3.5,
       z: 4,
+    });
+    createPhysicsMachine({
+      ...machineBasics,
+      delay: STEP_DURATION * 24,
+      // duration: STEP_DURATION * 16,
+      isFlipped: true,
+      radiusLarge: 0.5,
+      radiusMotor: 0.2,
+      x: 2,
+      xWheelDistance: 1,
+      yMotor: 3.3,
+      z: 5,
     });
   }
 
