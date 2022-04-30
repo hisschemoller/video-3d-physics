@@ -164,42 +164,68 @@ export default class Scene extends MainScene {
       scene3d: this,
       timeline: this.timeline,
     };
+
     createPhysicsMachine({
       ...machineBasics,
       radiusMotor: 0.8,
-      z: 2.5,
+      z: 1.6, // 2.5
     });
+
     createPhysicsMachine({
       ...machineBasics,
       delay: STEP_DURATION * 10,
       isFlipped: true,
       radiusLarge: 1.3,
       radiusMotor: 0.5,
-      x: 1,
+      x: 0.8,
       yMotor: 2.3,
-      z: 3.5,
+      z: 2.65, // 3.5,
     });
+
     createPhysicsMachine({
       ...machineBasics,
       delay: STEP_DURATION * 20,
-      radiusLarge: 1.5,
+      radiusLarge: 1.7,
       radiusMotor: 0.3,
-      x: -2.5,
+      x: -2.2,
       xWheelDistance: 5,
       yMotor: 3.5,
-      z: 4,
+      z: 3.5, // 4
     });
+
+    createPhysicsMachine({
+      ...machineBasics,
+      delay: STEP_DURATION * 15,
+      radiusLarge: 0.5,
+      radiusMotor: 0.8,
+      x: 1.5,
+      xWheelDistance: 1.5,
+      yMotor: 2.1,
+      z: 3.7,
+    });
+
     createPhysicsMachine({
       ...machineBasics,
       delay: STEP_DURATION * 24,
-      // duration: STEP_DURATION * 16,
       isFlipped: true,
       radiusLarge: 0.5,
       radiusMotor: 0.2,
       x: 2,
-      xWheelDistance: 1,
-      yMotor: 3.3,
+      xWheelDistance: 0.7,
+      yMotor: 3.7,
       z: 5,
+    });
+
+    createPhysicsMachine({
+      ...machineBasics,
+      delay: STEP_DURATION * 18,
+      isFlipped: true,
+      radiusLarge: 0.8,
+      radiusMotor: 0.6,
+      x: -0.9,
+      xWheelDistance: 1.2,
+      yMotor: 2.1,
+      z: 4.7,
     });
   }
 
