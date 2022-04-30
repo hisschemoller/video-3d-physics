@@ -13,6 +13,8 @@ interface MachineConfig {
   radiusLarge?: number;
   radiusMotor?: number;
   scene3d: MainScene;
+  svgWheelLarge?: string;
+  svgWheelMotor?: string;
   timeline: Timeline;
   x?: number;
   xWheelDistance?: number;
@@ -25,6 +27,51 @@ const SVG_WHEEL_SIZE = 1000;
 const DEPTH = 0.05;
 const BAR_WHEEL_MARGIN = 0.05;
 
+async function createWheel(
+  mass: number,
+  radius: number,
+  scene3d: MainScene,
+  svgPath: string,
+  x: number,
+  y: number,
+  z: number,
+) {
+  const svgScale = (radius * 2) / SVG_WHEEL_SIZE;
+  const svgMesh = await createSVG(
+    svgPath,
+    svgScale,
+    undefined,
+    DEPTH,
+  );
+  const geometry = svgMesh.geometry.clone();
+  // the canvas should exactly cover the SVG extrude front
+  const sizeVector = new THREE.Vector3();
+  geometry.computeBoundingBox();
+  geometry.boundingBox?.getSize(sizeVector);
+  const wRepeat = (1 / sizeVector.x) * svgScale;
+  const hRepeat = (1 / sizeVector.y) * svgScale * -1;
+  const texture = new THREE.TextureLoader().load('../assets/projects/spui/texture-rust2.jpg');
+  texture.offset = new THREE.Vector2(0, 1);
+  texture.repeat = new THREE.Vector2(wRepeat, hRepeat);
+  const material = new THREE.MeshPhongMaterial({
+    map: texture,
+    side: THREE.BackSide,
+  });
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  mesh.position.set(-radius, radius, DEPTH * -0.5);
+  const wheel = new ExtendedObject3D();
+  wheel.add(mesh);
+  wheel.position.set(x, y, z);
+  scene3d.scene.add(wheel);
+  scene3d.physics.add.existing(wheel, {
+    mass,
+    shape: 'mesh',
+  });
+  return wheel;
+}
+
 export default async function createPhysicsMachine({
   delay = 0.1,
   duration,
@@ -33,6 +80,8 @@ export default async function createPhysicsMachine({
   radiusLarge = 1,
   radiusMotor = 0.5,
   scene3d,
+  svgWheelLarge = '../assets/projects/spui/wheel1.svg',
+  svgWheelMotor = '../assets/projects/spui/wheel2.svg',
   timeline,
   x = -1.4,
   xWheelDistance = 3.4,
@@ -43,30 +92,15 @@ export default async function createPhysicsMachine({
   const y = ground.position.y + 0.4;
 
   // WHEEL_MOTOR
-  const svgMeshM = await createSVG(
-    '../assets/projects/spui/wheel2.svg',
-    (radiusMotor * 2) / SVG_WHEEL_SIZE,
-    undefined,
-    DEPTH,
-  );
-  const geometryM = svgMeshM.geometry.clone();
-  const materialM = new THREE.MeshPhongMaterial({ color: 0x999999, side: THREE.BackSide });
-  const meshM = new THREE.Mesh(geometryM, materialM);
-  meshM.castShadow = true;
-  meshM.receiveShadow = true;
-  meshM.position.set(-radiusMotor, radiusMotor, DEPTH * -0.5);
-  const wheelMotor = new ExtendedObject3D();
-  wheelMotor.add(meshM);
-  wheelMotor.position.set(
+  const wheelMotor = await createWheel(
+    10,
+    radiusMotor,
+    scene3d,
+    svgWheelMotor,
     x + (xWheelDistance * flip),
     y + yMotor,
     z,
   );
-  scene3d.scene.add(wheelMotor);
-  scene3d.physics.add.existing(wheelMotor, {
-    shape: 'mesh',
-    mass: 10,
-  });
   wheelMotor.body.setCollisionFlags(2); // make it kinematic
 
   // BAR
@@ -110,26 +144,15 @@ export default async function createPhysicsMachine({
   bar.add(capRight);
 
   // WHEEL_LARGE
-  const svgMesh = await createSVG(
-    '../assets/projects/spui/wheel1.svg',
-    (radiusLarge * 2) / SVG_WHEEL_SIZE,
-    undefined,
-    DEPTH,
+  const wheelLarge = await createWheel(
+    1,
+    radiusLarge,
+    scene3d,
+    svgWheelLarge,
+    x,
+    y + radiusLarge,
+    z,
   );
-  const geometry = svgMesh.geometry.clone();
-  const material = new THREE.MeshPhongMaterial({ color: 0x999999, side: THREE.BackSide });
-  const mesh = new THREE.Mesh(geometry, material);
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
-  mesh.position.set(-radiusLarge, radiusLarge, DEPTH * -0.5);
-  const wheelLarge = new ExtendedObject3D();
-  wheelLarge.add(mesh);
-  wheelLarge.position.set(x, y + radiusLarge, z);
-  scene3d.scene.add(wheelLarge);
-  scene3d.physics.add.existing(wheelLarge, {
-    mass: 1,
-    shape: 'mesh',
-  });
 
   // const wheelLarge = scene3d.add.cylinder({
   //   height: 0.05,
