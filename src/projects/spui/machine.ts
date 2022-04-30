@@ -15,6 +15,7 @@ interface MachineConfig {
   scene3d: MainScene;
   svgWheelLarge?: string;
   svgWheelMotor?: string;
+  textureUrl?: string;
   timeline: Timeline;
   x?: number;
   xWheelDistance?: number;
@@ -32,6 +33,7 @@ async function createWheel(
   radius: number,
   scene3d: MainScene,
   svgPath: string,
+  textureUrl: string,
   x: number,
   y: number,
   z: number,
@@ -50,7 +52,7 @@ async function createWheel(
   geometry.boundingBox?.getSize(sizeVector);
   const wRepeat = (1 / sizeVector.x) * svgScale;
   const hRepeat = (1 / sizeVector.y) * svgScale * -1;
-  const texture = new THREE.TextureLoader().load('../assets/projects/spui/texture-rust2.jpg');
+  const texture = new THREE.TextureLoader().load(textureUrl);
   texture.offset = new THREE.Vector2(0, 1);
   texture.repeat = new THREE.Vector2(wRepeat, hRepeat);
   const material = new THREE.MeshPhongMaterial({
@@ -82,6 +84,7 @@ export default async function createPhysicsMachine({
   scene3d,
   svgWheelLarge = '../assets/projects/spui/wheel1.svg',
   svgWheelMotor = '../assets/projects/spui/wheel2.svg',
+  textureUrl = '../assets/projects/spui/texture-rust2.jpg',
   timeline,
   x = -1.4,
   xWheelDistance = 3.4,
@@ -97,6 +100,7 @@ export default async function createPhysicsMachine({
     radiusMotor,
     scene3d,
     svgWheelMotor,
+    textureUrl,
     x + (xWheelDistance * flip),
     y + yMotor,
     z,
@@ -117,6 +121,10 @@ export default async function createPhysicsMachine({
     x: x + ((xWheelDistance / 2) * flip),
     y: barY,
     z: z + 0.09,
+  }, {
+    phong: {
+      map: new THREE.TextureLoader().load(textureUrl),
+    },
   });
   bar.rotation.z = barRotateZ;
   scene3d.physics.add.existing(bar, { mass: 0.5 });
@@ -128,6 +136,10 @@ export default async function createPhysicsMachine({
     radiusSegments: 24,
     radiusTop: 0.07,
     x: (barLength / -2) * flip,
+  }, {
+    phong: {
+      map: new THREE.TextureLoader().load(textureUrl),
+    },
   });
   capLeft.rotation.x = Math.PI * 0.5;
   bar.add(capLeft);
@@ -139,6 +151,10 @@ export default async function createPhysicsMachine({
     radiusSegments: 24,
     radiusTop: 0.05,
     x: (barLength / 2) * flip,
+  }, {
+    phong: {
+      map: new THREE.TextureLoader().load(textureUrl),
+    },
   });
   capRight.rotation.x = Math.PI * 0.5;
   bar.add(capRight);
@@ -149,6 +165,7 @@ export default async function createPhysicsMachine({
     radiusLarge,
     scene3d,
     svgWheelLarge,
+    textureUrl,
     x,
     y + radiusLarge,
     z,
@@ -180,7 +197,8 @@ export default async function createPhysicsMachine({
 
   // GROUND TO WHEEL_MOTOR: HINGE
   const pivotOnGround: Types.XYZ = {
-    x: x + (xWheelDistance * flip), y: 0.4 + yMotor, z: z - ground.position.z };
+    x: x + (xWheelDistance * flip), y: 0.4 + yMotor, z: z - ground.position.z,
+  };
   const pivotOnWheelM: Types.XYZ = { x: 0, y: 0, z: 0 };
   const hingeGroundAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
   const hingeWheelMAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
