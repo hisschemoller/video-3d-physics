@@ -12,6 +12,7 @@ interface MachineConfig {
   isFlipped?: boolean;
   radiusLarge?: number;
   radiusMotor?: number;
+  railLength?: number;
   scene3d: MainScene;
   svgWheelLarge?: string;
   svgWheelMotor?: string;
@@ -188,11 +189,11 @@ export default async function createPhysicsMachine({
   scene3d.physics.add.box({
     depth: 0.05,
     height: 0.2,
-    width: 1,
     x,
     y: ground.position.y + 0.4 + 0.05,
     z: z - 0.05 - (isFlipped ? 0.05 : 0),
     mass: 0,
+    width: railLength,
   }, {
     phong: {
       color: 0x958a78,

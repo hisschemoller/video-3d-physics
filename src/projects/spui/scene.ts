@@ -51,7 +51,7 @@ export default class Scene extends MainScene {
     this.directionalLight.intensity = 0.98;
 
     // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.6;
+    this.ambientLight.intensity = 0.62;
 
     // TWEENS
     this.timeline = createTimeline({
