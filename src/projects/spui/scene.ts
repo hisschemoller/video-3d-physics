@@ -151,7 +151,7 @@ export default class Scene extends MainScene {
     }
 
     const ground = this.add.box({
-      y: -2.4, z: 3, width: 16, height: 0.8, depth: 6,
+      y: -2.38, z: 3, width: 16, height: 0.8, depth: 6,
     });
     ground.rotation.z = 0.0188;
     this.physics.add.existing(ground, { mass: 0 });
@@ -177,7 +177,6 @@ export default class Scene extends MainScene {
       isFlipped: true,
       radiusLarge: 1.3,
       radiusMotor: 0.5,
-      textureUrl: '../assets/projects/spui/texture-rust2.jpg',
       x: 0.8,
       yMotor: 2.3,
       z: 2.65, // 3.5,
@@ -188,6 +187,7 @@ export default class Scene extends MainScene {
       delay: STEP_DURATION * 20,
       radiusLarge: 1.7,
       radiusMotor: 0.3,
+      svgWheelMotor: '../assets/projects/spui/wheel4.svg',
       textureUrl: '../assets/projects/spui/texture-rust4.jpg',
       x: -2.2,
       xWheelDistance: 5,
@@ -200,6 +200,7 @@ export default class Scene extends MainScene {
       delay: STEP_DURATION * 15,
       radiusLarge: 0.5,
       radiusMotor: 0.8,
+      textureUrl: '../assets/projects/spui/texture-rust7.jpg',
       x: 1.5,
       xWheelDistance: 1.5,
       yMotor: 2.1,
@@ -208,27 +209,28 @@ export default class Scene extends MainScene {
 
     createPhysicsMachine({
       ...machineBasics,
-      delay: STEP_DURATION * 24,
-      isFlipped: true,
-      radiusLarge: 0.5,
-      radiusMotor: 0.2,
-      textureUrl: '../assets/projects/spui/texture-rust5.jpg',
-      x: 2,
-      xWheelDistance: 0.7,
-      yMotor: 3.7,
-      z: 5,
-    });
-
-    createPhysicsMachine({
-      ...machineBasics,
       delay: STEP_DURATION * 18,
       isFlipped: true,
       radiusLarge: 0.8,
       radiusMotor: 0.6,
+      textureUrl: '../assets/projects/spui/texture-rust6.jpg',
       x: -0.9,
       xWheelDistance: 1.2,
       yMotor: 2.1,
       z: 4.7,
+    });
+
+    createPhysicsMachine({
+      ...machineBasics,
+      delay: STEP_DURATION * 24,
+      isFlipped: true,
+      radiusLarge: 0.5,
+      radiusMotor: 0.2,
+      textureUrl: '../assets/projects/spui/texture-rust3.jpg',
+      x: 2,
+      xWheelDistance: 0.7,
+      yMotor: 3.7,
+      z: 5,
     });
   }
 

@@ -193,6 +193,10 @@ export default async function createPhysicsMachine({
     y: ground.position.y + 0.4 + 0.05,
     z: z - 0.05 - (isFlipped ? 0.05 : 0),
     mass: 0,
+  }, {
+    phong: {
+      color: 0x958a78,
+    },
   });
 
   // GROUND TO WHEEL_MOTOR: HINGE
