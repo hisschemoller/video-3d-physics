@@ -47,16 +47,27 @@ async function createWheel(
     DEPTH,
   );
   const geometry = svgMesh.geometry.clone();
+
   // the canvas should exactly cover the SVG extrude front
   const sizeVector = new THREE.Vector3();
   geometry.computeBoundingBox();
   geometry.boundingBox?.getSize(sizeVector);
   const wRepeat = (1 / sizeVector.x) * svgScale;
   const hRepeat = (1 / sizeVector.y) * svgScale * -1;
+
   const texture = new THREE.TextureLoader().load(textureUrl);
   texture.offset = new THREE.Vector2(0, 1);
   texture.repeat = new THREE.Vector2(wRepeat, hRepeat);
+
+  const displacementMap = new THREE.TextureLoader()
+    .load('../assets/projects/spui/tileable_metal_scratch_texture.jpg');
+  displacementMap.offset = new THREE.Vector2(0, 1);
+  displacementMap.repeat = new THREE.Vector2(wRepeat, hRepeat);
+
   const material = new THREE.MeshPhongMaterial({
+    displacementBias: 0,
+    displacementMap,
+    displacementScale: 0.01,
     map: texture,
     side: THREE.BackSide,
   });
@@ -82,6 +93,7 @@ export default async function createPhysicsMachine({
   isFlipped = false,
   radiusLarge = 1,
   radiusMotor = 0.5,
+  railLength = 1,
   scene3d,
   svgWheelLarge = '../assets/projects/spui/wheel1.svg',
   svgWheelMotor = '../assets/projects/spui/wheel2.svg',
@@ -186,19 +198,19 @@ export default async function createPhysicsMachine({
   // wheelLarge.body.setFriction(0.5);
 
   // RAIL
-  scene3d.physics.add.box({
+  const rail = scene3d.add.box({
     depth: 0.05,
     height: 0.2,
     x,
     y: ground.position.y + 0.4 + 0.05,
     z: z - 0.05 - (isFlipped ? 0.05 : 0),
-    mass: 0,
     width: railLength,
   }, {
     phong: {
       color: 0x958a78,
     },
   });
+  scene3d.physics.add.existing(rail, { mass: 0 });
 
   // GROUND TO WHEEL_MOTOR: HINGE
   const pivotOnGround: Types.XYZ = {
