@@ -213,6 +213,8 @@ export default class Scene extends MainScene {
       isFlipped: true,
       radiusLarge: 0.8,
       radiusMotor: 0.6,
+      railLength: 3,
+      rotateY: Math.PI * -0.125,
       textureUrl: '../assets/projects/spui/texture-rust6.jpg',
       x: -0.9,
       xWheelDistance: 1.2,
