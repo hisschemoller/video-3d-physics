@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import { THREE, Types } from 'enable3d';
+import { THREE } from 'enable3d';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
@@ -110,13 +110,13 @@ export default class Scene extends MainScene {
       actor.setStaticPosition(getMatrix4({ x: to3d(-960), y: to3d(540) }));
       actor.addTween({
         delay: 0,
-        duration: STEP_DURATION * 16,
+        duration: STEP_DURATION * 15.9,
         videoStart: 79,
         fromImagePosition: new THREE.Vector2(0, 0),
       });
       actor.addTween({
         delay: STEP_DURATION * 16,
-        duration: STEP_DURATION * 16,
+        duration: STEP_DURATION * 15.9,
         videoStart: 112.7,
         fromImagePosition: new THREE.Vector2(0, 0),
       });
@@ -145,6 +145,9 @@ export default class Scene extends MainScene {
     }
   }
 
+  /**
+   * createPhysics
+   */
   createPhysics() {
     if (this.physics.debug) {
       // this.physics.debug.enable();
@@ -157,7 +160,6 @@ export default class Scene extends MainScene {
     this.physics.add.existing(ground, { mass: 0 });
     ground.body.setFriction(1);
 
-    // this.sliderTest(ground);
     const machineBasics = {
       duration: PATTERN_DURATION,
       ground,
@@ -168,7 +170,7 @@ export default class Scene extends MainScene {
     createPhysicsMachine({
       ...machineBasics,
       radiusMotor: 0.8,
-      z: 1.6, // 2.5
+      z: 1.65, // 2.5
     });
 
     createPhysicsMachine({
@@ -177,9 +179,10 @@ export default class Scene extends MainScene {
       isFlipped: true,
       radiusLarge: 1.3,
       radiusMotor: 0.5,
+      rotateY: -0.07,
       x: 0.8,
       yMotor: 2.3,
-      z: 2.65, // 3.5,
+      z: 2.6,
     });
 
     createPhysicsMachine({
@@ -187,12 +190,13 @@ export default class Scene extends MainScene {
       delay: STEP_DURATION * 20,
       radiusLarge: 1.7,
       radiusMotor: 0.3,
+      rotateY: -0.04,
       svgWheelMotor: '../assets/projects/spui/wheel4.svg',
       textureUrl: '../assets/projects/spui/texture-rust4.jpg',
       x: -2.2,
       xWheelDistance: 5,
       yMotor: 3.5,
-      z: 3.5, // 4
+      z: 3.55,
     });
 
     createPhysicsMachine({
@@ -200,11 +204,13 @@ export default class Scene extends MainScene {
       delay: STEP_DURATION * 15,
       radiusLarge: 0.5,
       radiusMotor: 0.8,
+      railLength: 4,
+      rotateY: -0.08,
       textureUrl: '../assets/projects/spui/texture-rust7.jpg',
       x: 1.5,
       xWheelDistance: 1.5,
       yMotor: 2.1,
-      z: 3.7,
+      z: 3.8,
     });
 
     createPhysicsMachine({
@@ -214,95 +220,27 @@ export default class Scene extends MainScene {
       radiusLarge: 0.8,
       radiusMotor: 0.6,
       railLength: 3,
-      rotateY: Math.PI * -0.125,
+      rotateY: Math.PI * -0.035,
       textureUrl: '../assets/projects/spui/texture-rust6.jpg',
       x: -0.9,
       xWheelDistance: 1.2,
       yMotor: 2.1,
-      z: 4.7,
+      z: 4.67,
     });
 
     createPhysicsMachine({
       ...machineBasics,
       delay: STEP_DURATION * 24,
       isFlipped: true,
-      radiusLarge: 0.5,
+      railLength: 1.4,
+      radiusLarge: 0.55,
       radiusMotor: 0.2,
+      rotateY: Math.PI * -0.04,
       textureUrl: '../assets/projects/spui/texture-rust3.jpg',
-      x: 2,
+      x: 1.5,
       xWheelDistance: 0.7,
       yMotor: 3.7,
-      z: 5,
+      z: 4.93,
     });
-  }
-
-  sliderConstraintTest(ground: Types.ExtendedObject3D) {
-    // WHEEL_MOTOR
-    const wheelMotor = this.add.cylinder({
-      height: 0.05,
-      radiusBottom: 0.4,
-      radiusSegments: 64,
-      radiusTop: 0.4,
-      x: 0,
-      y: 0,
-      z: 3.5,
-    });
-    // wheelMotor.rotation.z = 0.03;
-    wheelMotor.rotation.x = Math.PI * 0.5;
-    this.physics.add.existing(wheelMotor);
-
-    // SLIDER_BAR
-    const sliderBar = this.add.box({
-      depth: 0.05,
-      height: 0.05,
-      width: 1,
-      x: 0,
-      y: 0,
-      z: 3.7,
-    });
-    this.physics.add.existing(sliderBar, { mass: 1 });
-
-    // WHEEL_SLIDING
-    const wheelSliding = this.add.cylinder({
-      height: 0.05,
-      radiusBottom: 0.2,
-      radiusSegments: 64,
-      radiusTop: 0.2,
-      x: 0,
-      y: 0,
-      z: 3.6,
-    });
-    // wheelMotor.rotation.z = 0.03;
-    wheelSliding.rotation.x = Math.PI * 0.5;
-    this.physics.add.existing(wheelSliding, { mass: 0.01 });
-
-    // GROUND TO WHEEL_MOTOR: HINGE
-    const pivotOnGround: Types.XYZ = { x: 0, y: 2, z: 0.5 };
-    const pivotOnWheel: Types.XYZ = { x: 0, y: 0, z: 0 };
-    const hingeGroundAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-    const hingeWheelAxis: Types.XYZ = { x: 0, y: 1, z: 0 };
-    const motorHinge = this.physics.add.constraints.hinge(ground.body, wheelMotor.body, {
-      pivotA: { ...pivotOnGround },
-      pivotB: { ...pivotOnWheel },
-      axisA: { ...hingeGroundAxis },
-      axisB: { ...hingeWheelAxis },
-    });
-
-    // WHEEL_MOTOR TO SLIDER_BAR: LOCK
-    this.physics.add.constraints.lock(wheelMotor.body, sliderBar.body, true);
-
-    { // SLIDER_BAR TO WHEEL_SLIDING: SLIDER
-      const frameA = { x: 0, y: 0, z: 0 };
-      const frameB = { x: 0, y: 0, z: Math.PI / 2 };
-      this.physics.add.constraints.slider(sliderBar.body, wheelSliding.body, {
-        frameA,
-        frameB,
-        linearLowerLimit: -0.5,
-        linearUpperLimit: 0.5,
-      });
-    }
-
-    const speed = 2;
-    motorHinge.enableAngularMotor(true, speed, 0.25);
   }
 }

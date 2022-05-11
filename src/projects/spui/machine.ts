@@ -181,8 +181,16 @@ export default async function createPhysicsMachine({
   bar.add(capRight);
 
   // WHEEL_LARGE
+  let mass = 0;
+  switch (radiusLarge) {
+    case 0.8: mass = 8; break;
+    case 0.5: mass = 0.02; break;
+    case 0.55: mass = 0.02; break;
+    default: mass = 0.1;
+  }
+
   const wheelLarge = await createWheel(
-    0.1,
+    mass,
     radiusLarge,
     rotateY,
     scene3d,
@@ -198,9 +206,9 @@ export default async function createPhysicsMachine({
   const rail = scene3d.add.box({
     depth: 0.05,
     height: 0.2,
-    x: x + (Math.sin(rotateY) * (0.05 * flip)),
+    x: x + (Math.sin(rotateY) * -0.05),
     y: y + 0.05,
-    z: z + (Math.cos(rotateY) * (0.05 * flip)),
+    z: z + (Math.cos(rotateY) * -0.05),
     width: railLength,
   }, {
     phong: {
@@ -210,43 +218,27 @@ export default async function createPhysicsMachine({
   rail.rotation.y = rotateY;
   scene3d.physics.add.existing(rail, { mass: 0 });
 
-  // GROUND TO WHEEL_MOTOR: HINGE
-  // const pivotOnGround: Types.XYZ = {
-  //   x: x + (xWheelDistance * flip), y: 0.4 + yMotor, z: z - ground.position.z,
-  // };
-  // const pivotOnWheelM: Types.XYZ = { x: 0, y: 0, z: 0 };
-  // const hingeGroundAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-  // const hingeWheelMAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-  // scene3d.physics.add.constraints.hinge(ground.body, wheelMotor.body, {
-  //   pivotA: { ...pivotOnGround },
-  //   pivotB: { ...pivotOnWheelM },
-  //   axisA: { ...hingeGroundAxis },
-  //   axisB: { ...hingeWheelMAxis },
-  // });
-
   { // WHEEL_MOTOR TO BAR: HINGE
     const pivotOnWheel: Types.XYZ = { x: 0, y: (radiusMotor - 0.05) * 1, z: 0 };
     const pivotOnBar: Types.XYZ = { x: (barLength / 2) * flip, y: 0, z: -0.11 };
-    const hingeWheelAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-    const hingeBarAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
+    const hingeAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
     scene3d.physics.add.constraints.hinge(wheelMotor.body, bar.body, {
       pivotA: { ...pivotOnWheel },
       pivotB: { ...pivotOnBar },
-      axisA: { ...hingeWheelAxis },
-      axisB: { ...hingeBarAxis },
+      axisA: { ...hingeAxis },
+      axisB: { ...hingeAxis },
     });
   }
 
   { // BAR TO WHEEL_LARGE: HINGE
     const pivotOnBar: Types.XYZ = { x: (barLength / -2) * flip, y: 0, z: -0.09 };
-    const pivotOnWheel: Types.XYZ = { x: 0, y: 0, z: 0 }; // z: -radiusLarge + 0.05
-    const hingeBarAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
-    const hingeWheelAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
+    const pivotOnWheel: Types.XYZ = { x: 0, y: 0, z: 0 };
+    const hingeAxis: Types.XYZ = { x: 0, y: 0, z: 1 };
     scene3d.physics.add.constraints.hinge(bar.body, wheelLarge.body, {
       pivotA: { ...pivotOnBar },
       pivotB: { ...pivotOnWheel },
-      axisA: { ...hingeBarAxis },
-      axisB: { ...hingeWheelAxis },
+      axisA: { ...hingeAxis },
+      axisB: { ...hingeAxis },
     });
   }
 

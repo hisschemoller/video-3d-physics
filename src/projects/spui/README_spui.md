@@ -14,7 +14,22 @@ ffmpeg -i 'Spui 2019-08-24 IMG_0164.MOV' '/Volumes/Samsung_X5/spui-0164/frames/f
 ffmpeg -i 'Spui 2019-08-24 IMG_0164.MOV' -vf scale=480:270 spui-0164_preview.mov
 // convert preview to png sequence
 ffmpeg -i spui-0164_preview.mov '/Volumes/Samsung_X5/spui-0164/frames_preview/frame_%05d.png'
+
+// png to mp4 (from index 145) met 30 FPS
+ffmpeg -framerate 30 -start_number 145 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p spui-video-x1.mp4
+// repeat 32 times, 144 frames, video alleen
+ffmpeg -i spui-video-x1.mp4 -filter_complex "loop=loop=32:size=144:start=0" spui-video-x32.mp4
+// repeat 32, audio alleen
+ffmpeg -stream_loop 32 -i "spui-audio-x1.wav" -c copy spui-audio-x32.wav
+// video en audio samenvoegen
+ffmpeg -i spui-video-x32.mp4 -i spui-audio-x32.wav -vcodec copy spui-x32.mp4
 ```
+
+Het ingestelde tempo is 100 BPM<br>
+Video duurt 144 frames<br>
+Video duurt 144 / 30 FPS = 4.8 seconden.<br>
+Een beat duurt 4.8 / 8 = 0.6 seconden.<br>
+Het tempo is 60 / 0.6 = 100 BPM<br>
 
 ## Oud
 
