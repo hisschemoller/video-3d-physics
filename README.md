@@ -62,7 +62,7 @@ On Mac and Linux only apparently.
 for i in *.avi; do ffmpeg -i "$i" "${i%.*}.mp4"; done
 ```
 
-### Optimiseed MP4 and Webm files 
+### Optimised MP4 and Webm files 
 
 ```
 # H265
@@ -140,6 +140,15 @@ Settings for a 640x480px video to have no correction applied:
 ffmpeg -hide_banner -i input.mp4 -lavfi "perspective=x0=0:y0=0:x1=640:y1=0:x2=-0:y2=480:x3=640:y3=480:interpolation=linear" output.mp4
 ```
 
+### Color adjustment filter
+
+Set brightness, contrast, saturation and approximate gamma adjustment.<br>
+https://ffmpeg.org/ffmpeg-filters.html#eq<br>
+
+```
+ffmpeg -i input.mp4 -vf eq=gamma_r=1.2:gamma_g=1.2:contrast=1.1 output.mp4
+```
+
 ### Scale video to a specific size. 
 -1 to keep aspect ratio.
 
@@ -161,6 +170,14 @@ out_x and out_y are the left top corner of the output rectangle.
 
 ```
 ffmpeg -i input.avi -filter:v "crop=out_w:out_h:out_x:out_y" output.avi
+```
+
+## FFPlay
+
+Preview an edit.
+
+```
+ffplay -vf eq=brightness=0.01:saturation=1.1 input.mp4
 ```
 
 
