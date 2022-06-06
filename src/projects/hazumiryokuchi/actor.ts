@@ -36,6 +36,7 @@ interface TweenData {
   duration: number,
   ease?: keyof typeof Ease,
   isMirrored?: boolean,
+  videoExtraTime?: number,
   videoStart?: number,
   fromMatrix4?: THREE.Matrix4,
   toMatrix4?: THREE.Matrix4,
@@ -98,6 +99,7 @@ export async function createActor(
     duration,
     ease,
     isMirrored = false,
+    videoExtraTime = 0,
     videoStart = 0,
     fromMatrix4,
     toMatrix4,
@@ -135,8 +137,9 @@ export async function createActor(
     if (mediaData && 'imgSrcPath' in mediaData) {
       videoFrameTween = addVideoFrameTween(
         mediaData,
+        videoExtraTime,
         videoStart,
-        duration,
+        duration + 0,
       );
       if (context !== null && fromImagePosition && toImagePosition) {
         imagePositionTween = addImagePositionTween(

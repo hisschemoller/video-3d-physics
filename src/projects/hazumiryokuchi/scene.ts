@@ -83,7 +83,6 @@ export default class Scene extends MainScene {
     };
 
     await this.createActors(projectSettings, videos);
-    // this.createPhysics();
 
     this.postCreate();
   }
@@ -99,11 +98,10 @@ export default class Scene extends MainScene {
   async createActors(projectSettings: ProjectSettings,
     videos: { [key: string]: VideoData }) {
     const to3d = this.to3d.bind(this);
-    const toVP3d = this.toVP3d.bind(this);
 
     { // BACKGROUND
       const actor = await createActor(projectSettings, videos.main, {
-        box: { w: this.width3d, h: this.height3d, d: 0.02 },
+        box: { w: this.width3d, h: this.height3d, d: 0.01 },
         imageRect: { w: this.width, h: this.height },
       });
       actor.setStaticPosition(getMatrix4({ x: to3d(-960), y: to3d(540) }));
@@ -112,6 +110,23 @@ export default class Scene extends MainScene {
         duration: PATTERN_DURATION * 0.999,
         videoStart: 5.633333333333334,
         fromImagePosition: new THREE.Vector2(0, 0),
+      });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+    }
+
+    { // BACKGROUND 2
+      const actor = await createActor(projectSettings, videos.main, {
+        box: { w: to3d(436), h: to3d(164), d: 0.01 },
+        imageRect: { w: 436, h: 164 },
+      });
+      actor.setStaticPosition(getMatrix4({ x: to3d(-960 + 730), y: to3d(540 - 350), z: 0.01 }));
+      actor.addTween({
+        delay: STEP_DURATION * 16 * 4,
+        duration: PATTERN_DURATION * 0.999,
+        videoExtraTime: 1.7,
+        videoStart: 4,
+        fromImagePosition: new THREE.Vector2(730, 350),
       });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;

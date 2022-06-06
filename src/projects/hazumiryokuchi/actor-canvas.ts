@@ -58,12 +58,13 @@ export function addImagePositionTween(
  */
 export function addVideoFrameTween(
   { fps, imgSrcPath }: VideoData,
+  videoExtraTime: number,
   videoStart: number,
   duration: number,
 ): VideoFrameTween {
   const img = new Image();
   const imgNrFirst = videoStart * fps;
-  const imgNrLast = (videoStart + duration) * fps;
+  const imgNrLast = (videoStart + duration + videoExtraTime) * fps;
   let imgNr = imgNrFirst;
 
   const loadVideoFrame = async (progress: number) => (
