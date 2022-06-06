@@ -5,7 +5,7 @@ import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
-import { createActor } from './actor';
+import { createActor, createTweenGroup } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 117;
@@ -42,8 +42,14 @@ export default class Scene extends MainScene {
 
     const isPreview = true && !this.scene.userData.isCapture;
 
-    // CAMERA
-    // this.pCamera.position.set(0, 0, 9.6);
+    // CAMERA & ORBIT_CONTROLS
+    this.cameraTarget.set(0, -2.9, 0);
+    this.pCamera.position.set(0, 0, 10.5);
+    this.pCamera.lookAt(this.cameraTarget);
+    this.pCamera.updateProjectionMatrix();
+    this.orbitControls.target = this.cameraTarget;
+    this.orbitControls.update();
+    this.orbitControls.saveState();
 
     // // DIRECTIONAL LIGHT
     // this.directionalLight.position.set(10, 15, 10);
@@ -82,7 +88,14 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-    await this.createActors(projectSettings, videos);
+    // GROUP
+    const toVP3d = this.toVP3d.bind(this);
+    const group = createTweenGroup(projectSettings);
+    group.setStaticPosition(getMatrix4({ x: toVP3d(0), y: toVP3d(328, false), rx: -0.27 }));
+    const axesHelper = new THREE.AxesHelper(25);
+    group.getMesh().add(axesHelper);
+
+    await this.createActors(projectSettings, videos, group.getMesh());
 
     this.postCreate();
   }
@@ -95,8 +108,10 @@ export default class Scene extends MainScene {
   /**
    * createActors
    */
-  async createActors(projectSettings: ProjectSettings,
-    videos: { [key: string]: VideoData }) {
+  async createActors(
+    projectSettings: ProjectSettings,
+    videos: { [key: string]: VideoData },
+    group: THREE.Group,) {
     const to3d = this.to3d.bind(this);
 
     { // BACKGROUND
@@ -104,7 +119,7 @@ export default class Scene extends MainScene {
         box: { w: this.width3d, h: this.height3d, d: 0.01 },
         imageRect: { w: this.width, h: this.height },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(-960), y: to3d(540) }));
+      actor.setStaticPosition(getMatrix4({ }));
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION * 0.999,
@@ -113,6 +128,7 @@ export default class Scene extends MainScene {
       });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
     }
 
     { // BACKGROUND 2
@@ -120,16 +136,17 @@ export default class Scene extends MainScene {
         box: { w: to3d(436), h: to3d(164), d: 0.01 },
         imageRect: { w: 436, h: 164 },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(-960 + 730), y: to3d(540 - 350), z: 0.01 }));
+      actor.setStaticPosition(getMatrix4({ x: to3d(730), y: to3d(-350), z: 0.01 }));
       actor.addTween({
         delay: STEP_DURATION * 16 * 4,
         duration: PATTERN_DURATION * 0.999,
-        videoExtraTime: 1.7,
+        videoExtraTime: 1.6,
         videoStart: 4,
         fromImagePosition: new THREE.Vector2(730, 350),
       });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
     }
   }
 }
