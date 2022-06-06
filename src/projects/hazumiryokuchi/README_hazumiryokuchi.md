@@ -21,4 +21,13 @@ ffmpeg -i hazumiryokuchi.mp4 -vf eq=gamma_r=1.08:gamma_g=1.04:gamma_b=0.94:contr
 ffmpeg -hide_banner -i hazumiryokuchi-colored.mp4 -lavfi "perspective=x0=0:y0=0:x1=1920:y1=0:x2=79:y2=1054:x3=1824:y3=1035:interpolation=linear" hazumiryokuchi-perspective.mp4
 # extract frame 180 as an image
 ffmpeg -i hazumiryokuchi-perspective.mp4 -vf "select=eq(n\,179)" -vframes 1 hazumiryokuchi-perspective_frame_180.png
+# convert to png sequence
+ffmpeg -i hazumiryokuchi-perspective.mp4 '/Volumes/Samsung_X5/hazumiryokuchi/frames/frame_%05d.png'
+# scale to 25%, 1920 * 0.25 = 480 (x 270)
+ffmpeg -i hazumiryokuchi-perspective.mp4 -vf scale=480:270 hazumiryokuchi_preview.mp4
+# convert preview to png sequence
+ffmpeg -i hazumiryokuchi_preview.mp4 '/Volumes/Samsung_X5/hazumiryokuchi/frames_preview/frame_%05d.png'
 ```
+
+frame 169 tot 600
+169 / 30 = 5.633333333333334 sec. videoStart
