@@ -5,9 +5,9 @@ import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
+import createTween from '@app/tween';
 import { createActor, createTweenGroup } from './actor';
 import { createSVG } from './actor-mesh';
-import createTween from '@app/tween';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 117;
@@ -45,8 +45,8 @@ export default class Scene extends MainScene {
     const isPreview = true && !this.scene.userData.isCapture;
 
     // CAMERA & ORBIT_CONTROLS
-    this.cameraTarget.set(0, -2.9, 0);
-    this.pCamera.position.set(0, 0, 10.5);
+    this.cameraTarget.set(0, -2.9 * 4, 0);
+    this.pCamera.position.set(0, 0, 10.5 * 4);
     this.pCamera.lookAt(this.cameraTarget);
     this.pCamera.updateProjectionMatrix();
     this.orbitControls.target = this.cameraTarget;
@@ -91,9 +91,14 @@ export default class Scene extends MainScene {
     };
 
     // GROUP
-    const toVP3d = this.toVP3d.bind(this);
     const group = createTweenGroup(projectSettings);
-    group.setStaticPosition(getMatrix4({ x: toVP3d(0), y: toVP3d(328, false), rx: -0.27 }));
+    group.setStaticPosition(getMatrix4({
+      x: -32,
+      y: 7.1,
+      rx: -0.11,
+      sx: 4,
+      sy: 4,
+    }));
     const axesHelper = new THREE.AxesHelper(25);
     group.getMesh().add(axesHelper);
 
@@ -168,8 +173,8 @@ export default class Scene extends MainScene {
     const radius = 2;
     const mass = 1;
     const x = 0;
-    const y = -1.5;
-    const z = 3;
+    const y = -0.5;
+    const z = 36;
     const textureUrl = '../assets/projects/spui/texture-rust4.jpg';
     const svgPath = '../assets/projects/hazumiryokuchi/wheel1.svg';
     const svgScale = (radius * 2) / SVG_WHEEL_SIZE;
