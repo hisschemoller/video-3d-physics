@@ -1,13 +1,12 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import { ExtendedObject3D, THREE } from 'enable3d';
+import { THREE } from 'enable3d';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
-import createTween from '@app/tween';
 import { createActor, createTweenGroup } from './actor';
-import { createSVG } from './actor-mesh';
+import createWheel from './wheel';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 117;
@@ -164,67 +163,10 @@ export default class Scene extends MainScene {
    */
   async createPhysics() {
     if (this.physics.debug) {
-      this.physics.debug.enable();
+      // this.physics.debug.enable();
     }
 
-    const DOUBLE_PI = Math.PI * 2;
-    const SVG_WHEEL_SIZE = 1000;
-    const DEPTH = 0.05;
-    const radius = 2;
-    const mass = 1;
-    const x = 0;
-    const y = -0.5;
-    const z = 36;
-    const textureUrl = '../assets/projects/spui/texture-rust4.jpg';
-    const svgPath = '../assets/projects/hazumiryokuchi/wheel1.svg';
-    const svgScale = (radius * 2) / SVG_WHEEL_SIZE;
-    const svgMesh = await createSVG(
-      svgPath,
-      svgScale,
-      undefined,
-      DEPTH,
-    );
-    const geometry = svgMesh.geometry.clone();
-
-    // the canvas should exactly cover the SVG extrude front
-    const sizeVector = new THREE.Vector3();
-    geometry.computeBoundingBox();
-    geometry.boundingBox?.getSize(sizeVector);
-    const wRepeat = (1 / sizeVector.x) * svgScale;
-    const hRepeat = (1 / sizeVector.y) * svgScale * -1;
-
-    const texture = new THREE.TextureLoader().load(textureUrl);
-    texture.offset = new THREE.Vector2(0, 1);
-    texture.repeat = new THREE.Vector2(wRepeat, hRepeat);
-    const material = new THREE.MeshPhongMaterial({
-      map: texture,
-      side: THREE.BackSide,
-    });
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    mesh.position.set(-radius, radius, DEPTH * -0.5);
-    const wheel = new ExtendedObject3D();
-    wheel.add(mesh);
-    wheel.position.set(x, y, z);
-    wheel.rotation.x = Math.PI / 2;
-    this.scene.add(wheel);
-    this.physics.add.existing(wheel, {
-      mass,
-      shape: 'mesh',
-    });
-    wheel.body.setCollisionFlags(2); // make it kinematic
-
-    // MOTOR HINGE TWEEN
-    const tween = createTween({
-      delay: 0,
-      duration: PATTERN_DURATION * 0.999,
-      onStart: () => {},
-      onUpdate: (progress: number) => {
-        wheel.rotation.z = progress * DOUBLE_PI;
-        wheel.body.needUpdate = true;
-      },
-    });
-    this.timeline.add(tween);
+    createWheel(this, this.timeline, PATTERN_DURATION, 19);
+    createWheel(this, this.timeline, PATTERN_DURATION, 30);
   }
 }
