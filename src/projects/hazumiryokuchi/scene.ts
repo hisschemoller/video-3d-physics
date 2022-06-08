@@ -6,7 +6,7 @@ import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
 import { createActor, createTweenGroup } from './actor';
-import createWheel from './wheel';
+import createWheel, { addSphere } from './wheel';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 117;
@@ -52,12 +52,12 @@ export default class Scene extends MainScene {
     this.orbitControls.update();
     this.orbitControls.saveState();
 
-    // // DIRECTIONAL LIGHT
-    // this.directionalLight.position.set(10, 15, 10);
-    // this.directionalLight.intensity = 0.98;
+    // DIRECTIONAL LIGHT
+    this.directionalLight.position.set(10, 15, 10);
+    this.directionalLight.intensity = 0.98;
 
-    // // AMBIENT LIGHT
-    // this.ambientLight.intensity = 0.62;
+    // AMBIENT LIGHT
+    this.ambientLight.intensity = 0.35;
 
     // TWEENS
     this.timeline = createTimeline({
@@ -166,7 +166,9 @@ export default class Scene extends MainScene {
       // this.physics.debug.enable();
     }
 
-    createWheel(this, this.timeline, PATTERN_DURATION, 19);
-    createWheel(this, this.timeline, PATTERN_DURATION, 30);
+    await createWheel(this, this.timeline, PATTERN_DURATION, 19);
+
+    const wheel = await createWheel(this, this.timeline, PATTERN_DURATION, 30);
+    addSphere(this, wheel);
   }
 }

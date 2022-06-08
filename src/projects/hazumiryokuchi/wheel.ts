@@ -4,22 +4,23 @@ import MainScene from '@app/mainscene';
 import { Timeline } from '@app/timeline';
 import { createSVG } from './actor-mesh';
 
+const RADIUS = 3.5;
+const DOUBLE_PI = Math.PI * 2;
+const SVG_WHEEL_SIZE = 1000;
+const DEPTH = 0.05;
+
 export default async function createWheel(
   scene3d: MainScene,
   timeline: Timeline,
   patternDuration: number,
   z: number,
 ) {
-  const DOUBLE_PI = Math.PI * 2;
-  const SVG_WHEEL_SIZE = 1000;
-  const DEPTH = 0.05;
-  const radius = 3.5;
   const mass = 1;
   const x = 0;
   const y = 2;
-  const textureUrl = '../assets/projects/spui/texture-rust4.jpg';
+  const textureUrl = '../assets/projects/hazumiryokuchi/texture-rust.jpg';
   const svgPath = '../assets/projects/hazumiryokuchi/wheel1.svg';
-  const svgScale = (radius * 2) / SVG_WHEEL_SIZE;
+  const svgScale = (RADIUS * 2) / SVG_WHEEL_SIZE;
   const svgMesh = await createSVG(
     svgPath,
     svgScale,
@@ -45,7 +46,7 @@ export default async function createWheel(
   const mesh = new THREE.Mesh(geometry, material);
   mesh.castShadow = true;
   mesh.receiveShadow = true;
-  mesh.position.set(-radius, radius, DEPTH * -0.5);
+  mesh.position.set(-RADIUS, RADIUS, DEPTH * -0.5);
   const wheel = new ExtendedObject3D();
   wheel.add(mesh);
   wheel.position.set(x, y, z);
@@ -68,4 +69,23 @@ export default async function createWheel(
     },
   });
   timeline.add(tween);
+
+  return wheel;
+}
+
+export function addSphere(
+  scene3d: MainScene,
+  wheel: ExtendedObject3D,
+) {
+  const { x, y, z } = wheel.position;
+  console.log(x, y, z);
+  const box = scene3d.physics.add.box({
+    x,
+    y: y - 4,
+    z: z + 2,
+  }, { lambert: { color: 'hotpink' } });
+  scene3d.physics.add.constraints.pointToPoint(wheel.body, box.body, {
+    pivotA: { y: 2 },
+    pivotB: { y: 4 },
+  });
 }
