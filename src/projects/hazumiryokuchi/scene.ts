@@ -1,12 +1,13 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import { THREE } from 'enable3d';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
 import { createActor, createTweenGroup } from './actor';
-import createWheel, { addSphere } from './wheel';
+import createWheel, { addNewspaper } from './wheel';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 117;
@@ -64,6 +65,9 @@ export default class Scene extends MainScene {
       duration: PATTERN_DURATION,
     });
 
+    // BLENDER GLTF
+    const gltf = await this.load.gltf('../assets/projects/hazumiryokuchi/hazumiryokuchi.glb');
+
     // VIDEOS
     const videos = {
       main: {
@@ -102,7 +106,7 @@ export default class Scene extends MainScene {
     group.getMesh().add(axesHelper);
 
     await this.createActors(projectSettings, videos, group.getMesh());
-    await this.createPhysics();
+    await this.createPhysics(gltf);
 
     this.postCreate();
   }
@@ -161,14 +165,32 @@ export default class Scene extends MainScene {
   /**
    * createPhysics
    */
-  async createPhysics() {
+  async createPhysics(gltf: GLTF) {
     if (this.physics.debug) {
       // this.physics.debug.enable();
     }
 
-    await createWheel(this, this.timeline, PATTERN_DURATION, 19);
+    const wheel1 = await createWheel(this, this.timeline, PATTERN_DURATION, 19);
+    addNewspaper({
+      scene3d: this,
+      timeline: this.timeline,
+      wheel: wheel1,
+      cylinderHeight: 3,
+      distanceFromCenter: 3.5,
+      rotation: Math.PI * -0.5,
+      patternDuration: PATTERN_DURATION,
+    });
 
-    const wheel = await createWheel(this, this.timeline, PATTERN_DURATION, 30);
-    addSphere(this, wheel);
+    const wheel2 = await createWheel(this, this.timeline, PATTERN_DURATION, 30);
+    addNewspaper({
+      scene3d: this,
+      timeline: this.timeline,
+      wheel: wheel2,
+      distanceFromCenter: 3.5,
+      rotation: Math.PI * 0.5,
+      patternDuration: PATTERN_DURATION,
+      paperObject: gltf.scene.getObjectByName('paper1') as THREE.Mesh,
+      paperImagePath: '../assets/projects/hazumiryokuchi/krant1.jpg',
+    });
   }
 }

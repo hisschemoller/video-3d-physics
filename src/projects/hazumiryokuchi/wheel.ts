@@ -1,4 +1,6 @@
+/* eslint-disable no-param-reassign */
 import { ExtendedObject3D, THREE } from 'enable3d';
+import { Material } from 'three';
 import createTween from '@app/tween';
 import MainScene from '@app/mainscene';
 import { Timeline } from '@app/timeline';
@@ -15,7 +17,6 @@ export default async function createWheel(
   patternDuration: number,
   z: number,
 ) {
-  const mass = 1;
   const x = 0;
   const y = 2;
   const textureUrl = '../assets/projects/hazumiryokuchi/texture-rust.jpg';
@@ -46,46 +47,131 @@ export default async function createWheel(
   const mesh = new THREE.Mesh(geometry, material);
   mesh.castShadow = true;
   mesh.receiveShadow = true;
-  mesh.position.set(-RADIUS, RADIUS, DEPTH * -0.5);
-  const wheel = new ExtendedObject3D();
-  wheel.add(mesh);
-  wheel.position.set(x, y, z);
-  wheel.rotation.x = Math.PI / 2;
-  scene3d.scene.add(wheel);
-  scene3d.physics.add.existing(wheel, {
-    mass,
-    shape: 'mesh',
-  });
-  wheel.body.setCollisionFlags(2); // make it kinematic
+  mesh.position.set(-RADIUS, 0, RADIUS);
+  mesh.rotation.x = Math.PI / 2;
 
-  // MOTOR HINGE TWEEN
+  const group = new THREE.Group();
+  group.position.set(x, y, z);
+  group.add(mesh);
+  scene3d.scene.add(group);
+
   const tween = createTween({
     delay: 0,
     duration: patternDuration * 0.999,
     onStart: () => {},
     onUpdate: (progress: number) => {
-      wheel.rotation.z = progress * DOUBLE_PI;
-      wheel.body.needUpdate = true;
+      group.rotation.y = progress * DOUBLE_PI * -1;
     },
   });
   timeline.add(tween);
 
-  return wheel;
+  return group;
 }
 
-export function addSphere(
-  scene3d: MainScene,
-  wheel: ExtendedObject3D,
-) {
-  const { x, y, z } = wheel.position;
-  console.log(x, y, z);
-  const box = scene3d.physics.add.box({
-    x,
-    y: y - 4,
-    z: z + 2,
-  }, { lambert: { color: 'hotpink' } });
-  scene3d.physics.add.constraints.pointToPoint(wheel.body, box.body, {
-    pivotA: { y: 2 },
-    pivotB: { y: 4 },
+interface NewspaperArgs {
+  scene3d: MainScene;
+  timeline: Timeline;
+  wheel: THREE.Group;
+  cylinderHeight?: number;
+  cylinderRadius?: number;
+  distanceFromCenter?: number;
+  rotation?: number;
+  patternDuration: number,
+  paperObject?: THREE.Mesh | undefined;
+  paperImagePath?: string;
+}
+
+export function addNewspaper({
+  scene3d,
+  timeline,
+  wheel,
+  cylinderHeight = 4,
+  cylinderRadius = 0.02,
+  distanceFromCenter = 0,
+  rotation = 0,
+  patternDuration,
+  paperObject,
+  paperImagePath,
+}: NewspaperArgs) {
+  const cylinder = scene3d.add.cylinder({
+    height: cylinderHeight,
+    radiusBottom: cylinderRadius,
+    radiusTop: cylinderRadius,
+    x: 0 + (Math.sin(rotation) * distanceFromCenter),
+    y: 0 - (cylinderHeight / 2),
+    z: 0 + (Math.cos(rotation) * distanceFromCenter),
   });
+  cylinder.rotateY(rotation);
+  cylinder.rotateX(Math.PI * -0.025);
+  cylinder.castShadow = true;
+  cylinder.receiveShadow = true;
+  wheel.add(cylinder);
+
+  if (paperObject && paperImagePath) {
+    if (paperObject.material instanceof Material) {
+      const texture = new THREE.TextureLoader().load(paperImagePath);
+      (paperObject.material as THREE.MeshBasicMaterial).map = texture;
+      paperObject.material.side = THREE.DoubleSide;
+      paperObject.castShadow = true;
+      paperObject.receiveShadow = true;
+    }
+    const { x, y, z } = cylinder.position;
+    paperObject.position.set(x, y + (cylinderHeight / -2), z);
+    wheel.add(paperObject);
+
+    const tween = createTween({
+      delay: 0,
+      duration: patternDuration * 0.999,
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        paperObject.rotation.y = progress * DOUBLE_PI * -3;
+      },
+    });
+    timeline.add(tween);
+  }
+}
+
+interface SphereArgs {
+  scene3d: MainScene;
+  wheel: ExtendedObject3D;
+  cylinderHeight?: number;
+  cylinderRadius?: number;
+  sphereRadius?: number;
+  xOffset?: number;
+  zOffset?: number;
+}
+
+export function addSphere({
+  scene3d,
+  wheel,
+  cylinderHeight = 4,
+  cylinderRadius = 0.02,
+  sphereRadius = 0.3,
+  xOffset = 0,
+  zOffset = 0,
+}: SphereArgs) {
+  const { x, y, z } = wheel.position;
+
+  const cylinder = scene3d.physics.add.cylinder({
+    height: cylinderHeight,
+    radiusBottom: cylinderRadius,
+    radiusTop: cylinderRadius,
+    x: x + xOffset,
+    y: y - (cylinderHeight / 2),
+    z: z + zOffset,
+  });
+  // scene3d.physics.add.constraints.lock(wheel.body, cylinder.body);
+  scene3d.physics.add.constraints.pointToPoint(wheel.body, cylinder.body, {
+    pivotA: { x: xOffset, y: zOffset },
+    pivotB: { y: cylinderHeight / 2 },
+  });
+
+  const sphere = scene3d.physics.add.sphere({
+    mass: 0.1,
+    radius: sphereRadius,
+    x: x + xOffset,
+    y: y - cylinderHeight,
+    z: z + zOffset,
+  });
+  scene3d.physics.add.constraints.lock(cylinder.body, sphere.body);
 }
