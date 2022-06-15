@@ -10,18 +10,30 @@ const RADIUS = 3.5;
 const DOUBLE_PI = Math.PI * 2;
 const SVG_WHEEL_SIZE = 1000;
 const DEPTH = 0.05;
+const CYLINDER_RADIUS = 0.025;
 
-export default async function createWheel(
-  scene3d: MainScene,
-  timeline: Timeline,
-  patternDuration: number,
-  z: number,
+async function createCylinder(
+  height: number,
+  radius: number,
+  rotation: number,
 ) {
-  const x = 0;
-  const y = 2;
-  const textureUrl = '../assets/projects/hazumiryokuchi/texture-rust.jpg';
-  const svgPath = '../assets/projects/hazumiryokuchi/wheel1.svg';
-  const svgScale = (RADIUS * 2) / SVG_WHEEL_SIZE;
+  const geometry = new THREE.CylinderGeometry(radius, radius, height);
+  const material = new THREE.MeshPhongMaterial({ color: 0xcccccc });
+  const cylinder = new THREE.Mesh(geometry, material);
+  cylinder.rotateY(rotation);
+  // cylinder.rotateX(Math.PI * -0.025);
+  cylinder.castShadow = true;
+  cylinder.receiveShadow = true;
+
+  return cylinder;
+}
+
+async function createWheel(
+  svgPath: string,
+  textureUrl: string,
+  wheelRadius: number,
+) {
+  const svgScale = (wheelRadius * 2) / SVG_WHEEL_SIZE;
   const svgMesh = await createSVG(
     svgPath,
     svgScale,
@@ -41,19 +53,130 @@ export default async function createWheel(
   texture.offset = new THREE.Vector2(0, 1);
   texture.repeat = new THREE.Vector2(wRepeat, hRepeat);
   const material = new THREE.MeshPhongMaterial({
-    map: texture,
+    // map: texture,
+    color: 0xcccccc,
     side: THREE.BackSide,
   });
   const mesh = new THREE.Mesh(geometry, material);
   mesh.castShadow = true;
   mesh.receiveShadow = true;
-  mesh.position.set(-RADIUS, 0, RADIUS);
+  mesh.position.set(-wheelRadius, 0, wheelRadius);
   mesh.rotation.x = Math.PI / 2;
 
+  return mesh;
+}
+
+interface WheelArgs {
+  parent: THREE.Group;
+  timeline: Timeline;
+  patternDuration: number;
+  cylinderHeight: number;
+  distanceFromCenter: number;
+  rotation: number;
+  wheelRadius: number;
+  y: number;
+}
+
+export async function addCylinderWheel({
+  parent,
+  timeline,
+  patternDuration,
+  cylinderHeight,
+  distanceFromCenter,
+  rotation,
+  wheelRadius,
+  y,
+}: WheelArgs) {
+  // console.log('parent.position.y', parent.position.y);
   const group = new THREE.Group();
-  group.position.set(x, y, z);
-  group.add(mesh);
+  group.position.setX(Math.sin(rotation) * distanceFromCenter);
+  group.position.setY(y);
+  group.position.setZ(Math.cos(rotation) * distanceFromCenter);
+  parent.add(group);
+
+  // const axesHelper = new THREE.AxesHelper(25);
+  // group.add(axesHelper);
+
+  const svgPath = '../assets/projects/hazumiryokuchi/wheel2.svg';
+  const textureUrl = '../assets/projects/hazumiryokuchi/texture-rust.jpg';
+  const wheelMesh = await createWheel(svgPath, textureUrl, wheelRadius);
+  wheelMesh.position.setY(cylinderHeight * -1);
+  group.add(wheelMesh);
+
+  const cylinder = await createCylinder(cylinderHeight, 0.022, rotation);
+  cylinder.position.setY(cylinderHeight * -0.5);
+  group.add(cylinder);
+
+  const tween = createTween({
+    delay: 0,
+    duration: patternDuration * 0.999,
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      group.rotation.y = progress * DOUBLE_PI * -2;
+    },
+  });
+  timeline.add(tween);
+  // console.log('wheel.position.y', group.position.y);
+
+  return group;
+}
+
+interface BeadArgs {
+  parent: THREE.Group;
+}
+
+export async function addBead({
+  parent,
+}: BeadArgs) {
+  const geometry = new THREE.SphereGeometry(0.5);
+  const material = new THREE.MeshPhongMaterial({ color: 0xcccccc });
+  const bead = new THREE.Mesh(geometry, material);
+  bead.castShadow = true;
+  bead.receiveShadow = true;
+  parent.add(bead);
+  return bead;
+}
+
+interface LineArgs {
+  parent: THREE.Group;
+  cylinderHeight: number;
+  distanceFromCenter: number;
+  rotation: number;
+}
+
+export async function addLine({
+  parent,
+  cylinderHeight,
+  distanceFromCenter,
+  rotation,
+}: LineArgs) {
+  const group = new THREE.Group();
+  group.rotateY(rotation);
+  group.rotateX(Math.PI * -0.025);
+  group.position.setX(Math.sin(rotation) * distanceFromCenter);
+  group.position.setZ(Math.cos(rotation) * distanceFromCenter);
+  parent.add(group);
+
+  const line = await createCylinder(cylinderHeight, CYLINDER_RADIUS, rotation);
+  line.position.setY(cylinderHeight / -2);
+  group.add(line);
+  return group;
+}
+
+export default async function addMainWheel(
+  scene3d: MainScene,
+  timeline: Timeline,
+  patternDuration: number,
+  z: number,
+) {
+  const group = new THREE.Group();
+  group.position.set(0, 2, z);
   scene3d.scene.add(group);
+
+  const svgPath = '../assets/projects/hazumiryokuchi/wheel1.svg';
+  const textureUrl = '../assets/projects/hazumiryokuchi/texture-rust.jpg';
+  const wheelMesh = await createWheel(svgPath, textureUrl, RADIUS);
+  group.add(wheelMesh);
 
   const tween = createTween({
     delay: 0,

@@ -3,11 +3,12 @@
 import { THREE } from 'enable3d';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ProjectSettings, VideoData } from '@app/interfaces';
+import createTween from '@app/tween';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
 import { createActor, createTweenGroup } from './actor';
-import createWheel, { addNewspaper } from './wheel';
+import addMainWheel, { addBead, addLine } from './wheel';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 117;
@@ -106,7 +107,7 @@ export default class Scene extends MainScene {
     group.getMesh().add(axesHelper);
 
     await this.createActors(projectSettings, videos, group.getMesh());
-    await this.createPhysics(gltf);
+    await this.createWheels(gltf);
 
     this.postCreate();
   }
@@ -165,32 +166,138 @@ export default class Scene extends MainScene {
   /**
    * createPhysics
    */
-  async createPhysics(gltf: GLTF) {
+  async createWheels(gltf: GLTF) {
     if (this.physics.debug) {
       // this.physics.debug.enable();
     }
 
-    const wheel1 = await createWheel(this, this.timeline, PATTERN_DURATION, 19);
-    addNewspaper({
-      scene3d: this,
-      timeline: this.timeline,
-      wheel: wheel1,
-      cylinderHeight: 3,
-      distanceFromCenter: 3.5,
-      rotation: Math.PI * -0.5,
-      patternDuration: PATTERN_DURATION,
-    });
+    {
+      const mainWheel = await addMainWheel(this, this.timeline, PATTERN_DURATION, 30);
 
-    const wheel2 = await createWheel(this, this.timeline, PATTERN_DURATION, 30);
-    addNewspaper({
-      scene3d: this,
-      timeline: this.timeline,
-      wheel: wheel2,
-      distanceFromCenter: 3.5,
-      rotation: Math.PI * 0.5,
-      patternDuration: PATTERN_DURATION,
-      paperObject: gltf.scene.getObjectByName('paper1') as THREE.Mesh,
-      paperImagePath: '../assets/projects/hazumiryokuchi/krant1.jpg',
-    });
+      {
+        const line = await addLine({
+          parent: mainWheel,
+          cylinderHeight: 4.0,
+          distanceFromCenter: 3.3,
+          rotation: Math.PI * 0,
+        });
+
+        const bead1 = await addBead({
+          parent: line,
+        });
+        bead1.position.y = -0.5;
+
+        {
+          const tween = createTween({
+            delay: STEP_DURATION * 4,
+            duration: STEP_DURATION * 4,
+            ease: 'sineInOut',
+            onStart: () => {},
+            onUpdate: (progress: number) => {
+              bead1.position.y = -0.5 - (progress * 2);
+            },
+            onComplete: () => {},
+          });
+          this.timeline.add(tween);
+        }
+
+        {
+          const tween = createTween({
+            delay: STEP_DURATION * 60,
+            duration: STEP_DURATION * 12,
+            ease: 'sineInOut',
+            onStart: () => {},
+            onUpdate: (progress: number) => {
+              bead1.position.y = -2.5 + (progress * 2);
+            },
+            onComplete: () => {},
+          });
+          this.timeline.add(tween);
+        }
+      }
+
+      {
+        const line = addLine({
+          parent: mainWheel,
+          cylinderHeight: 5,
+          distanceFromCenter: 3.3,
+          rotation: Math.PI * 1,
+        });
+      }
+
+      // const wheel1 = await addWheel({
+      //   parent: line,
+      // });
+
+      // const bead1 = await addBead({
+      //   parent: line,
+      // });
+
+      // const wheel1 = await addCylinderWheel({
+      //   parent: mainWheel,
+      //   timeline: this.timeline,
+      //   patternDuration: PATTERN_DURATION,
+      //   cylinderHeight: 4.0,
+      //   distanceFromCenter: 3.3,
+      //   rotation: Math.PI * 0,
+      //   wheelRadius: 1,
+      //   y: 0,
+      // });
+      // const wheel2 = await addCylinderWheel({
+      //   parent: mainWheel,
+      //   timeline: this.timeline,
+      //   patternDuration: PATTERN_DURATION,
+      //   cylinderHeight: 4.0,
+      //   distanceFromCenter: 3,
+      //   rotation: Math.PI * 1,
+      //   wheelRadius: 1.2,
+      //   y: 0,
+      // });
+    }
+
+    {
+      const mainWheel = await addMainWheel(this, this.timeline, PATTERN_DURATION, 19);
+
+      // const wheel1 = await addCylinderWheel({
+      //   parent: mainWheel,
+      //   timeline: this.timeline,
+      //   patternDuration: PATTERN_DURATION,
+      //   cylinderHeight: 4.1 ,
+      //   distanceFromCenter: 3.4,
+      //   rotation: Math.PI * 0.5,
+      //   wheelRadius: 1.3,
+      //   y: 0,
+      // });
+      // const wheel2 = await addCylinderWheel({
+      //   parent: mainWheel,
+      //   timeline: this.timeline,
+      //   patternDuration: PATTERN_DURATION,
+      //   cylinderHeight: 4,
+      //   distanceFromCenter: 3,
+      //   rotation: Math.PI * -0.5,
+      //   wheelRadius: 1,
+      //   y: 0,
+      // });
+      // addNewspaper({
+      //   scene3d: this,
+      //   timeline: this.timeline,
+      //   wheel: mainWheel,
+      //   cylinderHeight: 3,
+      //   distanceFromCenter: 3.5,
+      //   rotation: Math.PI * -0.5,
+      //   patternDuration: PATTERN_DURATION,
+      // });
+    }
+
+    // addNewspaper({
+    //   scene3d: this,
+    //   timeline: this.timeline,
+    //   wheel: wheel2,
+    //   distanceFromCenter: 3.5,
+    //   rotation: Math.PI * 0.5,
+    //   patternDuration: PATTERN_DURATION,
+    //   paperObject: gltf.scene.getObjectByName('paper1') as THREE.Mesh,
+    //   paperImagePath: '../assets/projects/hazumiryokuchi/krant1.jpg',
+    // });
   }
 }
