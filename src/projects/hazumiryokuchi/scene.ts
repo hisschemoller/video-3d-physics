@@ -3,12 +3,11 @@
 import { THREE } from 'enable3d';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ProjectSettings, VideoData } from '@app/interfaces';
-import createTween from '@app/tween';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
 import { createActor, createTweenGroup } from './actor';
-import addMainWheel, { addBead, addLine } from './wheel';
+import addMainWheel, { addBead, addLine, addTweenOnLine, addWheel } from './wheel';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 117;
@@ -167,6 +166,8 @@ export default class Scene extends MainScene {
    * createPhysics
    */
   async createWheels(gltf: GLTF) {
+    const S = STEP_DURATION;
+
     if (this.physics.debug) {
       // this.physics.debug.enable();
     }
@@ -177,43 +178,30 @@ export default class Scene extends MainScene {
       {
         const line = await addLine({
           parent: mainWheel,
-          cylinderHeight: 4.0,
+          cylinderHeight: 4.6,
           distanceFromCenter: 3.3,
           rotation: Math.PI * 0,
         });
 
         const bead1 = await addBead({
           parent: line,
+          bead: gltf.scene.getObjectByName('bead1') as THREE.Mesh,
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-green.jpg',
         });
-        bead1.position.y = -0.5;
+        bead1.position.y = -1.1;
+        addTweenOnLine(bead1, this.timeline, S, 8, 6, 1.1, 4.5);
+        addTweenOnLine(bead1, this.timeline, S, 60, 12, 4.5, 1.1);
 
-        {
-          const tween = createTween({
-            delay: STEP_DURATION * 4,
-            duration: STEP_DURATION * 4,
-            ease: 'sineInOut',
-            onStart: () => {},
-            onUpdate: (progress: number) => {
-              bead1.position.y = -0.5 - (progress * 2);
-            },
-            onComplete: () => {},
-          });
-          this.timeline.add(tween);
-        }
-
-        {
-          const tween = createTween({
-            delay: STEP_DURATION * 60,
-            duration: STEP_DURATION * 12,
-            ease: 'sineInOut',
-            onStart: () => {},
-            onUpdate: (progress: number) => {
-              bead1.position.y = -2.5 + (progress * 2);
-            },
-            onComplete: () => {},
-          });
-          this.timeline.add(tween);
-        }
+        const wheel1 = await addWheel({
+          parent: line,
+          radius: 1,
+          timeline: this.timeline,
+          patternDuration: PATTERN_DURATION,
+          speed: 10,
+        });
+        wheel1.position.y = -0.2;
+        addTweenOnLine(wheel1, this.timeline, S, 12, 10, 0.2, 3.8);
+        addTweenOnLine(wheel1, this.timeline, S, 60, 12, 3.8, 0.2);
       }
 
       {

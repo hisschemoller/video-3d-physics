@@ -65,18 +65,6 @@ async function createWheel(
 
   return mesh;
 }
-
-interface WheelArgs {
-  parent: THREE.Group;
-  timeline: Timeline;
-  patternDuration: number;
-  cylinderHeight: number;
-  distanceFromCenter: number;
-  rotation: number;
-  wheelRadius: number;
-  y: number;
-}
-
 export async function addCylinderWheel({
   parent,
   timeline,
@@ -86,7 +74,16 @@ export async function addCylinderWheel({
   rotation,
   wheelRadius,
   y,
-}: WheelArgs) {
+}: {
+  parent: THREE.Group;
+  timeline: Timeline;
+  patternDuration: number;
+  cylinderHeight: number;
+  distanceFromCenter: number;
+  rotation: number;
+  wheelRadius: number;
+  y: number;
+}) {
   // console.log('parent.position.y', parent.position.y);
   const group = new THREE.Group();
   group.position.setX(Math.sin(rotation) * distanceFromCenter);
@@ -121,27 +118,28 @@ export async function addCylinderWheel({
   return group;
 }
 
-interface BeadArgs {
-  parent: THREE.Group;
-}
-
 export async function addBead({
   parent,
-}: BeadArgs) {
-  const geometry = new THREE.SphereGeometry(0.5);
-  const material = new THREE.MeshPhongMaterial({ color: 0xcccccc });
-  const bead = new THREE.Mesh(geometry, material);
+  bead,
+  beadImagePath,
+}: {
+  parent: THREE.Group;
+  bead: THREE.Mesh;
+  beadImagePath: string;
+}) {
+  if (bead.material instanceof Material) {
+    const texture = new THREE.TextureLoader().load(beadImagePath);
+    bead.material = new THREE.MeshPhongMaterial({
+      flatShading: false,
+      map: texture,
+      shininess: 80,
+      side: THREE.DoubleSide,
+    });
+  }
   bead.castShadow = true;
   bead.receiveShadow = true;
   parent.add(bead);
   return bead;
-}
-
-interface LineArgs {
-  parent: THREE.Group;
-  cylinderHeight: number;
-  distanceFromCenter: number;
-  rotation: number;
 }
 
 export async function addLine({
@@ -149,7 +147,12 @@ export async function addLine({
   cylinderHeight,
   distanceFromCenter,
   rotation,
-}: LineArgs) {
+}: {
+  parent: THREE.Group;
+  cylinderHeight: number;
+  distanceFromCenter: number;
+  rotation: number;
+}) {
   const group = new THREE.Group();
   group.rotateY(rotation);
   group.rotateX(Math.PI * -0.025);
@@ -191,19 +194,6 @@ export default async function addMainWheel(
   return group;
 }
 
-interface NewspaperArgs {
-  scene3d: MainScene;
-  timeline: Timeline;
-  wheel: THREE.Group;
-  cylinderHeight?: number;
-  cylinderRadius?: number;
-  distanceFromCenter?: number;
-  rotation?: number;
-  patternDuration: number,
-  paperObject?: THREE.Mesh | undefined;
-  paperImagePath?: string;
-}
-
 export function addNewspaper({
   scene3d,
   timeline,
@@ -215,7 +205,18 @@ export function addNewspaper({
   patternDuration,
   paperObject,
   paperImagePath,
-}: NewspaperArgs) {
+}: {
+  scene3d: MainScene;
+  timeline: Timeline;
+  wheel: THREE.Group;
+  cylinderHeight?: number;
+  cylinderRadius?: number;
+  distanceFromCenter?: number;
+  rotation?: number;
+  patternDuration: number,
+  paperObject?: THREE.Mesh | undefined;
+  paperImagePath?: string;
+}) {
   const cylinder = scene3d.add.cylinder({
     height: cylinderHeight,
     radiusBottom: cylinderRadius,
@@ -254,16 +255,6 @@ export function addNewspaper({
   }
 }
 
-interface SphereArgs {
-  scene3d: MainScene;
-  wheel: ExtendedObject3D;
-  cylinderHeight?: number;
-  cylinderRadius?: number;
-  sphereRadius?: number;
-  xOffset?: number;
-  zOffset?: number;
-}
-
 export function addSphere({
   scene3d,
   wheel,
@@ -272,7 +263,15 @@ export function addSphere({
   sphereRadius = 0.3,
   xOffset = 0,
   zOffset = 0,
-}: SphereArgs) {
+}: {
+  scene3d: MainScene;
+  wheel: ExtendedObject3D;
+  cylinderHeight?: number;
+  cylinderRadius?: number;
+  sphereRadius?: number;
+  xOffset?: number;
+  zOffset?: number;
+}) {
   const { x, y, z } = wheel.position;
 
   const cylinder = scene3d.physics.add.cylinder({
@@ -297,4 +296,60 @@ export function addSphere({
     z: z + zOffset,
   });
   scene3d.physics.add.constraints.lock(cylinder.body, sphere.body);
+}
+
+export function addTweenOnLine(
+  bead: THREE.Mesh | THREE.Group,
+  timeline: Timeline,
+  stepDuration: number,
+  delay: number,
+  duration: number,
+  startY: number,
+  endY: number,
+) {
+  const tween = createTween({
+    delay: delay * stepDuration,
+    duration: duration * stepDuration,
+    ease: 'sineInOut',
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      bead.position.y = -startY - (progress * (endY - startY));
+    },
+    onComplete: () => {},
+  });
+  timeline.add(tween);
+}
+
+export async function addWheel({
+  parent,
+  radius,
+  timeline,
+  patternDuration,
+  speed,
+}: {
+  parent: THREE.Group;
+  radius: number;
+  timeline: Timeline;
+  patternDuration: number;
+  speed: number;
+}) {
+  const group = new THREE.Group();
+  parent.add(group);
+
+  const svgPath = '../assets/projects/hazumiryokuchi/wheel2.svg';
+  const textureUrl = '../assets/projects/hazumiryokuchi/texture-rust.jpg';
+  const wheelMesh = await createWheel(svgPath, textureUrl, radius);
+  group.add(wheelMesh);
+
+  const tween = createTween({
+    delay: 0,
+    duration: patternDuration * 0.999,
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      group.rotation.y = progress * DOUBLE_PI * speed;
+    },
+  });
+  timeline.add(tween);
+
+  return group;
 }
