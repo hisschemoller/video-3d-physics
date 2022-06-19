@@ -130,14 +130,14 @@ export async function addBead({
   if (bead.material instanceof Material) {
     const texture = new THREE.TextureLoader().load(beadImagePath);
     bead.material = new THREE.MeshPhongMaterial({
-      flatShading: false,
       map: texture,
-      shininess: 80,
-      side: THREE.DoubleSide,
+      shininess: 90,
+      // side: THREE.DoubleSide,
     });
   }
   bead.castShadow = true;
   bead.receiveShadow = true;
+  bead.position.set(0, 0, 0);
   parent.add(bead);
   return bead;
 }

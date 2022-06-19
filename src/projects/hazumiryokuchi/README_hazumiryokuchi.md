@@ -31,3 +31,6 @@ ffmpeg -i hazumiryokuchi_preview.mp4 '/Volumes/Samsung_X5/hazumiryokuchi/frames_
 
 frame 169 tot 600
 169 / 30 = 5.633333333333334 sec. videoStart
+
+Glazed terra cotta textures:<br>
+https://www.pitoreska.sk/en/terracotta/glazed-terracotta/colours-and-textures

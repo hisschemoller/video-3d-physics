@@ -54,8 +54,17 @@ export default class Scene extends MainScene {
     this.orbitControls.saveState();
 
     // DIRECTIONAL LIGHT
-    this.directionalLight.position.set(10, 15, 10);
-    this.directionalLight.intensity = 0.98;
+    const lightZ = 30;
+    this.directionalLight.position.set(10, 15, 10 + lightZ);
+    // this.directionalLight.position.z += lightZ;
+    this.directionalLight.intensity = 0.99;
+
+    // const lightTarget = new THREE.Vector3(10, 0, 30);
+    this.scene.add(this.directionalLight.target);
+    // this.directionalLight.lookAt(new THREE.Vector3(0, 0, 20));
+    this.directionalLight.target.position.set(0, 0, lightZ);
+    // this.directionalLight.shadow.camera.position.set(0, 30, 0);
+    console.log(this.directionalLight.shadow.camera);
 
     // AMBIENT LIGHT
     this.ambientLight.intensity = 0.35;
@@ -81,6 +90,7 @@ export default class Scene extends MainScene {
       },
     };
 
+    // PROJECT SETTINGS
     const projectSettings: ProjectSettings = {
       height: this.height,
       height3d: this.height3d,
@@ -167,10 +177,7 @@ export default class Scene extends MainScene {
    */
   async createWheels(gltf: GLTF) {
     const S = STEP_DURATION;
-
-    if (this.physics.debug) {
-      // this.physics.debug.enable();
-    }
+    const T = this.timeline;
 
     {
       const mainWheel = await addMainWheel(this, this.timeline, PATTERN_DURATION, 30);
@@ -178,7 +185,7 @@ export default class Scene extends MainScene {
       {
         const line = await addLine({
           parent: mainWheel,
-          cylinderHeight: 4.6,
+          cylinderHeight: 4.5,
           distanceFromCenter: 3.3,
           rotation: Math.PI * 0,
         });
@@ -189,28 +196,111 @@ export default class Scene extends MainScene {
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-green.jpg',
         });
         bead1.position.y = -1.1;
-        addTweenOnLine(bead1, this.timeline, S, 8, 6, 1.1, 4.5);
-        addTweenOnLine(bead1, this.timeline, S, 60, 12, 4.5, 1.1);
+        addTweenOnLine(bead1, T, S, 8, 6, 1.1, 4.5);
+        addTweenOnLine(bead1, T, S, 60, 12, 4.5, 1.1);
 
         const wheel1 = await addWheel({
           parent: line,
           radius: 1,
-          timeline: this.timeline,
+          timeline: T,
           patternDuration: PATTERN_DURATION,
           speed: 10,
         });
         wheel1.position.y = -0.2;
-        addTweenOnLine(wheel1, this.timeline, S, 12, 10, 0.2, 3.8);
-        addTweenOnLine(wheel1, this.timeline, S, 60, 12, 3.8, 0.2);
+        addTweenOnLine(wheel1, T, S, 12, 10, 0.2, 3.8);
+        addTweenOnLine(wheel1, T, S, 60, 12, 3.8, 0.2);
       }
 
       {
-        const line = addLine({
+        const line = await addLine({
           parent: mainWheel,
-          cylinderHeight: 5,
+          cylinderHeight: 4.5,
           distanceFromCenter: 3.3,
           rotation: Math.PI * 1,
         });
+
+        const bead1 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('bead2') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-brown.jpg',
+        });
+        bead1.position.y = -1.1;
+        // addTweenOnLine(bead1, T, S, 8, 6, 1.1, 3.5);
+        // addTweenOnLine(bead1, T, S, 60, 12, 3.5, 1.1);
+
+        const bead2 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('bead3') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-green.jpg',
+        });
+        bead2.position.y = -1.7;
+        // addTweenOnLine(bead2, T, S, 8, 6, 1.7, 4.5);
+        // addTweenOnLine(bead2, T, S, 60, 12, 4.5, 1.7);
+
+        const bead3 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('bead4') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-grey.jpg',
+        });
+        bead3.position.y = -2.2;
+
+        const bead4 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('bead5') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-blue.jpg',
+        });
+        bead4.position.y = -2.7;
+
+        const bead5 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('bead2') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-gold.jpg',
+        });
+        bead5.position.y = -3.3;
+      }
+
+      {
+        const line = await addLine({
+          parent: mainWheel,
+          cylinderHeight: 4.5,
+          distanceFromCenter: 3.3,
+          rotation: Math.PI * 0.5,
+        });
+
+        const bead1 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder1') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-brown.jpg',
+        });
+        bead1.position.y = -1.1;
+
+        const bead2 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder2') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-green.jpg',
+        });
+        bead2.position.y = -1.5;
+
+        const bead3 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder3') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-grey.jpg',
+        });
+        bead3.position.y = -1.85;
+
+        const bead4 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder4') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-blue.jpg',
+        });
+        bead4.position.y = -2.25;
+
+        const bead5 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder5') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-gold.jpg',
+        });
+        bead5.position.y = -2.65;
       }
 
       // const wheel1 = await addWheel({
