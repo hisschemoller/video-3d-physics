@@ -184,6 +184,7 @@ export default async function addMainWheel(
   const tween = createTween({
     delay: 0,
     duration: patternDuration * 0.999,
+    onComplete: () => {},
     onStart: () => {},
     onUpdate: (progress: number) => {
       group.rotation.y = progress * DOUBLE_PI * -1;
@@ -311,11 +312,11 @@ export function addTweenOnLine(
     delay: delay * stepDuration,
     duration: duration * stepDuration,
     ease: 'sineInOut',
+    onComplete: () => {},
     onStart: () => {},
     onUpdate: (progress: number) => {
       bead.position.y = -startY - (progress * (endY - startY));
     },
-    onComplete: () => {},
   });
   timeline.add(tween);
 }
@@ -344,6 +345,7 @@ export async function addWheel({
   const tween = createTween({
     delay: 0,
     duration: patternDuration * 0.999,
+    onComplete: () => {},
     onStart: () => {},
     onUpdate: (progress: number) => {
       group.rotation.y = progress * DOUBLE_PI * speed;

@@ -64,7 +64,7 @@ export default function createTween({
     const localTime = time % timelineDuration;
     const localEnd = (delay + duration) % timelineDuration;
     const isStart = localTime >= delay && localTime - delta < delay;
-    const isComplete = localTime >= localEnd && localTime - delta < localEnd;
+    const isComplete = localTime >= localEnd && localTime - delta <= localEnd;
     const shouldComplete = isStart && !isComplete;
     // if the tween end (localEnd) is close to timelineDuration, then it can happen that localTime
     // jumps back to the start of the tween before the end is detected
