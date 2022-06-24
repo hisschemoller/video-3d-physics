@@ -261,7 +261,114 @@ export default class Scene extends MainScene {
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-green.jpg',
         });
         bead5.position.y = -4.3;
+        addTweenOnLine(bead5, T, S, 64, 6, 4.3, 2.6);
+        addTweenOnLine(bead5, T, S, 70, 4, 2.6, 4.3);
       }
+
+      { // 5 CYLINDERS
+        const line = await addLine({
+          parent: mainWheel,
+          cylinderHeight: 4.5,
+          distanceFromCenter: 3.3,
+          rotation: Math.PI * 0.5,
+        });
+
+        const bead1 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder1') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-brown.jpg',
+        });
+        bead1.position.y = -1.6;
+        addTweenOnLine(bead1, T, S, 8, 4, 1.6, 0.4);
+        addTweenOnLine(bead1, T, S, 36, 4, 0.4, 2.75);
+        addTweenOnLine(bead1, T, S, 40, 6, 2.75, 0.4);
+
+        const bead2 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder2') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-green.jpg',
+        });
+        bead2.position.y = -2.0;
+        addTweenOnLine(bead2, T, S, 8, 4, 2.0, 0.8);
+        addTweenOnLine(bead2, T, S, 32, 4, 0.8, 3.15);
+        addTweenOnLine(bead2, T, S, 42, 6, 3.15, 0.8);
+
+        const bead3 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder3') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-grey.jpg',
+        });
+        bead3.position.y = -2.35;
+        addTweenOnLine(bead3, T, S, 24, 4, 2.35, 1.15);
+        addTweenOnLine(bead3, T, S, 32, 4, 1.15, 3.5);
+        addTweenOnLine(bead3, T, S, 44, 6, 3.5, 1.15);
+
+        const bead4 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder4') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-blue.jpg',
+        });
+        bead4.position.y = -2.75;
+        addTweenOnLine(bead4, T, S, 24, 4, 2.75, 3.9);
+        addTweenOnLine(bead4, T, S, 46, 6, 3.9, 1.55);
+
+        const bead5 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder5') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-gold.jpg',
+        });
+        bead5.position.y = -3.15;
+        addTweenOnLine(bead5, T, S, 8, 4, 3.15, 4.3);
+        addTweenOnLine(bead5, T, S, 48, 6, 4.3, 1.95);
+      }
+
+      // { // 5 CYLINDERS
+      //   const line = await addLine({
+      //     parent: mainWheel,
+      //     cylinderHeight: 4.5,
+      //     distanceFromCenter: 3.3,
+      //     rotation: Math.PI * -0.5,
+      //   });
+
+      //   const bead1 = await addBead({
+      //     parent: line,
+      //     bead: (gltf.scene.getObjectByName('cylinder1') as THREE.Mesh).clone(true),
+      //     beadImagePath: '../assets/projects/hazumiryokuchi/texture-brown.jpg',
+      //   });
+      //   bead1.position.y = -1.1;
+
+      //   const bead2 = await addBead({
+      //     parent: line,
+      //     bead: (gltf.scene.getObjectByName('cylinder2') as THREE.Mesh).clone(true),
+      //     beadImagePath: '../assets/projects/hazumiryokuchi/texture-green.jpg',
+      //   });
+      //   bead2.position.y = -1.5;
+
+      //   const bead3 = await addBead({
+      //     parent: line,
+      //     bead: (gltf.scene.getObjectByName('cylinder3') as THREE.Mesh).clone(true),
+      //     beadImagePath: '../assets/projects/hazumiryokuchi/texture-grey.jpg',
+      //   });
+      //   bead3.position.y = -1.85;
+
+      //   const bead4 = await addBead({
+      //     parent: line,
+      //     bead: (gltf.scene.getObjectByName('cylinder4') as THREE.Mesh).clone(true),
+      //     beadImagePath: '../assets/projects/hazumiryokuchi/texture-blue.jpg',
+      //   });
+      //   bead4.position.y = -2.25;
+
+      //   const bead5 = await addBead({
+      //     parent: line,
+      //     bead: (gltf.scene.getObjectByName('cylinder5') as THREE.Mesh).clone(true),
+      //     beadImagePath: '../assets/projects/hazumiryokuchi/texture-gold.jpg',
+      //   });
+      //   bead5.position.y = -2.65;
+      // }
+    }
+
+    {
+      const mainWheel = await addMainWheel(this, this.timeline, PATTERN_DURATION, 19);
 
       { // 5 CYLINDERS
         const line = await addLine({
@@ -307,79 +414,49 @@ export default class Scene extends MainScene {
         bead5.position.y = -2.65;
       }
 
-      // const wheel1 = await addWheel({
-      //   parent: line,
-      // });
+      { // 5 CYLINDERS
+        const line = await addLine({
+          parent: mainWheel,
+          cylinderHeight: 4.5,
+          distanceFromCenter: 3.3,
+          rotation: Math.PI * -0.5,
+        });
 
-      // const bead1 = await addBead({
-      //   parent: line,
-      // });
+        const bead1 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder1') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-brown.jpg',
+        });
+        bead1.position.y = -1.1;
 
-      // const wheel1 = await addCylinderWheel({
-      //   parent: mainWheel,
-      //   timeline: this.timeline,
-      //   patternDuration: PATTERN_DURATION,
-      //   cylinderHeight: 4.0,
-      //   distanceFromCenter: 3.3,
-      //   rotation: Math.PI * 0,
-      //   wheelRadius: 1,
-      //   y: 0,
-      // });
-      // const wheel2 = await addCylinderWheel({
-      //   parent: mainWheel,
-      //   timeline: this.timeline,
-      //   patternDuration: PATTERN_DURATION,
-      //   cylinderHeight: 4.0,
-      //   distanceFromCenter: 3,
-      //   rotation: Math.PI * 1,
-      //   wheelRadius: 1.2,
-      //   y: 0,
-      // });
+        const bead2 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder2') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-green.jpg',
+        });
+        bead2.position.y = -1.5;
+
+        const bead3 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder3') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-grey.jpg',
+        });
+        bead3.position.y = -1.85;
+
+        const bead4 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder4') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-blue.jpg',
+        });
+        bead4.position.y = -2.25;
+
+        const bead5 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('cylinder5') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-gold.jpg',
+        });
+        bead5.position.y = -2.65;
+      }
     }
-
-    {
-      const mainWheel = await addMainWheel(this, this.timeline, PATTERN_DURATION, 19);
-
-      // const wheel1 = await addCylinderWheel({
-      //   parent: mainWheel,
-      //   timeline: this.timeline,
-      //   patternDuration: PATTERN_DURATION,
-      //   cylinderHeight: 4.1 ,
-      //   distanceFromCenter: 3.4,
-      //   rotation: Math.PI * 0.5,
-      //   wheelRadius: 1.3,
-      //   y: 0,
-      // });
-      // const wheel2 = await addCylinderWheel({
-      //   parent: mainWheel,
-      //   timeline: this.timeline,
-      //   patternDuration: PATTERN_DURATION,
-      //   cylinderHeight: 4,
-      //   distanceFromCenter: 3,
-      //   rotation: Math.PI * -0.5,
-      //   wheelRadius: 1,
-      //   y: 0,
-      // });
-      // addNewspaper({
-      //   scene3d: this,
-      //   timeline: this.timeline,
-      //   wheel: mainWheel,
-      //   cylinderHeight: 3,
-      //   distanceFromCenter: 3.5,
-      //   rotation: Math.PI * -0.5,
-      //   patternDuration: PATTERN_DURATION,
-      // });
-    }
-
-    // addNewspaper({
-    //   scene3d: this,
-    //   timeline: this.timeline,
-    //   wheel: wheel2,
-    //   distanceFromCenter: 3.5,
-    //   rotation: Math.PI * 0.5,
-    //   patternDuration: PATTERN_DURATION,
-    //   paperObject: gltf.scene.getObjectByName('paper1') as THREE.Mesh,
-    //   paperImagePath: '../assets/projects/hazumiryokuchi/krant1.jpg',
-    // });
   }
 }
