@@ -280,8 +280,11 @@ export default class Scene extends MainScene {
         });
         bead1.position.y = -1.6;
         addTweenOnLine(bead1, T, S, 8, 4, 1.6, 0.4);
-        addTweenOnLine(bead1, T, S, 36, 4, 0.4, 2.75);
-        addTweenOnLine(bead1, T, S, 40, 6, 2.75, 0.4);
+        addTweenOnLine(bead1, T, S, 40, 4, 0.4, 2.75);
+        addTweenOnLine(bead1, T, S, 48, 6, 2.75, 0.4);
+        addTweenOnLine(bead1, T, S, 72, 4, 0.4, 2.75);
+        addTweenOnLine(bead1, T, S, 80, 4, 2.75, 0.4);
+        addTweenOnLine(bead1, T, S, 96, 4, 0.4, 1.6);
 
         const bead2 = await addBead({
           parent: line,
@@ -291,7 +294,10 @@ export default class Scene extends MainScene {
         bead2.position.y = -2.0;
         addTweenOnLine(bead2, T, S, 8, 4, 2.0, 0.8);
         addTweenOnLine(bead2, T, S, 32, 4, 0.8, 3.15);
-        addTweenOnLine(bead2, T, S, 42, 6, 3.15, 0.8);
+        addTweenOnLine(bead2, T, S, 48, 6, 3.15, 0.8);
+        addTweenOnLine(bead2, T, S, 72, 4, 0.8, 3.15);
+        addTweenOnLine(bead2, T, S, 80, 4, 3.15, 0.8);
+        addTweenOnLine(bead2, T, S, 88, 4, 0.8, 2.0);
 
         const bead3 = await addBead({
           parent: line,
@@ -301,7 +307,9 @@ export default class Scene extends MainScene {
         bead3.position.y = -2.35;
         addTweenOnLine(bead3, T, S, 24, 4, 2.35, 1.15);
         addTweenOnLine(bead3, T, S, 32, 4, 1.15, 3.5);
-        addTweenOnLine(bead3, T, S, 44, 6, 3.5, 1.15);
+        addTweenOnLine(bead3, T, S, 48, 6, 3.5, 1.15);
+        addTweenOnLine(bead3, T, S, 72, 4, 1.15, 3.5);
+        addTweenOnLine(bead3, T, S, 80, 4, 3.5, 2.35);
 
         const bead4 = await addBead({
           parent: line,
@@ -310,7 +318,9 @@ export default class Scene extends MainScene {
         });
         bead4.position.y = -2.75;
         addTweenOnLine(bead4, T, S, 24, 4, 2.75, 3.9);
-        addTweenOnLine(bead4, T, S, 46, 6, 3.9, 1.55);
+        addTweenOnLine(bead4, T, S, 48, 6, 3.9, 1.55);
+        addTweenOnLine(bead4, T, S, 64, 4, 1.55, 3.9);
+        addTweenOnLine(bead4, T, S, 88, 4, 3.9, 2.75);
 
         const bead5 = await addBead({
           parent: line,
@@ -320,6 +330,8 @@ export default class Scene extends MainScene {
         bead5.position.y = -3.15;
         addTweenOnLine(bead5, T, S, 8, 4, 3.15, 4.3);
         addTweenOnLine(bead5, T, S, 48, 6, 4.3, 1.95);
+        addTweenOnLine(bead5, T, S, 64, 4, 1.95, 4.3);
+        addTweenOnLine(bead5, T, S, 96, 4, 4.3, 3.15);
       }
 
       // { // 5 CYLINDERS
