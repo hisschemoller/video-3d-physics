@@ -333,56 +333,12 @@ export default class Scene extends MainScene {
         addTweenOnLine(bead5, T, S, 64, 4, 1.95, 4.3);
         addTweenOnLine(bead5, T, S, 96, 4, 4.3, 3.15);
       }
-
-      // { // 5 CYLINDERS
-      //   const line = await addLine({
-      //     parent: mainWheel,
-      //     cylinderHeight: 4.5,
-      //     distanceFromCenter: 3.3,
-      //     rotation: Math.PI * -0.5,
-      //   });
-
-      //   const bead1 = await addBead({
-      //     parent: line,
-      //     bead: (gltf.scene.getObjectByName('cylinder1') as THREE.Mesh).clone(true),
-      //     beadImagePath: '../assets/projects/hazumiryokuchi/texture-brown.jpg',
-      //   });
-      //   bead1.position.y = -1.1;
-
-      //   const bead2 = await addBead({
-      //     parent: line,
-      //     bead: (gltf.scene.getObjectByName('cylinder2') as THREE.Mesh).clone(true),
-      //     beadImagePath: '../assets/projects/hazumiryokuchi/texture-green.jpg',
-      //   });
-      //   bead2.position.y = -1.5;
-
-      //   const bead3 = await addBead({
-      //     parent: line,
-      //     bead: (gltf.scene.getObjectByName('cylinder3') as THREE.Mesh).clone(true),
-      //     beadImagePath: '../assets/projects/hazumiryokuchi/texture-grey.jpg',
-      //   });
-      //   bead3.position.y = -1.85;
-
-      //   const bead4 = await addBead({
-      //     parent: line,
-      //     bead: (gltf.scene.getObjectByName('cylinder4') as THREE.Mesh).clone(true),
-      //     beadImagePath: '../assets/projects/hazumiryokuchi/texture-blue.jpg',
-      //   });
-      //   bead4.position.y = -2.25;
-
-      //   const bead5 = await addBead({
-      //     parent: line,
-      //     bead: (gltf.scene.getObjectByName('cylinder5') as THREE.Mesh).clone(true),
-      //     beadImagePath: '../assets/projects/hazumiryokuchi/texture-gold.jpg',
-      //   });
-      //   bead5.position.y = -2.65;
-      // }
     }
 
     {
       const mainWheel = await addMainWheel(this, this.timeline, PATTERN_DURATION, 19);
 
-      { // 5 CYLINDERS
+      { // 2 CYLINDERS AND 1 WHEEL
         const line = await addLine({
           parent: mainWheel,
           cylinderHeight: 4.5,
@@ -392,38 +348,30 @@ export default class Scene extends MainScene {
 
         const bead1 = await addBead({
           parent: line,
-          bead: (gltf.scene.getObjectByName('cylinder1') as THREE.Mesh).clone(true),
-          beadImagePath: '../assets/projects/hazumiryokuchi/texture-brown.jpg',
-        });
-        bead1.position.y = -1.1;
-
-        const bead2 = await addBead({
-          parent: line,
-          bead: (gltf.scene.getObjectByName('cylinder2') as THREE.Mesh).clone(true),
+          bead: (gltf.scene.getObjectByName('bead4') as THREE.Mesh).clone(true),
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-green.jpg',
         });
-        bead2.position.y = -1.5;
+        bead1.position.y = -0.5;
 
-        const bead3 = await addBead({
+        const wheel1 = await addWheel({
           parent: line,
-          bead: (gltf.scene.getObjectByName('cylinder3') as THREE.Mesh).clone(true),
-          beadImagePath: '../assets/projects/hazumiryokuchi/texture-grey.jpg',
+          radius: 1.0,
+          timeline: T,
+          patternDuration: PATTERN_DURATION,
+          speed: 10,
         });
-        bead3.position.y = -1.85;
-
-        const bead4 = await addBead({
-          parent: line,
-          bead: (gltf.scene.getObjectByName('cylinder4') as THREE.Mesh).clone(true),
-          beadImagePath: '../assets/projects/hazumiryokuchi/texture-blue.jpg',
-        });
-        bead4.position.y = -2.25;
+        wheel1.position.y = -0.7;
+        addTweenOnLine(wheel1, T, S, 0, 28, 0.7, 4.0);
+        addTweenOnLine(wheel1, T, S, 28, 28, 4.0, 0.7);
+        addTweenOnLine(wheel1, T, S, 56, 28, 0.7, 4.0);
+        addTweenOnLine(wheel1, T, S, 84, 28, 4.0, 0.7);
 
         const bead5 = await addBead({
           parent: line,
           bead: (gltf.scene.getObjectByName('cylinder5') as THREE.Mesh).clone(true),
-          beadImagePath: '../assets/projects/hazumiryokuchi/texture-gold.jpg',
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-grey.jpg',
         });
-        bead5.position.y = -2.65;
+        bead5.position.y = -4.3;
       }
 
       { // 5 CYLINDERS
@@ -436,38 +384,41 @@ export default class Scene extends MainScene {
 
         const bead1 = await addBead({
           parent: line,
-          bead: (gltf.scene.getObjectByName('cylinder1') as THREE.Mesh).clone(true),
-          beadImagePath: '../assets/projects/hazumiryokuchi/texture-brown.jpg',
+          bead: (gltf.scene.getObjectByName('cylinder4') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-gold.jpg',
         });
-        bead1.position.y = -1.1;
+        bead1.position.y = -0.4;
+        addTweenOnLine(bead1, T, S, 32, 6, 0.4, 3.0);
+        addTweenOnLine(bead1, T, S, 56, 6, 3.0, 0.4);
 
         const bead2 = await addBead({
+          parent: line,
+          bead: (gltf.scene.getObjectByName('bead4') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-blue.jpg',
+        });
+        bead2.position.y = -0.85;
+        addTweenOnLine(bead2, T, S, 32, 6, 0.85, 3.45);
+        addTweenOnLine(bead2, T, S, 56, 6, 3.45, 1.5);
+        addTweenOnLine(bead2, T, S, 96, 6, 1.5, 0.85);
+
+        const bead3 = await addBead({
           parent: line,
           bead: (gltf.scene.getObjectByName('cylinder2') as THREE.Mesh).clone(true),
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-green.jpg',
         });
-        bead2.position.y = -1.5;
-
-        const bead3 = await addBead({
-          parent: line,
-          bead: (gltf.scene.getObjectByName('cylinder3') as THREE.Mesh).clone(true),
-          beadImagePath: '../assets/projects/hazumiryokuchi/texture-grey.jpg',
-        });
-        bead3.position.y = -1.85;
+        bead3.position.y = -1.3;
+        addTweenOnLine(bead3, T, S, 16, 6, 1.3, 3.9);
+        addTweenOnLine(bead3, T, S, 56, 6, 3.9, 3.0);
+        addTweenOnLine(bead3, T, S, 96, 6, 3.0, 1.3);
 
         const bead4 = await addBead({
           parent: line,
-          bead: (gltf.scene.getObjectByName('cylinder4') as THREE.Mesh).clone(true),
-          beadImagePath: '../assets/projects/hazumiryokuchi/texture-blue.jpg',
+          bead: (gltf.scene.getObjectByName('bead3') as THREE.Mesh).clone(true),
+          beadImagePath: '../assets/projects/hazumiryokuchi/texture-grey.jpg',
         });
-        bead4.position.y = -2.25;
-
-        const bead5 = await addBead({
-          parent: line,
-          bead: (gltf.scene.getObjectByName('cylinder5') as THREE.Mesh).clone(true),
-          beadImagePath: '../assets/projects/hazumiryokuchi/texture-gold.jpg',
-        });
-        bead5.position.y = -2.65;
+        bead4.position.y = -1.7;
+        addTweenOnLine(bead4, T, S, 16, 6, 1.7, 4.3);
+        addTweenOnLine(bead4, T, S, 96, 6, 4.3, 1.7);
       }
     }
   }
