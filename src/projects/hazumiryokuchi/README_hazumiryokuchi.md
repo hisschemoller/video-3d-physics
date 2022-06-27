@@ -27,6 +27,11 @@ ffmpeg -i hazumiryokuchi-perspective.mp4 '/Volumes/Samsung_X5/hazumiryokuchi/fra
 ffmpeg -i hazumiryokuchi-perspective.mp4 -vf scale=480:270 hazumiryokuchi_preview.mp4
 # convert preview to png sequence
 ffmpeg -i hazumiryokuchi_preview.mp4 '/Volumes/Samsung_X5/hazumiryokuchi/frames_preview/frame_%05d.png'
+
+// png to mp4 (from index 1) met 30 FPS
+ffmpeg -framerate 30 -start_number 1 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p hazumiryokuchi-video-x1.mp4
+// repeat 16 times, 144 frames, video alleen
+ffmpeg -i hazumiryokuchi-video-x1.mp4 -filter_complex "loop=loop=16:size=431:start=0" hazumiryokuchi-video-x16.mp4
 ```
 
 frame 169 tot 600

@@ -225,7 +225,7 @@ export default class Scene extends MainScene {
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-brown.jpg',
         });
         bead1.position.y = -0.5;
-        addTweenOnLine(bead1, T, S, 48, 4, 0.5, 2.2);
+        addTweenOnLine(bead1, T, S, 48, 6, 0.5, 2.2);
         addTweenOnLine(bead1, T, S, 64, 6, 2.2, 0.5);
 
         const bead2 = await addBead({
@@ -234,7 +234,7 @@ export default class Scene extends MainScene {
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-grey.jpg',
         });
         bead2.position.y = -1.1;
-        addTweenOnLine(bead2, T, S, 32, 4, 1.1, 2.8);
+        addTweenOnLine(bead2, T, S, 32, 6, 1.1, 2.8);
         addTweenOnLine(bead2, T, S, 64, 6, 2.8, 1.1);
 
         const bead3 = await addBead({
@@ -243,7 +243,7 @@ export default class Scene extends MainScene {
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-blue.jpg',
         });
         bead3.position.y = -1.5;
-        addTweenOnLine(bead3, T, S, 16, 4, 1.5, 3.2);
+        addTweenOnLine(bead3, T, S, 16, 6, 1.5, 3.2);
         addTweenOnLine(bead3, T, S, 64, 6, 3.2, 1.5);
 
         const bead4 = await addBead({
@@ -252,7 +252,7 @@ export default class Scene extends MainScene {
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-gold.jpg',
         });
         bead4.position.y = -2.0;
-        addTweenOnLine(bead4, T, S, 0, 4, 2.0, 3.7);
+        addTweenOnLine(bead4, T, S, 0, 6, 2.0, 3.7);
         addTweenOnLine(bead4, T, S, 64, 6, 3.7, 2.0);
 
         const bead5 = await addBead({
@@ -262,7 +262,7 @@ export default class Scene extends MainScene {
         });
         bead5.position.y = -4.3;
         addTweenOnLine(bead5, T, S, 64, 6, 4.3, 2.6);
-        addTweenOnLine(bead5, T, S, 70, 4, 2.6, 4.3);
+        addTweenOnLine(bead5, T, S, 96, 6, 2.6, 4.3);
       }
 
       { // 5 CYLINDERS
@@ -273,18 +273,23 @@ export default class Scene extends MainScene {
           rotation: Math.PI * 0.5,
         });
 
+        // 8: 1,2 omhoog, 5 naar beneden
+        // 24: 3 omhoog, 4 omlaag
+        // 32: 1,2,3 omlaag
+        // 48: alles omhoog
+        // 64: 5,6 omlaag, 3 midden
+        // 72: 1,2,3 omlaag
+
         const bead1 = await addBead({
           parent: line,
           bead: (gltf.scene.getObjectByName('cylinder1') as THREE.Mesh).clone(true),
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-brown.jpg',
         });
         bead1.position.y = -1.6;
-        addTweenOnLine(bead1, T, S, 8, 4, 1.6, 0.4);
-        addTweenOnLine(bead1, T, S, 40, 4, 0.4, 2.75);
-        addTweenOnLine(bead1, T, S, 48, 6, 2.75, 0.4);
-        addTweenOnLine(bead1, T, S, 72, 4, 0.4, 2.75);
-        addTweenOnLine(bead1, T, S, 80, 4, 2.75, 0.4);
-        addTweenOnLine(bead1, T, S, 96, 4, 0.4, 1.6);
+        addTweenOnLine(bead1, T, S, 8, 6, 1.6, 0.4);
+        addTweenOnLine(bead1, T, S, 40, 6, 0.4, 2.75);
+        addTweenOnLine(bead1, T, S, 64, 6, 2.75, 0.4);
+        addTweenOnLine(bead1, T, S, 96, 6, 0.4, 1.6);
 
         const bead2 = await addBead({
           parent: line,
@@ -292,12 +297,10 @@ export default class Scene extends MainScene {
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-green.jpg',
         });
         bead2.position.y = -2.0;
-        addTweenOnLine(bead2, T, S, 8, 4, 2.0, 0.8);
-        addTweenOnLine(bead2, T, S, 32, 4, 0.8, 3.15);
-        addTweenOnLine(bead2, T, S, 48, 6, 3.15, 0.8);
-        addTweenOnLine(bead2, T, S, 72, 4, 0.8, 3.15);
-        addTweenOnLine(bead2, T, S, 80, 4, 3.15, 0.8);
-        addTweenOnLine(bead2, T, S, 88, 4, 0.8, 2.0);
+        addTweenOnLine(bead2, T, S, 8, 6, 2.0, 0.8);
+        addTweenOnLine(bead2, T, S, 40, 6, 0.8, 3.15);
+        addTweenOnLine(bead2, T, S, 64, 6, 3.15, 0.8);
+        addTweenOnLine(bead2, T, S, 96, 6, 0.8, 2.0);
 
         const bead3 = await addBead({
           parent: line,
@@ -305,11 +308,10 @@ export default class Scene extends MainScene {
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-grey.jpg',
         });
         bead3.position.y = -2.35;
-        addTweenOnLine(bead3, T, S, 24, 4, 2.35, 1.15);
-        addTweenOnLine(bead3, T, S, 32, 4, 1.15, 3.5);
-        addTweenOnLine(bead3, T, S, 48, 6, 3.5, 1.15);
-        addTweenOnLine(bead3, T, S, 72, 4, 1.15, 3.5);
-        addTweenOnLine(bead3, T, S, 80, 4, 3.5, 2.35);
+        addTweenOnLine(bead3, T, S, 24, 6, 2.35, 1.15);
+        addTweenOnLine(bead3, T, S, 40, 6, 1.15, 3.5);
+        addTweenOnLine(bead3, T, S, 64, 6, 3.5, 1.15);
+        addTweenOnLine(bead3, T, S, 80, 6, 1.15, 2.35);
 
         const bead4 = await addBead({
           parent: line,
@@ -317,10 +319,10 @@ export default class Scene extends MainScene {
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-blue.jpg',
         });
         bead4.position.y = -2.75;
-        addTweenOnLine(bead4, T, S, 24, 4, 2.75, 3.9);
-        addTweenOnLine(bead4, T, S, 48, 6, 3.9, 1.55);
-        addTweenOnLine(bead4, T, S, 64, 4, 1.55, 3.9);
-        addTweenOnLine(bead4, T, S, 88, 4, 3.9, 2.75);
+        addTweenOnLine(bead4, T, S, 24, 6, 2.75, 3.9);
+        addTweenOnLine(bead4, T, S, 64, 6, 3.9, 1.55);
+        addTweenOnLine(bead4, T, S, 80, 6, 1.55, 3.9);
+        addTweenOnLine(bead4, T, S, 96, 6, 3.9, 2.75);
 
         const bead5 = await addBead({
           parent: line,
@@ -328,10 +330,10 @@ export default class Scene extends MainScene {
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-gold.jpg',
         });
         bead5.position.y = -3.15;
-        addTweenOnLine(bead5, T, S, 8, 4, 3.15, 4.3);
-        addTweenOnLine(bead5, T, S, 48, 6, 4.3, 1.95);
-        addTweenOnLine(bead5, T, S, 64, 4, 1.95, 4.3);
-        addTweenOnLine(bead5, T, S, 96, 4, 4.3, 3.15);
+        addTweenOnLine(bead5, T, S, 8, 6, 3.15, 4.3);
+        addTweenOnLine(bead5, T, S, 64, 6, 4.3, 1.95);
+        addTweenOnLine(bead5, T, S, 80, 6, 1.95, 4.3);
+        addTweenOnLine(bead5, T, S, 96, 6, 4.3, 3.15);
       }
     }
 
