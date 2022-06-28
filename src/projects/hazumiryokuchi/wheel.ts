@@ -127,6 +127,8 @@ export async function addBead({
   bead: THREE.Mesh;
   beadImagePath: string;
 }) {
+  const SCALE = 0.9;
+
   if (bead.material instanceof Material) {
     const texture = new THREE.TextureLoader().load(beadImagePath);
     bead.material = new THREE.MeshPhongMaterial({
@@ -138,6 +140,7 @@ export async function addBead({
   bead.castShadow = true;
   bead.receiveShadow = true;
   bead.position.set(0, 0, 0);
+  bead.scale.set(SCALE, 1, SCALE);
   parent.add(bead);
   return bead;
 }
