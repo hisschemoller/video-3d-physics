@@ -67,7 +67,7 @@ export default class Scene extends MainScene {
     // console.log(this.directionalLight.shadow.camera);
 
     // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.35;
+    this.ambientLight.intensity = 0.40;
 
     // TWEENS
     this.timeline = createTimeline({
@@ -273,13 +273,6 @@ export default class Scene extends MainScene {
           rotation: Math.PI * 0.5,
         });
 
-        // 8: 1,2 omhoog, 5 naar beneden
-        // 24: 3 omhoog, 4 omlaag
-        // 32: 1,2,3 omlaag
-        // 48: alles omhoog
-        // 64: 5,6 omlaag, 3 midden
-        // 72: 1,2,3 omlaag
-
         const bead1 = await addBead({
           parent: line,
           bead: (gltf.scene.getObjectByName('cylinder1') as THREE.Mesh).clone(true),
@@ -329,11 +322,11 @@ export default class Scene extends MainScene {
           bead: (gltf.scene.getObjectByName('cylinder5') as THREE.Mesh).clone(true),
           beadImagePath: '../assets/projects/hazumiryokuchi/texture-gold.jpg',
         });
-        bead5.position.y = -3.15;
-        addTweenOnLine(bead5, T, S, 8, 6, 3.15, 4.3);
-        addTweenOnLine(bead5, T, S, 64, 6, 4.3, 1.95);
-        addTweenOnLine(bead5, T, S, 80, 6, 1.95, 4.3);
-        addTweenOnLine(bead5, T, S, 96, 6, 4.3, 3.15);
+        bead5.position.y = -3.27;
+        addTweenOnLine(bead5, T, S, 8, 6, 3.27, 4.42);
+        addTweenOnLine(bead5, T, S, 64, 6, 4.42, 2.07);
+        addTweenOnLine(bead5, T, S, 80, 6, 2.07, 4.42);
+        addTweenOnLine(bead5, T, S, 96, 6, 4.42, 3.27);
       }
     }
 
@@ -376,7 +369,7 @@ export default class Scene extends MainScene {
         bead5.position.y = -4.3;
       }
 
-      { // 5 CYLINDERS
+      { // 4 KRALEN EN CYLINDERS
         const line = await addLine({
           parent: mainWheel,
           cylinderHeight: 4.5,
