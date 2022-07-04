@@ -37,6 +37,7 @@ export default class Scene extends MainScene {
     this.captureThrottle = 10;
     this.captureDuration = PATTERN_DURATION * 2;
     this.clearColor = 0x9ed3ff;
+    this.shadowSize = 7.2;
   }
 
   async create() {
@@ -54,17 +55,11 @@ export default class Scene extends MainScene {
     this.orbitControls.saveState();
 
     // DIRECTIONAL LIGHT
-    const lightZ = 30;
-    this.directionalLight.position.set(10, 15, 10 + lightZ);
-    // this.directionalLight.position.z += lightZ;
+    const LIGHT_Z = 25;
+    this.directionalLight.position.set(10, 15, 10 + LIGHT_Z);
     this.directionalLight.intensity = 0.99;
-
-    // const lightTarget = new THREE.Vector3(10, 0, 30);
     this.scene.add(this.directionalLight.target);
-    // this.directionalLight.lookAt(new THREE.Vector3(0, 0, 20));
-    this.directionalLight.target.position.set(0, 0, lightZ);
-    // this.directionalLight.shadow.camera.position.set(0, 30, 0);
-    // console.log(this.directionalLight.shadow.camera);
+    this.directionalLight.target.position.set(0, 0, LIGHT_Z);
 
     // AMBIENT LIGHT
     this.ambientLight.intensity = 0.40;

@@ -39,6 +39,8 @@ export default class MainScene extends Scene3D {
 
   orbitControls: OrbitControls;
 
+  shadowSize = 6;
+
   count = 0;
 
   delta = 0;
@@ -90,7 +92,6 @@ export default class MainScene extends Scene3D {
 
     // DIRECTIONAL LIGHT
     const SHADOW_MAP_SIZE = 2048;
-    const SHADOW_SIZE = 6;
     const SHADOW_FAR = 13500;
     this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.6);
     this.directionalLight.position.set(20, 5, 10);
@@ -99,10 +100,10 @@ export default class MainScene extends Scene3D {
     this.directionalLight.castShadow = true;
     this.directionalLight.shadow.mapSize.width = SHADOW_MAP_SIZE;
     this.directionalLight.shadow.mapSize.height = SHADOW_MAP_SIZE;
-    this.directionalLight.shadow.camera.left = -SHADOW_SIZE;
-    this.directionalLight.shadow.camera.right = SHADOW_SIZE;
-    this.directionalLight.shadow.camera.top = SHADOW_SIZE;
-    this.directionalLight.shadow.camera.bottom = -SHADOW_SIZE;
+    this.directionalLight.shadow.camera.left = -this.shadowSize;
+    this.directionalLight.shadow.camera.right = this.shadowSize;
+    this.directionalLight.shadow.camera.top = this.shadowSize;
+    this.directionalLight.shadow.camera.bottom = -this.shadowSize;
     this.directionalLight.shadow.camera.far = SHADOW_FAR;
     this.scene.add(this.directionalLight);
 
