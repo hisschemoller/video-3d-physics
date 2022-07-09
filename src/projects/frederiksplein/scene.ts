@@ -44,10 +44,27 @@ export default class Scene extends MainScene {
 
     const isPreview = true && !this.scene.userData.isCapture;
 
+    // CAMERA
+    this.cameraTarget.y = 2;
+    this.pCamera.position.y = 2;
+    this.pCamera.lookAt(this.cameraTarget);
+
+    // ORBIT CONTROLS
+    this.orbitControls.target = this.cameraTarget;
+    this.orbitControls.update();
+    this.orbitControls.saveState();
+
+    // AMBIENT LIGHT
+    this.ambientLight.intensity = 0.80;
+
+    // DIRECTIONAL LIGHT
+    this.directionalLight.position.set(-10, 7, 3);
+    this.directionalLight.intensity = 0.99;
+
     // TWEENS
     this.timeline = createTimeline({
       duration: PATTERN_DURATION,
-    }); 
+    });
 
     // VIDEOS
     const videos = {
@@ -57,8 +74,8 @@ export default class Scene extends MainScene {
         scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
         width: 1920,
         imgSrcPath: isPreview
-          ? '../assets/projects/hazumiryokuchi/frames_preview/frame_#FRAME#.png'
-          : 'fs-img?dir=/Volumes/Samsung_X5/hazumiryokuchi/frames/&img=frame_#FRAME#.png',
+          ? '../assets/projects/frederiksplein/frames_preview/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/frederiksplein/frames/&img=frame_#FRAME#.png',
       },
     };
 
@@ -75,14 +92,8 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-    // GROUP
-    const group = createTweenGroup(projectSettings);
-    group.setStaticPosition(getMatrix4({}));
-    const axesHelper = new THREE.AxesHelper(25);
-    group.getMesh().add(axesHelper);
-
     this.createShadowMaterialTest();
-    await this.createActors(projectSettings, videos, group.getMesh());
+    await this.createActors(projectSettings, videos);
 
     this.postCreate();
   }
@@ -98,9 +109,24 @@ export default class Scene extends MainScene {
   async createActors(
     projectSettings: ProjectSettings,
     videos: { [key: string]: VideoData },
-    group: THREE.Group,
   ) {
     const to3d = this.to3d.bind(this);
+
+    { // BACKGROUND
+      const actor = await createActor(projectSettings, videos.main, {
+        box: { w: this.width3d, h: this.height3d, d: 0.02 },
+        imageRect: { w: this.width, h: this.height },
+      });
+      actor.setStaticPosition(getMatrix4({ x: to3d(-960), y: to3d(540) + 2 }));
+      actor.addTween({
+        delay: 0,
+        duration: STEP_DURATION * 15.9,
+        videoStart: 30, // 20,
+        fromImagePosition: new THREE.Vector2(0, 0),
+      });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+    }
   }
 
   createShadowMaterialTest() {
@@ -108,7 +134,7 @@ export default class Scene extends MainScene {
       new THREE.CylinderBufferGeometry(0.2, 0.2, 2),
       new THREE.MeshPhongMaterial({ color: 0xff0000 }),
     );
-    cylinder.position.y = 1;
+    cylinder.position.set(0, 1, 3.5);
     cylinder.castShadow = true;
     cylinder.receiveShadow = true;
     this.scene.add(cylinder);
@@ -117,7 +143,7 @@ export default class Scene extends MainScene {
       new THREE.BoxBufferGeometry(10, 0.2, 10),
       new THREE.ShadowMaterial({ opacity: 0.5 }),
     );
-    ground.position.y = -0.1;
+    ground.position.set(0, -0.1, 3.5);
     ground.receiveShadow = true;
     this.scene.add(ground);
   }
