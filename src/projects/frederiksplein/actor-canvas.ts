@@ -45,6 +45,8 @@ export function addImagePositionTween(
   const currentPosition = new THREE.Vector2();
   const tweenPosition = async (progress: number) => {
     currentPosition.lerpVectors(fromImagePosition, toImagePosition, progress);
+    // TODO: Can be removed when no PNG transparency is used.
+    context.clearRect(0, 0, width, height);
     context.drawImage(
       img, currentPosition.x, currentPosition.y, width, height, dx, 0, width, height,
     );

@@ -125,6 +125,13 @@ Timestamps are in HH:MM:SS.xxx format or in seconds (s.msec).
 ```
 ffmpeg -ss 00:00:30.0 -i input.avi -c copy -t 00:00:10.0 output.avi
 ffmpeg -ss 30 -i input.avi -c copy -t 10 output.avi
+
+# Drop everything except the second minute of input:
+ffmpeg -i input.mp4 -vf trim=60:120 output.mp4
+# Keep only the first second:
+ffmpeg -i input.mp4 -vf trim=duration=1 output.mp4
+# Drop everything until second 13:
+ffmpeg -i input.mp4 -vf trim=start=13 output.mp4
 ```
 
 ### Perspective correction filter
@@ -172,6 +179,13 @@ out_x and out_y are the left top corner of the output rectangle.
 ffmpeg -i input.avi -filter:v "crop=out_w:out_h:out_x:out_y" output.avi
 ```
 
+## Chromakey, replace greenscreen with transparency in PNG's.
+chromakey=color:similarity:blend
+
+```
+ffmpeg -i input.mp4 -vf "chromakey=0x00ff00:0.3:0.2" frame_%05d.png
+```
+
 ## FFPlay
 
 Preview an edit.
@@ -204,6 +218,21 @@ ffprobe -show_streams -count_frames droogbak.mp4
 ffprobe -loglevel panic -select\_streams v -show\_entries "frames" -read\_intervals %+#1 droogbak.mp4
 ffprobe -v error -show_entries frame=pkt_pts_time,pict_type,frame_index -select_streams v -of csv=p=0 droogbak.mp4
 
+## FFmpeg module for Node
+  
+FFmpeg module for Node. This library provides a set of functions and utilities to abstract commands-line usage of ffmpeg. To use this library requires that ffmpeg is already installed.
+
+https://www.npmjs.com/package/ffmpeg
+
+* Can you "stream" images to ffmpeg to construct a video, instead of saving them to disk?
+  * https://stackoverflow.com/questions/1329  4919/can-you-stream-images-to-ffmpeg-to-construct-a-video-instead-of-saving-them-t
+* FFMPEG waiting for images in image2pipe mode
+  * https://stackoverflow.com/questions/24026729/ffmpeg-waiting-for-images-in-image2pipe-mode
+
+## FFmpeg.wasm
+
+FFmpeg.wasm, a pure WebAssembly / JavaScript port of FFmpeg<br />
+https://jeromewu.github.io/ffmpeg-wasm-a-pure-webassembly-javascript-port-of-ffmpeg/
 
 # Enable3d Physics
 

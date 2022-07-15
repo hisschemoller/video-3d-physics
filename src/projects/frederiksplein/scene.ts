@@ -1,21 +1,22 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import { THREE } from 'enable3d';
+import { Material } from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
-import { createActor, createTweenGroup } from './actor';
+import { createActor } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 115;
-const MEASURES = 1;
+const SECONDS_PER_BEAT = 60 / BPM;
+const MEASURES = 4;
 const BEATS_PER_MEASURE = 4;
 const STEPS_PER_BEAT = 4;
 const STEPS = STEPS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
-const SECONDS_PER_BEAT = 60 / BPM;
-const PATTERN_DURATION = SECONDS_PER_BEAT * STEPS_PER_BEAT * MEASURES;
+const PATTERN_DURATION = SECONDS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
 
 export default class Scene extends MainScene {
@@ -32,7 +33,7 @@ export default class Scene extends MainScene {
     this.height = 1080;
     this.width3d = 16;
     this.height3d = (this.height / this.width) * this.width3d;
-    this.fps = 15;
+    this.fps = 30;
     this.captureFps = 30;
     this.captureThrottle = 10;
     this.captureDuration = PATTERN_DURATION * 2;
@@ -66,6 +67,9 @@ export default class Scene extends MainScene {
       duration: PATTERN_DURATION,
     });
 
+    // BLENDER GLTF
+    const gltf = await this.load.gltf('../assets/projects/frederiksplein/frederiksplein.glb');
+
     // VIDEOS
     const videos = {
       main: {
@@ -76,6 +80,24 @@ export default class Scene extends MainScene {
         imgSrcPath: isPreview
           ? '../assets/projects/frederiksplein/frames_preview/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/frederiksplein/frames/&img=frame_#FRAME#.png',
+      },
+      chromatest: {
+        fps: 30,
+        height: 720,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1280,
+        imgSrcPath: isPreview
+          ? '../assets/projects/frederiksplein/chromatest-frames_preview/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/frederiksplein-chromatest/frames/&img=frame_#FRAME#.png',
+      },
+      auto1: {
+        fps: 30,
+        height: 720,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1280,
+        imgSrcPath: isPreview
+          ? '../assets/projects/frederiksplein/frames_preview_auto1/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/frederiksplein-auto1/frames/&img=frame_#FRAME#.png',
       },
     };
 
@@ -94,6 +116,7 @@ export default class Scene extends MainScene {
 
     this.createShadowMaterialTest();
     await this.createActors(projectSettings, videos);
+    await this.createBalloons(gltf);
 
     this.postCreate();
   }
@@ -111,6 +134,7 @@ export default class Scene extends MainScene {
     videos: { [key: string]: VideoData },
   ) {
     const to3d = this.to3d.bind(this);
+    const BOX_SCALE = this.width3d / this.width;
 
     { // BACKGROUND
       const actor = await createActor(projectSettings, videos.main, {
@@ -127,23 +151,252 @@ export default class Scene extends MainScene {
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
     }
+
+    // { // BACKGROUND Z = 2
+    //   const scale = 0.58;
+    //   const actor = await createActor(projectSettings, videos.chromatest, {
+    //     box: { w: this.width3d, h: this.height3d, d: 0.02 },
+    //     imageRect: { w: this.width, h: this.height },
+    //   });
+    //   actor.setStaticPosition(getMatrix4({
+    //     x: to3d(-1390 * scale),
+    //     y: to3d(300 * scale) + 2,
+    //     z: 2,
+    //     sx: scale,
+    //     sy: scale,
+    //   }));
+    //   actor.addTween({
+    //     delay: 0,
+    //     duration: STEP_DURATION * 15.9,
+    //     videoStart: 1, // 20,
+    //     fromImagePosition: new THREE.Vector2(0, 0),
+    //   });
+    //   actor.getMesh().castShadow = false;
+    //   actor.getMesh().receiveShadow = false;
+    // }
+
+    { // AUTO1, Z=2.1
+      const scale = 0.78;
+      const actor = await createActor(projectSettings, videos.auto1, {
+        box: {
+          w: videos.auto1.width * BOX_SCALE,
+          h: videos.auto1.height * BOX_SCALE,
+          d: 0.02 },
+        imageRect: { w: videos.auto1.width, h: videos.auto1.height },
+      });
+      actor.setStaticPosition(getMatrix4({
+        x: -6.3,
+        y: 3.2,
+        z: 2.1,
+        sx: scale,
+        sy: scale,
+      }));
+      actor.addTween({
+        delay: 0,
+        duration: PATTERN_DURATION,
+        videoStart: 0, // 20,
+        fromImagePosition: new THREE.Vector2(0, 0),
+        fromMatrix4: getMatrix4({
+          x: -6.3,
+          y: 3.2,
+          z: 2.1,
+          sx: scale,
+          sy: scale,
+        }),
+        toMatrix4: getMatrix4({
+          x: -6.3,
+          y: 3.2,
+          z: 2.0,
+          sx: scale,
+          sy: scale,
+        }),
+      });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+    }
+
+    { // AUTO1, Z=2.1
+      const scale = 0.78;
+      const actor = await createActor(projectSettings, videos.auto1, {
+        box: {
+          w: videos.auto1.width * BOX_SCALE,
+          h: videos.auto1.height * BOX_SCALE,
+          d: 0.02 },
+        imageRect: { w: videos.auto1.width, h: videos.auto1.height },
+      });
+      actor.setStaticPosition(getMatrix4({
+        x: -6.3,
+        y: 3.2,
+        z: 2.1,
+        sx: scale,
+        sy: scale,
+      }));
+      actor.addTween({
+        delay: PATTERN_DURATION * 0.25,
+        duration: PATTERN_DURATION,
+        videoStart: 0, // 20,
+        fromImagePosition: new THREE.Vector2(0, 0),
+        fromMatrix4: getMatrix4({
+          x: -6.3,
+          y: 3.2,
+          z: 2.1,
+          sx: scale,
+          sy: scale,
+        }),
+        toMatrix4: getMatrix4({
+          x: -6.3,
+          y: 3.2,
+          z: 2.0,
+          sx: scale,
+          sy: scale,
+        }),
+      });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+    }
+
+    { // AUTO1, Z=2.1
+      const scale = 0.78;
+      const actor = await createActor(projectSettings, videos.auto1, {
+        box: {
+          w: videos.auto1.width * BOX_SCALE,
+          h: videos.auto1.height * BOX_SCALE,
+          d: 0.02 },
+        imageRect: { w: videos.auto1.width, h: videos.auto1.height },
+      });
+      actor.setStaticPosition(getMatrix4({
+        x: -6.3,
+        y: 3.2,
+        z: 2.1,
+        sx: scale,
+        sy: scale,
+      }));
+      actor.addTween({
+        delay: PATTERN_DURATION * 0.5,
+        duration: PATTERN_DURATION,
+        videoStart: 0, // 20,
+        fromImagePosition: new THREE.Vector2(0, 0),
+        fromMatrix4: getMatrix4({
+          x: -6.3,
+          y: 3.2,
+          z: 2.1,
+          sx: scale,
+          sy: scale,
+        }),
+        toMatrix4: getMatrix4({
+          x: -6.3,
+          y: 3.2,
+          z: 2.0,
+          sx: scale,
+          sy: scale,
+        }),
+      });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+    }
+
+    { // AUTO1, Z=2.1
+      const scale = 0.78;
+      const actor = await createActor(projectSettings, videos.auto1, {
+        box: {
+          w: videos.auto1.width * BOX_SCALE,
+          h: videos.auto1.height * BOX_SCALE,
+          d: 0.02 },
+        imageRect: { w: videos.auto1.width, h: videos.auto1.height },
+      });
+      actor.setStaticPosition(getMatrix4({
+        x: -6.3,
+        y: 3.2,
+        z: 2.1,
+        sx: scale,
+        sy: scale,
+      }));
+      actor.addTween({
+        delay: PATTERN_DURATION * 0.75,
+        duration: PATTERN_DURATION,
+        videoStart: 0.3, // 20,
+        fromImagePosition: new THREE.Vector2(0, 0),
+        fromMatrix4: getMatrix4({
+          x: -6.3,
+          y: 3.2,
+          z: 2.1,
+          sx: scale,
+          sy: scale,
+        }),
+        toMatrix4: getMatrix4({
+          x: -6.3,
+          y: 3.2,
+          z: 2.0,
+          sx: scale,
+          sy: scale,
+        }),
+      });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+    }
+  }
+
+  /**
+   * createBalloons
+   */
+  async createBalloons(gltf: GLTF) {
+    await this.addBalloon({
+      balloon: (gltf.scene.getObjectByName('balloon') as THREE.Mesh).clone(true),
+      balloonImagePath: '../assets/projects/hazumiryokuchi/texture-brown.jpg',
+    });
+  }
+
+  /**
+   * createBalloons
+   */
+  async addBalloon({
+    balloon,
+    balloonImagePath,
+    scale = 0.3,
+    x = -2,
+    z = 2,
+  }: {
+    balloon: THREE.Mesh;
+    balloonImagePath: string;
+    scale?: number;
+    x?: number;
+    z?: number;
+  }) {
+    if (balloon.material instanceof Material) {
+      const texture = new THREE.TextureLoader().load(balloonImagePath);
+      // eslint-disable-next-line no-param-reassign
+      balloon.material = new THREE.MeshPhongMaterial({
+        map: texture,
+        opacity: 0.8,
+        shininess: 90,
+        side: THREE.DoubleSide,
+        transparent: true,
+      });
+    }
+    balloon.scale.set(scale, scale, scale);
+    balloon.position.set(x, 3, z);
+    this.scene.add(balloon);
   }
 
   createShadowMaterialTest() {
+    const y = 1;
+    const z = 1;
     const cylinder = new THREE.Mesh(
-      new THREE.CylinderBufferGeometry(0.2, 0.2, 2),
+      new THREE.CylinderBufferGeometry(0.1, 0.1, 1.5),
       new THREE.MeshPhongMaterial({ color: 0xff0000 }),
     );
-    cylinder.position.set(0, 1, 3.5);
+    cylinder.position.set(0, y + 0.75, z);
     cylinder.castShadow = true;
     cylinder.receiveShadow = true;
     this.scene.add(cylinder);
 
+    const planeGeometry = new THREE.PlaneGeometry(10, 1);
+    planeGeometry.rotateX(Math.PI / -2);
     const ground = new THREE.Mesh(
-      new THREE.BoxBufferGeometry(10, 0.2, 10),
-      new THREE.ShadowMaterial({ opacity: 0.5 }),
+      planeGeometry,
+      new THREE.ShadowMaterial({ opacity: 0.6, transparent: true, side: THREE.FrontSide }),
     );
-    ground.position.set(0, -0.1, 3.5);
+    ground.position.set(0, y, z - 0.5 + 0.2);
     ground.receiveShadow = true;
     this.scene.add(ground);
   }
