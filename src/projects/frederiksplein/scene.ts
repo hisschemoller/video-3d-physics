@@ -114,7 +114,7 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-    this.createShadowMaterialTest();
+    // this.createShadowMaterialTest();
     await this.createActors(projectSettings, videos);
     await this.createBalloons(gltf);
 
@@ -133,15 +133,15 @@ export default class Scene extends MainScene {
     projectSettings: ProjectSettings,
     videos: { [key: string]: VideoData },
   ) {
-    const to3d = this.to3d.bind(this);
     const BOX_SCALE = this.width3d / this.width;
 
-    { // BACKGROUND
+    { // BACKGROUND, Z=-2
+      const scale = 1.21;
       const actor = await createActor(projectSettings, videos.main, {
         box: { w: this.width3d, h: this.height3d, d: 0.02 },
         imageRect: { w: this.width, h: this.height },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(-960), y: to3d(540) + 2 }));
+      actor.setStaticPosition(getMatrix4({ x: -9.65, y: 7.4, z: -2, sx: scale, sy: scale }));
       actor.addTween({
         delay: 0,
         duration: STEP_DURATION * 15.9,
@@ -152,31 +152,9 @@ export default class Scene extends MainScene {
       actor.getMesh().receiveShadow = false;
     }
 
-    // { // BACKGROUND Z = 2
-    //   const scale = 0.58;
-    //   const actor = await createActor(projectSettings, videos.chromatest, {
-    //     box: { w: this.width3d, h: this.height3d, d: 0.02 },
-    //     imageRect: { w: this.width, h: this.height },
-    //   });
-    //   actor.setStaticPosition(getMatrix4({
-    //     x: to3d(-1390 * scale),
-    //     y: to3d(300 * scale) + 2,
-    //     z: 2,
-    //     sx: scale,
-    //     sy: scale,
-    //   }));
-    //   actor.addTween({
-    //     delay: 0,
-    //     duration: STEP_DURATION * 15.9,
-    //     videoStart: 1, // 20,
-    //     fromImagePosition: new THREE.Vector2(0, 0),
-    //   });
-    //   actor.getMesh().castShadow = false;
-    //   actor.getMesh().receiveShadow = false;
-    // }
-
-    { // AUTO1, Z=2.1
-      const scale = 0.78;
+    // CARS, Z=0
+    new Array(4).fill(true).forEach(async (el, i) => {
+      const scale = 1;
       const actor = await createActor(projectSettings, videos.auto1, {
         box: {
           w: videos.auto1.width * BOX_SCALE,
@@ -184,162 +162,27 @@ export default class Scene extends MainScene {
           d: 0.02 },
         imageRect: { w: videos.auto1.width, h: videos.auto1.height },
       });
-      actor.setStaticPosition(getMatrix4({
-        x: -6.3,
-        y: 3.2,
-        z: 2.1,
-        sx: scale,
-        sy: scale,
-      }));
+      const matrix = { x: -8, y: 3.4, z: 0, sx: scale, sy: scale };
       actor.addTween({
-        delay: 0,
+        delay: PATTERN_DURATION * i * 0.25,
         duration: PATTERN_DURATION,
         videoStart: 0, // 20,
         fromImagePosition: new THREE.Vector2(0, 0),
-        fromMatrix4: getMatrix4({
-          x: -6.3,
-          y: 3.2,
-          z: 2.1,
-          sx: scale,
-          sy: scale,
-        }),
-        toMatrix4: getMatrix4({
-          x: -6.3,
-          y: 3.2,
-          z: 2.0,
-          sx: scale,
-          sy: scale,
-        }),
+        fromMatrix4: getMatrix4({ ...matrix }),
+        toMatrix4: getMatrix4({ ...matrix, z: -0.1 }),
       });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
-    }
-
-    { // AUTO1, Z=2.1
-      const scale = 0.78;
-      const actor = await createActor(projectSettings, videos.auto1, {
-        box: {
-          w: videos.auto1.width * BOX_SCALE,
-          h: videos.auto1.height * BOX_SCALE,
-          d: 0.02 },
-        imageRect: { w: videos.auto1.width, h: videos.auto1.height },
-      });
-      actor.setStaticPosition(getMatrix4({
-        x: -6.3,
-        y: 3.2,
-        z: 2.1,
-        sx: scale,
-        sy: scale,
-      }));
-      actor.addTween({
-        delay: PATTERN_DURATION * 0.25,
-        duration: PATTERN_DURATION,
-        videoStart: 0, // 20,
-        fromImagePosition: new THREE.Vector2(0, 0),
-        fromMatrix4: getMatrix4({
-          x: -6.3,
-          y: 3.2,
-          z: 2.1,
-          sx: scale,
-          sy: scale,
-        }),
-        toMatrix4: getMatrix4({
-          x: -6.3,
-          y: 3.2,
-          z: 2.0,
-          sx: scale,
-          sy: scale,
-        }),
-      });
-      actor.getMesh().castShadow = false;
-      actor.getMesh().receiveShadow = false;
-    }
-
-    { // AUTO1, Z=2.1
-      const scale = 0.78;
-      const actor = await createActor(projectSettings, videos.auto1, {
-        box: {
-          w: videos.auto1.width * BOX_SCALE,
-          h: videos.auto1.height * BOX_SCALE,
-          d: 0.02 },
-        imageRect: { w: videos.auto1.width, h: videos.auto1.height },
-      });
-      actor.setStaticPosition(getMatrix4({
-        x: -6.3,
-        y: 3.2,
-        z: 2.1,
-        sx: scale,
-        sy: scale,
-      }));
-      actor.addTween({
-        delay: PATTERN_DURATION * 0.5,
-        duration: PATTERN_DURATION,
-        videoStart: 0, // 20,
-        fromImagePosition: new THREE.Vector2(0, 0),
-        fromMatrix4: getMatrix4({
-          x: -6.3,
-          y: 3.2,
-          z: 2.1,
-          sx: scale,
-          sy: scale,
-        }),
-        toMatrix4: getMatrix4({
-          x: -6.3,
-          y: 3.2,
-          z: 2.0,
-          sx: scale,
-          sy: scale,
-        }),
-      });
-      actor.getMesh().castShadow = false;
-      actor.getMesh().receiveShadow = false;
-    }
-
-    { // AUTO1, Z=2.1
-      const scale = 0.78;
-      const actor = await createActor(projectSettings, videos.auto1, {
-        box: {
-          w: videos.auto1.width * BOX_SCALE,
-          h: videos.auto1.height * BOX_SCALE,
-          d: 0.02 },
-        imageRect: { w: videos.auto1.width, h: videos.auto1.height },
-      });
-      actor.setStaticPosition(getMatrix4({
-        x: -6.3,
-        y: 3.2,
-        z: 2.1,
-        sx: scale,
-        sy: scale,
-      }));
-      actor.addTween({
-        delay: PATTERN_DURATION * 0.75,
-        duration: PATTERN_DURATION,
-        videoStart: 0.3, // 20,
-        fromImagePosition: new THREE.Vector2(0, 0),
-        fromMatrix4: getMatrix4({
-          x: -6.3,
-          y: 3.2,
-          z: 2.1,
-          sx: scale,
-          sy: scale,
-        }),
-        toMatrix4: getMatrix4({
-          x: -6.3,
-          y: 3.2,
-          z: 2.0,
-          sx: scale,
-          sy: scale,
-        }),
-      });
-      actor.getMesh().castShadow = false;
-      actor.getMesh().receiveShadow = false;
-    }
+    });
   }
 
   /**
    * createBalloons
    */
   async createBalloons(gltf: GLTF) {
+    this.addGround(0.2, -1, 2.4);
+    this.addGround(-1, 1, 2.4);
+
     await this.addBalloon({
       balloon: (gltf.scene.getObjectByName('balloon') as THREE.Mesh).clone(true),
       balloonImagePath: '../assets/projects/hazumiryokuchi/texture-brown.jpg',
@@ -347,7 +190,7 @@ export default class Scene extends MainScene {
   }
 
   /**
-   * createBalloons
+   * addBalloon
    */
   async addBalloon({
     balloon,
@@ -376,6 +219,23 @@ export default class Scene extends MainScene {
     balloon.scale.set(scale, scale, scale);
     balloon.position.set(x, 3, z);
     this.scene.add(balloon);
+  }
+
+  /**
+   * addGround
+   */
+  addGround(y: number, z: number, depth: number) {
+    const planeGeometry = new THREE.PlaneGeometry(20, depth);
+    planeGeometry.rotateX(Math.PI / -3);
+    const ground = new THREE.Mesh(
+      planeGeometry,
+      new THREE.ShadowMaterial({ opacity: 0.6, transparent: true, side: THREE.FrontSide }),
+      // new THREE.MeshPhongMaterial({ color: 0x999999 }),
+    );
+    ground.position.set(0, y, z);
+    ground.receiveShadow = true;
+    this.scene.add(ground);
+    return ground;
   }
 
   createShadowMaterialTest() {
