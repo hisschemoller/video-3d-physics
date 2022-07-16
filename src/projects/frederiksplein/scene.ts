@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import { THREE } from 'enable3d';
-import { Material } from 'three';
+import { Material, Uint8ClampedBufferAttribute } from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
@@ -193,13 +193,19 @@ export default class Scene extends MainScene {
 
     await this.addBalloon({
       balloon: balloon.clone(true),
-      ropeLength: 4,
+      ropeLength: 6,
+      tweenOffset: 0,
+      tweenOffsetWind: 0,
+      wind: [-0.1, 0.1, -0.08, 0.12],
     });
 
     await this.addBalloon({
       balloon: balloon.clone(true),
-      ropeLength: 2,
+      ropeLength: 3,
       scale: 0.2,
+      tweenOffset: 48,
+      tweenOffsetWind: 27,
+      wind: [0.1, -0.08, 0.03, -0.05],
       x: -1,
       y: 0.2,
       z: -1,
@@ -213,6 +219,9 @@ export default class Scene extends MainScene {
     balloon,
     ropeLength,
     scale = 0.3,
+    tweenOffset,
+    tweenOffsetWind,
+    wind = [-0.1, 0.1, -0.15, 0.15],
     x = -2,
     y = -0.95,
     z = 1,
@@ -220,6 +229,9 @@ export default class Scene extends MainScene {
     balloon: THREE.Mesh;
     ropeLength: number;
     scale?: number;
+    tweenOffset: number;
+    tweenOffsetWind: number;
+    wind: number[];
     x?: number;
     y?: number;
     z?: number;
@@ -228,11 +240,29 @@ export default class Scene extends MainScene {
     group.position.set(x, y, z);
     this.scene.add(group);
 
+    const brick = new THREE.Mesh(
+      new THREE.BoxBufferGeometry(1.33, 0.27, 0.5),
+      new THREE.MeshPhongMaterial({ color: 0x777777 }),
+    );
+    brick.position.set(0, 0, 0);
+    brick.scale.set(scale, scale, scale);
+    brick.rotateX(-2.6);
+    brick.rotateY(Math.PI * -0.01);
+    brick.castShadow = true;
+    brick.receiveShadow = true;
+    group.add(brick);
+
+    const balloonGroup = new THREE.Group();
+    balloonGroup.position.set(x, y, z);
+    // eslint-disable-next-line prefer-destructuring
+    balloonGroup.rotation.z = wind[0];
+    this.scene.add(balloonGroup);
+
     if (balloon.material instanceof Material) {
       balloon.material = new THREE.MeshPhysicalMaterial({
         clearcoat: 1,
-        color: 0xaa0000,
-        opacity: 0.75,
+        color: 0x881100, // 0x990000,
+        opacity: 0.8,
         reflectivity: 0.9,
         roughness: 0.4,
         side: THREE.FrontSide,
@@ -252,19 +282,7 @@ export default class Scene extends MainScene {
     balloon.position.set(0, ropeLength, 0);
     balloon.castShadow = true;
     balloon.receiveShadow = true;
-    group.add(balloon);
-
-    const brick = new THREE.Mesh(
-      new THREE.BoxBufferGeometry(1.33, 0.27, 0.5),
-      new THREE.MeshPhongMaterial({ color: 0x777777 }),
-    );
-    brick.position.set(0, 0, 0);
-    brick.scale.set(scale, scale, scale);
-    brick.rotateX(-2.6);
-    brick.rotateY(Math.PI * -0.01);
-    brick.castShadow = true;
-    brick.receiveShadow = true;
-    group.add(brick);
+    balloonGroup.add(balloon);
 
     const rope = new THREE.Mesh(
       new THREE.CylinderBufferGeometry(0.004, 0.004, ropeLength),
@@ -273,28 +291,13 @@ export default class Scene extends MainScene {
     rope.position.set(0, ropeLength / 2, 0);
     rope.castShadow = true;
     rope.receiveShadow = true;
-    group.add(rope);
+    balloonGroup.add(rope);
 
-    const delay = 0;
-    const duration = 48;
+    const DURATION = 48;
+
     const tweenDown = createTween({
-      delay: delay * STEP_DURATION,
-      duration: duration * STEP_DURATION,
-      ease: 'sineInOut',
-      onComplete: () => {},
-      onStart: () => {},
-      onUpdate: (progress: number) => {
-        const length = 0.1 + (progress * (ropeLength - 0.1));
-        balloon.position.setY(length);
-        rope.position.setY(length / 2);
-        rope.scale.setY(length / ropeLength);
-      },
-    });
-    this.timeline.add(tweenDown);
-
-    const tweenUp = createTween({
-      delay: 64 * STEP_DURATION,
-      duration: duration * STEP_DURATION,
+      delay: (tweenOffset + 0) * STEP_DURATION,
+      duration: DURATION * STEP_DURATION,
       ease: 'sineInOut',
       onComplete: () => {},
       onStart: () => {},
@@ -305,7 +308,35 @@ export default class Scene extends MainScene {
         rope.scale.setY(length / ropeLength);
       },
     });
+    this.timeline.add(tweenDown);
+    const tweenUp = createTween({
+      delay: (tweenOffset + 64) * STEP_DURATION,
+      duration: DURATION * STEP_DURATION,
+      ease: 'sineInOut',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        const length = 0.1 + (progress * (ropeLength - 0.1));
+        balloon.position.setY(length);
+        rope.position.setY(length / 2);
+        rope.scale.setY(length / ropeLength);
+      },
+    });
     this.timeline.add(tweenUp);
+
+    wind.forEach((windX, i) => {
+      const tweenWind = createTween({
+        delay: (tweenOffsetWind + (i * 32)) * STEP_DURATION,
+        duration: 32 * STEP_DURATION,
+        ease: 'sineInOut',
+        onComplete: () => {},
+        onStart: () => {},
+        onUpdate: (progress: number) => {
+          balloonGroup.rotation.z = wind[i] + ((wind[(i + 1) % wind.length] - wind[i]) * progress);
+        },
+      });
+      this.timeline.add(tweenWind);
+    });
   }
 
   /**
