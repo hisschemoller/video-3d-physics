@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import { THREE } from 'enable3d';
@@ -6,18 +7,21 @@ import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
+import createTween from '@app/tween';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 115;
 const SECONDS_PER_BEAT = 60 / BPM;
-const MEASURES = 4;
+const MEASURES = 8;
 const BEATS_PER_MEASURE = 4;
 const STEPS_PER_BEAT = 4;
 const STEPS = STEPS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
 const PATTERN_DURATION = SECONDS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
+
+const GROUND_ROTATION_X = Math.PI / -3;
 
 export default class Scene extends MainScene {
   timeline: Timeline;
@@ -33,7 +37,7 @@ export default class Scene extends MainScene {
     this.height = 1080;
     this.width3d = 16;
     this.height3d = (this.height / this.width) * this.width3d;
-    this.fps = 30;
+    this.fps = 15;
     this.captureFps = 30;
     this.captureThrottle = 10;
     this.captureDuration = PATTERN_DURATION * 2;
@@ -56,10 +60,10 @@ export default class Scene extends MainScene {
     this.orbitControls.saveState();
 
     // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.80;
+    this.ambientLight.intensity = 0.90;
 
     // DIRECTIONAL LIGHT
-    this.directionalLight.position.set(-10, 7, 3);
+    this.directionalLight.position.set(-7, 10, 1.5);
     this.directionalLight.intensity = 0.99;
 
     // TWEENS
@@ -142,14 +146,16 @@ export default class Scene extends MainScene {
         imageRect: { w: this.width, h: this.height },
       });
       actor.setStaticPosition(getMatrix4({ x: -9.65, y: 7.4, z: -2, sx: scale, sy: scale }));
-      actor.addTween({
-        delay: 0,
-        duration: STEP_DURATION * 15.9,
-        videoStart: 30, // 20,
-        fromImagePosition: new THREE.Vector2(0, 0),
-      });
+      for (let i = 0; i < MEASURES; i += 1) {
+        actor.addTween({
+          delay: STEP_DURATION * 16 * i,
+          duration: STEP_DURATION * 15.9,
+          videoStart: 30, // 20,
+          fromImagePosition: new THREE.Vector2(0, 0),
+        });
+      }
       actor.getMesh().castShadow = false;
-      actor.getMesh().receiveShadow = false;
+      actor.getMesh().receiveShadow = true;
     }
 
     // CARS, Z=0
@@ -165,14 +171,14 @@ export default class Scene extends MainScene {
       const matrix = { x: -8, y: 3.4, z: 0, sx: scale, sy: scale };
       actor.addTween({
         delay: PATTERN_DURATION * i * 0.25,
-        duration: PATTERN_DURATION,
+        duration: PATTERN_DURATION / 2,
         videoStart: 0, // 20,
         fromImagePosition: new THREE.Vector2(0, 0),
         fromMatrix4: getMatrix4({ ...matrix }),
         toMatrix4: getMatrix4({ ...matrix, z: -0.1 }),
       });
       actor.getMesh().castShadow = false;
-      actor.getMesh().receiveShadow = false;
+      actor.getMesh().receiveShadow = true;
     });
   }
 
@@ -180,12 +186,23 @@ export default class Scene extends MainScene {
    * createBalloons
    */
   async createBalloons(gltf: GLTF) {
-    this.addGround(0.2, -1, 2.4);
+    this.addGround(0.2, -1.1, 2.4);
     this.addGround(-1, 1, 2.4);
 
+    const balloon = gltf.scene.getObjectByName('balloon') as THREE.Mesh;
+
     await this.addBalloon({
-      balloon: (gltf.scene.getObjectByName('balloon') as THREE.Mesh).clone(true),
-      balloonImagePath: '../assets/projects/hazumiryokuchi/texture-brown.jpg',
+      balloon: balloon.clone(true),
+      ropeLength: 4,
+    });
+
+    await this.addBalloon({
+      balloon: balloon.clone(true),
+      ropeLength: 2,
+      scale: 0.2,
+      x: -1,
+      y: 0.2,
+      z: -1,
     });
   }
 
@@ -194,31 +211,101 @@ export default class Scene extends MainScene {
    */
   async addBalloon({
     balloon,
-    balloonImagePath,
+    ropeLength,
     scale = 0.3,
     x = -2,
-    z = 2,
+    y = -0.95,
+    z = 1,
   }: {
     balloon: THREE.Mesh;
-    balloonImagePath: string;
+    ropeLength: number;
     scale?: number;
     x?: number;
+    y?: number;
     z?: number;
   }) {
+    const group = new THREE.Group();
+    group.position.set(x, y, z);
+    this.scene.add(group);
+
     if (balloon.material instanceof Material) {
-      const texture = new THREE.TextureLoader().load(balloonImagePath);
-      // eslint-disable-next-line no-param-reassign
-      balloon.material = new THREE.MeshPhongMaterial({
-        map: texture,
-        opacity: 0.8,
-        shininess: 90,
-        side: THREE.DoubleSide,
+      balloon.material = new THREE.MeshPhysicalMaterial({
+        clearcoat: 1,
+        color: 0xaa0000,
+        opacity: 0.75,
+        reflectivity: 0.9,
+        roughness: 0.4,
+        side: THREE.FrontSide,
         transparent: true,
       });
+      // balloon.material = new THREE.MeshPhysicalMaterial({
+      //   attenuationDistance: 0.5,
+      //   clearcoat: 1,
+      //   color: 0xaa0000,
+      //   reflectivity: 0.9,
+      //   roughness: 0.35,
+      //   transmission: 0.4,
+      //   transparent: true,
+      // });
     }
     balloon.scale.set(scale, scale, scale);
-    balloon.position.set(x, 3, z);
-    this.scene.add(balloon);
+    balloon.position.set(0, ropeLength, 0);
+    balloon.castShadow = true;
+    balloon.receiveShadow = true;
+    group.add(balloon);
+
+    const brick = new THREE.Mesh(
+      new THREE.BoxBufferGeometry(1.33, 0.27, 0.5),
+      new THREE.MeshPhongMaterial({ color: 0x777777 }),
+    );
+    brick.position.set(0, 0, 0);
+    brick.scale.set(scale, scale, scale);
+    brick.rotateX(-2.6);
+    brick.rotateY(Math.PI * -0.01);
+    brick.castShadow = true;
+    brick.receiveShadow = true;
+    group.add(brick);
+
+    const rope = new THREE.Mesh(
+      new THREE.CylinderBufferGeometry(0.004, 0.004, ropeLength),
+      new THREE.MeshPhongMaterial({ color: 0x885511 }),
+    );
+    rope.position.set(0, ropeLength / 2, 0);
+    rope.castShadow = true;
+    rope.receiveShadow = true;
+    group.add(rope);
+
+    const delay = 0;
+    const duration = 48;
+    const tweenDown = createTween({
+      delay: delay * STEP_DURATION,
+      duration: duration * STEP_DURATION,
+      ease: 'sineInOut',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        const length = 0.1 + (progress * (ropeLength - 0.1));
+        balloon.position.setY(length);
+        rope.position.setY(length / 2);
+        rope.scale.setY(length / ropeLength);
+      },
+    });
+    this.timeline.add(tweenDown);
+
+    const tweenUp = createTween({
+      delay: 64 * STEP_DURATION,
+      duration: duration * STEP_DURATION,
+      ease: 'sineInOut',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        const length = 0.1 + ((1 - progress) * (ropeLength - 0.1));
+        balloon.position.setY(length);
+        rope.position.setY(length / 2);
+        rope.scale.setY(length / ropeLength);
+      },
+    });
+    this.timeline.add(tweenUp);
   }
 
   /**
@@ -226,7 +313,7 @@ export default class Scene extends MainScene {
    */
   addGround(y: number, z: number, depth: number) {
     const planeGeometry = new THREE.PlaneGeometry(20, depth);
-    planeGeometry.rotateX(Math.PI / -3);
+    planeGeometry.rotateX(GROUND_ROTATION_X);
     const ground = new THREE.Mesh(
       planeGeometry,
       new THREE.ShadowMaterial({ opacity: 0.6, transparent: true, side: THREE.FrontSide }),
