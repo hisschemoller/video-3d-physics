@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import { THREE } from 'enable3d';
-import { Material, Uint8ClampedBufferAttribute } from 'three';
+import { Material } from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
@@ -194,21 +194,37 @@ export default class Scene extends MainScene {
     await this.addBalloon({
       balloon: balloon.clone(true),
       ropeLength: 6,
+      scale: 0.3,
       tweenOffset: 0,
       tweenOffsetWind: 0,
       wind: [-0.1, 0.1, -0.08, 0.12],
+      x: -2,
+      y: -0.95,
+      z: 1,
     });
 
     await this.addBalloon({
       balloon: balloon.clone(true),
-      ropeLength: 3,
+      ropeLength: 3.5,
       scale: 0.2,
       tweenOffset: 48,
       tweenOffsetWind: 27,
       wind: [0.1, -0.08, 0.03, -0.05],
       x: -1,
-      y: 0.2,
+      y: 0.15,
       z: -1,
+    });
+
+    await this.addBalloon({
+      balloon: balloon.clone(true),
+      ropeLength: 4,
+      scale: 0.22,
+      tweenOffset: 32,
+      tweenOffsetWind: 12,
+      wind: [-0.03, 0.08, -0.01, 0.02],
+      x: 3.5,
+      y: 0,
+      z: -0.75,
     });
   }
 
@@ -218,23 +234,23 @@ export default class Scene extends MainScene {
   async addBalloon({
     balloon,
     ropeLength,
-    scale = 0.3,
+    scale,
     tweenOffset,
     tweenOffsetWind,
     wind = [-0.1, 0.1, -0.15, 0.15],
-    x = -2,
-    y = -0.95,
-    z = 1,
+    x,
+    y,
+    z,
   }: {
     balloon: THREE.Mesh;
     ropeLength: number;
-    scale?: number;
+    scale: number;
     tweenOffset: number;
     tweenOffsetWind: number;
     wind: number[];
-    x?: number;
-    y?: number;
-    z?: number;
+    x: number;
+    y: number;
+    z: number;
   }) {
     const group = new THREE.Group();
     group.position.set(x, y, z);
@@ -251,6 +267,18 @@ export default class Scene extends MainScene {
     brick.castShadow = true;
     brick.receiveShadow = true;
     group.add(brick);
+
+    const winder = new THREE.Mesh(
+      new THREE.CylinderBufferGeometry(0.06, 0.06, 0.5),
+      new THREE.MeshPhongMaterial({ color: 0x555555 }),
+    );
+    winder.position.set(0, 0.07, 0);
+    winder.scale.set(scale, scale, scale);
+    winder.rotateY(Math.PI * -0.01);
+    winder.rotateZ(Math.PI / 2);
+    winder.castShadow = true;
+    winder.receiveShadow = true;
+    group.add(winder);
 
     const balloonGroup = new THREE.Group();
     balloonGroup.position.set(x, y, z);
