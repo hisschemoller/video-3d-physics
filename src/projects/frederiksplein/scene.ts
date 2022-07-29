@@ -20,6 +20,8 @@ const STEPS_PER_BEAT = 4;
 const STEPS = STEPS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
 const PATTERN_DURATION = SECONDS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
+console.log(PATTERN_DURATION);
+console.log(STEP_DURATION);
 
 const GROUND_ROTATION_X = Math.PI / -3;
 
@@ -100,8 +102,35 @@ export default class Scene extends MainScene {
         scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
         width: 1280,
         imgSrcPath: isPreview
-          ? '../assets/projects/frederiksplein/frames_preview_auto1/frame_#FRAME#.png'
+          ? '../assets/projects/frederiksplein/frames_preview-auto1/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/frederiksplein-auto1/frames/&img=frame_#FRAME#.png',
+      },
+      bike1b: {
+        fps: 30,
+        height: 720,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1280,
+        imgSrcPath: isPreview
+          ? '../assets/projects/frederiksplein/frames_preview-bike1b/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/frederiksplein-bike1b/frames/&img=frame_#FRAME#.png',
+      },
+      auto2: {
+        fps: 30,
+        height: 720,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1280,
+        imgSrcPath: isPreview
+          ? '../assets/projects/frederiksplein/frames_preview-auto2/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/frederiksplein-auto2/frames/&img=frame_#FRAME#.png',
+      },
+      scooter: {
+        fps: 30,
+        height: 720,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1280,
+        imgSrcPath: isPreview
+          ? '../assets/projects/frederiksplein/frames_preview-scooter/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/frederiksplein-scooter/frames/&img=frame_#FRAME#.png',
       },
     };
 
@@ -158,15 +187,16 @@ export default class Scene extends MainScene {
       actor.getMesh().receiveShadow = true;
     }
 
-    // CARS, Z=0
-    new Array(4).fill(true).forEach(async (el, i) => {
+    // TRAFFIC, Z=0
+    ['auto1', 'bike1b', 'auto2', 'scooter'].forEach(async (video, i) => {
+      const videoData = videos[video];
       const scale = 1;
-      const actor = await createActor(projectSettings, videos.auto1, {
+      const actor = await createActor(projectSettings, videoData, {
         box: {
-          w: videos.auto1.width * BOX_SCALE,
-          h: videos.auto1.height * BOX_SCALE,
+          w: videoData.width * BOX_SCALE,
+          h: videoData.height * BOX_SCALE,
           d: 0.02 },
-        imageRect: { w: videos.auto1.width, h: videos.auto1.height },
+        imageRect: { w: videoData.width, h: videoData.height },
       });
       const matrix = { x: -8, y: 3.4, z: 0, sx: scale, sy: scale };
       actor.addTween({
