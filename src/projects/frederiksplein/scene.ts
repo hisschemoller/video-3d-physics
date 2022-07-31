@@ -150,6 +150,7 @@ export default class Scene extends MainScene {
     // this.createShadowMaterialTest();
     await this.createActors(projectSettings, videos);
     await this.createBalloons(gltf);
+    this.createClock();
 
     this.postCreate();
   }
@@ -188,7 +189,7 @@ export default class Scene extends MainScene {
     }
 
     // TRAFFIC, Z=0
-    ['auto1', 'bike1b', 'auto2', 'scooter'].forEach(async (video, i) => {
+    ['auto1', 'bike1b', 'auto2', 'scooter', 'auto1', 'bike1b', 'auto2', 'scooter'].forEach(async (video, i) => {
       const videoData = videos[video];
       const scale = 1;
       const actor = await createActor(projectSettings, videoData, {
@@ -200,7 +201,7 @@ export default class Scene extends MainScene {
       });
       const matrix = { x: -8, y: 3.4, z: 0, sx: scale, sy: scale };
       actor.addTween({
-        delay: PATTERN_DURATION * i * 0.25,
+        delay: PATTERN_DURATION * i * 0.125,
         duration: PATTERN_DURATION / 2,
         videoStart: 0, // 20,
         fromImagePosition: new THREE.Vector2(0, 0),
@@ -210,6 +211,70 @@ export default class Scene extends MainScene {
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = true;
     });
+  }
+
+  /**
+   * createClock
+   */
+  async createClock() {
+    const scale = 0.13;
+    const group = new THREE.Group();
+    group.position.set(-3.76, 2.31, -1);
+    group.rotation.y = -0.5;
+    group.scale.set(scale, scale, scale);
+    this.scene.add(group);
+
+    const faceRadius = 0.6;
+    const face = new THREE.Mesh(
+      new THREE.CylinderBufferGeometry(faceRadius, faceRadius, 0.01, 16),
+      new THREE.MeshPhongMaterial({ color: 0xeeeeee }),
+    );
+    face.rotateX(Math.PI * 0.5);
+    group.add(face);
+
+    const handLargeWidth = 0.3;
+    const handLargeHeight = 1;
+    const handLargeGeometry = new THREE.BoxBufferGeometry(handLargeWidth, handLargeHeight, 0.01);
+    handLargeGeometry.translate(0, handLargeHeight * 0.45, 0);
+    const handLarge = new THREE.Mesh(
+      handLargeGeometry,
+      new THREE.MeshPhongMaterial({ color: 0x999999 }),
+    );
+    handLarge.position.setZ(0.1);
+    group.add(handLarge);
+
+    this.timeline.add(createTween({
+      delay: 0,
+      duration: PATTERN_DURATION * 0.99,
+      ease: 'linear',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        handLarge.rotation.z = progress * Math.PI * -4;
+      },
+    }));
+
+    const handSmallWidth = 0.4;
+    const handSmallHeight = 0.6;
+    const handSmallGeometry = new THREE.BoxBufferGeometry(handSmallWidth, handSmallHeight, 0.01);
+    handSmallGeometry.translate(0, handSmallHeight * 0.45, 0);
+    const handSmall = new THREE.Mesh(
+      handSmallGeometry,
+      new THREE.MeshPhongMaterial({ color: 0x999999 }),
+    );
+    handSmall.position.setZ(0.1);
+    group.add(handSmall);
+
+    this.timeline.add(createTween({
+      delay: 0,
+      duration: PATTERN_DURATION * 0.99,
+      ease: 'linear',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        handSmall.rotation.z = progress * Math.PI * -2;
+      },
+    }));
   }
 
   /**
@@ -320,7 +385,7 @@ export default class Scene extends MainScene {
       balloon.material = new THREE.MeshPhysicalMaterial({
         clearcoat: 1,
         color: 0x881100, // 0x990000,
-        opacity: 0.8,
+        opacity: 0.9,
         reflectivity: 0.9,
         roughness: 0.4,
         side: THREE.FrontSide,
