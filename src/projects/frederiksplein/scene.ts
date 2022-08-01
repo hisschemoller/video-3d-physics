@@ -189,6 +189,7 @@ export default class Scene extends MainScene {
     }
 
     // TRAFFIC, Z=0
+    const startFrames = [11, 2, 5, 2];
     ['auto1', 'bike1b', 'auto2', 'scooter', 'auto1', 'bike1b', 'auto2', 'scooter'].forEach(async (video, i) => {
       const videoData = videos[video];
       const scale = 1;
@@ -203,7 +204,7 @@ export default class Scene extends MainScene {
       actor.addTween({
         delay: PATTERN_DURATION * i * 0.125,
         duration: PATTERN_DURATION / 2,
-        videoStart: 0, // 20,
+        videoStart: startFrames[i % startFrames.length] / videoData.fps,
         fromImagePosition: new THREE.Vector2(0, 0),
         fromMatrix4: getMatrix4({ ...matrix }),
         toMatrix4: getMatrix4({ ...matrix, z: -0.1 }),
