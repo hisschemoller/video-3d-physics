@@ -20,8 +20,6 @@ const STEPS_PER_BEAT = 4;
 const STEPS = STEPS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
 const PATTERN_DURATION = SECONDS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
-console.log(PATTERN_DURATION);
-console.log(STEP_DURATION);
 
 const GROUND_ROTATION_X = Math.PI / -3;
 
@@ -185,7 +183,7 @@ export default class Scene extends MainScene {
         });
       }
       actor.getMesh().castShadow = false;
-      actor.getMesh().receiveShadow = true;
+      actor.getMesh().receiveShadow = false;
     }
 
     // TRAFFIC, Z=0
@@ -295,7 +293,7 @@ export default class Scene extends MainScene {
       tweenOffsetWind: 0,
       wind: [-0.1, 0.1, -0.08, 0.12],
       x: -2,
-      y: -0.95,
+      y: -0.98,
       z: 1,
     });
 
@@ -321,6 +319,42 @@ export default class Scene extends MainScene {
       x: 3.5,
       y: 0,
       z: -0.75,
+    });
+
+    // await this.addBalloon({
+    //   balloon: balloon.clone(true),
+    //   ropeLength: 5,
+    //   scale: 0.25,
+    //   tweenOffset: 20,
+    //   tweenOffsetWind: 12,
+    //   wind: [-0.01, 0.02, -0.03, 0.08],
+    //   x: -7,
+    //   y: 0,
+    //   z: -0.6,
+    // });
+
+    await this.addBalloon({
+      balloon: balloon.clone(true),
+      ropeLength: 2.4,
+      scale: 0.13,
+      tweenOffset: 25,
+      tweenOffsetWind: 12,
+      wind: [-0.05, 0.1, -0.08, 0.03],
+      x: -3.3,
+      y: 0.38,
+      z: -1.4,
+    });
+
+    await this.addBalloon({
+      balloon: balloon.clone(true),
+      ropeLength: 2.1,
+      scale: 0.105,
+      tweenOffset: 15,
+      tweenOffsetWind: 20,
+      wind: [0.05, -0.08, -0.1, 0.03],
+      x: 0.4,
+      y: 0.62,
+      z: -1.8,
     });
   }
 
@@ -368,7 +402,7 @@ export default class Scene extends MainScene {
       new THREE.CylinderBufferGeometry(0.06, 0.06, 0.5),
       new THREE.MeshPhongMaterial({ color: 0x555555 }),
     );
-    winder.position.set(0, 0.07, 0);
+    winder.position.set(0, 0.3 * scale, 0);
     winder.scale.set(scale, scale, scale);
     winder.rotateY(Math.PI * -0.01);
     winder.rotateZ(Math.PI / 2);
@@ -381,26 +415,17 @@ export default class Scene extends MainScene {
     // eslint-disable-next-line prefer-destructuring
     balloonGroup.rotation.z = wind[0];
     this.scene.add(balloonGroup);
-
+    console.log(scale, 0.9 + ((scale - 0.3) * 1.2));
     if (balloon.material instanceof Material) {
       balloon.material = new THREE.MeshPhysicalMaterial({
         clearcoat: 1,
         color: 0x881100, // 0x990000,
-        opacity: 0.9,
+        opacity: 0.9 + ((scale - 0.3) * 1.2),
         reflectivity: 0.9,
         roughness: 0.4,
         side: THREE.FrontSide,
         transparent: true,
       });
-      // balloon.material = new THREE.MeshPhysicalMaterial({
-      //   attenuationDistance: 0.5,
-      //   clearcoat: 1,
-      //   color: 0xaa0000,
-      //   reflectivity: 0.9,
-      //   roughness: 0.35,
-      //   transmission: 0.4,
-      //   transparent: true,
-      // });
     }
     balloon.scale.set(scale, scale, scale);
     balloon.position.set(0, ropeLength, 0);
