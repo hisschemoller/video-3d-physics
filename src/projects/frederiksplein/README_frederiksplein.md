@@ -45,11 +45,11 @@ ffmpeg -i frederiksplein.mov -filter:v "crop=1280:720:0:360" frederiksplein-720p
 ffmpeg -ss 00:00:01.0 -i frederiksplein-720p.mov -c copy -t 00:00:09.0 frederiksplein-720p-auto1.mov
 # runway...
 # chromakey greenscreen to transparency
-ffmpeg -i auto1-720p.mp4 -vf "chromakey=0xaaff00:0.3:0" '/Volumes/Samsung_X5/frederiksplein-auto1/frames/frame_%05d.png'
+ffmpeg -i auto1-720p.mp4 -vf "chromakey=0xaaff00:0.22:0.05" '/Volumes/Samsung_X5/frederiksplein-auto1/frames/frame_%05d.png'
 # scale to 25%, 1280 * 0.25 = 320 (x 180)
 ffmpeg -i auto1-720p.mp4 -vf scale=320:180 auto1-720p_preview.mp4
 # chromakey greenscreen to transparency preview
-ffmpeg -i auto1-720p_preview.mp4 -vf "chromakey=0xaaff00:0.3:0" '/Volumes/Samsung_X5/frederiksplein-auto1/frames_preview/frame_%05d.png'
+ffmpeg -i auto1-720p_preview.mp4 -vf "chromakey=0xaaff00:0.22:0.05" '/Volumes/Samsung_X5/frederiksplein-auto1/frames_preview/frame_%05d.png'
 
 # bikes1 (2 fietsers)
 # time slice 3 - 14 sec (tijdsduur 11 sec)
@@ -60,11 +60,11 @@ ffmpeg -ss 00:00:03.10 -i frederiksplein-720p.mov -c copy -t 00:00:14.0 frederik
 ffmpeg -ss 00:00:05.10 -i frederiksplein-720p.mov -c copy -t 00:00:11.0 frederiksplein-720p-bike1b.mov
 # runway...
 # chromakey greenscreen to transparency
-ffmpeg -i bike1b-720p.mp4 -vf "chromakey=0xaaff00:0.3:0" '/Volumes/Samsung_X5/frederiksplein-bike1b/frames/frame_%05d.png'
+ffmpeg -i bike1b-720p.mp4 -vf "chromakey=0xaaff00:0.22:0.05" '/Volumes/Samsung_X5/frederiksplein-bike1b/frames/frame_%05d.png'
 # scale to 25%, 1280 * 0.25 = 320 (x 180)
 ffmpeg -i bike1b-720p.mp4 -vf scale=320:180 bike1b-720p_preview.mp4
 # chromakey greenscreen to transparency preview
-ffmpeg -i bike1b-720p_preview.mp4 -vf "chromakey=0xaaff00:0.3:0" '/Volumes/Samsung_X5/frederiksplein-bike1b/frames_preview/frame_%05d.png'
+ffmpeg -i bike1b-720p_preview.mp4 -vf "chromakey=0xaaff00:0.22:0.05" '/Volumes/Samsung_X5/frederiksplein-bike1b/frames_preview/frame_%05d.png'
 
 
 # motor
@@ -77,11 +77,11 @@ ffmpeg -ss 00:00:23.00 -i frederiksplein-720p.mov -c copy -t 00:00:10.0 frederik
 ffmpeg -ss 00:00:42.70 -i frederiksplein-720p.mov -c copy -t 00:00:09.0 frederiksplein-720p-scooter.mov
 # runway...
 # chromakey greenscreen to transparency
-ffmpeg -i scooter-720p.mp4 -vf "chromakey=0xaaff00:0.3:0" '/Volumes/Samsung_X5/frederiksplein-scooter/frames/frame_%05d.png'
+ffmpeg -i scooter-720p.mp4 -vf "chromakey=0xaaff00:0.22:0.05" '/Volumes/Samsung_X5/frederiksplein-scooter/frames/frame_%05d.png'
 # scale to 25%, 1280 * 0.25 = 320 (x 180)
 ffmpeg -i scooter-720p.mp4 -vf scale=320:180 scooter-720p_preview.mp4
 # chromakey greenscreen to transparency preview
-ffmpeg -i scooter-720p_preview.mp4 -vf "chromakey=0xaaff00:0.3:0" '/Volumes/Samsung_X5/frederiksplein-scooter/frames_preview/frame_%05d.png'
+ffmpeg -i scooter-720p_preview.mp4 -vf "chromakey=0xaaff00:0.22:0.05" '/Volumes/Samsung_X5/frederiksplein-scooter/frames_preview/frame_%05d.png'
 
 
 # auto2
@@ -89,11 +89,11 @@ ffmpeg -i scooter-720p_preview.mp4 -vf "chromakey=0xaaff00:0.3:0" '/Volumes/Sams
 ffmpeg -ss 00:00:37.60 -i frederiksplein-720p.mov -c copy -t 00:00:12.0 frederiksplein-720p-auto2.mov
 # runway...
 # chromakey greenscreen to transparency
-ffmpeg -i auto2-720p.mp4 -vf "chromakey=0xaaff00:0.3:0" '/Volumes/Samsung_X5/frederiksplein-auto2/frames/frame_%05d.png'
+ffmpeg -i auto2-720p.mp4 -vf "chromakey=0xaaff00:0.22:0.05" '/Volumes/Samsung_X5/frederiksplein-auto2/frames/frame_%05d.png'
 # scale to 25%, 1280 * 0.25 = 320 (x 180)
 ffmpeg -i auto2-720p.mp4 -vf scale=320:180 auto2-720p_preview.mp4
 # chromakey greenscreen to transparency preview
-ffmpeg -i auto2-720p_preview.mp4 -vf "chromakey=0xaaff00:0.3:0" '/Volumes/Samsung_X5/frederiksplein-auto2/frames_preview/frame_%05d.png'
+ffmpeg -i auto2-720p_preview.mp4 -vf "chromakey=0xaaff00:0.22:0.05" '/Volumes/Samsung_X5/frederiksplein-auto2/frames_preview/frame_%05d.png'
 
 
 # bikes2 (2 fietsers)
@@ -112,7 +112,26 @@ ffmpeg -i frederiksplein.mov '/Volumes/Samsung_X5/frederiksplein/frames/frame_%0
 ffmpeg -i frederiksplein.mov -vf scale=480:270 frederiksplein_preview.mov
 # convert preview to png sequence
 ffmpeg -i frederiksplein_preview.mov '/Volumes/Samsung_X5/frederiksplein/frames_preview/frame_%05d.png'
+
+# png to mp4 (from index 502 met 30 FPS
+ffmpeg -framerate 30 -start_number 502 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p frederiksplein-video-x1.mp4
+# repeat 16 times, 501 frames, video alleen
+ffmpeg -i frederiksplein-video-x1.mp4 -filter_complex "loop=loop=16:size=501:start=0" frederiksplein-video-x16.mp4
+# repeat 16 times, audio
+ffmpeg -stream_loop 16 -i frederiksplein-audio-x1.wav -c copy frederiksplein-audio-x16.wav
+# video en audio samenvoegen
+ffmpeg -i frederiksplein-video-x16.mp4 -i frederiksplein-audio-x16.wav -vcodec copy frederiksplein-x16.mp4
+# scale to 50%, 960 * 540
+ffmpeg -i frederiksplein-x16.mp4 -vf scale=960:540 frederiksplein-x16_halfsize.mp4
 ```
 
-Pattern duration: 16.695652173913043 sec.
-Step duration: 0.13043478260869565 sec.
+Pattern duration: 16.695652173913043 sec.<br>
+Step duration: 0.13043478260869565 sec.<br>
+
+Muziek Sampled Music album nummer 13? (Digitakt project nummer 14)
+
+Video duurt 501 frames.<br>
+Video duurt 501 / 30 FPS = 16.7 seconden.<br>
+Video duurt 8 maten van 4 beats = 32 beats.<br>
+Een beat duurt 16.7 / 32 = 0.521875 seconden.<br>
+Het tempo is 60 / 0.521875 = 114.97005988023953 BPM<br>

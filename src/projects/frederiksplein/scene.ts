@@ -415,7 +415,6 @@ export default class Scene extends MainScene {
     // eslint-disable-next-line prefer-destructuring
     balloonGroup.rotation.z = wind[0];
     this.scene.add(balloonGroup);
-    console.log(scale, 0.9 + ((scale - 0.3) * 1.2));
     if (balloon.material instanceof Material) {
       balloon.material = new THREE.MeshPhysicalMaterial({
         clearcoat: 1,
