@@ -1,6 +1,7 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
+import ffmpeg from 'fluent-ffmpeg';
 import http from 'http';
 import { exec as _exec } from 'child_process';
 import path, { resolve } from 'path';
@@ -22,7 +23,7 @@ if (params[0] === 'serve') {
   
   // app.use(express.static(publicPath));
   app.use(`/`, express.static(resolve(publicPath)));
-  
+
   app.get('/fs-img', function (req, res) {
     const url = `${req.query.dir}${req.query.img}`;
     res.sendFile(path.resolve(url));
@@ -56,3 +57,37 @@ if (params[0] === 'serve') {
     }
   });
 }
+
+function startStream(streamWidth, streamHeight, streamFps, writeStreamPath) {
+  try {
+    // const readStream = fs.createReadStream(new URL('http://localhost:2020/'));
+    const writeStream = fs.createWriteStream(writeStreamPath);
+    // console.log('writeStream', writeStream);
+
+    // const process = new ffmpeg({
+    //   source: readStream,
+    //   // logger: winston,s
+    //   timeout: 0,
+    // })
+    const process = new ffmpeg('http://localhost:2020/')
+    .fromFormat('rawvideo')
+    .addInputOption('-pixel_format', 'argb')
+    .addInputOption('-video_size', streamWidth + 'x' + streamHeight)
+    // .fromFormat('image2pipe')
+    // .addInputOption('-vcodec', 'mjpeg')
+    .toFormat('mp4')
+    .withVideoBitrate('800k')
+    .withFps(streamFps)
+    .stream(writeStream); // .writeToStream(outStream);
+  } catch (e) {
+    if (e) {
+      console.log('e', e);
+      // console.log('Error.code', e.code);
+      // console.log('Error.msg', e.msg);
+    } else {
+      console.log('Error');
+    }
+	}
+}
+
+// startStream(800, 450, 30, 'rendered-mp4/output.mp4');

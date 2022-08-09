@@ -172,15 +172,26 @@ ffmpeg -i input.mp4 -vf "scale=iw/2:ih/2" input_-_halfsize.mp4
 ```
 
 ## Crop video with the crop filter.
-out_w and out_h are width and height of the output rectangle.
-out_x and out_y are the left top corner of the output rectangle.
+out_w and out_h are width and height of the output rectangle.<br>
+out_x and out_y are the left top corner of the output rectangle.<br>
 
 ```
-ffmpeg -i input.avi -filter:v "crop=out_w:out_h:out_x:out_y" output.avi
+ffmpeg -i input.avi -filter:v "crop=out_w:out_h:out_x:out_y" output.avi<br>
 ```
 
 ## Chromakey, replace greenscreen with transparency in PNG's.
-chromakey=color:similarity:blend
+chromakey=color:similarity:blend<br>
+
+* **color**
+  * The color which will be replaced with transparency.
+* **similarity**
+  * Similarity percentage with the key color.
+  * 0.01 matches only the exact key color, while 1.0 matches everything.
+* **blend**
+  * Blend percentage.
+  * 0.0 makes pixels either fully transparent, or not transparent at all.
+
+Higher values result in semi-transparent pixels, with a higher transparency the more similar the pixels color is to the key color.
 
 ```
 ffmpeg -i input.mp4 -vf "chromakey=0x00ff00:0.3:0.2" frame_%05d.png
@@ -214,9 +225,9 @@ ffprobe -v error -show_entries frame=pkt_pts_time -select_streams v -of csv=p=0 
 ffprobe -v error -show_entries frame=pkt_pts_time,pict_type -select_streams v -of csv=p=0 input.mp4
 ```
 
-ffprobe -show_streams -count_frames droogbak.mp4
-ffprobe -loglevel panic -select\_streams v -show\_entries "frames" -read\_intervals %+#1 droogbak.mp4
-ffprobe -v error -show_entries frame=pkt_pts_time,pict_type,frame_index -select_streams v -of csv=p=0 droogbak.mp4
+ffprobe -show_streams -count_frames droogbak.mp4<br>
+ffprobe -loglevel panic -select\_streams v -show\_entries "frames" -read\_intervals %+#1 droogbak.mp4<br>
+ffprobe -v error -show_entries frame=pkt_pts_time,pict_type,frame_index -select_streams v -of csv=p=0 droogbak.mp4<br>
 
 ## FFmpeg module for Node
   
@@ -225,9 +236,14 @@ FFmpeg module for Node. This library provides a set of functions and utilities t
 https://www.npmjs.com/package/ffmpeg
 
 * Can you "stream" images to ffmpeg to construct a video, instead of saving them to disk?
-  * https://stackoverflow.com/questions/1329  4919/can-you-stream-images-to-ffmpeg-to-construct-a-video-instead-of-saving-them-t
+  * https://stackoverflow.com/questions/13294919/can-you-stream-images-to-ffmpeg-to-construct-a-video-instead-of-saving-them-t
 * FFMPEG waiting for images in image2pipe mode
   * https://stackoverflow.com/questions/24026729/ffmpeg-waiting-for-images-in-image2pipe-mode
+* fluent-ffmpeg
+  * https://github.com/fluent-ffmpeg/node-fluent-ffmpeg
+  * https://www.npmjs.com/package/fluent-ffmpeg
+* JavaScript fluent-ffmpeg writeToStream Examples
+  * https://javascript.hotexamples.com/examples/fluent-ffmpeg/-/writeToStream/javascript-writetostream-function-examples.html
 
 ## FFmpeg.wasm
 
