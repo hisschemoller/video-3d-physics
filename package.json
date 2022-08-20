@@ -15,16 +15,16 @@
     "dev": "node server.mjs serve & webpack --watch"
   },
   "dependencies": {
-    "@enable3d/ammo-physics": "~0.22.0",
-    "@enable3d/three-graphics": "~0.22.0",
-    "@types/three": "^0.133.1",
+    "@enable3d/ammo-physics": "~0.25.2",
+    "@enable3d/three-graphics": "~0.25.2",
+    "@types/three": "^0.141.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "enable3d": "~0.22.0",
+    "enable3d": "~0.25.2",
     "express": "^4.17.1",
     "fluent-ffmpeg": "^2.1.2",
     "matter-js": "^0.17.1",
-    "three": "~0.127.0"
+    "three": "~0.141.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.29.3",
@@ -39,11 +39,12 @@
     "webpack-cli": "^4.7.2"
   },
   "peerDependencies": {
-    "@types/matter-js": "0.17.3",
-    "@types/three": "~0.130",
+    "@types/matter-js": "0.17.6",
+    "@types/three": "0.141.0",
     "matter-js": "0.17.1",
     "phaser": "^3.55.2",
     "poly-decomp": "^0.3.0",
-    "three": "~0.130"
+    "three": "0.141.0",
+    "three-csg-ts": "^3.1.10"
   }
 }
