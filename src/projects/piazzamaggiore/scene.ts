@@ -4,6 +4,7 @@
 import { THREE } from 'enable3d';
 import { Material } from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
+import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
@@ -12,14 +13,17 @@ import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 115;
+const BPM = 108;
 const SECONDS_PER_BEAT = 60 / BPM;
-const MEASURES = 4;
+const MEASURES = 8;
 const BEATS_PER_MEASURE = 4;
 const STEPS_PER_BEAT = 4;
 const STEPS = STEPS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
 const PATTERN_DURATION = SECONDS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
+
+console.log('PATTERN_DURATION', PATTERN_DURATION);
+console.log('STEP_DURATION', STEP_DURATION);
 
 // const GROUND_ROTATION_X = Math.PI / -3;
 
@@ -60,11 +64,11 @@ export default class Scene extends MainScene {
     // this.orbitControls.saveState();
 
     // AMBIENT LIGHT
-    // this.ambientLight.intensity = 0.90;
+    this.ambientLight.intensity = 0.7;
 
     // DIRECTIONAL LIGHT
     // this.directionalLight.position.set(-7, 10, 1.5);
-    // this.directionalLight.intensity = 0.99;
+    this.directionalLight.intensity = 0.8;
 
     // TWEENS
     this.timeline = createTimeline({
@@ -128,19 +132,27 @@ export default class Scene extends MainScene {
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION * 0.999,
-        videoStart: 23,
+        videoStart: 84.3,
         fromImagePosition: new THREE.Vector2(0, 0),
       });
-      // actor.addTween({
-      //   delay: STEP_DURATION * 16,
-      //   duration: STEP_DURATION * 15.9,
-      //   videoStart: 29,
-      //   fromImagePosition: new THREE.Vector2(0, 0),
-      // });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
     }
 
-    {}
+    // eslint-disable-next-line no-lone-blocks
+    { // MORANDI
+      new SVGLoader().load('../assets/projects/piazzamaggiore/morandi.svg', async (data) => {
+        const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/wood_strip.jpg');
+        const scale = 0.007;
+        const points = data.paths[0].currentPath.getPoints(1);
+        const geometry = new THREE.LatheGeometry(points);
+        const material = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 1.2, map: texture }); // 0x442900
+        const lathe = new THREE.Mesh(geometry, material);
+        lathe.rotation.z = Math.PI;
+        lathe.scale.set(scale, scale, scale);
+        lathe.position.set(-1, 3.7, 0.5);
+        this.scene.add(lathe);
+      });
+    }
   }
 }
