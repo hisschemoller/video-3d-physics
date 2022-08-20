@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 /* eslint-disable no-param-reassign */
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
@@ -5,6 +6,7 @@ import { THREE } from 'enable3d';
 import { Material } from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
+import { CSG } from 'three-csg-ts';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
@@ -139,7 +141,6 @@ export default class Scene extends MainScene {
       actor.getMesh().receiveShadow = false;
     }
 
-    // eslint-disable-next-line no-lone-blocks
     { // MORANDI
       new SVGLoader().load('../assets/projects/piazzamaggiore/morandi.svg', async (data) => {
         const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/wood_strip.jpg');
@@ -150,8 +151,52 @@ export default class Scene extends MainScene {
         const lathe = new THREE.Mesh(geometry, material);
         lathe.rotation.z = Math.PI;
         lathe.scale.set(scale, scale, scale);
-        lathe.position.set(-1, 3.7, 0.5);
+        lathe.position.set(-1.1, 3.7, 0.5);
         this.scene.add(lathe);
+        this.timeline.add(createTween({
+          delay: STEP_DURATION,
+          duration: PATTERN_DURATION * 0.999,
+          ease: 'linear',
+          onComplete: () => {},
+          onStart: () => {},
+          onUpdate: (progress: number) => {
+            lathe.rotation.y = progress * Math.PI * -4;
+          },
+        }));
+      });
+    }
+
+    { // MORANDI 2
+      new SVGLoader().load('../assets/projects/piazzamaggiore/morandi2.svg', async (data) => {
+        const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/wood_strip.jpg');
+        const scale = 0.01;
+        const points = data.paths[0].currentPath.getPoints(16);
+        const material = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 1.2, map: texture }); // 0x442900
+        const geometry = new THREE.LatheGeometry(points);
+        const lathe = new THREE.Mesh(geometry, material);
+        lathe.rotation.z = Math.PI;
+        lathe.scale.set(scale, scale, scale);
+        lathe.updateMatrix();
+
+        const boxGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
+        const box = new THREE.Mesh(boxGeometry, material);
+        box.position.set(-0.3, 0, 0);
+        box.rotation.z = Math.PI * 0.25;
+        box.updateMatrix();
+
+        const csg = CSG.subtract(lathe, box);
+        csg.position.set(-2.7, 3.9, 0.5);
+        this.scene.add(csg);
+        this.timeline.add(createTween({
+          delay: STEP_DURATION,
+          duration: PATTERN_DURATION * 0.999,
+          ease: 'linear',
+          onComplete: () => {},
+          onStart: () => {},
+          onUpdate: (progress: number) => {
+            csg.rotation.y = progress * Math.PI * -4;
+          },
+        }));
       });
     }
   }

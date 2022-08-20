@@ -1,5 +1,10 @@
 # Piazza Maggiore
 
+Breedte tot aan muur: 1600px.
+
+Constructive Solid Geometry for three.js, ES6 + BufferGeometry.<br>
+https://github.com/looeee/threejs-csg
+
 ## FFmpeg
 
 ```
