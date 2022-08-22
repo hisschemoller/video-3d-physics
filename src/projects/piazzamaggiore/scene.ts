@@ -91,6 +91,15 @@ export default class Scene extends MainScene {
           ? '../assets/projects/piazzamaggiore/frames_preview/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/piazzamaggiore/frames/&img=frame_#FRAME#.png',
       },
+      greenscreen: {
+        fps: 30,
+        height: 720,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1280,
+        imgSrcPath: isPreview
+          ? '../assets/projects/piazzamaggiore/frames_preview_greenscreen/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/piazzamaggiore_greenscreen/frames/&img=frame_#FRAME#.png',
+      },
     };
 
     // PROJECT SETTINGS
