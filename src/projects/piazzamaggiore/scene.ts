@@ -115,7 +115,8 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-    await this.createActors(projectSettings, videos);
+    await this.createBologna(projectSettings, videos);
+    await this.createMorandi();
 
     this.postCreate();
   }
@@ -126,20 +127,19 @@ export default class Scene extends MainScene {
   }
 
   /**
-   * createActors
+   * createBologna
    */
-  async createActors(
+  async createBologna(
     projectSettings: ProjectSettings,
     videos: { [key: string]: VideoData },
   ) {
-    const to3d = this.to3d.bind(this);
-
     { // BACKGROUND
+      const scale = 1.415;
       const actor = await createActor(projectSettings, videos.main, {
         box: { w: this.width3d, h: this.height3d, d: 0.02 },
         imageRect: { w: this.width, h: this.height },
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(-960), y: to3d(540) }));
+      actor.setStaticPosition(getMatrix4({ x: -11.3, y: 6.4, z: -4, sx: scale, sy: scale }));
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION * 0.999,
@@ -150,17 +150,41 @@ export default class Scene extends MainScene {
       actor.getMesh().receiveShadow = false;
     }
 
+    { // GREENSCREEN
+      const { width: videoWidth, height: videoHeight } = videos.greenscreen;
+      // const scale = 1600 / 1280;
+      const actor = await createActor(projectSettings, videos.greenscreen, {
+        box: {
+          w: (1600 / projectSettings.width) * this.width3d,
+          h: (900 / projectSettings.height) * this.height3d,
+          d: 0.02,
+        },
+        imageRect: { w: videoWidth, h: videoHeight },
+      });
+      actor.setStaticPosition(getMatrix4({ x: -8, y: 3, z: -0.01, sx: 1, sy: 1 }));
+      actor.addTween({
+        delay: 0,
+        duration: PATTERN_DURATION * 0.999,
+        videoStart: 0.3 + 0.02,
+        fromImagePosition: new THREE.Vector2(0, 0),
+      });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+    }
+  }
+
+  async createMorandi() {
     { // MORANDI
       new SVGLoader().load('../assets/projects/piazzamaggiore/morandi.svg', async (data) => {
         const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/wood_strip.jpg');
-        const scale = 0.007;
+        const scale = 0.009;
         const points = data.paths[0].currentPath.getPoints(1);
         const geometry = new THREE.LatheGeometry(points);
         const material = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 1.2, map: texture }); // 0x442900
         const lathe = new THREE.Mesh(geometry, material);
         lathe.rotation.z = Math.PI;
         lathe.scale.set(scale, scale, scale);
-        lathe.position.set(-1.1, 3.7, 0.5);
+        lathe.position.set(-1.1, 3.7, -2);
         this.scene.add(lathe);
         this.timeline.add(createTween({
           delay: STEP_DURATION,
@@ -177,7 +201,7 @@ export default class Scene extends MainScene {
 
     { // MORANDI 2
       new SVGLoader().load('../assets/projects/piazzamaggiore/morandi2.svg', async (data) => {
-        const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/wood_strip.jpg');
+        const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/wood_strip3.jpg');
         const scale = 0.01;
         const points = data.paths[0].currentPath.getPoints(16);
         const material = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 1.2, map: texture }); // 0x442900
@@ -193,8 +217,12 @@ export default class Scene extends MainScene {
         box.rotation.z = Math.PI * 0.25;
         box.updateMatrix();
 
+        const csgScale = 0.01 + 0.0015;
         const csg = CSG.subtract(lathe, box);
-        csg.position.set(-2.7, 3.9, 0.5);
+        csg.scale.set(csgScale, csgScale, csgScale);
+        console.log(csg.scale);
+        csg.position.set(-2.7, 3.9, -2);
+        csg.updateMatrix();
         this.scene.add(csg);
         this.timeline.add(createTween({
           delay: STEP_DURATION,
