@@ -192,6 +192,17 @@ export default class MainScene extends Scene3D {
         this.run();
       }
     });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        this.isPaused = !this.isPaused;
+        const el: HTMLInputElement = document.getElementById('pause-toggle') as HTMLInputElement;
+        el.checked = this.isPaused;
+        if (!this.isPaused) {
+          this.run();
+        }
+      }
+    });
   }
 
   postCreate() {
