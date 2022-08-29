@@ -98,6 +98,11 @@ export default class Scene extends MainScene {
           ? '../assets/projects/piazzamaggiore/frames_preview_greenscreen/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/piazzamaggiore_greenscreen/frames/&img=frame_#FRAME#.png',
       },
+      wallright: {
+        height: 1080,
+        imgSrc: '../assets/projects/piazzamaggiore/muur_rechts_gat.jpg',
+        width: 240,
+      },
     };
 
     // PROJECT SETTINGS
@@ -114,6 +119,7 @@ export default class Scene extends MainScene {
     };
 
     await this.createBologna(projectSettings, videos);
+    await this.createWallRight(projectSettings, videos);
     await this.createMorandi();
 
     this.postCreate();
@@ -168,6 +174,42 @@ export default class Scene extends MainScene {
       });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
+    }
+  }
+
+  async createWallRight(
+    projectSettings: ProjectSettings,
+    videos: { [key: string]: VideoData },
+  ) {
+    {
+      const SVG_SCALE = this.width3d / this.width;
+      const scale = 0.79;
+      const actor = await createActor(projectSettings, videos.main, {
+        imageRect: { w: 179, h: 1080 },
+        svg: { depth: 0.003, scale: SVG_SCALE, url: '../assets/projects/piazzamaggiore/muur_rechts.svg' },
+      });
+      actor.setStaticPosition(getMatrix4({ x: 5.15, y: 3.53, z: 2, sx: scale, sy: scale }));
+      actor.addTween({
+        delay: 0,
+        duration: PATTERN_DURATION * 0.999,
+        fromImagePosition: new THREE.Vector2(1741, 0),
+        videoStart: 84.3,
+      });
+    }
+
+    {
+      const scale = 0.84;
+      const actor = await createActor(projectSettings, videos.wallright, {
+        imageRect: { w: 240, h: 1080 },
+        box: { w: this.to3d(240), h: this.to3d(1080), d: 0.003 },
+      });
+      actor.setStaticPosition(getMatrix4({ x: 5.05, y: 3.78, z: 1.5, sx: scale, sy: scale }));
+      actor.setStaticImage(0, 0);
+      actor.addTween({
+        delay: 0,
+        duration: PATTERN_DURATION * 0.999,
+        fromImagePosition: new THREE.Vector2(1920 - 240, 0),
+      });
     }
   }
 
