@@ -98,11 +98,6 @@ export default class Scene extends MainScene {
           ? '../assets/projects/piazzamaggiore/frames_preview_greenscreen/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/piazzamaggiore_greenscreen/frames/&img=frame_#FRAME#.png',
       },
-      wallright: {
-        height: 1080,
-        imgSrc: '../assets/projects/piazzamaggiore/muur_rechts_gat.jpg',
-        width: 240,
-      },
     };
 
     // PROJECT SETTINGS
@@ -120,6 +115,7 @@ export default class Scene extends MainScene {
 
     await this.createBologna(projectSettings, videos);
     await this.createWallRight(projectSettings, videos);
+    await this.createGateLeft(projectSettings, videos);
     await this.createMorandi();
 
     this.postCreate();
@@ -130,20 +126,18 @@ export default class Scene extends MainScene {
     super.updateAsync(time, delta);
   }
 
-  /**
-   * createBologna
-   */
   async createBologna(
     projectSettings: ProjectSettings,
     videos: { [key: string]: VideoData },
   ) {
     { // BACKGROUND
-      const scale = 1.415;
+      const scale = 1.515; // 1.415;
       const actor = await createActor(projectSettings, videos.main, {
         box: { w: this.width3d, h: this.height3d, d: 0.02 },
         imageRect: { w: this.width, h: this.height },
       });
-      actor.setStaticPosition(getMatrix4({ x: -11.3, y: 6.4, z: -4, sx: scale, sy: scale }));
+      // actor.setStaticPosition(getMatrix4({ x: -11.3, y: 6.4, z: -5, sx: scale, sy: scale }));
+      actor.setStaticPosition(getMatrix4({ x: -12.1, y: 6.8, z: -5, sx: scale, sy: scale }));
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION * 0.999,
@@ -177,16 +171,67 @@ export default class Scene extends MainScene {
     }
   }
 
+  async createGateLeft(
+    projectSettings: ProjectSettings,
+    videos: { [key: string]: VideoData },
+  ) {
+    const SVG_SCALE = this.width3d / this.width;
+
+    { // GEVEL RECHTS
+      const scale = 1.415;
+      const actor = await createActor(projectSettings, videos.main, {
+        imageRect: { w: 325, h: 869 },
+        svg: { depth: 0.0003, scale: SVG_SCALE, url: '../assets/projects/piazzamaggiore/gevel_links.svg' },
+      });
+      actor.setStaticPosition(getMatrix4({ x: -11.3, y: 6.4, z: -4, sx: scale, sy: scale }));
+      actor.addTween({
+        delay: 0,
+        duration: PATTERN_DURATION * 0.999,
+        videoStart: 84.3,
+        fromImagePosition: new THREE.Vector2(0, 0),
+      });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+    }
+
+    { // STICK
+      const group = new THREE.Group();
+      group.position.set(-9, -2, -4.5);
+      group.rotation.z = Math.PI * -0.5;
+      this.scene.add(group);
+
+      const length = 3;
+      const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
+      const geometry = new THREE.CylinderBufferGeometry(0.05, 0.05, length);
+      const material = new THREE.MeshPhongMaterial({ color: 0x555555, shininess: 0.4, map: texture, flatShading: false });
+      const stick = new THREE.Mesh(geometry, material);
+      stick.position.set(0, length * 0.5, 0);
+      stick.castShadow = true;
+      stick.receiveShadow = true;
+      group.add(stick);
+      // this.timeline.add(createTween({
+      //   delay: STEP_DURATION,
+      //   duration: PATTERN_DURATION * 0.999,
+      //   ease: 'linear',
+      //   onComplete: () => {},
+      //   onStart: () => {},
+      //   onUpdate: (progress: number) => {
+      //     stick.rotation.y = progress * Math.PI * -4;
+      //   },
+      // }));
+    }
+  }
+
   async createWallRight(
     projectSettings: ProjectSettings,
     videos: { [key: string]: VideoData },
   ) {
-    {
+    { // WALL RIGHT  FRONT
       const SVG_SCALE = this.width3d / this.width;
       const scale = 0.79;
       const actor = await createActor(projectSettings, videos.main, {
         imageRect: { w: 179, h: 1080 },
-        svg: { depth: 0.003, scale: SVG_SCALE, url: '../assets/projects/piazzamaggiore/muur_rechts.svg' },
+        svg: { depth: 0.0003, scale: SVG_SCALE, url: '../assets/projects/piazzamaggiore/muur_rechts.svg' },
       });
       actor.setStaticPosition(getMatrix4({ x: 5.15, y: 3.53, z: 2, sx: scale, sy: scale }));
       actor.addTween({
@@ -197,11 +242,15 @@ export default class Scene extends MainScene {
       });
     }
 
-    {
+    { // WALL RIGHT BACK
       const scale = 0.84;
-      const actor = await createActor(projectSettings, videos.wallright, {
+      const actor = await createActor(projectSettings, {
+        height: 1080,
+        imgSrc: '../assets/projects/piazzamaggiore/muur_rechts_gat.jpg',
+        width: 240,
+      }, {
         imageRect: { w: 240, h: 1080 },
-        box: { w: this.to3d(240), h: this.to3d(1080), d: 0.003 },
+        box: { w: this.to3d(240), h: this.to3d(1080), d: 0.0003 },
       });
       actor.setStaticPosition(getMatrix4({ x: 5.05, y: 3.78, z: 1.5, sx: scale, sy: scale }));
       actor.setStaticImage(0, 0);
@@ -210,6 +259,33 @@ export default class Scene extends MainScene {
         duration: PATTERN_DURATION * 0.999,
         fromImagePosition: new THREE.Vector2(1920 - 240, 0),
       });
+    }
+
+    { // STICK
+      const group = new THREE.Group();
+      group.position.set(7, 0, 1.75);
+      group.rotation.z = Math.PI * 0.5;
+      this.scene.add(group);
+
+      const length = 5;
+      const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
+      const geometry = new THREE.CylinderBufferGeometry(0.05, 0.05, length);
+      const material = new THREE.MeshPhongMaterial({ color: 0x555555, shininess: 0.4, map: texture, flatShading: false });
+      const stick = new THREE.Mesh(geometry, material);
+      stick.position.set(0, length * 0.5, 0);
+      stick.castShadow = true;
+      stick.receiveShadow = true;
+      group.add(stick);
+      // this.timeline.add(createTween({
+      //   delay: STEP_DURATION,
+      //   duration: PATTERN_DURATION * 0.999,
+      //   ease: 'linear',
+      //   onComplete: () => {},
+      //   onStart: () => {},
+      //   onUpdate: (progress: number) => {
+      //     stick.rotation.y = progress * Math.PI * -4;
+      //   },
+      // }));
     }
   }
 
@@ -297,7 +373,14 @@ export default class Scene extends MainScene {
         const csg = CSG.subtract(lathe, box);
         csg.scale.set(csgScale, csgScale, csgScale);
         csg.position.set(-3.2, y, -2);
+
+        // const wheel = await addWheel(this, this.timeline, PATTERN_DURATION * 0.999);
+        // wheel.position.set(0, 680, 0); // (-3.2, -3.6, -2);
+        // wheel.scale.set(10, 10, 10);
+        // csg.add(wheel);
+
         this.scene.add(csg);
+
         this.timeline.add(createTween({
           delay: STEP_DURATION,
           duration: PATTERN_DURATION * 0.999,
