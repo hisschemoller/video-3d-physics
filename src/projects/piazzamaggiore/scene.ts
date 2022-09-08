@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable no-lone-blocks */
 /* eslint-disable no-param-reassign */
 /* eslint-disable max-len */
@@ -11,7 +12,7 @@ import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
-import addWheel from './wheel';
+import { createMachine } from './machine';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 108;
@@ -25,8 +26,6 @@ const STEP_DURATION = PATTERN_DURATION / STEPS;
 
 console.log('PATTERN_DURATION', PATTERN_DURATION);
 console.log('STEP_DURATION', STEP_DURATION);
-
-// const GROUND_ROTATION_X = Math.PI / -3;
 
 export default class Scene extends MainScene {
   timeline: Timeline;
@@ -118,6 +117,7 @@ export default class Scene extends MainScene {
     await this.createWallRight(projectSettings, videos);
     await this.createGateLeft(projectSettings, videos);
     await this.createMorandi();
+    await createMachine(this, PATTERN_DURATION, STEP_DURATION);
 
     this.postCreate();
   }
@@ -230,34 +230,6 @@ export default class Scene extends MainScene {
           group.rotation.z = (Math.PI * -0.55) + progress * (Math.PI * 0.30);
         },
       }));
-    }
-
-    { // WHEEL
-      const scale = 0.34;
-      const wheel = await addWheel(this, this.timeline, PATTERN_DURATION);
-      wheel.position.set(-8.0, -1.4, -4.5);
-      wheel.scale.set(scale, scale, 2);
-    }
-
-    { // WHEEL 2
-      const scale = 0.28;
-      const wheel = await addWheel(this, this.timeline, PATTERN_DURATION);
-      wheel.position.set(-5.3, -1.0, -4.7);
-      wheel.scale.set(scale, scale, 2);
-    }
-
-    // { // WHEEL 3
-    //   const scale = 0.5;
-    //   const wheel = await addWheel(this, this.timeline, PATTERN_DURATION);
-    //   wheel.position.set(-2.5, 0.3, -4.7);
-    //   wheel.scale.set(scale, scale, scale);
-    // }
-
-    { // WHEEL 3
-      const scale = 0.5;
-      const wheel = await addWheel(this, this.timeline, PATTERN_DURATION);
-      wheel.position.set(-2.2, 0.4, -2.7);
-      wheel.scale.set(scale, scale, 3);
     }
   }
 
@@ -458,26 +430,26 @@ export default class Scene extends MainScene {
     //   });
     // }
 
-    { // SPHERE
-      const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
-      const geometry = new THREE.SphereBufferGeometry(0.7);
-      const material = new THREE.MeshPhongMaterial({ color: 0xb6a385, shininess: 0.4, map: texture, flatShading: false });
-      const sphere = new THREE.Mesh(geometry, material);
-      sphere.position.set(1.5, 4.1, -2.1);
-      sphere.castShadow = true;
-      sphere.receiveShadow = true;
-      this.scene.add(sphere);
-      this.timeline.add(createTween({
-        delay: STEP_DURATION,
-        duration: PATTERN_DURATION * 0.999,
-        ease: 'linear',
-        onComplete: () => {},
-        onStart: () => {},
-        onUpdate: (progress: number) => {
-          sphere.rotation.y = progress * Math.PI * -4;
-        },
-      }));
-    }
+    // { // SPHERE
+    //   const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
+    //   const geometry = new THREE.SphereBufferGeometry(0.7);
+    //   const material = new THREE.MeshPhongMaterial({ color: 0xb6a385, shininess: 0.4, map: texture, flatShading: false });
+    //   const sphere = new THREE.Mesh(geometry, material);
+    //   sphere.position.set(1.5, 4.1, -2.1);
+    //   sphere.castShadow = true;
+    //   sphere.receiveShadow = true;
+    //   this.scene.add(sphere);
+    //   this.timeline.add(createTween({
+    //     delay: STEP_DURATION,
+    //     duration: PATTERN_DURATION * 0.999,
+    //     ease: 'linear',
+    //     onComplete: () => {},
+    //     onStart: () => {},
+    //     onUpdate: (progress: number) => {
+    //       sphere.rotation.y = progress * Math.PI * -4;
+    //     },
+    //   }));
+    // }
 
     // { // SPHERE SMALL
     //   const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
@@ -499,27 +471,5 @@ export default class Scene extends MainScene {
     //     },
     //   }));
     // }
-
-    { // WHEEL
-      const scale = 0.5;
-      const wheel = await addWheel(this, this.timeline, PATTERN_DURATION, 1);
-      wheel.position.set(-0.7, -1.9, -2.1);
-      wheel.scale.set(scale, scale, 4);
-    }
-
-    // { // WHEEL 2
-    //   const scale = 0.9;
-    //   const wheel = await addWheel(this, this.timeline, PATTERN_DURATION);
-    //   wheel.position.set(6.8, -0.5, -1.9);
-    //   wheel.scale.set(scale, scale, 4);
-    // }
-
-    { // WHEEL 2a
-      const scale = 0.6;
-      const wheel = await addWheel(this, this.timeline, PATTERN_DURATION, 1);
-      // wheel.position.set(-8.0, -1.4, -4.5);
-      wheel.position.set(5.0, -1.2, -1.9);
-      wheel.scale.set(scale, scale, 4);
-    }
   }
 }
