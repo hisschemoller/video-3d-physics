@@ -11,6 +11,7 @@ import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
+import addWheel from './wheel';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 108;
@@ -196,8 +197,8 @@ export default class Scene extends MainScene {
 
     { // STICK
       const group = new THREE.Group();
-      group.position.set(-9, -2, -4.5);
-      group.rotation.z = Math.PI * -0.5;
+      group.position.set(-8.5, -2, -4.5);
+      group.rotation.z = Math.PI * -0.25; // -0.5
       this.scene.add(group);
 
       const length = 3;
@@ -209,16 +210,54 @@ export default class Scene extends MainScene {
       stick.castShadow = true;
       stick.receiveShadow = true;
       group.add(stick);
-      // this.timeline.add(createTween({
-      //   delay: STEP_DURATION,
-      //   duration: PATTERN_DURATION * 0.999,
-      //   ease: 'linear',
-      //   onComplete: () => {},
-      //   onStart: () => {},
-      //   onUpdate: (progress: number) => {
-      //     stick.rotation.y = progress * Math.PI * -4;
-      //   },
-      // }));
+      this.timeline.add(createTween({
+        delay: STEP_DURATION,
+        duration: PATTERN_DURATION * 0.2499,
+        ease: 'sineInOut',
+        onComplete: () => {},
+        onStart: () => {},
+        onUpdate: (progress: number) => {
+          group.rotation.z = (Math.PI * -0.25) + progress * (Math.PI * -0.30);
+        },
+      }));
+      this.timeline.add(createTween({
+        delay: STEP_DURATION + (PATTERN_DURATION * 0.25),
+        duration: PATTERN_DURATION * 0.2499,
+        ease: 'sineInOut',
+        onComplete: () => {},
+        onStart: () => {},
+        onUpdate: (progress: number) => {
+          group.rotation.z = (Math.PI * -0.55) + progress * (Math.PI * 0.30);
+        },
+      }));
+    }
+
+    { // WHEEL
+      const scale = 0.34;
+      const wheel = await addWheel(this, this.timeline, PATTERN_DURATION);
+      wheel.position.set(-8.0, -1.4, -4.5);
+      wheel.scale.set(scale, scale, 2);
+    }
+
+    { // WHEEL 2
+      const scale = 0.28;
+      const wheel = await addWheel(this, this.timeline, PATTERN_DURATION);
+      wheel.position.set(-5.3, -1.0, -4.7);
+      wheel.scale.set(scale, scale, 2);
+    }
+
+    // { // WHEEL 3
+    //   const scale = 0.5;
+    //   const wheel = await addWheel(this, this.timeline, PATTERN_DURATION);
+    //   wheel.position.set(-2.5, 0.3, -4.7);
+    //   wheel.scale.set(scale, scale, scale);
+    // }
+
+    { // WHEEL 3
+      const scale = 0.5;
+      const wheel = await addWheel(this, this.timeline, PATTERN_DURATION);
+      wheel.position.set(-2.2, 0.4, -2.7);
+      wheel.scale.set(scale, scale, 3);
     }
   }
 
@@ -226,8 +265,9 @@ export default class Scene extends MainScene {
     projectSettings: ProjectSettings,
     videos: { [key: string]: VideoData },
   ) {
+    const SVG_SCALE = this.width3d / this.width;
+
     { // WALL RIGHT  FRONT
-      const SVG_SCALE = this.width3d / this.width;
       const scale = 0.79;
       const actor = await createActor(projectSettings, videos.main, {
         imageRect: { w: 179, h: 1080 },
@@ -246,25 +286,25 @@ export default class Scene extends MainScene {
       const scale = 0.84;
       const actor = await createActor(projectSettings, {
         height: 1080,
-        imgSrc: '../assets/projects/piazzamaggiore/muur_rechts_gat.jpg',
-        width: 240,
+        imgSrc: '../assets/projects/piazzamaggiore/muur_rechts_gat2.jpg',
+        width: 334,
       }, {
-        imageRect: { w: 240, h: 1080 },
-        box: { w: this.to3d(240), h: this.to3d(1080), d: 0.0003 },
+        imageRect: { w: 334, h: 1080 },
+        svg: { depth: 0.0003, scale: SVG_SCALE, url: '../assets/projects/piazzamaggiore/muur_rechts2.svg' },
       });
-      actor.setStaticPosition(getMatrix4({ x: 5.05, y: 3.78, z: 1.5, sx: scale, sy: scale }));
+      actor.setStaticPosition(getMatrix4({ x: 4.4, y: 3.78, z: 1.5, sx: scale, sy: scale }));
       actor.setStaticImage(0, 0);
       actor.addTween({
         delay: 0,
         duration: PATTERN_DURATION * 0.999,
-        fromImagePosition: new THREE.Vector2(1920 - 240, 0),
+        fromImagePosition: new THREE.Vector2(1920 - 334, 0),
       });
     }
 
     { // STICK
       const group = new THREE.Group();
       group.position.set(7, 0, 1.75);
-      group.rotation.z = Math.PI * 0.5;
+      group.rotation.z = Math.PI * 0.35;
       this.scene.add(group);
 
       const length = 5;
@@ -276,16 +316,26 @@ export default class Scene extends MainScene {
       stick.castShadow = true;
       stick.receiveShadow = true;
       group.add(stick);
-      // this.timeline.add(createTween({
-      //   delay: STEP_DURATION,
-      //   duration: PATTERN_DURATION * 0.999,
-      //   ease: 'linear',
-      //   onComplete: () => {},
-      //   onStart: () => {},
-      //   onUpdate: (progress: number) => {
-      //     stick.rotation.y = progress * Math.PI * -4;
-      //   },
-      // }));
+      this.timeline.add(createTween({
+        delay: STEP_DURATION + (PATTERN_DURATION * 0.4),
+        duration: PATTERN_DURATION * 0.2499,
+        ease: 'sineInOut',
+        onComplete: () => {},
+        onStart: () => {},
+        onUpdate: (progress: number) => {
+          group.rotation.z = (Math.PI * 0.35) + progress * (Math.PI * 0.30);
+        },
+      }));
+      this.timeline.add(createTween({
+        delay: STEP_DURATION + (PATTERN_DURATION * 0.65),
+        duration: PATTERN_DURATION * 0.2499,
+        ease: 'sineInOut',
+        onComplete: () => {},
+        onStart: () => {},
+        onUpdate: (progress: number) => {
+          group.rotation.z = (Math.PI * 0.65) + progress * (Math.PI * -0.30);
+        },
+      }));
     }
   }
 
@@ -298,121 +348,115 @@ export default class Scene extends MainScene {
       new THREE.ShadowMaterial({ opacity: 0.4, transparent: true, side: THREE.FrontSide }),
       // new THREE.MeshPhongMaterial({ color: 0x999999 }),
     );
-    ground.position.set(0, -3.8, -2);
+    ground.position.set(-2, -3.8, -2);
     ground.receiveShadow = true;
     this.scene.add(ground);
 
-    { // MORANDI TAFELPOOT
-      const scale = 0.01;
-      const y = 4.7 - 0.5;
-      new SVGLoader().load('../assets/projects/piazzamaggiore/morandi.svg', async (data) => {
-        const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/wood_strip.jpg');
-        const points = data.paths[0].currentPath.getPoints(1);
-        const geometry = new THREE.LatheGeometry(points);
-        const material = new THREE.MeshPhongMaterial({ color: 0xd2d0cb, shininess: 1.2, map: texture });
-        const lathe = new THREE.Mesh(geometry, material);
-        lathe.rotation.z = Math.PI;
-        lathe.scale.set(scale, scale, scale);
-        lathe.position.set(-1.1, y, -2.1);
-        lathe.castShadow = true;
-        lathe.receiveShadow = true;
-        this.scene.add(lathe);
-        this.timeline.add(createTween({
-          delay: STEP_DURATION,
-          duration: PATTERN_DURATION * 0.999,
-          ease: 'linear',
-          onComplete: () => {},
-          onStart: () => {},
-          onUpdate: (progress: number) => {
-            lathe.rotation.y = progress * Math.PI * -4;
-          },
-        }));
-        this.timeline.add(createTween({
-          delay: STEP_DURATION,
-          duration: PATTERN_DURATION * 0.499,
-          ease: 'sineInOut',
-          onComplete: () => {},
-          onStart: () => {},
-          onUpdate: (progress: number) => {
-            lathe.position.setY(y + progress);
-          },
-        }));
-        this.timeline.add(createTween({
-          delay: STEP_DURATION + (PATTERN_DURATION * 0.5),
-          duration: PATTERN_DURATION * 0.499,
-          ease: 'sineInOut',
-          onComplete: () => {},
-          onStart: () => {},
-          onUpdate: (progress: number) => {
-            lathe.position.setY(y + (1 - progress));
-          },
-        }));
-      });
-    }
+    // { // MORANDI TAFELPOOT
+    //   const scale = 0.01;
+    //   const y = 4.7 - 0.5;
+    //   new SVGLoader().load('../assets/projects/piazzamaggiore/morandi.svg', async (data) => {
+    //     const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/wood_strip.jpg');
+    //     const points = data.paths[0].currentPath.getPoints(1);
+    //     const geometry = new THREE.LatheGeometry(points);
+    //     const material = new THREE.MeshPhongMaterial({ color: 0xd2d0cb, shininess: 1.2, map: texture });
+    //     const lathe = new THREE.Mesh(geometry, material);
+    //     lathe.rotation.z = Math.PI;
+    //     lathe.scale.set(scale, scale, scale);
+    //     lathe.position.set(-1.1, y, -2.1);
+    //     lathe.castShadow = true;
+    //     lathe.receiveShadow = true;
+    //     this.scene.add(lathe);
+    //     this.timeline.add(createTween({
+    //       delay: STEP_DURATION,
+    //       duration: PATTERN_DURATION * 0.999,
+    //       ease: 'linear',
+    //       onComplete: () => {},
+    //       onStart: () => {},
+    //       onUpdate: (progress: number) => {
+    //         lathe.rotation.y = progress * Math.PI * -4;
+    //       },
+    //     }));
+    //     this.timeline.add(createTween({
+    //       delay: STEP_DURATION,
+    //       duration: PATTERN_DURATION * 0.499,
+    //       ease: 'sineInOut',
+    //       onComplete: () => {},
+    //       onStart: () => {},
+    //       onUpdate: (progress: number) => {
+    //         lathe.position.setY(y + progress);
+    //       },
+    //     }));
+    //     this.timeline.add(createTween({
+    //       delay: STEP_DURATION + (PATTERN_DURATION * 0.5),
+    //       duration: PATTERN_DURATION * 0.499,
+    //       ease: 'sineInOut',
+    //       onComplete: () => {},
+    //       onStart: () => {},
+    //       onUpdate: (progress: number) => {
+    //         lathe.position.setY(y + (1 - progress));
+    //       },
+    //     }));
+    //   });
+    // }
 
-    { // MORANDI 2
-      const scale = 0.01;
-      const y = 4.8;
-      new SVGLoader().load('../assets/projects/piazzamaggiore/morandi2.svg', async (data) => {
-        const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/stone_strip_brown.jpg');
-        const points = data.paths[0].currentPath.getPoints(16);
-        const material = new THREE.MeshPhongMaterial({ color: 0x978776, shininess: 1.2, map: texture, flatShading: false });
-        const geometry = new THREE.LatheGeometry(points);
-        const lathe = new THREE.Mesh(geometry, material);
-        lathe.rotation.z = Math.PI;
-        lathe.scale.set(scale, scale, scale);
-        lathe.updateMatrix();
+    // { // MORANDI TOETER
+    //   const scale = 0.01;
+    //   const y = 4.8;
+    //   new SVGLoader().load('../assets/projects/piazzamaggiore/morandi2.svg', async (data) => {
+    //     const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/stone_strip_brown.jpg');
+    //     const points = data.paths[0].currentPath.getPoints(16);
+    //     const material = new THREE.MeshPhongMaterial({ color: 0x978776, shininess: 1.2, map: texture, flatShading: false });
+    //     const geometry = new THREE.LatheGeometry(points);
+    //     const lathe = new THREE.Mesh(geometry, material);
+    //     lathe.rotation.z = Math.PI;
+    //     lathe.scale.set(scale, scale, scale);
+    //     lathe.updateMatrix();
 
-        const boxGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
-        const box = new THREE.Mesh(boxGeometry, material);
-        box.position.set(-0.3, 0, 0);
-        box.rotation.z = Math.PI * 0.25;
-        box.updateMatrix();
+    //     const boxGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
+    //     const box = new THREE.Mesh(boxGeometry, material);
+    //     box.position.set(-0.3, 0, 0);
+    //     box.rotation.z = Math.PI * 0.25;
+    //     box.updateMatrix();
 
-        const csgScale = 0.01 + 0.0028;
-        const csg = CSG.subtract(lathe, box);
-        csg.scale.set(csgScale, csgScale, csgScale);
-        csg.position.set(-3.2, y, -2);
+    //     const csgScale = 0.01 + 0.0028;
+    //     const csg = CSG.subtract(lathe, box);
+    //     csg.scale.set(csgScale, csgScale, csgScale);
+    //     csg.position.set(-3.2, y, -2);
+    //     this.scene.add(csg);
 
-        // const wheel = await addWheel(this, this.timeline, PATTERN_DURATION * 0.999);
-        // wheel.position.set(0, 680, 0); // (-3.2, -3.6, -2);
-        // wheel.scale.set(10, 10, 10);
-        // csg.add(wheel);
-
-        this.scene.add(csg);
-
-        this.timeline.add(createTween({
-          delay: STEP_DURATION,
-          duration: PATTERN_DURATION * 0.999,
-          ease: 'linear',
-          onComplete: () => {},
-          onStart: () => {},
-          onUpdate: (progress: number) => {
-            csg.rotation.y = progress * Math.PI * -4;
-          },
-        }));
-        this.timeline.add(createTween({
-          delay: STEP_DURATION,
-          duration: PATTERN_DURATION * 0.499,
-          ease: 'sineInOut',
-          onComplete: () => {},
-          onStart: () => {},
-          onUpdate: (progress: number) => {
-            csg.position.setY(y + ((1 - progress) * 0.4));
-          },
-        }));
-        this.timeline.add(createTween({
-          delay: STEP_DURATION + (PATTERN_DURATION * 0.5),
-          duration: PATTERN_DURATION * 0.499,
-          ease: 'sineInOut',
-          onComplete: () => {},
-          onStart: () => {},
-          onUpdate: (progress: number) => {
-            csg.position.setY(y + (progress * 0.4));
-          },
-        }));
-      });
-    }
+    //     this.timeline.add(createTween({
+    //       delay: STEP_DURATION,
+    //       duration: PATTERN_DURATION * 0.999,
+    //       ease: 'linear',
+    //       onComplete: () => {},
+    //       onStart: () => {},
+    //       onUpdate: (progress: number) => {
+    //         csg.rotation.y = progress * Math.PI * -4;
+    //       },
+    //     }));
+    //     this.timeline.add(createTween({
+    //       delay: STEP_DURATION,
+    //       duration: PATTERN_DURATION * 0.499,
+    //       ease: 'sineInOut',
+    //       onComplete: () => {},
+    //       onStart: () => {},
+    //       onUpdate: (progress: number) => {
+    //         csg.position.setY(y + ((1 - progress) * 0.4));
+    //       },
+    //     }));
+    //     this.timeline.add(createTween({
+    //       delay: STEP_DURATION + (PATTERN_DURATION * 0.5),
+    //       duration: PATTERN_DURATION * 0.499,
+    //       ease: 'sineInOut',
+    //       onComplete: () => {},
+    //       onStart: () => {},
+    //       onUpdate: (progress: number) => {
+    //         csg.position.setY(y + (progress * 0.4));
+    //       },
+    //     }));
+    //   });
+    // }
 
     { // SPHERE
       const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
@@ -435,25 +479,47 @@ export default class Scene extends MainScene {
       }));
     }
 
-    { // SPHERE SMALL
-      const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
-      const geometry = new THREE.SphereBufferGeometry(0.4);
-      const material = new THREE.MeshPhongMaterial({ color: 0xb4b1aa, shininess: 0.4, map: texture, flatShading: false });
-      const sphere = new THREE.Mesh(geometry, material);
-      sphere.position.set(-1.1, -3.1, -2.1);
-      sphere.castShadow = true;
-      sphere.receiveShadow = true;
-      this.scene.add(sphere);
-      this.timeline.add(createTween({
-        delay: STEP_DURATION,
-        duration: PATTERN_DURATION * 0.999,
-        ease: 'linear',
-        onComplete: () => {},
-        onStart: () => {},
-        onUpdate: (progress: number) => {
-          sphere.rotation.y = progress * Math.PI * -4;
-        },
-      }));
+    // { // SPHERE SMALL
+    //   const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
+    //   const geometry = new THREE.SphereBufferGeometry(0.4);
+    //   const material = new THREE.MeshPhongMaterial({ color: 0xb4b1aa, shininess: 0.4, map: texture, flatShading: false });
+    //   const sphere = new THREE.Mesh(geometry, material);
+    //   sphere.position.set(-1.1, -3.1, -2.1);
+    //   sphere.castShadow = true;
+    //   sphere.receiveShadow = true;
+    //   this.scene.add(sphere);
+    //   this.timeline.add(createTween({
+    //     delay: STEP_DURATION,
+    //     duration: PATTERN_DURATION * 0.999,
+    //     ease: 'linear',
+    //     onComplete: () => {},
+    //     onStart: () => {},
+    //     onUpdate: (progress: number) => {
+    //       sphere.rotation.y = progress * Math.PI * -4;
+    //     },
+    //   }));
+    // }
+
+    { // WHEEL
+      const scale = 0.5;
+      const wheel = await addWheel(this, this.timeline, PATTERN_DURATION, 1);
+      wheel.position.set(-0.7, -1.9, -2.1);
+      wheel.scale.set(scale, scale, 4);
+    }
+
+    // { // WHEEL 2
+    //   const scale = 0.9;
+    //   const wheel = await addWheel(this, this.timeline, PATTERN_DURATION);
+    //   wheel.position.set(6.8, -0.5, -1.9);
+    //   wheel.scale.set(scale, scale, 4);
+    // }
+
+    { // WHEEL 2a
+      const scale = 0.6;
+      const wheel = await addWheel(this, this.timeline, PATTERN_DURATION, 1);
+      // wheel.position.set(-8.0, -1.4, -4.5);
+      wheel.position.set(5.0, -1.2, -1.9);
+      wheel.scale.set(scale, scale, 4);
     }
   }
 }
