@@ -4,6 +4,7 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import { THREE } from 'enable3d';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
 import { CSG } from 'three-csg-ts';
 import { ProjectSettings, VideoData } from '@app/interfaces';
@@ -76,7 +77,7 @@ export default class Scene extends MainScene {
     });
 
     // BLENDER GLTF
-    // const gltf = await this.load.gltf('../assets/projects/frederiksplein/frederiksplein.glb');
+    const gltf = await this.load.gltf('../assets/projects/piazzamaggiore/piazzamaggiore.glb');
 
     // VIDEOS
     const videos = {
@@ -114,10 +115,12 @@ export default class Scene extends MainScene {
     };
 
     await this.createBologna(projectSettings, videos);
+    await this.createGround();
     await this.createWallRight(projectSettings, videos);
     await this.createGateLeft(projectSettings, videos);
     await this.createMorandi();
-    await createMachine(this, PATTERN_DURATION, STEP_DURATION);
+    // await createMachines(this, PATTERN_DURATION, STEP_DURATION);
+    await this.createShapes(gltf);
 
     this.postCreate();
   }
@@ -170,6 +173,20 @@ export default class Scene extends MainScene {
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
     }
+  }
+
+  async createGround() {
+    // GROUND
+    const planeGeometry = new THREE.PlaneGeometry(20, 4);
+    planeGeometry.rotateX(Math.PI / -2);
+    const ground = new THREE.Mesh(
+      planeGeometry,
+      new THREE.ShadowMaterial({ opacity: 0.4, transparent: true, side: THREE.FrontSide }),
+      // new THREE.MeshPhongMaterial({ color: 0x999999 }),
+    );
+    ground.position.set(-2, -3.8, -2);
+    ground.receiveShadow = true;
+    this.scene.add(ground);
   }
 
   async createGateLeft(
@@ -312,18 +329,6 @@ export default class Scene extends MainScene {
   }
 
   async createMorandi() {
-    // GROUND
-    const planeGeometry = new THREE.PlaneGeometry(20, 4);
-    planeGeometry.rotateX(Math.PI / -2);
-    const ground = new THREE.Mesh(
-      planeGeometry,
-      new THREE.ShadowMaterial({ opacity: 0.4, transparent: true, side: THREE.FrontSide }),
-      // new THREE.MeshPhongMaterial({ color: 0x999999 }),
-    );
-    ground.position.set(-2, -3.8, -2);
-    ground.receiveShadow = true;
-    this.scene.add(ground);
-
     // { // MORANDI TAFELPOOT
     //   const scale = 0.01;
     //   const y = 4.7 - 0.5;
@@ -471,5 +476,25 @@ export default class Scene extends MainScene {
     //     },
     //   }));
     // }
+  }
+
+  async createShapes(gltf: GLTF) {
+    const testObject = (gltf.scene.getObjectByName('test') as THREE.Mesh).clone(true);
+    testObject.position.set(0, 0, -2.1);
+    testObject.scale.set(10, 10, 10);
+    testObject.rotation.set(Math.PI * 0.5, 0, 0);
+    testObject.castShadow = true;
+    testObject.receiveShadow = true;
+    this.scene.add(testObject);
+    this.timeline.add(createTween({
+      delay: STEP_DURATION,
+      duration: PATTERN_DURATION * 0.999,
+      ease: 'linear',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        testObject.rotation.y = progress * Math.PI * 4;
+      },
+    }));
   }
 }
