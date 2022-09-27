@@ -479,7 +479,19 @@ export default class Scene extends MainScene {
   }
 
   async createShapes(gltf: GLTF) {
+    const imagePath = '../assets/projects/test/testimage3d.jpg';
     const testObject = (gltf.scene.getObjectByName('test') as THREE.Mesh).clone(true);
+
+    if (testObject.material instanceof THREE.Material) {
+      const texture = new THREE.TextureLoader().load(imagePath);
+      testObject.material = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        map: texture,
+        shininess: 0,
+        // side: THREE.DoubleSide,
+      });
+    }
+
     testObject.position.set(0, 0, -2.1);
     testObject.scale.set(10, 10, 10);
     testObject.rotation.set(Math.PI * 0.5, 0, 0);
