@@ -13,7 +13,8 @@ import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
-import { createMachine } from './machine';
+import { createMachines } from './machine';
+import createShapes from './shapes';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 108;
@@ -53,6 +54,8 @@ export default class Scene extends MainScene {
     await super.create();
 
     const isPreview = true && !this.scene.userData.isCapture;
+
+    this.physics.setGravity(0, 0, 0);
 
     // CAMERA
     // this.cameraTarget.y = 2;
@@ -118,9 +121,17 @@ export default class Scene extends MainScene {
     await this.createGround();
     await this.createWallRight(projectSettings, videos);
     await this.createGateLeft(projectSettings, videos);
-    await this.createMorandi();
+    // await this.createMorandi();
     // await createMachines(this, PATTERN_DURATION, STEP_DURATION);
-    await this.createShapes(gltf);
+    // await this.createShapes(gltf);
+    createShapes({
+      gltf,
+      patternDuration: PATTERN_DURATION,
+      projectSettings,
+      scene: this.scene,
+      stepDuration: STEP_DURATION,
+      timeline: this.timeline,
+    });
 
     this.postCreate();
   }
@@ -256,6 +267,48 @@ export default class Scene extends MainScene {
   ) {
     const SVG_SCALE = this.width3d / this.width;
 
+    // { // DRAWING
+    //   const size = 3;
+    //   const actor = await createActor(projectSettings, {
+    //     height: size,
+    //     imgSrc: '../assets/projects/piazzamaggiore/pencil-blue.jpg',
+    //     width: size,
+    //   }, {
+    //     imageRect: { w: 1024, h: 1024 },
+    //     svg: { depth: 0.0003, scale: size / 1024, url: '../assets/projects/piazzamaggiore/circle.svg' },
+    //   });
+    //   actor.setStaticPosition(getMatrix4({ x: 0, y: 3.78, z: -2 }));
+    //   actor.setStaticImage(0, 0);
+    // }
+
+    // { // DRAWING 2
+    //   const size = 3;
+    //   const actor = await createActor(projectSettings, {
+    //     height: size,
+    //     imgSrc: '../assets/projects/piazzamaggiore/pencil-red.jpg',
+    //     width: size,
+    //   }, {
+    //     imageRect: { w: 1024, h: 1024 },
+    //     svg: { depth: 0.0003, scale: size / 1024, url: '../assets/projects/piazzamaggiore/circle.svg' },
+    //   });
+    //   actor.setStaticPosition(getMatrix4({ x: -2, y: 5, z: -2 }));
+    //   actor.setStaticImage(0, 0);
+    // }
+
+    // { // DRAWING 2
+    //   const size = 3;
+    //   const actor = await createActor(projectSettings, {
+    //     height: size,
+    //     imgSrc: '../assets/projects/piazzamaggiore/pencil-grey.jpg',
+    //     width: size,
+    //   }, {
+    //     imageRect: { w: 1024, h: 1024 },
+    //     svg: { depth: 0.0003, scale: size / 1024, url: '../assets/projects/piazzamaggiore/circle.svg' },
+    //   });
+    //   actor.setStaticPosition(getMatrix4({ x: 3, y: 4.5, z: -1.8 }));
+    //   actor.setStaticImage(0, 0);
+    // }
+
     { // WALL RIGHT  FRONT
       const scale = 0.79;
       const actor = await createActor(projectSettings, videos.main, {
@@ -328,155 +381,155 @@ export default class Scene extends MainScene {
     }
   }
 
-  async createMorandi() {
-    // { // MORANDI TAFELPOOT
-    //   const scale = 0.01;
-    //   const y = 4.7 - 0.5;
-    //   new SVGLoader().load('../assets/projects/piazzamaggiore/morandi.svg', async (data) => {
-    //     const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/wood_strip.jpg');
-    //     const points = data.paths[0].currentPath.getPoints(1);
-    //     const geometry = new THREE.LatheGeometry(points);
-    //     const material = new THREE.MeshPhongMaterial({ color: 0xd2d0cb, shininess: 1.2, map: texture });
-    //     const lathe = new THREE.Mesh(geometry, material);
-    //     lathe.rotation.z = Math.PI;
-    //     lathe.scale.set(scale, scale, scale);
-    //     lathe.position.set(-1.1, y, -2.1);
-    //     lathe.castShadow = true;
-    //     lathe.receiveShadow = true;
-    //     this.scene.add(lathe);
-    //     this.timeline.add(createTween({
-    //       delay: STEP_DURATION,
-    //       duration: PATTERN_DURATION * 0.999,
-    //       ease: 'linear',
-    //       onComplete: () => {},
-    //       onStart: () => {},
-    //       onUpdate: (progress: number) => {
-    //         lathe.rotation.y = progress * Math.PI * -4;
-    //       },
-    //     }));
-    //     this.timeline.add(createTween({
-    //       delay: STEP_DURATION,
-    //       duration: PATTERN_DURATION * 0.499,
-    //       ease: 'sineInOut',
-    //       onComplete: () => {},
-    //       onStart: () => {},
-    //       onUpdate: (progress: number) => {
-    //         lathe.position.setY(y + progress);
-    //       },
-    //     }));
-    //     this.timeline.add(createTween({
-    //       delay: STEP_DURATION + (PATTERN_DURATION * 0.5),
-    //       duration: PATTERN_DURATION * 0.499,
-    //       ease: 'sineInOut',
-    //       onComplete: () => {},
-    //       onStart: () => {},
-    //       onUpdate: (progress: number) => {
-    //         lathe.position.setY(y + (1 - progress));
-    //       },
-    //     }));
-    //   });
-    // }
+  // async createMorandi() {
+  //   { // MORANDI TAFELPOOT
+  //     const scale = 0.01;
+  //     const y = 4.7 - 0.5;
+  //     new SVGLoader().load('../assets/projects/piazzamaggiore/morandi.svg', async (data) => {
+  //       const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/wood_strip.jpg');
+  //       const points = data.paths[0].currentPath.getPoints(1);
+  //       const geometry = new THREE.LatheGeometry(points);
+  //       const material = new THREE.MeshPhongMaterial({ color: 0xd2d0cb, shininess: 1.2, map: texture });
+  //       const lathe = new THREE.Mesh(geometry, material);
+  //       lathe.rotation.z = Math.PI;
+  //       lathe.scale.set(scale, scale, scale);
+  //       lathe.position.set(-1.1, y, -2.1);
+  //       lathe.castShadow = true;
+  //       lathe.receiveShadow = true;
+  //       this.scene.add(lathe);
+  //       this.timeline.add(createTween({
+  //         delay: STEP_DURATION,
+  //         duration: PATTERN_DURATION * 0.999,
+  //         ease: 'linear',
+  //         onComplete: () => {},
+  //         onStart: () => {},
+  //         onUpdate: (progress: number) => {
+  //           lathe.rotation.y = progress * Math.PI * -4;
+  //         },
+  //       }));
+  //       this.timeline.add(createTween({
+  //         delay: STEP_DURATION,
+  //         duration: PATTERN_DURATION * 0.499,
+  //         ease: 'sineInOut',
+  //         onComplete: () => {},
+  //         onStart: () => {},
+  //         onUpdate: (progress: number) => {
+  //           lathe.position.setY(y + progress);
+  //         },
+  //       }));
+  //       this.timeline.add(createTween({
+  //         delay: STEP_DURATION + (PATTERN_DURATION * 0.5),
+  //         duration: PATTERN_DURATION * 0.499,
+  //         ease: 'sineInOut',
+  //         onComplete: () => {},
+  //         onStart: () => {},
+  //         onUpdate: (progress: number) => {
+  //           lathe.position.setY(y + (1 - progress));
+  //         },
+  //       }));
+  //     });
+  //   }
 
-    // { // MORANDI TOETER
-    //   const scale = 0.01;
-    //   const y = 4.8;
-    //   new SVGLoader().load('../assets/projects/piazzamaggiore/morandi2.svg', async (data) => {
-    //     const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/stone_strip_brown.jpg');
-    //     const points = data.paths[0].currentPath.getPoints(16);
-    //     const material = new THREE.MeshPhongMaterial({ color: 0x978776, shininess: 1.2, map: texture, flatShading: false });
-    //     const geometry = new THREE.LatheGeometry(points);
-    //     const lathe = new THREE.Mesh(geometry, material);
-    //     lathe.rotation.z = Math.PI;
-    //     lathe.scale.set(scale, scale, scale);
-    //     lathe.updateMatrix();
+  //   { // MORANDI TOETER
+  //     const scale = 0.01;
+  //     const y = 4.8;
+  //     new SVGLoader().load('../assets/projects/piazzamaggiore/morandi2.svg', async (data) => {
+  //       const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/stone_strip_brown.jpg');
+  //       const points = data.paths[0].currentPath.getPoints(16);
+  //       const material = new THREE.MeshPhongMaterial({ color: 0x978776, shininess: 1.2, map: texture, flatShading: false });
+  //       const geometry = new THREE.LatheGeometry(points);
+  //       const lathe = new THREE.Mesh(geometry, material);
+  //       lathe.rotation.z = Math.PI;
+  //       lathe.scale.set(scale, scale, scale);
+  //       lathe.updateMatrix();
 
-    //     const boxGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
-    //     const box = new THREE.Mesh(boxGeometry, material);
-    //     box.position.set(-0.3, 0, 0);
-    //     box.rotation.z = Math.PI * 0.25;
-    //     box.updateMatrix();
+  //       const boxGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
+  //       const box = new THREE.Mesh(boxGeometry, material);
+  //       box.position.set(-0.3, 0, 0);
+  //       box.rotation.z = Math.PI * 0.25;
+  //       box.updateMatrix();
 
-    //     const csgScale = 0.01 + 0.0028;
-    //     const csg = CSG.subtract(lathe, box);
-    //     csg.scale.set(csgScale, csgScale, csgScale);
-    //     csg.position.set(-3.2, y, -2);
-    //     this.scene.add(csg);
+  //       const csgScale = 0.01 + 0.0028;
+  //       const csg = CSG.subtract(lathe, box);
+  //       csg.scale.set(csgScale, csgScale, csgScale);
+  //       csg.position.set(-3.2, y, -2);
+  //       this.scene.add(csg);
 
-    //     this.timeline.add(createTween({
-    //       delay: STEP_DURATION,
-    //       duration: PATTERN_DURATION * 0.999,
-    //       ease: 'linear',
-    //       onComplete: () => {},
-    //       onStart: () => {},
-    //       onUpdate: (progress: number) => {
-    //         csg.rotation.y = progress * Math.PI * -4;
-    //       },
-    //     }));
-    //     this.timeline.add(createTween({
-    //       delay: STEP_DURATION,
-    //       duration: PATTERN_DURATION * 0.499,
-    //       ease: 'sineInOut',
-    //       onComplete: () => {},
-    //       onStart: () => {},
-    //       onUpdate: (progress: number) => {
-    //         csg.position.setY(y + ((1 - progress) * 0.4));
-    //       },
-    //     }));
-    //     this.timeline.add(createTween({
-    //       delay: STEP_DURATION + (PATTERN_DURATION * 0.5),
-    //       duration: PATTERN_DURATION * 0.499,
-    //       ease: 'sineInOut',
-    //       onComplete: () => {},
-    //       onStart: () => {},
-    //       onUpdate: (progress: number) => {
-    //         csg.position.setY(y + (progress * 0.4));
-    //       },
-    //     }));
-    //   });
-    // }
+  //       this.timeline.add(createTween({
+  //         delay: STEP_DURATION,
+  //         duration: PATTERN_DURATION * 0.999,
+  //         ease: 'linear',
+  //         onComplete: () => {},
+  //         onStart: () => {},
+  //         onUpdate: (progress: number) => {
+  //           csg.rotation.y = progress * Math.PI * -4;
+  //         },
+  //       }));
+  //       this.timeline.add(createTween({
+  //         delay: STEP_DURATION,
+  //         duration: PATTERN_DURATION * 0.499,
+  //         ease: 'sineInOut',
+  //         onComplete: () => {},
+  //         onStart: () => {},
+  //         onUpdate: (progress: number) => {
+  //           csg.position.setY(y + ((1 - progress) * 0.4));
+  //         },
+  //       }));
+  //       this.timeline.add(createTween({
+  //         delay: STEP_DURATION + (PATTERN_DURATION * 0.5),
+  //         duration: PATTERN_DURATION * 0.499,
+  //         ease: 'sineInOut',
+  //         onComplete: () => {},
+  //         onStart: () => {},
+  //         onUpdate: (progress: number) => {
+  //           csg.position.setY(y + (progress * 0.4));
+  //         },
+  //       }));
+  //     });
+  //   }
 
-    // { // SPHERE
-    //   const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
-    //   const geometry = new THREE.SphereBufferGeometry(0.7);
-    //   const material = new THREE.MeshPhongMaterial({ color: 0xb6a385, shininess: 0.4, map: texture, flatShading: false });
-    //   const sphere = new THREE.Mesh(geometry, material);
-    //   sphere.position.set(1.5, 4.1, -2.1);
-    //   sphere.castShadow = true;
-    //   sphere.receiveShadow = true;
-    //   this.scene.add(sphere);
-    //   this.timeline.add(createTween({
-    //     delay: STEP_DURATION,
-    //     duration: PATTERN_DURATION * 0.999,
-    //     ease: 'linear',
-    //     onComplete: () => {},
-    //     onStart: () => {},
-    //     onUpdate: (progress: number) => {
-    //       sphere.rotation.y = progress * Math.PI * -4;
-    //     },
-    //   }));
-    // }
+  //   { // SPHERE
+  //     const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
+  //     const geometry = new THREE.SphereBufferGeometry(0.7);
+  //     const material = new THREE.MeshPhongMaterial({ color: 0xb6a385, shininess: 0.4, map: texture, flatShading: false });
+  //     const sphere = new THREE.Mesh(geometry, material);
+  //     sphere.position.set(1.5, 4.1, -2.1);
+  //     sphere.castShadow = true;
+  //     sphere.receiveShadow = true;
+  //     this.scene.add(sphere);
+  //     this.timeline.add(createTween({
+  //       delay: STEP_DURATION,
+  //       duration: PATTERN_DURATION * 0.999,
+  //       ease: 'linear',
+  //       onComplete: () => {},
+  //       onStart: () => {},
+  //       onUpdate: (progress: number) => {
+  //         sphere.rotation.y = progress * Math.PI * -4;
+  //       },
+  //     }));
+  //   }
 
-    // { // SPHERE SMALL
-    //   const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
-    //   const geometry = new THREE.SphereBufferGeometry(0.4);
-    //   const material = new THREE.MeshPhongMaterial({ color: 0xb4b1aa, shininess: 0.4, map: texture, flatShading: false });
-    //   const sphere = new THREE.Mesh(geometry, material);
-    //   sphere.position.set(-1.1, -3.1, -2.1);
-    //   sphere.castShadow = true;
-    //   sphere.receiveShadow = true;
-    //   this.scene.add(sphere);
-    //   this.timeline.add(createTween({
-    //     delay: STEP_DURATION,
-    //     duration: PATTERN_DURATION * 0.999,
-    //     ease: 'linear',
-    //     onComplete: () => {},
-    //     onStart: () => {},
-    //     onUpdate: (progress: number) => {
-    //       sphere.rotation.y = progress * Math.PI * -4;
-    //     },
-    //   }));
-    // }
-  }
+  //   { // SPHERE SMALL
+  //     const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
+  //     const geometry = new THREE.SphereBufferGeometry(0.4);
+  //     const material = new THREE.MeshPhongMaterial({ color: 0xb4b1aa, shininess: 0.4, map: texture, flatShading: false });
+  //     const sphere = new THREE.Mesh(geometry, material);
+  //     sphere.position.set(-1.1, -3.1, -2.1);
+  //     sphere.castShadow = true;
+  //     sphere.receiveShadow = true;
+  //     this.scene.add(sphere);
+  //     this.timeline.add(createTween({
+  //       delay: STEP_DURATION,
+  //       duration: PATTERN_DURATION * 0.999,
+  //       ease: 'linear',
+  //       onComplete: () => {},
+  //       onStart: () => {},
+  //       onUpdate: (progress: number) => {
+  //         sphere.rotation.y = progress * Math.PI * -4;
+  //       },
+  //     }));
+  //   }
+  // }
 
   async createShapes(gltf: GLTF) {
     const imagePath = '../assets/projects/test/testimage3d.jpg';
