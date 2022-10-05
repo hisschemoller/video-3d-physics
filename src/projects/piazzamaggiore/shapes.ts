@@ -17,29 +17,24 @@ export interface ShapeArgs {
   timeline: Timeline;
 }
 
+const TEST_IMAGE = '../assets/projects/test/testimage3d.jpg';
+
 async function createTwoBlackCircles({
-  gltf, patternDuration, projectSettings, scene, stepDuration,
+  patternDuration, projectSettings, scene, stepDuration,
 }: ShapeArgs) {
   const { timeline } = projectSettings;
-  const scale = 0.5 / 1024;
+  const svgScale = 0.5 / 1024;
+  const svgUrl = '../assets/projects/piazzamaggiore/circle2.svg';
 
-  const circleLeft = await createActor(projectSettings, {
-    height: 949,
-    imgSrc: '../assets/projects/piazzamaggiore/muur_rechts_gat2.jpg',
-    width: 1004,
-  }, {
-    imageRect: { w: 949, h: 1004 },
-    svg: { depth: 0.003, scale, url: '../assets/projects/piazzamaggiore/circle2.svg' },
-  });
-  circleLeft.setStaticPosition(getMatrix4({ x: -0.4 }));
-  circleLeft.setStaticImage(0, 0);
+  const circleLeft = await createSVG(svgUrl, svgScale, undefined, 0.003, 0xff0000);
+  circleLeft.position.x = 0;
 
-  const circleRight = circleLeft.getMesh().clone();
+  const circleRight = circleLeft.clone();
   circleRight.position.x = 0.4;
 
   const group = new THREE.Group();
   group.position.set(-1.1, 4.0, -2.1);
-  group.add(circleLeft.getMesh());
+  group.add(circleLeft);
   group.add(circleRight);
   scene.add(group);
 

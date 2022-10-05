@@ -51,6 +51,7 @@ export function createSVG(
   svgScale: number,
   texture?: THREE.Texture,
   depth: number = 0.02,
+  color: number = BASE_COLOR,
 ) {
   return new Promise<ExtendedMesh>(
     (resolve, reject) => {
@@ -58,17 +59,17 @@ export function createSVG(
         svgUrl,
         (data) => {
           const { paths } = data;
-
+          const surface = texture ? { map: texture } : { color };
           paths.forEach((path) => {
             const materials = [
               new THREE.MeshPhongMaterial({
-                color: BASE_COLOR,
+                color,
                 opacity: 0,
                 transparent: false,
                 side: THREE.BackSide,
               }),
               new THREE.MeshPhongMaterial({
-                map: texture,
+                ...surface,
                 opacity: 1,
                 transparent: false,
                 side: THREE.BackSide,
