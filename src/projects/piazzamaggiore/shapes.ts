@@ -26,11 +26,15 @@ async function createTwoBlackCircles({
   const svgScale = 0.5 / 1024;
   const svgUrl = '../assets/projects/piazzamaggiore/circle2.svg';
 
-  const circleLeft = await createSVG(svgUrl, svgScale, undefined, 0.003, 0xff0000);
+  const circleLeft = await createSVG(svgUrl, svgScale, undefined, 0.003, 0xaa0000);
   circleLeft.position.x = 0;
+  circleLeft.castShadow = true;
+  circleLeft.receiveShadow = true;
 
   const circleRight = circleLeft.clone();
   circleRight.position.x = 0.4;
+  circleRight.castShadow = true;
+  circleRight.receiveShadow = true;
 
   const group = new THREE.Group();
   group.position.set(-1.1, 4.0, -2.1);

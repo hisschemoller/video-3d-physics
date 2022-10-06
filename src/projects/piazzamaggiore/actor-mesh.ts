@@ -64,15 +64,17 @@ export function createSVG(
             const materials = [
               new THREE.MeshPhongMaterial({
                 color,
+                flatShading: false,
                 opacity: 0,
-                transparent: false,
                 side: THREE.BackSide,
+                transparent: false,
               }),
               new THREE.MeshPhongMaterial({
                 ...surface,
+                flatShading: false,
                 opacity: 1,
-                transparent: false,
                 side: THREE.BackSide,
+                transparent: false,
               }),
             ];
 
