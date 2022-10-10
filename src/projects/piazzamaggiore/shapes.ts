@@ -14,9 +14,10 @@ export interface ShapeArgs {
   timeline: Timeline;
 }
 
-const TEST_IMAGE = '../assets/projects/test/testimage3d.jpg';
+// const TEST_IMAGE = '../assets/projects/test/testimage3d.jpg';
 const WIRE_RADIUS = 0.01;
 const EXTRUDE_DEPTH = 0.03;
+const Z = -2;
 
 async function createShape(
   projectSettings: ProjectSettings,
@@ -27,6 +28,8 @@ async function createShape(
   const { scene } = projectSettings;
   const texture = new THREE.TextureLoader().load(imgUrl);
   const mesh = await createSVG(svgUrl, svgScale, texture, EXTRUDE_DEPTH, 0x888888);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
 
   // the texture should exactly cover the SVG extrude front
   const sizeVector = new THREE.Vector3();
@@ -39,9 +42,187 @@ async function createShape(
 
   mesh.position.set(-4, 5, -2.0);
   scene.add(mesh);
+  return mesh;
 }
 
-async function createTwoBlackCircles({
+async function createShape1({
+  patternDuration, projectSettings, scene, stepDuration,
+}: ShapeArgs) {
+  const { timeline } = projectSettings;
+  const mesh = await createShape(
+    projectSettings,
+    1.5 / 1024,
+    '../assets/projects/piazzamaggiore/shape1.svg',
+    '../assets/projects/piazzamaggiore/shape1.jpg',
+  );
+  mesh.position.set(-0.6, 0, 0);
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.position.set(-1, 1, Z);
+  scene.add(group);
+
+  timeline.add(createTween({
+    delay: stepDuration,
+    duration: patternDuration * 0.999,
+    ease: 'linear',
+    onComplete: () => {},
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      group.rotation.y = progress * Math.PI * 8;
+    },
+  }));
+}
+
+async function createShape2({
+  patternDuration, projectSettings, scene, stepDuration,
+}: ShapeArgs) {
+  const { timeline } = projectSettings;
+  const mesh = await createShape(
+    projectSettings,
+    5 / 1024,
+    '../assets/projects/piazzamaggiore/shape2.svg',
+    '../assets/projects/piazzamaggiore/shape2.jpg',
+  );
+  mesh.rotation.y = -0.3;
+  mesh.position.set(-3, 0, 0);
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.position.set(-1, -1.9, Z);
+  scene.add(group);
+
+  timeline.add(createTween({
+    delay: stepDuration,
+    duration: patternDuration * 0.499,
+    ease: 'sineInOut',
+    onComplete: () => {},
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      group.rotation.z = -0.1 + (progress * Math.PI * 0.2);
+    },
+  }));
+  timeline.add(createTween({
+    delay: stepDuration + (patternDuration * 0.5),
+    duration: patternDuration * 0.499,
+    ease: 'sineInOut',
+    onComplete: () => {},
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      group.rotation.z = -0.1 + ((1 - progress) * Math.PI * 0.2);
+    },
+  }));
+}
+
+async function createShape3({
+  patternDuration, projectSettings, scene, stepDuration,
+}: ShapeArgs) {
+  const { timeline } = projectSettings;
+  const mesh = await createShape(
+    projectSettings,
+    1.8 / 1024,
+    '../assets/projects/piazzamaggiore/shape3.svg',
+    '../assets/projects/piazzamaggiore/shape3.jpg',
+  );
+  mesh.rotation.z = Math.PI * 0.47;
+  mesh.position.set(-0.75, -1, 0);
+
+  const mesh2 = mesh.clone();
+  mesh2.rotation.y = Math.PI * 0.5;
+  mesh2.position.set(0, -1, 0.75);
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.add(mesh2);
+  // group.rotation.z = 0.6;
+  group.position.set(0.75, -0.4, Z);
+  scene.add(group);
+
+  timeline.add(createTween({
+    delay: stepDuration,
+    duration: patternDuration * 0.999,
+    ease: 'linear',
+    onComplete: () => {},
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      group.rotation.y = progress * Math.PI * -8;
+    },
+  }));
+}
+
+async function createShape4({
+  patternDuration, projectSettings, scene, stepDuration,
+}: ShapeArgs) {
+  const { timeline } = projectSettings;
+  const mesh = await createShape(
+    projectSettings,
+    1.6 / 1024,
+    '../assets/projects/piazzamaggiore/shape4.svg',
+    '../assets/projects/piazzamaggiore/shape4.jpg',
+  );
+  mesh.position.set(-0.75, -1, 0);
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.position.set(1, 5.5, Z);
+  scene.add(group);
+}
+
+async function createShape5({
+  patternDuration, projectSettings, scene, stepDuration,
+}: ShapeArgs) {
+  const { timeline } = projectSettings;
+  const mesh = await createShape(
+    projectSettings,
+    1.6 / 1024,
+    '../assets/projects/piazzamaggiore/shape5.svg',
+    '../assets/projects/piazzamaggiore/shape5.jpg',
+  );
+  mesh.position.set(-0.75, -1, 0);
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.position.set(1.8, 2.6, Z - 0.1);
+  scene.add(group);
+}
+
+async function createShape6({
+  patternDuration, projectSettings, scene, stepDuration,
+}: ShapeArgs) {
+  const { timeline } = projectSettings;
+  const mesh = await createShape(
+    projectSettings,
+    1.0 / 1024,
+    '../assets/projects/piazzamaggiore/shape6.svg',
+    '../assets/projects/piazzamaggiore/shape6.jpg',
+  );
+  mesh.position.set(-0.5, -1, 0);
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.position.set(-1, 3.5, Z);
+  scene.add(group);
+}
+
+async function createShape7({
+  patternDuration, projectSettings, scene, stepDuration,
+}: ShapeArgs) {
+  const { timeline } = projectSettings;
+  const mesh = await createShape(
+    projectSettings,
+    1.0 / 1024,
+    '../assets/projects/piazzamaggiore/shape7.svg',
+    '../assets/projects/piazzamaggiore/shape7.jpg',
+  );
+  mesh.position.set(-0.5, 0, 0);
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.position.set(-1, 5, Z);
+  scene.add(group);
+}
+
+async function createTwoRedCircles({
   patternDuration, projectSettings, scene, stepDuration,
 }: ShapeArgs) {
   const { timeline } = projectSettings;
@@ -68,7 +249,7 @@ async function createTwoBlackCircles({
   connectWire.receiveShadow = true;
 
   const group = new THREE.Group();
-  group.position.set(1.1, 4.0, -2.1);
+  group.position.set(0.75, 2.0, -2.1);
   group.add(connectWire);
   group.add(circleLeft);
   group.add(circleRight);
@@ -87,17 +268,12 @@ async function createTwoBlackCircles({
 }
 
 export default function createShapes(shapeArgs: ShapeArgs) {
-  createTwoBlackCircles(shapeArgs);
-  // createShape(
-  //   shapeArgs.projectSettings,
-  //   8 / 1024,
-  //   '../assets/projects/piazzamaggiore/shape1.svg',
-  //   '../assets/projects/piazzamaggiore/shape1.jpg',
-  // );
-  createShape(
-    shapeArgs.projectSettings,
-    8 / 1024,
-    '../assets/projects/piazzamaggiore/shape2.svg',
-    '../assets/projects/piazzamaggiore/shape2.jpg',
-  );
+  createTwoRedCircles(shapeArgs);
+  createShape1(shapeArgs);
+  createShape2(shapeArgs);
+  createShape3(shapeArgs);
+  createShape4(shapeArgs);
+  createShape5(shapeArgs);
+  createShape6(shapeArgs);
+  createShape7(shapeArgs);
 }
