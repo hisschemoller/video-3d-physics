@@ -71,7 +71,7 @@ export default class Scene extends MainScene {
     this.ambientLight.intensity = 1.1;
 
     // DIRECTIONAL LIGHT
-    this.directionalLight.position.set(10, 7, 0);
+    this.directionalLight.position.set(10, 7, 1);
     this.directionalLight.intensity = 0.8;
 
     // TWEENS
