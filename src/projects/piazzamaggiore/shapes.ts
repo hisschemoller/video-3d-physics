@@ -287,7 +287,7 @@ async function createShape3a({
     onStart: () => {},
     onUpdate: (progress: number) => {
       group.rotation.x = progress * Math.PI * -2;
-      group.rotation.z = progress * Math.PI * 1;
+      group.rotation.z = progress * Math.PI * 2;
     },
   }));
 
