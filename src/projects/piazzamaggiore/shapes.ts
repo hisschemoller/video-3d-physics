@@ -4,7 +4,6 @@ import { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 import { ProjectSettings } from '@app/interfaces';
 import { createSVG } from './actor-mesh';
-import { AxesHelper } from 'three';
 
 export interface ShapeArgs {
   gltf: GLTF;
@@ -85,6 +84,49 @@ async function createShape1({
     onStart: () => {},
     onUpdate: (progress: number) => {
       group.rotation.y = progress * Math.PI * 8;
+    },
+  }));
+}
+
+async function createShape1a({
+  patternDuration, projectSettings, scene, stepDuration,
+}: ShapeArgs) {
+  const { timeline } = projectSettings;
+  const mesh = await createShape(
+    projectSettings,
+    1.0 / 1024,
+    '../assets/projects/piazzamaggiore/shape1.svg',
+    '../assets/projects/piazzamaggiore/shape1.jpg',
+  );
+  mesh.position.set(-0.4, 0, 0);
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.position.set(-0.2, 0.7, Z);
+  scene.add(group);
+
+  for (let i = 0; i < 2; i += 1) {
+    timeline.add(createTween({
+      delay: (stepDuration * 1) + (patternDuration * i * 0.6),
+      duration: patternDuration * 0.33333,
+      ease: 'sineInOut',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        const prog = i % 2 === 0 ? progress : 1 - progress;
+        group.position.y = 1.2 - ((1 - prog) * 0.8);
+      },
+    }));
+  }
+
+  timeline.add(createTween({
+    delay: stepDuration,
+    duration: patternDuration * 0.999,
+    ease: 'linear',
+    onComplete: () => {},
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      group.rotation.y = progress * Math.PI * -32;
     },
   }));
 }
@@ -182,7 +224,6 @@ async function createShape3({
   const group = new THREE.Group();
   group.add(mesh);
   group.add(mesh2);
-  // group.rotation.z = 0.6;
   group.position.set(0.75, -0.4, Z);
   scene.add(group);
 
@@ -196,6 +237,73 @@ async function createShape3({
       group.rotation.y = progress * Math.PI * -8;
     },
   }));
+
+  for (let i = 0; i < 2; i += 1) {
+    timeline.add(createTween({
+      delay: (stepDuration * 2) + (patternDuration * i * 0.6),
+      duration: patternDuration * 0.33333,
+      ease: 'sineInOut',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        const prog = i % 2 === 0 ? progress : 1 - progress;
+        group.position.y = -0.9 + (prog * 0.5);
+      },
+    }));
+  }
+}
+
+async function createShape3a({
+  patternDuration, projectSettings, scene, stepDuration,
+}: ShapeArgs) {
+  const { timeline } = projectSettings;
+  const mesh = await createShape(
+    projectSettings,
+    1.8 / 1024,
+    '../assets/projects/piazzamaggiore/shape3.svg',
+    '../assets/projects/piazzamaggiore/shape3.jpg',
+  );
+  mesh.rotation.z = Math.PI * 0.47;
+  mesh.position.set(-0.75, -1, 0);
+
+  const mesh2 = mesh.clone();
+  mesh2.rotation.y = Math.PI * 0.5;
+  mesh2.position.set(0, -1, 0.75);
+
+  const groupScale = 0.8;
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.add(mesh2);
+  group.scale.set(groupScale, groupScale, groupScale);
+  group.rotation.z = Math.PI * 0.5;
+  group.position.set(2.7, 2.0, Z);
+  scene.add(group);
+
+  timeline.add(createTween({
+    delay: stepDuration,
+    duration: patternDuration * 0.999,
+    ease: 'linear',
+    onComplete: () => {},
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      group.rotation.x = progress * Math.PI * -2;
+      group.rotation.z = progress * Math.PI * 1;
+    },
+  }));
+
+  for (let i = 0; i < 2; i += 1) {
+    timeline.add(createTween({
+      delay: (stepDuration * 16) + (patternDuration * i * 0.5),
+      duration: patternDuration * 0.4999,
+      ease: 'sineInOut',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        const prog = i % 2 === 0 ? progress : 1 - progress;
+        group.position.y = 2.0 + (prog * 1.0);
+      },
+    }));
+  }
 }
 
 async function createShape4({
@@ -244,6 +352,49 @@ async function createShape4({
   }
 }
 
+async function createShape4a({
+  patternDuration, projectSettings, scene, stepDuration,
+}: ShapeArgs) {
+  const { timeline } = projectSettings;
+  const mesh = await createShape(
+    projectSettings,
+    0.8 / 1024,
+    '../assets/projects/piazzamaggiore/shape4.svg',
+    '../assets/projects/piazzamaggiore/shape4.jpg',
+  );
+  mesh.position.set(-0.4, 0.3, 0);
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.position.set(0.5, 0.4, Z + 0.7);
+  scene.add(group);
+
+  timeline.add(createTween({
+    delay: stepDuration,
+    duration: patternDuration * 0.999,
+    ease: 'linear',
+    onComplete: () => {},
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      group.rotation.z = progress * Math.PI * -8;
+    },
+  }));
+
+  for (let i = 0; i < 2; i += 1) {
+    timeline.add(createTween({
+      delay: (stepDuration * 12) + (patternDuration * i * 0.5),
+      duration: patternDuration * 0.4999,
+      ease: 'sineInOut',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        const prog = i % 2 === 0 ? progress : 1 - progress;
+        group.position.y = 0.4 + (prog * 3.6);
+      },
+    }));
+  }
+}
+
 async function createShape5({
   patternDuration, projectSettings, scene, stepDuration,
 }: ShapeArgs) {
@@ -255,13 +406,13 @@ async function createShape5({
     '../assets/projects/piazzamaggiore/shape5.jpg',
   );
   mesh.position.set(-0.75, 0.75, 0);
-  // mesh.add(new AxesHelper(1));
+  // mesh.add(new THREE.AxesHelper(1));
 
   const group = new THREE.Group();
   group.add(mesh);
   group.position.set(0.75, 2.6, Z + 0.1);
   scene.add(group);
-  // group.add(new AxesHelper(2));
+  // group.add(new THREE.AxesHelper(2));
 
   for (let i = 0; i < 2; i += 1) {
     timeline.add(createTween({
@@ -285,6 +436,51 @@ async function createShape5({
     onStart: () => {},
     onUpdate: (progress: number) => {
       group.rotation.z = progress * Math.PI * 4;
+    },
+  }));
+}
+
+async function createShape5a({
+  patternDuration, projectSettings, scene, stepDuration,
+}: ShapeArgs) {
+  const { timeline } = projectSettings;
+  const mesh = await createShape(
+    projectSettings,
+    0.6 / 1024,
+    '../assets/projects/piazzamaggiore/shape5.svg',
+    '../assets/projects/piazzamaggiore/shape5.jpg',
+  );
+  mesh.position.set(-0.3, 0.3, 0);
+  // mesh.add(new THREE.AxesHelper(1));
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.position.set(1.1, 0.1, Z + 0.9);
+  scene.add(group);
+  // group.add(new THREE.AxesHelper(2));
+
+  for (let i = 0; i < 2; i += 1) {
+    timeline.add(createTween({
+      delay: stepDuration + (patternDuration * i * 0.5),
+      duration: patternDuration * 0.36,
+      ease: 'sineInOut',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        const prog = i % 2 === 0 ? progress : 1 - progress;
+        group.position.y = 0.1 + (prog * 4.4);
+      },
+    }));
+  }
+
+  timeline.add(createTween({
+    delay: stepDuration,
+    duration: patternDuration * 0.999,
+    ease: 'linear',
+    onComplete: () => {},
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      group.rotation.z = progress * Math.PI * 8;
     },
   }));
 }
@@ -332,6 +528,49 @@ async function createShape6({
   }));
 }
 
+async function createShape6a({
+  patternDuration, projectSettings, scene, stepDuration,
+}: ShapeArgs) {
+  const { timeline } = projectSettings;
+  const mesh = await createShape(
+    projectSettings,
+    0.9  / 1024,
+    '../assets/projects/piazzamaggiore/shape6.svg',
+    '../assets/projects/piazzamaggiore/shape6.jpg',
+  );
+  mesh.position.set(-0.5, -1, 0);
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.position.set(2.0, 0.6, Z);
+  scene.add(group);
+
+  for (let i = 0; i < 2; i += 1) {
+    timeline.add(createTween({
+      delay: (stepDuration * 16 ) + (patternDuration * i * 0.6),
+      duration: patternDuration * 0.33333,
+      ease: 'sineInOut',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        const prog = i % 2 === 0 ? progress : 1 - progress;
+        group.position.y = 0.6 + (prog * 2.7);
+      },
+    }));
+  }
+
+  timeline.add(createTween({
+    delay: stepDuration,
+    duration: patternDuration * 0.999,
+    ease: 'linear',
+    onComplete: () => {},
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      group.rotation.y = progress * Math.PI * 4;
+    },
+  }));
+}
+
 async function createShape7({
   patternDuration, projectSettings, scene, stepDuration,
 }: ShapeArgs) {
@@ -363,6 +602,50 @@ async function createShape7({
       },
     }));
   }
+}
+
+async function createShape7a({
+  patternDuration, projectSettings, scene, stepDuration,
+}: ShapeArgs) {
+  const { timeline } = projectSettings;
+  const mesh = await createShape(
+    projectSettings,
+    0.9 / 1024,
+    '../assets/projects/piazzamaggiore/shape7.svg',
+    '../assets/projects/piazzamaggiore/shape7.jpg',
+  );
+  mesh.rotation.z = Math.PI * 0.3;
+  mesh.position.set(-0.6, -0.2, 0);
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.position.set(1.7, 0.2, Z + 0.3);
+  scene.add(group);
+
+  for (let i = 0; i < 2; i += 1) {
+    timeline.add(createTween({
+      delay: (stepDuration * 12) + (patternDuration * i * 0.5),
+      duration: patternDuration * 0.4,
+      ease: 'sineInOut',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        const prog = i % 2 === 0 ? progress : 1 - progress;
+        group.position.y = 0.2 + (prog * 4.4);
+      },
+    }));
+  }
+
+  timeline.add(createTween({
+    delay: stepDuration,
+    duration: patternDuration * 0.999,
+    ease: 'linear',
+    onComplete: () => {},
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      group.rotation.z = progress * Math.PI * 2;
+    },
+  }));
 }
 
 async function createTwoRedCircles({
@@ -413,11 +696,17 @@ async function createTwoRedCircles({
 export default function createShapes(shapeArgs: ShapeArgs) {
   // createTwoRedCircles(shapeArgs);
   createShape1(shapeArgs);
+  createShape1a(shapeArgs);
   createShape2(shapeArgs);
   createShape2a(shapeArgs);
   createShape3(shapeArgs);
+  createShape3a(shapeArgs);
   createShape4(shapeArgs);
+  createShape4a(shapeArgs);
   createShape5(shapeArgs);
+  createShape5a(shapeArgs);
   createShape6(shapeArgs);
+  createShape6a(shapeArgs);
   createShape7(shapeArgs);
+  createShape7a(shapeArgs);
 }
