@@ -19,7 +19,7 @@ export interface ShapeArgs {
 const EXTRUDE_DEPTH = 0.03;
 const Z = -2;
 
-async function createShape(
+export async function createShape(
   projectSettings: ProjectSettings,
   svgScale: number,
   svgUrl: string,

@@ -1,18 +1,38 @@
 import { THREE } from 'enable3d';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
-import createTween from '@app/tween';
 import { createActor } from './actor';
+import { createShape } from './shapes';
+
+const Z = 1.75;
+
+async function createShape4(projectSettings: ProjectSettings) {
+  const {
+    scene,
+  } = projectSettings;
+
+  const mesh = await createShape(
+    projectSettings,
+    1.6 / 1024,
+    '../assets/projects/piazzamaggiore/shape4.svg',
+    '../assets/projects/piazzamaggiore/shape4.jpg',
+    0x7d7f00,
+  );
+  mesh.position.set(-0.7, 0.5, 0);
+
+  const group = new THREE.Group();
+  group.add(mesh);
+  group.position.set(5.7, 0, Z);
+  scene.add(group);
+}
 
 export default async function createWallRight(
   projectSettings: ProjectSettings,
   videos: { [key: string]: VideoData },
 ) {
+  createShape4(projectSettings);
   const {
     patternDuration,
-    scene,
-    stepDuration,
-    timeline,
     width,
     width3d,
   } = projectSettings;
@@ -54,44 +74,5 @@ export default async function createWallRight(
       duration: patternDuration * 0.999,
       fromImagePosition: new THREE.Vector2(1920 - 334, 0),
     });
-  }
-
-  { // STICK
-    const group = new THREE.Group();
-    group.position.set(7, 0, 1.75);
-    group.rotation.z = Math.PI * 0.35;
-    scene.add(group);
-
-    const length = 5;
-    const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
-    const geometry = new THREE.CylinderBufferGeometry(0.05, 0.05, length);
-    const material = new THREE.MeshPhongMaterial({
-      color: 0x555555, shininess: 0.4, map: texture, flatShading: false,
-    });
-    const stick = new THREE.Mesh(geometry, material);
-    stick.position.set(0, length * 0.5, 0);
-    stick.castShadow = true;
-    stick.receiveShadow = true;
-    group.add(stick);
-    timeline.add(createTween({
-      delay: stepDuration + (patternDuration * 0.4),
-      duration: patternDuration * 0.2499,
-      ease: 'sineInOut',
-      onComplete: () => {},
-      onStart: () => {},
-      onUpdate: (progress: number) => {
-        group.rotation.z = (Math.PI * 0.35) + progress * (Math.PI * 0.30);
-      },
-    }));
-    timeline.add(createTween({
-      delay: stepDuration + (patternDuration * 0.65),
-      duration: patternDuration * 0.2499,
-      ease: 'sineInOut',
-      onComplete: () => {},
-      onStart: () => {},
-      onUpdate: (progress: number) => {
-        group.rotation.z = (Math.PI * 0.65) + progress * (Math.PI * -0.30);
-      },
-    }));
   }
 }

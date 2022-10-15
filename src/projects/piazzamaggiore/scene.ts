@@ -7,11 +7,11 @@ import { THREE } from 'enable3d';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
-import createTween from '@app/tween';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
 import createShapes from './shapes';
 import createWallRight from './wall-right';
+import createGateLeft from './gate-left';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 108;
@@ -119,7 +119,7 @@ export default class Scene extends MainScene {
     await this.createBologna(projectSettings, videos);
     await this.createGround();
     await createWallRight(projectSettings, videos);
-    await this.createGateLeft(projectSettings, videos);
+    await createGateLeft(projectSettings, videos);
     // await this.createMorandi();
     // await createMachines(this, PATTERN_DURATION, STEP_DURATION);
     // await this.createShapes(gltf);
@@ -197,67 +197,6 @@ export default class Scene extends MainScene {
     ground.position.set(-2, -3.8, -2);
     ground.receiveShadow = true;
     this.scene.add(ground);
-  }
-
-  async createGateLeft(
-    projectSettings: ProjectSettings,
-    videos: { [key: string]: VideoData },
-  ) {
-    const SVG_SCALE = this.width3d / this.width;
-
-    { // GEVEL RECHTS
-      const scale = 1.415;
-      const actor = await createActor(projectSettings, videos.main, {
-        imageRect: { w: 325, h: 869 },
-        svg: { depth: 0.0003, scale: SVG_SCALE, url: '../assets/projects/piazzamaggiore/gevel_links.svg' },
-      });
-      actor.setStaticPosition(getMatrix4({ x: -11.3, y: 6.4, z: -4, sx: scale, sy: scale }));
-      actor.addTween({
-        delay: 0,
-        duration: PATTERN_DURATION * 0.999,
-        videoStart: 84.3,
-        fromImagePosition: new THREE.Vector2(0, 0),
-      });
-      actor.getMesh().castShadow = false;
-      actor.getMesh().receiveShadow = false;
-    }
-
-    { // STICK
-      const group = new THREE.Group();
-      group.position.set(-8.5, -2, -4.5);
-      group.rotation.z = Math.PI * -0.25; // -0.5
-      this.scene.add(group);
-
-      const length = 3;
-      const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
-      const geometry = new THREE.CylinderBufferGeometry(0.05, 0.05, length);
-      const material = new THREE.MeshPhongMaterial({ color: 0x555555, shininess: 0.4, map: texture, flatShading: false });
-      const stick = new THREE.Mesh(geometry, material);
-      stick.position.set(0, length * 0.5, 0);
-      stick.castShadow = true;
-      stick.receiveShadow = true;
-      group.add(stick);
-      this.timeline.add(createTween({
-        delay: STEP_DURATION,
-        duration: PATTERN_DURATION * 0.2499,
-        ease: 'sineInOut',
-        onComplete: () => {},
-        onStart: () => {},
-        onUpdate: (progress: number) => {
-          group.rotation.z = (Math.PI * -0.25) + progress * (Math.PI * -0.30);
-        },
-      }));
-      this.timeline.add(createTween({
-        delay: STEP_DURATION + (PATTERN_DURATION * 0.25),
-        duration: PATTERN_DURATION * 0.2499,
-        ease: 'sineInOut',
-        onComplete: () => {},
-        onStart: () => {},
-        onUpdate: (progress: number) => {
-          group.rotation.z = (Math.PI * -0.55) + progress * (Math.PI * 0.30);
-        },
-      }));
-    }
   }
 
   // async createMorandi() {
