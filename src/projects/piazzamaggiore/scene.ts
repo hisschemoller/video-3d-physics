@@ -4,17 +4,14 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 import { THREE } from 'enable3d';
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
-import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
-import { CSG } from 'three-csg-ts';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
-import { createMachines } from './machine';
 import createShapes from './shapes';
+import createWallRight from './wall-right';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 108;
@@ -109,9 +106,11 @@ export default class Scene extends MainScene {
       height: this.height,
       height3d: this.height3d,
       isPreview,
+      patternDuration: PATTERN_DURATION,
       previewScale: PROJECT_PREVIEW_SCALE,
       scene: this.scene,
       scene3d: this,
+      stepDuration: STEP_DURATION,
       timeline: this.timeline,
       width: this.width,
       width3d: this.width3d,
@@ -119,7 +118,7 @@ export default class Scene extends MainScene {
 
     await this.createBologna(projectSettings, videos);
     await this.createGround();
-    await this.createWallRight(projectSettings, videos);
+    await createWallRight(projectSettings, videos);
     await this.createGateLeft(projectSettings, videos);
     // await this.createMorandi();
     // await createMachines(this, PATTERN_DURATION, STEP_DURATION);
@@ -256,126 +255,6 @@ export default class Scene extends MainScene {
         onStart: () => {},
         onUpdate: (progress: number) => {
           group.rotation.z = (Math.PI * -0.55) + progress * (Math.PI * 0.30);
-        },
-      }));
-    }
-  }
-
-  async createWallRight(
-    projectSettings: ProjectSettings,
-    videos: { [key: string]: VideoData },
-  ) {
-    const SVG_SCALE = this.width3d / this.width;
-
-    // { // DRAWING
-    //   const size = 3;
-    //   const actor = await createActor(projectSettings, {
-    //     height: size,
-    //     imgSrc: '../assets/projects/piazzamaggiore/pencil-blue.jpg',
-    //     width: size,
-    //   }, {
-    //     imageRect: { w: 1024, h: 1024 },
-    //     svg: { depth: 0.0003, scale: size / 1024, url: '../assets/projects/piazzamaggiore/circle.svg' },
-    //   });
-    //   actor.setStaticPosition(getMatrix4({ x: 0, y: 3.78, z: -2 }));
-    //   actor.setStaticImage(0, 0);
-    // }
-
-    // { // DRAWING 2
-    //   const size = 3;
-    //   const actor = await createActor(projectSettings, {
-    //     height: size,
-    //     imgSrc: '../assets/projects/piazzamaggiore/pencil-red.jpg',
-    //     width: size,
-    //   }, {
-    //     imageRect: { w: 1024, h: 1024 },
-    //     svg: { depth: 0.0003, scale: size / 1024, url: '../assets/projects/piazzamaggiore/circle.svg' },
-    //   });
-    //   actor.setStaticPosition(getMatrix4({ x: -2, y: 5, z: -2 }));
-    //   actor.setStaticImage(0, 0);
-    // }
-
-    // { // DRAWING 2
-    //   const size = 3;
-    //   const actor = await createActor(projectSettings, {
-    //     height: size,
-    //     imgSrc: '../assets/projects/piazzamaggiore/pencil-grey.jpg',
-    //     width: size,
-    //   }, {
-    //     imageRect: { w: 1024, h: 1024 },
-    //     svg: { depth: 0.0003, scale: size / 1024, url: '../assets/projects/piazzamaggiore/circle.svg' },
-    //   });
-    //   actor.setStaticPosition(getMatrix4({ x: 3, y: 4.5, z: -1.8 }));
-    //   actor.setStaticImage(0, 0);
-    // }
-
-    { // WALL RIGHT  FRONT
-      const scale = 0.79;
-      const actor = await createActor(projectSettings, videos.main, {
-        imageRect: { w: 179, h: 1080 },
-        svg: { depth: 0.0003, scale: SVG_SCALE, url: '../assets/projects/piazzamaggiore/muur_rechts.svg' },
-      });
-      actor.setStaticPosition(getMatrix4({ x: 5.15, y: 3.53, z: 2, sx: scale, sy: scale }));
-      actor.addTween({
-        delay: 0,
-        duration: PATTERN_DURATION * 0.999,
-        fromImagePosition: new THREE.Vector2(1741, 0),
-        videoStart: 84.3,
-      });
-    }
-
-    { // WALL RIGHT BACK
-      const scale = 0.84;
-      const actor = await createActor(projectSettings, {
-        height: 1080,
-        imgSrc: '../assets/projects/piazzamaggiore/muur_rechts_gat2.jpg',
-        width: 334,
-      }, {
-        imageRect: { w: 334, h: 1080 },
-        svg: { depth: 0.0003, scale: SVG_SCALE, url: '../assets/projects/piazzamaggiore/muur_rechts2.svg' },
-      });
-      actor.setStaticPosition(getMatrix4({ x: 4.4, y: 3.78, z: 1.5, sx: scale, sy: scale }));
-      actor.setStaticImage(0, 0);
-      actor.addTween({
-        delay: 0,
-        duration: PATTERN_DURATION * 0.999,
-        fromImagePosition: new THREE.Vector2(1920 - 334, 0),
-      });
-    }
-
-    { // STICK
-      const group = new THREE.Group();
-      group.position.set(7, 0, 1.75);
-      group.rotation.z = Math.PI * 0.35;
-      this.scene.add(group);
-
-      const length = 5;
-      const texture = new THREE.TextureLoader().load('../assets/projects/piazzamaggiore/texture-grey.jpg');
-      const geometry = new THREE.CylinderBufferGeometry(0.05, 0.05, length);
-      const material = new THREE.MeshPhongMaterial({ color: 0x555555, shininess: 0.4, map: texture, flatShading: false });
-      const stick = new THREE.Mesh(geometry, material);
-      stick.position.set(0, length * 0.5, 0);
-      stick.castShadow = true;
-      stick.receiveShadow = true;
-      group.add(stick);
-      this.timeline.add(createTween({
-        delay: STEP_DURATION + (PATTERN_DURATION * 0.4),
-        duration: PATTERN_DURATION * 0.2499,
-        ease: 'sineInOut',
-        onComplete: () => {},
-        onStart: () => {},
-        onUpdate: (progress: number) => {
-          group.rotation.z = (Math.PI * 0.35) + progress * (Math.PI * 0.30);
-        },
-      }));
-      this.timeline.add(createTween({
-        delay: STEP_DURATION + (PATTERN_DURATION * 0.65),
-        duration: PATTERN_DURATION * 0.2499,
-        ease: 'sineInOut',
-        onComplete: () => {},
-        onStart: () => {},
-        onUpdate: (progress: number) => {
-          group.rotation.z = (Math.PI * 0.65) + progress * (Math.PI * -0.30);
         },
       }));
     }
@@ -531,35 +410,35 @@ export default class Scene extends MainScene {
   //   }
   // }
 
-  async createShapes(gltf: GLTF) {
-    const imagePath = '../assets/projects/test/testimage3d.jpg';
-    const testObject = (gltf.scene.getObjectByName('test') as THREE.Mesh).clone(true);
+  // async createShapes(gltf: GLTF) {
+  //   const imagePath = '../assets/projects/test/testimage3d.jpg';
+  //   const testObject = (gltf.scene.getObjectByName('test') as THREE.Mesh).clone(true);
 
-    if (testObject.material instanceof THREE.Material) {
-      const texture = new THREE.TextureLoader().load(imagePath);
-      testObject.material = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        map: texture,
-        shininess: 0,
-        // side: THREE.DoubleSide,
-      });
-    }
+  //   if (testObject.material instanceof THREE.Material) {
+  //     const texture = new THREE.TextureLoader().load(imagePath);
+  //     testObject.material = new THREE.MeshPhongMaterial({
+  //       color: 0xffffff,
+  //       map: texture,
+  //       shininess: 0,
+  //       // side: THREE.DoubleSide,
+  //     });
+  //   }
 
-    testObject.position.set(0, 0, -2.1);
-    testObject.scale.set(10, 10, 10);
-    testObject.rotation.set(Math.PI * 0.5, 0, 0);
-    testObject.castShadow = true;
-    testObject.receiveShadow = true;
-    this.scene.add(testObject);
-    this.timeline.add(createTween({
-      delay: STEP_DURATION,
-      duration: PATTERN_DURATION * 0.999,
-      ease: 'linear',
-      onComplete: () => {},
-      onStart: () => {},
-      onUpdate: (progress: number) => {
-        testObject.rotation.y = progress * Math.PI * 4;
-      },
-    }));
-  }
+  //   testObject.position.set(0, 0, -2.1);
+  //   testObject.scale.set(10, 10, 10);
+  //   testObject.rotation.set(Math.PI * 0.5, 0, 0);
+  //   testObject.castShadow = true;
+  //   testObject.receiveShadow = true;
+  //   this.scene.add(testObject);
+  //   this.timeline.add(createTween({
+  //     delay: STEP_DURATION,
+  //     duration: PATTERN_DURATION * 0.999,
+  //     ease: 'linear',
+  //     onComplete: () => {},
+  //     onStart: () => {},
+  //     onUpdate: (progress: number) => {
+  //       testObject.rotation.y = progress * Math.PI * 4;
+  //     },
+  //   }));
+  // }
 }
