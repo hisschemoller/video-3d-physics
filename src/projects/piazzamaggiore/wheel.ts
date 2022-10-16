@@ -1,8 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { THREE } from 'enable3d';
 import createTween from '@app/tween';
-import MainScene from '@app/mainscene';
-import { Timeline } from '@app/timeline';
+import { ProjectSettings } from '@app/interfaces';
 import { createSVG } from './actor-mesh';
 
 const RADIUS = 3.5;
@@ -49,11 +48,11 @@ async function createWheel(
 }
 
 export default async function addWheel(
-  scene3d: MainScene,
-  timeline: Timeline,
-  patternDuration: number,
+  projectSettings: ProjectSettings,
   direction: number = -1,
+  speed: 1 | 2 | 4 | 8 | 16 = 1,
 ): Promise<THREE.Group> {
+  const { scene3d, patternDuration, timeline } = projectSettings;
   const group = new THREE.Group();
   scene3d.scene.add(group);
 
@@ -68,7 +67,7 @@ export default async function addWheel(
     onComplete: () => {},
     onStart: () => {},
     onUpdate: (progress: number) => {
-      group.rotation.z = progress * DOUBLE_PI * direction;
+      group.rotation.z = progress * DOUBLE_PI * speed * direction;
     },
   });
   timeline.add(tween);
