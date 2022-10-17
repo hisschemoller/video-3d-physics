@@ -20,6 +20,7 @@ async function createShape5(projectSettings: ProjectSettings) {
     1.4 / 1024,
     '../assets/projects/piazzamaggiore/shape5.svg',
     '../assets/projects/piazzamaggiore/shape5.jpg',
+    0x660000,
   );
   mesh.position.set(-0.75, 0.75, 0);
   // mesh.add(new THREE.AxesHelper(1));

@@ -26,24 +26,30 @@ const getTween = (
   })
 );
 
-async function createShape4(projectSettings: ProjectSettings) {
+async function createShape5(projectSettings: ProjectSettings) {
   const {
     scene,
+    stepDuration: s,
+    timeline,
   } = projectSettings;
 
   const mesh = await createShape(
     projectSettings,
-    1.6 / 1024,
-    '../assets/projects/piazzamaggiore/shape4.svg',
-    '../assets/projects/piazzamaggiore/shape4.jpg',
-    0x7d7f00,
+    2.0 / 1024,
+    '../assets/projects/piazzamaggiore/shape5.svg',
+    '../assets/projects/piazzamaggiore/shape5a.jpg',
+    0x660000,
   );
-  mesh.position.set(-0.7, 0.5, 0);
+  mesh.position.set(-1.0, 0.9, 0);
 
   const group = new THREE.Group();
   group.add(mesh);
-  group.position.set(5.7, 0, Z);
+  group.position.set(6.4, 0.6, Z - 0.1);
   scene.add(group);
+
+  timeline.add(getTween(s * 0.1, s * 112, (p) => { group.rotation.z = p * DOUBLE_PI; }));
+  timeline.add(getTween(s * 8, s * 64, (p) => { group.position.x = 6.4 + (p * -0.6); }, 'sineInOut'));
+  timeline.add(getTween(s * 72, s * 64, (p) => { group.position.x = 5.8 + (p * 0.6); }, 'sineInOut'));
 }
 
 async function createWheel1(projectSettings: ProjectSettings) {
@@ -53,22 +59,12 @@ async function createWheel1(projectSettings: ProjectSettings) {
   } = projectSettings;
   const scale = 0.12;
   const wheel = await createWheelGroup(projectSettings, 0xaaaaaa);
-  wheel.position.set(6.2, -1.0, Z + 0.1);
+  wheel.position.set(6.2, -1.3, Z + 0.1);
   wheel.scale.set(scale, scale, 1);
 
-  timeline.add(getTween(s * 1, s * 1, (p) => {
-    wheel.position.y = -1.0;
-    wheel.rotation.z = Math.PI * p * 0.15;
-  }));
-  // timeline.add(getTween(s * 32, s * 8, (p) => { wheel.rotation.z = p * DOUBLE_PI; }));
-  timeline.add(getTween(s * 16, s * 8, (p) => { wheel.position.x = 6.2 + (p * -0.8); }, 'sineInOut'));
-  timeline.add(getTween(s * 32, s * 12, (p) => { wheel.rotation.z = p * DOUBLE_PI; }));
-  timeline.add(getTween(s * 64, s * 8, (p) => {
-    wheel.position.x = 5.4 + (p * -0.6);
-    wheel.position.y = -1.0 + (p * 2.0);
-  }, 'sineInOut'));
-  timeline.add(getTween(s * 74, s * 12, (p) => { wheel.rotation.z = p * -DOUBLE_PI; }));
-  timeline.add(getTween(s * 96, s * 8, (p) => { wheel.position.x = 4.8 + (p * 1.4); }, 'sineInOut'));
+  timeline.add(getTween(s * 16, s * 32, (p) => { wheel.position.x = 6.2 + (p * -1.2); }, 'sineInOut'));
+  timeline.add(getTween(s * 0.1, s * 112, (p) => { wheel.rotation.z = p * DOUBLE_PI; }));
+  timeline.add(getTween(s * 80, s * 32, (p) => { wheel.position.x = 5.0 + (p * 1.2); }, 'sineInOut'));
 }
 
 async function createWheel2(projectSettings: ProjectSettings) {
@@ -81,16 +77,16 @@ async function createWheel2(projectSettings: ProjectSettings) {
   wheel.position.set(7.2, 0.0, Z);
   wheel.scale.set(scale, scale, 1);
 
-  timeline.add(getTween(s * 32, s * 12, (p) => { wheel.position.x = 7.2 + (p * -1.0); }, 'sineInOut'));
-  timeline.add(getTween(s * 32, s * 54, (p) => { wheel.rotation.z = p * -DOUBLE_PI * 0.5; }, 'sineInOut'));
-  timeline.add(getTween(s * 74, s * 12, (p) => { wheel.position.x = 6.2 + (p * 1.0); }, 'sineInOut'));
+  timeline.add(getTween(s * 1, s * 64, (p) => { wheel.position.x = 7.2 + (p * -1.0); }, 'sineInOut'));
+  timeline.add(getTween(s * 1, s * 112, (p) => { wheel.rotation.z = p * -DOUBLE_PI; }, 'sineInOut'));
+  timeline.add(getTween(s * 65, s * 64, (p) => { wheel.position.x = 6.2 + (p * 1.0); }, 'sineInOut'));
 }
 
 export default async function createWallRight(
   projectSettings: ProjectSettings,
   videos: { [key: string]: VideoData },
 ) {
-  // createShape4(projectSettings);
+  createShape5(projectSettings);
   createWheel1(projectSettings);
   createWheel2(projectSettings);
 
