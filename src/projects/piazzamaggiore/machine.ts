@@ -1,6 +1,5 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable import/prefer-default-export */
-import createTween from '@app/tween';
 import { ExtendedObject3D, THREE } from 'enable3d';
 import Scene from './scene';
 import addWheel from './wheel';

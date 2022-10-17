@@ -1,8 +1,10 @@
 import { THREE } from 'enable3d';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
+import createTween from '@app/tween';
 import { createActor } from './actor';
 import { createShape } from './shapes';
+import addWheel, { createWheelGroup } from './wheel';
 
 const Z = 1.75;
 
@@ -26,11 +28,42 @@ async function createShape4(projectSettings: ProjectSettings) {
   scene.add(group);
 }
 
+async function createWheel1(projectSettings: ProjectSettings) {
+  const {
+    patternDuration,
+    stepDuration,
+    timeline,
+  } = projectSettings;
+
+  { // WHEEL 1
+    const scale = 0.34;
+    const wheel = await createWheelGroup(projectSettings);
+    wheel.position.set(-0.7, 0, Z);
+    wheel.scale.set(scale, scale, 2);
+
+    // for (let i = 0; i < 2; i += 1) {
+    //   timeline.add(createTween({
+    //     delay: stepDuration + (patternDuration * i * 0.5),
+    //     duration: patternDuration * 0.4999,
+    //     ease: 'sineInOut',
+    //     onComplete: () => {},
+    //     onStart: () => {},
+    //     onUpdate: (progress: number) => {
+    //       const prog = i % 2 === 0 ? progress : 1 - progress;
+    //       wheel.position.x = -8.9 + (prog * 1.0);
+    //     },
+    //   }));
+    // }
+  }
+}
+
 export default async function createWallRight(
   projectSettings: ProjectSettings,
   videos: { [key: string]: VideoData },
 ) {
   createShape4(projectSettings);
+  createWheel1(projectSettings);
+
   const {
     patternDuration,
     width,

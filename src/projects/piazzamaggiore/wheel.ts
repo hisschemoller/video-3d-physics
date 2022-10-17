@@ -42,17 +42,12 @@ async function createWheel(
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   mesh.position.set(-wheelRadius, wheelRadius, 0);
-  // mesh.rotation.x = Math.PI / 2;
 
   return mesh;
 }
 
-export default async function addWheel(
-  projectSettings: ProjectSettings,
-  direction: number = -1,
-  speed: 1 | 2 | 4 | 8 | 16 = 1,
-): Promise<THREE.Group> {
-  const { scene3d, patternDuration, timeline } = projectSettings;
+export async function createWheelGroup(projectSettings: ProjectSettings): Promise<THREE.Group> {
+  const { scene3d } = projectSettings;
   const group = new THREE.Group();
   scene3d.scene.add(group);
 
@@ -60,6 +55,17 @@ export default async function addWheel(
   const textureUrl = '../assets/projects/piazzamaggiore/texture-rust.jpg';
   const wheelMesh = await createWheel(svgPath, textureUrl, RADIUS);
   group.add(wheelMesh);
+
+  return group;
+}
+
+export default async function addWheel(
+  projectSettings: ProjectSettings,
+  direction: number = -1,
+  speed: 1 | 2 | 4 | 8 | 16 = 1,
+): Promise<THREE.Group> {
+  const { patternDuration, timeline } = projectSettings;
+  const group = await createWheelGroup(projectSettings);
 
   const tween = createTween({
     delay: 0.1,
