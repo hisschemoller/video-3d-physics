@@ -411,6 +411,7 @@ async function createShape5({
     1.6 / 1024,
     '../assets/projects/piazzamaggiore/shape5.svg',
     '../assets/projects/piazzamaggiore/shape5.jpg',
+    0x660000,
   );
   mesh.position.set(-0.75, 0.75, 0);
   // mesh.add(new THREE.AxesHelper(1));
@@ -456,6 +457,7 @@ async function createShape5a({
     0.6 / 1024,
     '../assets/projects/piazzamaggiore/shape5.svg',
     '../assets/projects/piazzamaggiore/shape5a.jpg',
+    0x660000,
   );
   mesh.position.set(-0.3, 0.3, 0);
   // mesh.add(new THREE.AxesHelper(1));
@@ -501,6 +503,7 @@ async function createShape6({
     1.0 / 1024,
     '../assets/projects/piazzamaggiore/shape6.svg',
     '../assets/projects/piazzamaggiore/shape6.jpg',
+    0x5b3d07,
   );
   mesh.position.set(-0.5, -1, 0);
 
@@ -544,6 +547,7 @@ async function createShape6a({
     0.9 / 1024,
     '../assets/projects/piazzamaggiore/shape6.svg',
     '../assets/projects/piazzamaggiore/shape6.jpg',
+    0x5b3d07,
   );
   mesh.position.set(-0.5, -1, 0);
 
@@ -586,7 +590,8 @@ async function createShape7({
     projectSettings,
     1.2 / 1024,
     '../assets/projects/piazzamaggiore/shape7.svg',
-    '../assets/projects/piazzamaggiore/shape7.jpg',
+    '../assets/projects/piazzamaggiore/shape7a.jpg',
+    0x7f6d01,
   );
   mesh.rotation.z = Math.PI * 0.3;
   mesh.position.set(-0.6, -0.2, 0);
@@ -619,7 +624,8 @@ async function createShape7a({
     projectSettings,
     0.9 / 1024,
     '../assets/projects/piazzamaggiore/shape7.svg',
-    '../assets/projects/piazzamaggiore/shape7.jpg',
+    '../assets/projects/piazzamaggiore/shape7a.jpg',
+    0x7f6d01,
   );
   mesh.rotation.z = Math.PI * 0.3;
   mesh.position.set(-0.6, -0.2, 0);
