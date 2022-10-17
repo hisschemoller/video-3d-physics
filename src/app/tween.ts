@@ -6,7 +6,7 @@ export interface Tween {
 /**
  * @link https://easings.net/
  */
-export const Ease = {
+export const EaseFunction = {
   linear: (progress: number) => progress,
   cubicIn: (progress: number) => 1 - progress * progress * progress,
   cubicInOut: (progress: number) => (
@@ -17,10 +17,12 @@ export const Ease = {
   sineOut: (progress: number) => Math.sin((Math.PI * progress) / 2),
 };
 
+export type Ease = keyof typeof EaseFunction;
+
 interface TweenParams {
   delay?: number;
   duration: number;
-  ease?: keyof typeof Ease,
+  ease?: keyof typeof EaseFunction,
   easeAmount?: number;
   onComplete?: () => void | undefined;
   onStart?: () => void | undefined;
@@ -52,7 +54,7 @@ export default function createTween({
   onStart,
   onUpdate,
 }: TweenParams): Tween {
-  const easeFunction = ease ? Ease[ease] : Ease.linear;
+  const easeFunction = ease ? EaseFunction[ease] : EaseFunction.linear;
   let isActive = false;
   let startPosition = 0;
   let currentPosition = 0;

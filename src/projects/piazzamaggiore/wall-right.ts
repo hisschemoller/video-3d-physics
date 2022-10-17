@@ -1,12 +1,30 @@
+/* eslint-disable max-len */
 import { THREE } from 'enable3d';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
-import createTween from '@app/tween';
+import createTween, { Ease } from '@app/tween';
 import { createActor } from './actor';
 import { createShape } from './shapes';
-import addWheel, { createWheelGroup } from './wheel';
+import { createWheelGroup } from './wheel';
 
+const DOUBLE_PI = Math.PI * 2;
 const Z = 1.75;
+
+const getTween = (
+  delay: number,
+  duration: number,
+  update: (p: number) => void,
+  ease: Ease = 'linear',
+) => (
+  createTween({
+    delay,
+    duration: duration * 0.99,
+    ease,
+    onComplete: () => {},
+    onStart: () => {},
+    onUpdate: (progress: number) => update(progress),
+  })
+);
 
 async function createShape4(projectSettings: ProjectSettings) {
   const {
@@ -30,39 +48,51 @@ async function createShape4(projectSettings: ProjectSettings) {
 
 async function createWheel1(projectSettings: ProjectSettings) {
   const {
-    patternDuration,
-    stepDuration,
+    stepDuration: s,
     timeline,
   } = projectSettings;
+  const scale = 0.12;
+  const wheel = await createWheelGroup(projectSettings, 0xaaaaaa);
+  wheel.position.set(6.2, -1.0, Z + 0.1);
+  wheel.scale.set(scale, scale, 1);
 
-  { // WHEEL 1
-    const scale = 0.34;
-    const wheel = await createWheelGroup(projectSettings);
-    wheel.position.set(-0.7, 0, Z);
-    wheel.scale.set(scale, scale, 2);
+  timeline.add(getTween(s * 1, s * 1, (p) => {
+    wheel.position.y = -1.0;
+    wheel.rotation.z = Math.PI * p * 0.15;
+  }));
+  // timeline.add(getTween(s * 32, s * 8, (p) => { wheel.rotation.z = p * DOUBLE_PI; }));
+  timeline.add(getTween(s * 16, s * 8, (p) => { wheel.position.x = 6.2 + (p * -0.8); }, 'sineInOut'));
+  timeline.add(getTween(s * 32, s * 12, (p) => { wheel.rotation.z = p * DOUBLE_PI; }));
+  timeline.add(getTween(s * 64, s * 8, (p) => {
+    wheel.position.x = 5.4 + (p * -0.6);
+    wheel.position.y = -1.0 + (p * 2.0);
+  }, 'sineInOut'));
+  timeline.add(getTween(s * 74, s * 12, (p) => { wheel.rotation.z = p * -DOUBLE_PI; }));
+  timeline.add(getTween(s * 96, s * 8, (p) => { wheel.position.x = 4.8 + (p * 1.4); }, 'sineInOut'));
+}
 
-    // for (let i = 0; i < 2; i += 1) {
-    //   timeline.add(createTween({
-    //     delay: stepDuration + (patternDuration * i * 0.5),
-    //     duration: patternDuration * 0.4999,
-    //     ease: 'sineInOut',
-    //     onComplete: () => {},
-    //     onStart: () => {},
-    //     onUpdate: (progress: number) => {
-    //       const prog = i % 2 === 0 ? progress : 1 - progress;
-    //       wheel.position.x = -8.9 + (prog * 1.0);
-    //     },
-    //   }));
-    // }
-  }
+async function createWheel2(projectSettings: ProjectSettings) {
+  const {
+    stepDuration: s,
+    timeline,
+  } = projectSettings;
+  const scale = 0.45;
+  const wheel = await createWheelGroup(projectSettings, 0xaaaaaa);
+  wheel.position.set(7.2, 0.0, Z);
+  wheel.scale.set(scale, scale, 1);
+
+  timeline.add(getTween(s * 32, s * 12, (p) => { wheel.position.x = 7.2 + (p * -1.0); }, 'sineInOut'));
+  timeline.add(getTween(s * 32, s * 54, (p) => { wheel.rotation.z = p * -DOUBLE_PI * 0.5; }, 'sineInOut'));
+  timeline.add(getTween(s * 74, s * 12, (p) => { wheel.position.x = 6.2 + (p * 1.0); }, 'sineInOut'));
 }
 
 export default async function createWallRight(
   projectSettings: ProjectSettings,
   videos: { [key: string]: VideoData },
 ) {
-  createShape4(projectSettings);
+  // createShape4(projectSettings);
   createWheel1(projectSettings);
+  createWheel2(projectSettings);
 
   const {
     patternDuration,

@@ -13,6 +13,7 @@ async function createWheel(
   svgPath: string,
   textureUrl: string,
   wheelRadius: number,
+  color: number,
 ): Promise<THREE.Mesh> {
   const svgScale = (wheelRadius * 2) / SVG_WHEEL_SIZE;
   const svgMesh = await createSVG(
@@ -35,7 +36,7 @@ async function createWheel(
   texture.repeat = new THREE.Vector2(wRepeat, hRepeat);
   const material = new THREE.MeshPhongMaterial({
     map: texture,
-    color: 0xffffff,
+    color,
     side: THREE.BackSide,
   });
   const mesh = new THREE.Mesh(geometry, material);
@@ -46,14 +47,17 @@ async function createWheel(
   return mesh;
 }
 
-export async function createWheelGroup(projectSettings: ProjectSettings): Promise<THREE.Group> {
+export async function createWheelGroup(
+  projectSettings: ProjectSettings,
+  color: number,
+): Promise<THREE.Group> {
   const { scene3d } = projectSettings;
   const group = new THREE.Group();
   scene3d.scene.add(group);
 
-  const svgPath = '../assets/projects/piazzamaggiore/wheel1.svg';
+  const svgPath = '../assets/projects/piazzamaggiore/wheel3.svg';
   const textureUrl = '../assets/projects/piazzamaggiore/texture-rust.jpg';
-  const wheelMesh = await createWheel(svgPath, textureUrl, RADIUS);
+  const wheelMesh = await createWheel(svgPath, textureUrl, RADIUS, color);
   group.add(wheelMesh);
 
   return group;
@@ -63,9 +67,10 @@ export default async function addWheel(
   projectSettings: ProjectSettings,
   direction: number = -1,
   speed: 1 | 2 | 4 | 8 | 16 = 1,
+  color = 0xffffff,
 ): Promise<THREE.Group> {
   const { patternDuration, timeline } = projectSettings;
-  const group = await createWheelGroup(projectSettings);
+  const group = await createWheelGroup(projectSettings, color);
 
   const tween = createTween({
     delay: 0.1,

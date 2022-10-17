@@ -64,7 +64,7 @@ async function createWheels(projectSettings: ProjectSettings) {
 
   { // WHEEL 1
     const scale = 0.34;
-    const wheel = await addWheel(projectSettings);
+    const wheel = await addWheel(projectSettings, -1, 1, 0x666666);
     wheel.position.set(-8.9, -1.5, Z + 0.1);
     wheel.scale.set(scale, scale, 2);
 
@@ -85,7 +85,7 @@ async function createWheels(projectSettings: ProjectSettings) {
 
   { // WHEEL 2
     const scale = 0.20;
-    const wheel = await addWheel(projectSettings, -1, 8);
+    const wheel = await addWheel(projectSettings, -1, 8, 0x666666);
     wheel.position.set(-8.0, -1.7, Z + 0.2);
     wheel.scale.set(scale, scale, 2);
   }
