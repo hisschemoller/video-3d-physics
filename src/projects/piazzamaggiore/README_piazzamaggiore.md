@@ -41,3 +41,21 @@ ffmpeg -i piazzamaggiore_greenscreen.mp4 -vf "chromakey=0x00ff00:0.28:0.05" '/Vo
 # scale PNGs to 25%, 1280 * 0.25 = 320 (x 180) preview size
 ffmpeg -start_number 1 -i '/Volumes/Samsung_X5/piazzamaggiore_greenscreen/frames/frame_%05d.png' -vf scale=320:180 '/Volumes/Samsung_X5/piazzamaggiore_greenscreen/frames_preview/frame_%05d.png'
 ```
+
+Learning 3D Graphics With Three.js | Dynamic Geometry<br>
+https://steemit.com/utopian-io/@clayjohn/learning-3d-graphics-with-three-js-or-dynamic-geometry
+
+## FFmpeg render
+
+```
+# png to mp4 (from index 533 met 30 FPS
+ffmpeg -framerate 30 -start_number 533 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p piazzamaggiore-video-x1.mp4
+# repeat 16 times, 531 frames, video alleen
+ffmpeg -i piazzamaggiore-video-x1.mp4 -filter_complex "loop=loop=16:size=531:start=0" piazzamaggiore-video-x16.mp4
+```
+
+Video duurt 531 frames.<br>
+Video duurt 531 / 30 FPS = 17.7 seconden.<br>
+Video duurt 8 maten van 4 beats = 32 beats.<br>
+Een beat duurt 17.7 / 32 = 0,553125 seconden.<br>
+Het tempo is 60 / 0,553125 = 108,474576271186441 BPM<br>
