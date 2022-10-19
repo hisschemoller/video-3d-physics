@@ -34,6 +34,7 @@
   },
   "include": [
     "src/**/*.ts",
+    "server.mjs"
   ],
   "exclude": [
     "node_modules"

@@ -15,7 +15,7 @@ const publicPath = 'public';
 if (params[0] === 'serve') {
   const server = http.createServer(app);
   server.listen(port, () => {
-    console.log('listening on %d', port);
+    console.log('\x1b[33m%s\x1b[0m', `listening at http://localhost:${port}`);
   });
 
   app.use(cors());
