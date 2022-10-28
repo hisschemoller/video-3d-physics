@@ -65,7 +65,7 @@ export default class Scene extends MainScene {
     // this.orbitControls.saveState();
 
     // AMBIENT LIGHT
-    this.ambientLight.intensity = 1.1;
+    this.ambientLight.intensity = 0.95;
 
     // DIRECTIONAL LIGHT
     this.directionalLight.position.set(10, 7, 1);

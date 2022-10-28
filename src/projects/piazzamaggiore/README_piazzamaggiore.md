@@ -52,10 +52,22 @@ https://steemit.com/utopian-io/@clayjohn/learning-3d-graphics-with-three-js-or-d
 ffmpeg -framerate 30 -start_number 533 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p piazzamaggiore-video-x1.mp4
 # repeat 16 times, 531 frames, video alleen
 ffmpeg -i piazzamaggiore-video-x1.mp4 -filter_complex "loop=loop=16:size=531:start=0" piazzamaggiore-video-x16.mp4
+
+# slice audio from 17.7 to 35.4
+# (loop was played twice to record tails into start)
+ffmpeg -ss 00:00:17.7 -i piazzamaggiore-audio-loop-x2.wav -c copy -t 00:00:17.7 piazzamaggiore-audio-x1.wav
+# repeat 16 times, audio
+ffmpeg -stream_loop 16 -i piazzamaggiore-audio-x1.wav -c copy piazzamaggiore-audio-x16.wav
+# video en audio samenvoegen
+ffmpeg -i piazzamaggiore-video-x16.mp4 -i piazzamaggiore-audio-x16.wav -vcodec copy piazzamaggiore-x16.mp4
+# scale to 50%, 960 * 540
+ffmpeg -i piazzamaggiore-x16.mp4 -vf scale=960:540 piazzamaggiore-x16_halfsize.mp4
 ```
 
-Video duurt 531 frames.<br>
+Video duurt 531 frames.<br> 
 Video duurt 531 / 30 FPS = 17.7 seconden.<br>
 Video duurt 8 maten van 4 beats = 32 beats.<br>
 Een beat duurt 17.7 / 32 = 0,553125 seconden.<br>
 Het tempo is 60 / 0,553125 = 108,474576271186441 BPM<br>
+
+Muziek Sampled Music album nummer 9 of 15? (Digitakt project nummer 10 of 16)
