@@ -3,7 +3,6 @@
 Wind simulation: https://pybullet.org/Bullet/phpBB3/viewtopic.php?t=5973
 
 Shadow material:
-
 * Shadow Catcher in three.js / shadow on transparent material
   * https://stackoverflow.com/questions/35710130/shadow-catcher-in-three-js-shadow-on-transparent-material
 * ShadowMaterial
