@@ -70,4 +70,4 @@ Video duurt 8 maten van 4 beats = 32 beats.<br>
 Een beat duurt 17.7 / 32 = 0,553125 seconden.<br>
 Het tempo is 60 / 0,553125 = 108,474576271186441 BPM<br>
 
-Muziek Sampled Music album nummer 9 of 15? (Digitakt project nummer 10 of 16)
+Muziek Sampled Music album nummer 9 (Digitakt project nummer 10).
