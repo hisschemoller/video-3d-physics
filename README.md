@@ -171,6 +171,14 @@ ffmpeg -i input.mp4 -vf "scale=iw*.5:ih*.5" input_-_halfsize.mp4
 ffmpeg -i input.mp4 -vf "scale=iw/2:ih/2" input_-_halfsize.mp4
 ```
 
+### Rotate video
+Works with MP4 files, didn't with MOV.<br>
+Example rotates 1.3 degrees clockwise.
+
+```
+ffmpeg -i input.mp4 -vf "rotate=1.3*PI/180" output.mp4
+```
+
 ## Crop video with the crop filter.
 out_w and out_h are width and height of the output rectangle.<br>
 out_x and out_y are the left top corner of the output rectangle.<br>
