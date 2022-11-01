@@ -1,13 +1,8 @@
-/* eslint-disable import/no-cycle */
-/* eslint-disable no-lone-blocks */
-/* eslint-disable no-param-reassign */
-/* eslint-disable max-len */
-/* eslint-disable object-curly-newline */
 import { THREE } from 'enable3d';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
-import { getMatrix4 } from '@app/utils';
+import { createMeshFromPoints, createSVG } from './actor-mesh';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 110;
@@ -95,12 +90,33 @@ export default class Scene extends MainScene {
 
   // eslint-disable-next-line class-methods-use-this
   async createThings(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     projectSettings: ProjectSettings,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     videos: { [key: string]: VideoData },
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   ) {
+    const { scene, width, width3d } = projectSettings;
+    const SVG_SCALE = width3d / width;
 
+    {
+      const mesh = await createSVG(
+        '../assets/projects/elandsgracht/testrectangle.svg',
+        SVG_SCALE,
+        undefined,
+        0.01,
+        0xff0000,
+      );
+      scene.add(mesh);
+    }
+
+    {
+      const mesh = createMeshFromPoints([
+        new THREE.Vector2(0, 0),
+        new THREE.Vector2(4, 0),
+        new THREE.Vector2(4, 3),
+        new THREE.Vector2(0, 3),
+      ]);
+      mesh.position.set(-5, 2, -1);
+      scene.add(mesh);
+    }
   }
 }
