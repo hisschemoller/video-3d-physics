@@ -39,7 +39,7 @@ ffmpeg -stream_loop 32 -i "prinshendrikkade-audio-x1.wav" -c copy prinshendrikka
 ffmpeg -i prinshendrikkade-video-x32.mp4 -i prinshendrikkade-audio-x32.wav -vcodec copy prinshendrikkade-x32.mp4
 ```
 
-Video duurt 57 frames.
-Video duurt 57 / 25 FPS = 2.28 seconden.
-Een beat duurt 2.28 / 4 = 0.57 seconden.
-Het tempo is 60 / 0.57 = 105.26315789473685 BPM
+Video duurt 57 frames.<br>
+Video duurt 57 / 25 FPS = 2.28 seconden.<br>
+Een beat duurt 2.28 / 4 = 0.57 seconden.<br>
+Het tempo is 60 / 0.57 = 105.26315789473685 BPM<br>
