@@ -40,7 +40,7 @@ ffmpeg -i hazumiryokuchi-video-x16.mp4 -i hazumiryokuchi-audio-x16.wav -vcodec c
 ffmpeg -i hazumiryokuchi-x16.mp4 -vf scale=960:540 hazumiryokuchi-x16_halfsize.mp4
 ```
 
-frame 169 tot 600
+frame 169 tot 600<br>
 169 / 30 = 5.633333333333334 sec. videoStart
 
 Glazed terra cotta textures:<br>
