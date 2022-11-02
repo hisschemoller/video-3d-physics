@@ -11,7 +11,7 @@ https://www.google.com/maps/@51.5448704,-0.0762395,3a,75y,149.02h,98.55t/data=!3
 Steele's is nu Scooterden, maar het gebouw is er nog, met een extra verdieping.
 
 John Smith, The Girl Chewing Gum, 1976.mp4<br>
-Overzicht scene: 6:00 - 7:20
+Overzicht scene: 6:00 - 7:20<br>
 stamfordroad1
 
 ## Actor2
@@ -47,9 +47,9 @@ ffmpeg -i stamfordroad-video-x32.mp4 -i stamfordroad-audio-x32.wav -vcodec copy 
 
 ## Berekeningen
 
-Video duurt 124 frames.
-Video duurt 124 / 25 FPS = 4.96 seconden.
-Een beat duurt 60 / 96 BPM = 0.625 seconden.
-Twee maten muziek duren 8 beats.
-Twee maten muziek duren 0.625 * 8 beats = 5 seconden.
+Video duurt 124 frames.<br>
+Video duurt 124 / 25 FPS = 4.96 seconden.<br>
+Een beat duurt 60 / 96 BPM = 0.625 seconden.<br>
+Twee maten muziek duren 8 beats.<br>
+Twee maten muziek duren 0.625 * 8 beats = 5 seconden.<br>
 Video van 5 seconden bevat 5 * 25 = 125 frames.
