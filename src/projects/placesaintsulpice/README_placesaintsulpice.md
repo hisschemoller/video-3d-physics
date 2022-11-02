@@ -62,6 +62,11 @@ ffmpeg -stream_loop 32 -i placesaintsulpice-audio-x1.wav -c copy placesaintsulpi
 ffmpeg -i placesaintsulpice-video-x32.mp4 -i placesaintsulpice-audio-x32.wav -vcodec copy placesaintsulpice-x32.mp4
 // half size
 ffmpeg -i placesaintsulpice-x32.mp4 -vf scale=320:240 placesaintsulpice-x32-halfsize.mp4
+
+# slice from 32 to 16 repeats (117.33333333333333 sec)
+ffmpeg -ss 00:00:00.0 -i wouter_hisschemoller_-_place_saint_sulpice_-_2022.mp4 -c copy -t 00:01:57.3 wouter_hisschemoller_-_place_saint_sulpice_x16_-_2022.mp4
+# halfsize too
+ffmpeg -ss 00:00:00.0 -i wouter_hisschemoller_-_place_saint_sulpice_-_2022_halfsize.mp4 -c copy -t 00:01:57.3 wouter_hisschemoller_-_place_saint_sulpice_x16_-_2022_halfsize.mp4
 ```
 
 Video 1613: 1920 x 700 px, preview 480 x 176 px<br>
