@@ -125,13 +125,48 @@ export default class Scene extends MainScene {
           width: 1024,
         },
         {
-          // svg: { url: '../assets/projects/elandsgracht/testrectangle.svg', scale: SVG_SCALE, depth: 0.01 },
           points: [[0, 0], [3, 0], [3, 2], [0, 2]],
           imageRect: { w: 1024, h: 1024 },
         },
       );
       actor.setStaticPosition(getMatrix4({ x: 3, y: -2 }));
       actor.setStaticImage(0, 0);
+    }
+
+    { // LINKS BOVEN
+      const actor = await createActor(
+        projectSettings,
+        videos.main,
+        {
+          points: [[0, 0], [4, 0], [4, 1], [2, 2], [0, 2]],
+          imageRect: { w: 480, h: 240 },
+        },
+      );
+      actor.setStaticPosition(getMatrix4({ x: -8, y: 4.5 }));
+      actor.addTween({
+        delay: 0.1,
+        duration: PATTERN_DURATION,
+        videoStart: 50,
+        fromImagePosition: new THREE.Vector2(0, 0),
+      });
+    }
+
+    { // LINKS BOVEN 2
+      const actor = await createActor(
+        projectSettings,
+        videos.main,
+        {
+          points: [[0, 0], [3, 0], [3, 2], [0, 2]],
+          imageRect: { w: 360, h: 240 },
+        },
+      );
+      actor.setStaticPosition(getMatrix4({ x: -4, y: 4.5 }));
+      actor.addTween({
+        delay: 0.1,
+        duration: PATTERN_DURATION,
+        videoStart: 100,
+        fromImagePosition: new THREE.Vector2(480, 0),
+      });
     }
   }
 }
