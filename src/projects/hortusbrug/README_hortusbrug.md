@@ -42,11 +42,11 @@ ffmpeg -stream_loop 32 -i "hortusbrug-x1-125.5bpm.wav" -c copy hortusbrug-audio-
 ffmpeg -i hortusbrug-video-x32.mp4 -i hortusbrug-audio-x32.wav -vcodec copy hortusbrug-x32.mp4
 ```
 
-64 frames is de video lang, 
-30 FPS is de video, 
-64 / 30 = 2,133333333333333 seconden voor een maat, 
-2,133333333333333 / 4 = 0,533333333333333 seconden voor een beat, 
-60 / 0,533333333333333 = 112,50000000000007 BPM 
+64 frames is de video lang,<br>
+30 FPS is de video,<br>
+64 / 30 = 2,133333333333333 seconden voor een maat,<br>
+2,133333333333333 / 4 = 0,533333333333333 seconden voor een beat,<br>
+60 / 0,533333333333333 = 112,50000000000007 BPM<br>
 
 Audio bestand tijdsduur: 2.133333 seconden
 
