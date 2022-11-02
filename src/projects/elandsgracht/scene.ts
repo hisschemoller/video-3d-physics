@@ -3,6 +3,8 @@ import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { createMeshFromPoints, createSVG } from './actor-mesh';
+import { createActor } from './actor';
+import { getMatrix4 } from '@app/utils';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 110;
@@ -109,14 +111,27 @@ export default class Scene extends MainScene {
     }
 
     {
-      const mesh = createMeshFromPoints([
-        new THREE.Vector2(0, 0),
-        new THREE.Vector2(4, 0),
-        new THREE.Vector2(4, 3),
-        new THREE.Vector2(0, 3),
-      ]);
-      mesh.position.set(-5, 2, -1);
+      const mesh = createMeshFromPoints([[0, 0], [3, 0], [3, 2], [0, 2]]);
+      mesh.position.set(-3, 2, 0);
       scene.add(mesh);
+    }
+
+    {
+      const actor = await createActor(
+        projectSettings,
+        {
+          imgSrc: '../assets/projects/test/testimage3d.jpg',
+          height: 1024,
+          width: 1024,
+        },
+        {
+          // svg: { url: '../assets/projects/elandsgracht/testrectangle.svg', scale: SVG_SCALE, depth: 0.01 },
+          points: [[0, 0], [3, 0], [3, 2], [0, 2]],
+          imageRect: { w: 1024, h: 1024 },
+        },
+      );
+      actor.setStaticPosition(getMatrix4({ x: 3, y: -2 }));
+      actor.setStaticImage(0, 0);
     }
   }
 }
