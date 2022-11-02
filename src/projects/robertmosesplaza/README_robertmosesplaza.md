@@ -22,6 +22,7 @@ Close-up gedeelte: 3:13 - 4:04 (51 sec)<br>
 Frame rate: 25<br>
 Dimensions: 704 × 544
 
+
 ## FFMPEG
 
 ```
@@ -45,6 +46,7 @@ ffmpeg -i robertmosesplaza-c_preview.mp4 '/Volumes/Samsung_X5/robertmosesplaza/f
 * 2:13 - 3:12
 * 4:04 - 6:04
 * 7:18 - 8:44
+
 
 ## FFMPEG Top view
 
