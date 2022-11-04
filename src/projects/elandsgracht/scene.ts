@@ -1,10 +1,7 @@
-import { THREE } from 'enable3d';
-import { ProjectSettings, VideoData } from '@app/interfaces';
+import { ProjectSettings } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
-import { createMeshFromPoints, createSVG } from './actor-mesh';
-import { createActor } from './actor';
-import { getMatrix4 } from '@app/utils';
+import createMosaic from './mosaic';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 110;
@@ -35,7 +32,7 @@ export default class Scene extends MainScene {
     this.height = 1080;
     this.width3d = 16;
     this.height3d = (this.height / this.width) * this.width3d;
-    this.fps = 15;
+    this.fps = 10;
     this.captureFps = 30;
     this.captureThrottle = 10;
     this.captureDuration = PATTERN_DURATION * 2;
@@ -80,7 +77,7 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-    await this.createThings(projectSettings, videos);
+    await createMosaic(projectSettings, videos);
 
     this.postCreate();
   }
@@ -88,85 +85,5 @@ export default class Scene extends MainScene {
   async updateAsync(time: number, delta: number) {
     await this.timeline.update(time, delta);
     super.updateAsync(time, delta);
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  async createThings(
-    projectSettings: ProjectSettings,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    videos: { [key: string]: VideoData },
-  ) {
-    const { scene, width, width3d } = projectSettings;
-    const SVG_SCALE = width3d / width;
-
-    {
-      const mesh = await createSVG(
-        '../assets/projects/elandsgracht/testrectangle.svg',
-        SVG_SCALE,
-        undefined,
-        0.01,
-        0xff0000,
-      );
-      scene.add(mesh);
-    }
-
-    {
-      const mesh = createMeshFromPoints([[0, 0], [3, 0], [3, 2], [0, 2]]);
-      mesh.position.set(-3, 2, 0);
-      scene.add(mesh);
-    }
-
-    {
-      const actor = await createActor(
-        projectSettings,
-        {
-          imgSrc: '../assets/projects/test/testimage3d.jpg',
-          height: 1024,
-          width: 1024,
-        },
-        {
-          points: [[0, 0], [3, 0], [3, 2], [0, 2]],
-          imageRect: { w: 1024, h: 1024 },
-        },
-      );
-      actor.setStaticPosition(getMatrix4({ x: 3, y: -2 }));
-      actor.setStaticImage(0, 0);
-    }
-
-    { // LINKS BOVEN
-      const actor = await createActor(
-        projectSettings,
-        videos.main,
-        {
-          points: [[0, 0], [4, 0], [4, 1], [2, 2], [0, 2]],
-          imageRect: { w: 480, h: 240 },
-        },
-      );
-      actor.setStaticPosition(getMatrix4({ x: -8, y: 4.5 }));
-      actor.addTween({
-        delay: 0.1,
-        duration: PATTERN_DURATION,
-        videoStart: 50,
-        fromImagePosition: new THREE.Vector2(0, 0),
-      });
-    }
-
-    { // LINKS BOVEN 2
-      const actor = await createActor(
-        projectSettings,
-        videos.main,
-        {
-          points: [[0, 0], [3, 0], [3, 2], [0, 2]],
-          imageRect: { w: 360, h: 240 },
-        },
-      );
-      actor.setStaticPosition(getMatrix4({ x: -4, y: 4.5 }));
-      actor.addTween({
-        delay: 0.1,
-        duration: PATTERN_DURATION,
-        videoStart: 100,
-        fromImagePosition: new THREE.Vector2(480, 0),
-      });
-    }
   }
 }
