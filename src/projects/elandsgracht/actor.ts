@@ -24,9 +24,10 @@ export interface Actor {
  */
 interface ActorData {
   box?: { w: number, h: number, d: number },
+  depth: number,
   imageRect: { w: number, h: number, },
   points?: [number, number][],
-  svg?: { url: string, scale: number, depth: number },
+  svg?: { url: string, scale: number },
 }
 
 /**
@@ -55,7 +56,7 @@ export async function createActor(
 ): Promise<Actor> {
   const { scene, timeline } = projectSettings;
   const {
-    box, imageRect, points, svg,
+    box, depth, imageRect, points, svg,
   } = actorData;
 
   // if video then use preview size
@@ -78,9 +79,9 @@ export async function createActor(
   if (box) {
     mesh = createRectangle(box.w, box.h, texture, box.d);
   } else if (svg) {
-    mesh = await createSVG(svg.url, svg.scale, texture, svg.depth);
+    mesh = await createSVG(svg.url, svg.scale, texture, depth);
   } else if (points) {
-    mesh = createMeshFromPoints(points, texture, 0.02, 0x00ff00);
+    mesh = createMeshFromPoints(points, texture, depth, 0x999999);
   } else {
     mesh = createRectangle(1, 1, texture, 1);
   }

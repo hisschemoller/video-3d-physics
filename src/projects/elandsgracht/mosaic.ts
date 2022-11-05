@@ -1,6 +1,7 @@
 import { THREE } from 'enable3d';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
+import createTween from '@app/tween';
 import { createActor } from './actor';
 
 async function createMosaicPiece(
@@ -15,22 +16,37 @@ async function createMosaicPiece(
   w: number,
   h: number,
 ) {
-  const { patternDuration } = projectSettings;
+  const { patternDuration, timeline } = projectSettings;
   const actor = await createActor(
     projectSettings,
     video,
     {
+      depth: 2,
       points,
       imageRect: { w, h },
     },
   );
-  actor.setStaticPosition(getMatrix4({ x: x3d, y: y3d }));
+  actor.setStaticPosition(getMatrix4({ x: x3d, y: y3d, z: -2 }));
   actor.addTween({
     delay: 0.1,
     duration: patternDuration,
     videoStart,
     fromImagePosition: new THREE.Vector2(x, y),
   });
+  const offset = Math.random() * (patternDuration / 2);
+  for (let i = 0; i < 2; i += 1) {
+    timeline.add(createTween({
+      delay: offset + (patternDuration * i * 0.5),
+      duration: patternDuration * 0.4999,
+      ease: 'sineInOut',
+      onComplete: () => {},
+      onStart: () => {},
+      onUpdate: (progress: number) => {
+        const prog = i % 2 === 0 ? progress : 1 - progress;
+        actor.getMesh().position.z = -2 + (prog * 2);
+      },
+    }));
+  }
 }
 
 // eslint-disable-next-line class-methods-use-this
