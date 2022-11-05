@@ -20,3 +20,12 @@ ffmpeg -i elandsgracht2.mov -vf scale=480:270 elandsgracht2_preview.mov
 # convert preview to png sequence
 ffmpeg -i elandsgracht2_preview.mov '/Volumes/Samsung_X5/elandsgracht/frames_preview/frame_%05d.png'
 ```
+
+## FFmpeg render demo at 110 BPM
+
+```
+# png to mp4 (from index 260 met 30 FPS
+ffmpeg -framerate 30 -start_number 260 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p elandsgracht-video-x1.mp4
+# repeat 16 times, 235 frames, video alleen
+ffmpeg -i elandsgracht-video-x1.mp4 -filter_complex "loop=loop=16:size=235:start=0" elandsgracht-video-x16.mp4
+```
