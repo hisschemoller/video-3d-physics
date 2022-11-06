@@ -57,7 +57,7 @@ export default class Scene extends MainScene {
         scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
         width: 1920,
         imgSrcPath: isPreview
-          ? '../assets/projects/elandsgracht/frames_preview/frame_#FRAME#.png'
+          ? '../assets/projects/elandsgracht/frames_preview_elandsgracht/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/elandsgracht/frames/&img=frame_#FRAME#.png',
       },
     };

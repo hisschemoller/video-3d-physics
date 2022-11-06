@@ -3,7 +3,6 @@ import cors from 'cors';
 import express from 'express';
 import ffmpeg from 'fluent-ffmpeg';
 import http from 'http';
-import { exec as _exec } from 'child_process';
 import path, { resolve } from 'path';
 import fs from 'fs';
 
@@ -20,11 +19,11 @@ if (params[0] === 'serve') {
 
   app.use(cors());
   app.use(bodyParser.json({ limit: '25mb' }));
-  
-  // app.use(express.static(publicPath));
-  app.use(`/`, express.static(resolve(publicPath)));
 
-  app.get('/fs-img', function (req, res) {
+  // app.use(express.static(publicPath));
+  app.use('/', express.static(resolve(publicPath)));
+
+  app.get('/fs-img', (req, res) => {
     const url = `${req.query.dir}${req.query.img}`;
     res.sendFile(path.resolve(url));
   });
@@ -32,20 +31,20 @@ if (params[0] === 'serve') {
   app.post('/', async (req, res) => {
     const { img, frame } = req.body;
     try {
-      const f = ('0000' + frame).slice(-5);
+      const f = (`0000${frame}`).slice(-5);
 
       // get rid of the data:image/png;base64 at the beginning of the file data
       const imageClean = img.split(',')[1];
       const buffer = Buffer.from(imageClean, 'base64');
-      fs.writeFile('rendered/frame_' + f + '.png',
-      buffer.toString('binary'),
-      'binary',
-      (err) => {
-        if (err) {
-          console.log('An error occurred: ', err);
-          throw err;
-        }
-      });
+      fs.writeFile(`rendered/frame_${f}.png`,
+        buffer.toString('binary'),
+        'binary',
+        (err) => {
+          if (err) {
+            console.log('An error occurred: ', err);
+            throw err;
+          }
+        });
 
       if (frame > 0) {
         process.stdout.moveCursor(0, -1); // up one line
@@ -70,15 +69,15 @@ function startStream(streamWidth, streamHeight, streamFps, writeStreamPath) {
     //   timeout: 0,
     // })
     const process = new ffmpeg('http://localhost:2020/')
-    .fromFormat('rawvideo')
-    .addInputOption('-pixel_format', 'argb')
-    .addInputOption('-video_size', streamWidth + 'x' + streamHeight)
+      .fromFormat('rawvideo')
+      .addInputOption('-pixel_format', 'argb')
+      .addInputOption('-video_size', `${streamWidth}x${streamHeight}`)
     // .fromFormat('image2pipe')
     // .addInputOption('-vcodec', 'mjpeg')
-    .toFormat('mp4')
-    .withVideoBitrate('800k')
-    .withFps(streamFps)
-    .stream(writeStream); // .writeToStream(outStream);
+      .toFormat('mp4')
+      .withVideoBitrate('800k')
+      .withFps(streamFps)
+      .stream(writeStream); // .writeToStream(outStream);
   } catch (e) {
     if (e) {
       console.log('e', e);
@@ -87,7 +86,7 @@ function startStream(streamWidth, streamHeight, streamFps, writeStreamPath) {
     } else {
       console.log('Error');
     }
-	}
+  }
 }
 
 // startStream(800, 450, 30, 'rendered-mp4/output.mp4');

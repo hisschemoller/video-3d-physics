@@ -2,7 +2,7 @@ node_modules
 /public/assets/projects
 /public/js
 /public/lib
-rendered
+rendered*
 screenshots
 
 *.mp4

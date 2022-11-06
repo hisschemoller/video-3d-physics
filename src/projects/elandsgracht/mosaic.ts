@@ -28,12 +28,12 @@ async function createMosaicPiece(
   );
   actor.setStaticPosition(getMatrix4({ x: x3d, y: y3d, z: -2 }));
   actor.addTween({
-    delay: 0.1,
+    delay: 0.01,
     duration: patternDuration,
-    videoStart,
+    videoStart: videoStart - 4,
     fromImagePosition: new THREE.Vector2(x, y),
   });
-  const offset = Math.random() * (patternDuration / 2);
+  const offset = Math.random() * (patternDuration / 2.2);
   for (let i = 0; i < 2; i += 1) {
     timeline.add(createTween({
       delay: offset + (patternDuration * i * 0.5),
@@ -139,7 +139,7 @@ export default async function createMosaic(
   );
 
   await createMosaicPiece( // LAAG 2
-    projectSettings, videos.main, 35,
+    projectSettings, videos.main, 126,
     [[0, 0], [4, 2], [4, 3], [0, 3]],
     -6, 0.5, 240, 480, 480, 360,
   );
