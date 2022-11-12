@@ -80,7 +80,8 @@ ffmpeg -i elandsgracht-x16.mp4 -vf scale=960:540 elandsgracht-x16_halfsize.mp4
 
 ### Muziek
 
-Sampled Music album 3, 5 of 15.
+Sampled Music album 3, 5 of 15.<br>
+15 is het.
 
 Video duurt 235 frames.<br> 
 Video duurt 235 / 30 FPS = 7.833333333333333 seconden.<br>
