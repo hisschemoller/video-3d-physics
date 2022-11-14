@@ -70,6 +70,8 @@ ffmpeg -i elandsgracht-video-x1.mp4 -filter_complex "loop=loop=16:size=235:start
 ffmpeg -framerate 30 -start_number 286 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p elandsgracht-video-x1.mp4
 # repeat 16 times, 276 frames, video alleen
 ffmpeg -i elandsgracht-video-x1.mp4 -filter_complex "loop=loop=16:size=276:start=0" elandsgracht-video-x16.mp4
+# slice to second half of audio file from bitwig
+ffmpeg -ss 00:00:07.833333333333333 -i Elandsgracht_versie2_x2.wav -c copy -t 00:00:07.833333333333333 elandsgracht-audio-x1.wav
 # repeat 16 times, audio
 ffmpeg -stream_loop 16 -i elandsgracht-audio-x1.wav -c copy elandsgracht-audio-x16.wav
 # video en audio samenvoegen
@@ -80,16 +82,15 @@ ffmpeg -i elandsgracht-x16.mp4 -vf scale=960:540 elandsgracht-x16_halfsize.mp4
 
 ### Muziek
 
-Sampled Music album 3, 5 of 15.<br>
-15 is het.
+Sampled Music album 3, 5 of 15.
 
-Video duurt 235 frames.<br> 
+Video duurt 235 frames.<br>
 Video duurt 235 / 30 FPS = 7.833333333333333 seconden.<br>
 Video duurt 4 maten van 4 beats = 16 beats.<br>
 Een beat duurt 7.833333333333333 / 16 = 0.4895833333333333 seconden.<br>
 Het tempo is 60 / 0.4895833333333333 = 122.55319148936171 BPM<br>
 
-Video duurt 276 frames.<br> 
+Video duurt 276 frames.<br>
 Video duurt 276 / 30 FPS = 9.2 seconden.<br>
 Video duurt 4 maten van 4 beats = 16 beats.<br>
 Een beat duurt 9.2 / 16 = 0.575 seconden.<br>
