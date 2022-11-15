@@ -87,11 +87,12 @@ export async function createActor(
   }
   if (points || svg) {
     // the canvas should exactly cover the SVG extrude front
+    const scale = svg ? svg.scale : 1;
     const sizeVector = new THREE.Vector3();
     mesh.geometry.computeBoundingBox();
     mesh.geometry.boundingBox?.getSize(sizeVector);
-    const wRepeat = (1 / sizeVector.x);
-    const hRepeat = (1 / sizeVector.y) * -1;
+    const wRepeat = (1 / sizeVector.x) * scale;
+    const hRepeat = (1 / sizeVector.y) * scale * -1;
     texture.offset = new THREE.Vector2(0, 1);
     texture.repeat = new THREE.Vector2(wRepeat, hRepeat);
   }
