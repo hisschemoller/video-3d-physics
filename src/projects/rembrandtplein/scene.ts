@@ -3,7 +3,7 @@ import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
-import { createTweenGroup } from './actor';
+import { createActor, createTweenGroup } from './actor';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 110;
@@ -45,6 +45,23 @@ export default class Scene extends MainScene {
     await super.create();
 
     const isPreview = true && !this.scene.userData.isCapture;
+
+    // CAMERA & ORBIT_CONTROLS
+    this.cameraTarget.set(0, 1.6, 0);
+    this.pCamera.position.set(0, 0, 12);
+    this.pCamera.lookAt(this.cameraTarget);
+    this.pCamera.updateProjectionMatrix();
+    this.orbitControls.target = this.cameraTarget;
+    this.orbitControls.update();
+    this.orbitControls.saveState();
+
+    // DIRECTIONAL LIGHT
+    this.directionalLight.position.set(6, 9, 6);
+    // this.directionalLight.intensity = 0.98;
+    this.directionalLight.color.setHSL(0, 1, 0.95);
+
+    // AMBIENT LIGHT
+    this.ambientLight.intensity = 0.40;
 
     // TWEENS
     this.timeline = createTimeline({
@@ -88,10 +105,16 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
+
     const group = createTweenGroup(projectSettings); // GROUP
     group.setStaticPosition(getMatrix4({
-      x: -8.4, y: 9.45, rx: 0.227, sx: 1.05, sy: 1.05,
+      x: -8.05, y: 7.67, rx: 0.13, sx: 1.005, sy: 1.005,
     }));
+    const axesHelper = new THREE.AxesHelper(25);
+    group.getMesh().add(axesHelper);
+    const gridHelper = new THREE.GridHelper(20, 20, 0x0000ff, 0xff0000);
+    gridHelper.position.set(0, 0, 0);
+    group.getMesh().add(gridHelper);
 
     await this.createBackground(projectSettings, videos, group.getMesh());
 
@@ -113,6 +136,22 @@ export default class Scene extends MainScene {
   ): Promise<void> {
     const to3d = this.to3d.bind(this);
 
-    const y = to3d(-860);
+    { // BACKGROUND
+      const scale = 1;
+      const actor = await createActor(projectSettings, {
+        imgSrc: '../assets/projects/rembrandtplein/rembrandtplein-collage.jpg',
+        height: this.height,
+        width: this.width,
+      }, {
+        box: { w: this.width3d, h: this.height3d, d: 0.02 },
+        imageRect: { w: this.width, h: this.height },
+        depth: 0.02,
+      });
+      actor.setStaticPosition(getMatrix4({}));
+      actor.setStaticImage(0, 0);
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
+    }
   }
 }
