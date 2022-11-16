@@ -15,6 +15,9 @@ const STEPS = STEPS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
 const PATTERN_DURATION = SECONDS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
 
+const SCALE_0008 = 1.00;
+const SCALE_0010 = 1.00;
+
 // eslint-disable-next-line no-console
 console.log('PATTERN_DURATION', PATTERN_DURATION);
 // eslint-disable-next-line no-console
@@ -105,7 +108,6 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-
     const group = createTweenGroup(projectSettings); // GROUP
     group.setStaticPosition(getMatrix4({
       x: -8.05, y: 7.67, rx: 0.13, sx: 1.005, sy: 1.005,
@@ -134,10 +136,10 @@ export default class Scene extends MainScene {
     videos: { [key: string]: VideoData },
     group: THREE.Group,
   ): Promise<void> {
+    const SVG_SCALE = this.width3d / this.width;
     const to3d = this.to3d.bind(this);
 
-    { // BACKGROUND
-      const scale = 1;
+    { // BACKGROUND EXAMPLE IMAGE
       const actor = await createActor(projectSettings, {
         imgSrc: '../assets/projects/rembrandtplein/rembrandtplein-collage.jpg',
         height: this.height,
@@ -149,6 +151,63 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({}));
       actor.setStaticImage(0, 0);
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
+    }
+
+    { // BACKGROUND LEFT
+      const scale = 438 / 602; // 0.74;
+      const actor = await createActor(projectSettings, videos.main_0010, {
+        imageRect: { w: 602 * scale, h: 1057 * scale },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-left.svg' },
+        depth: 0.005,
+      });
+      actor.setStaticPosition(getMatrix4({ x: 0, y: to3d(-74), z: 0.1 }));
+      actor.addTween({
+        delay: 0.01,
+        duration: PATTERN_DURATION,
+        videoStart: 30,
+        fromImagePosition: new THREE.Vector2(960 + 21, 0 - 6),
+      });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
+    }
+
+    { // BACKGROUND LEFT MID
+      const scale = 0.91;
+      const actor = await createActor(projectSettings, videos.main_0008, {
+        imageRect: { w: 911 * scale, h: 1133 * scale },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-leftmid.svg' },
+        depth: 0.005,
+      });
+      actor.setStaticPosition(getMatrix4({ x: to3d(602), y: to3d(-34), z: 0.05 }));
+      actor.addTween({
+        delay: 0.01,
+        duration: PATTERN_DURATION,
+        videoStart: 30,
+        fromImagePosition: new THREE.Vector2(602 - 100, 34 - 18),
+      });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
+    }
+
+    { // BACKGROUND RIGHT MID
+      const scale = 0.67;
+      const actor = await createActor(projectSettings, videos.main_0010, {
+        imageRect: { w: 313 * scale, h: 1125 * scale },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-rightmid.svg' },
+        depth: 0.005,
+      });
+      actor.setStaticPosition(getMatrix4({ x: to3d(1196), y: to3d(-74), z: 0.1 }));
+      actor.addTween({
+        delay: 0.01,
+        duration: PATTERN_DURATION,
+        videoStart: 10,
+        fromImagePosition: new THREE.Vector2(1667, 0),
+      });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
