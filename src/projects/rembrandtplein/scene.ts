@@ -139,27 +139,27 @@ export default class Scene extends MainScene {
     const SVG_SCALE = this.width3d / this.width;
     const to3d = this.to3d.bind(this);
 
-    { // BACKGROUND EXAMPLE IMAGE
-      const actor = await createActor(projectSettings, {
-        imgSrc: '../assets/projects/rembrandtplein/rembrandtplein-collage.jpg',
-        height: this.height,
-        width: this.width,
-      }, {
-        box: { w: this.width3d, h: this.height3d, d: 0.02 },
-        imageRect: { w: this.width, h: this.height },
-        depth: 0.02,
-      });
-      actor.setStaticPosition(getMatrix4({}));
-      actor.setStaticImage(0, 0);
-      actor.getMesh().castShadow = false;
-      actor.getMesh().receiveShadow = false;
-      group.add(actor.getMesh());
-    }
+    // { // BACKGROUND EXAMPLE IMAGE
+    //   const actor = await createActor(projectSettings, {
+    //     imgSrc: '../assets/projects/rembrandtplein/rembrandtplein-collage.jpg',
+    //     height: this.height,
+    //     width: this.width,
+    //   }, {
+    //     box: { w: this.width3d, h: this.height3d, d: 0.02 },
+    //     imageRect: { w: this.width, h: this.height },
+    //     depth: 0.02,
+    //   });
+    //   actor.setStaticPosition(getMatrix4({}));
+    //   actor.setStaticImage(0, 0);
+    //   actor.getMesh().castShadow = false;
+    //   actor.getMesh().receiveShadow = false;
+    //   group.add(actor.getMesh());
+    // }
 
     { // BACKGROUND LEFT
-      const scale = 438 / 602; // 0.74;
+      const scale = 438 / 616; // 0.74;
       const actor = await createActor(projectSettings, videos.main_0010, {
-        imageRect: { w: 602 * scale, h: 1057 * scale },
+        imageRect: { w: 604 * scale, h: 1057 * scale },
         svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-left.svg' },
         depth: 0.005,
       });
@@ -168,7 +168,7 @@ export default class Scene extends MainScene {
         delay: 0.01,
         duration: PATTERN_DURATION,
         videoStart: 30,
-        fromImagePosition: new THREE.Vector2(960 + 21, 0 - 6),
+        fromImagePosition: new THREE.Vector2(960 + 26, 0),
       });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
@@ -197,7 +197,7 @@ export default class Scene extends MainScene {
     { // BACKGROUND RIGHT MID
       const scale = 0.67;
       const actor = await createActor(projectSettings, videos.main_0010, {
-        imageRect: { w: 313 * scale, h: 1125 * scale },
+        imageRect: { w: 353 * scale, h: 1125 * scale },
         svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-rightmid.svg' },
         depth: 0.005,
       });
@@ -206,7 +206,26 @@ export default class Scene extends MainScene {
         delay: 0.01,
         duration: PATTERN_DURATION,
         videoStart: 10,
-        fromImagePosition: new THREE.Vector2(1667, 0),
+        fromImagePosition: new THREE.Vector2(1667, 34),
+      });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
+    }
+
+    { // BACKGROUND RIGHT
+      const scale = 0.91;
+      const actor = await createActor(projectSettings, videos.main_0008, {
+        imageRect: { w: 436 * scale, h: 1199 * scale },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-right.svg' },
+        depth: 0.005,
+      });
+      actor.setStaticPosition(getMatrix4({ x: to3d(1483), y: 0, z: 0.15 }));
+      actor.addTween({
+        delay: 0.01,
+        duration: PATTERN_DURATION,
+        videoStart: 18,
+        fromImagePosition: new THREE.Vector2(1146, 0),
       });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;

@@ -67,7 +67,6 @@ export function addVideoFrameTween(
   const imgNrFirst = videoStart * fps;
   const imgNrLast = (videoStart + duration) * fps;
   let imgNr = imgNrFirst;
-  console.log(fps);
 
   const loadVideoFrame = async (progress: number) => (
     new Promise<boolean>((resolve, reject) => {
