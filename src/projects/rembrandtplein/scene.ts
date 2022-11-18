@@ -156,7 +156,7 @@ export default class Scene extends MainScene {
     { // BACKGROUND LEFT
       const scale = 438 / 616; // 0.74;
       const actor = await createActor(projectSettings, videos.main_0010, {
-        imageRect: { w: 604 * scale, h: 1057 * scale },
+        imageRect: { w: 604 * scale, h: 1100 * scale },
         svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-left.svg' },
         depth: 0.005,
       });
@@ -183,7 +183,7 @@ export default class Scene extends MainScene {
       actor.addTween({
         delay: 0.01,
         duration: PATTERN_DURATION,
-        videoStart: 30,
+        videoStart: 25,
         fromImagePosition: new THREE.Vector2(602 - 100, 34 - 18),
       });
       actor.getMesh().castShadow = false;
@@ -221,7 +221,7 @@ export default class Scene extends MainScene {
       actor.addTween({
         delay: 0.01,
         duration: PATTERN_DURATION,
-        videoStart: 18,
+        videoStart: 46,
         fromImagePosition: new THREE.Vector2(1146, 0),
       });
       actor.getMesh().castShadow = false;
@@ -242,6 +242,24 @@ export default class Scene extends MainScene {
         duration: PATTERN_DURATION,
         videoStart: 18,
         fromImagePosition: new THREE.Vector2(1511 - 10, 0),
+      });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
+    }
+
+    { // GRAS
+      const actor = await createActor(projectSettings, videos.main_0010, {
+        imageRect: { w: 1920, h: 476 },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/gras.svg' },
+        depth: 0.005,
+      });
+      actor.setStaticPosition(getMatrix4({ x: 0, y: -to3d(1440 - 476), z: 0.25 }));
+      actor.addTween({
+        delay: 0.01,
+        duration: PATTERN_DURATION,
+        videoStart: 10,
+        fromImagePosition: new THREE.Vector2(0, 604),
       });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
