@@ -15,9 +15,6 @@ const STEPS = STEPS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
 const PATTERN_DURATION = SECONDS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
 const STEP_DURATION = PATTERN_DURATION / STEPS;
 
-const SCALE_0008 = 1.00;
-const SCALE_0010 = 1.00;
-
 // eslint-disable-next-line no-console
 console.log('PATTERN_DURATION', PATTERN_DURATION);
 // eslint-disable-next-line no-console
@@ -112,11 +109,11 @@ export default class Scene extends MainScene {
     group.setStaticPosition(getMatrix4({
       x: -8.05, y: 7.67, rx: 0.13, sx: 1.005, sy: 1.005,
     }));
-    const axesHelper = new THREE.AxesHelper(25);
-    group.getMesh().add(axesHelper);
-    const gridHelper = new THREE.GridHelper(20, 20, 0x0000ff, 0xff0000);
-    gridHelper.position.set(0, 0, 0);
-    group.getMesh().add(gridHelper);
+    // const axesHelper = new THREE.AxesHelper(25);
+    // group.getMesh().add(axesHelper);
+    // const gridHelper = new THREE.GridHelper(20, 20, 0x0000ff, 0xff0000);
+    // gridHelper.position.set(0, 0, 0);
+    // group.getMesh().add(gridHelper);
 
     await this.createBackground(projectSettings, videos, group.getMesh());
 
@@ -201,7 +198,7 @@ export default class Scene extends MainScene {
         svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-rightmid.svg' },
         depth: 0.005,
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(1196), y: to3d(-74), z: 0.1 }));
+      actor.setStaticPosition(getMatrix4({ x: to3d(1196), y: to3d(-74), z: 0.15 }));
       actor.addTween({
         delay: 0.01,
         duration: PATTERN_DURATION,
@@ -220,12 +217,31 @@ export default class Scene extends MainScene {
         svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-right.svg' },
         depth: 0.005,
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(1483), y: 0, z: 0.15 }));
+      actor.setStaticPosition(getMatrix4({ x: to3d(1483), y: 0, z: 0.2 }));
       actor.addTween({
         delay: 0.01,
         duration: PATTERN_DURATION,
         videoStart: 18,
         fromImagePosition: new THREE.Vector2(1146, 0),
+      });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
+    }
+
+    { // BACKGROUND TREE
+      const scale = 0.7;
+      const actor = await createActor(projectSettings, videos.main_0010, {
+        imageRect: { w: 488 * scale, h: 460 * scale },
+        svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-tree.svg' },
+        depth: 0.005,
+      });
+      actor.setStaticPosition(getMatrix4({ x: to3d(900), y: 0, z: 0.1 }));
+      actor.addTween({
+        delay: 0.01,
+        duration: PATTERN_DURATION,
+        videoStart: 18,
+        fromImagePosition: new THREE.Vector2(1511 - 10, 0),
       });
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
