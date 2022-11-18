@@ -156,7 +156,7 @@ export default class Scene extends MainScene {
     { // BACKGROUND LEFT
       const scale = 438 / 616; // 0.74;
       const actor = await createActor(projectSettings, videos.main_0010, {
-        imageRect: { w: 604 * scale, h: 1100 * scale },
+        imageRect: { w: 604 * scale, h: 1120 * scale },
         svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-left.svg' },
         depth: 0.005,
       });
@@ -181,7 +181,7 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: to3d(602), y: to3d(-34), z: 0.05 }));
       actor.addTween({
-        delay: 0.01,
+        delay: STEP_DURATION * 6,
         duration: PATTERN_DURATION,
         videoStart: 25,
         fromImagePosition: new THREE.Vector2(602 - 100, 34 - 18),
@@ -200,7 +200,7 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: to3d(1196), y: to3d(-74), z: 0.15 }));
       actor.addTween({
-        delay: 0.01,
+        delay: STEP_DURATION * 24,
         duration: PATTERN_DURATION,
         videoStart: 10,
         fromImagePosition: new THREE.Vector2(1667, 34),
@@ -219,7 +219,7 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: to3d(1483), y: 0, z: 0.2 }));
       actor.addTween({
-        delay: 0.01,
+        delay: STEP_DURATION * 12,
         duration: PATTERN_DURATION,
         videoStart: 46,
         fromImagePosition: new THREE.Vector2(1146, 0),
@@ -238,7 +238,7 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: to3d(900), y: 0, z: 0.1 }));
       actor.addTween({
-        delay: 0.01,
+        delay: STEP_DURATION * 18,
         duration: PATTERN_DURATION,
         videoStart: 18,
         fromImagePosition: new THREE.Vector2(1511 - 10, 0),
@@ -256,7 +256,7 @@ export default class Scene extends MainScene {
       });
       actor.setStaticPosition(getMatrix4({ x: 0, y: -to3d(1440 - 476), z: 0.25 }));
       actor.addTween({
-        delay: 0.01,
+        delay: STEP_DURATION * 27,
         duration: PATTERN_DURATION,
         videoStart: 10,
         fromImagePosition: new THREE.Vector2(0, 604),
