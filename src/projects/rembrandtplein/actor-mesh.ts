@@ -26,13 +26,13 @@ export function createRectangle(
     new THREE.MeshPhongMaterial({
       color: BASE_COLOR,
       opacity: 1,
-      transparent: true,
+      transparent: false,
       side: THREE.FrontSide,
     }),
     new THREE.MeshPhongMaterial({
       map: texture,
       opacity: 1,
-      transparent: true,
+      transparent: false,
       side: THREE.FrontSide,
       shininess: 0,
     }),

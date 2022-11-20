@@ -37,7 +37,7 @@ export default class Scene extends MainScene {
     this.fps = 15;
     this.captureFps = 30;
     this.captureThrottle = 10;
-    this.captureDuration = PATTERN_DURATION * 2;
+    this.captureDuration = STEP_DURATION;
     this.clearColor = 0x7ba8dd;
   }
 
@@ -47,7 +47,7 @@ export default class Scene extends MainScene {
     const isPreview = true && !this.scene.userData.isCapture;
 
     // CAMERA & ORBIT_CONTROLS
-    this.cameraTarget.set(0, 1.6, 0);
+    this.cameraTarget.set(0, 2, 0);
     this.pCamera.position.set(0, 0, 12);
     this.pCamera.lookAt(this.cameraTarget);
     this.pCamera.updateProjectionMatrix();
@@ -107,13 +107,8 @@ export default class Scene extends MainScene {
 
     const group = createTweenGroup(projectSettings); // GROUP
     group.setStaticPosition(getMatrix4({
-      x: -8.05, y: 7.67, rx: 0.13, sx: 1.005, sy: 1.005,
+      x: -8.20, y: 8.23, rx: 0.1623, sx: 1.03, sy: 1.03,
     }));
-    // const axesHelper = new THREE.AxesHelper(25);
-    // group.getMesh().add(axesHelper);
-    // const gridHelper = new THREE.GridHelper(20, 20, 0x0000ff, 0xff0000);
-    // gridHelper.position.set(0, 0, 0);
-    // group.getMesh().add(gridHelper);
 
     await this.createBackground(projectSettings, videos, group.getMesh());
 
