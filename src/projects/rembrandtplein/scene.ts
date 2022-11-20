@@ -128,7 +128,8 @@ export default class Scene extends MainScene {
     videos: { [key: string]: VideoData },
     group: THREE.Group,
   ): Promise<void> {
-    const SVG_SCALE = this.width3d / this.width;
+    const { width, width3d } = projectSettings;
+    const SVG_SCALE = width3d / width;
     const to3d = this.to3d.bind(this);
 
     // { // BACKGROUND EXAMPLE IMAGE
@@ -259,6 +260,19 @@ export default class Scene extends MainScene {
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
+    }
+
+    { // SHADOW GROUND
+      const planeGeometry = new THREE.PlaneGeometry(width3d, 6);
+      planeGeometry.rotateX(Math.PI / -2);
+      const ground = new THREE.Mesh(
+        planeGeometry,
+        new THREE.ShadowMaterial({ opacity: 0.4, transparent: true, side: THREE.FrontSide }),
+        // new THREE.MeshPhongMaterial({ color: 0x999999 }),
+      );
+      ground.position.set(8, -9.2, 3);
+      ground.receiveShadow = true;
+      group.add(ground);
     }
   }
 }
