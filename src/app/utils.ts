@@ -45,6 +45,9 @@ export function logBoundingBox(geometry: THREE.BufferGeometry) {
   geometry.computeBoundingBox();
   const size = new THREE.Vector3();
   geometry.boundingBox?.getSize(size);
+  console.log(
+    `Bounding box w: ${size.x.toFixed(3)}, h: ${size.y.toFixed(3)}, d: ${size.z.toFixed(3)}`,
+  );
 }
 
 /**

@@ -4,9 +4,10 @@ import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
 import { createActor, createTweenGroup } from './actor';
+import createSequence from './sequence';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 110;
+const BPM = 112;
 const SECONDS_PER_BEAT = 60 / BPM;
 const MEASURES = 2;
 const BEATS_PER_MEASURE = 4;
@@ -111,6 +112,7 @@ export default class Scene extends MainScene {
     }));
 
     await this.createBackground(projectSettings, videos, group.getMesh());
+    createSequence(projectSettings, videos, group.getMesh());
 
     this.postCreate();
   }
