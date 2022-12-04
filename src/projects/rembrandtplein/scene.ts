@@ -3,6 +3,7 @@ import { ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
+import { playSound, setupAudio } from '@app/audio';
 import { createActor, createTweenGroup } from './actor';
 import createSequence from './sequence';
 
@@ -63,6 +64,10 @@ export default class Scene extends MainScene {
 
     // AMBIENT LIGHT
     this.ambientLight.intensity = 0.40;
+
+    // AUDIO
+    setupAudio(this.pCamera);
+    playSound('../assets/projects/rembrandtplein/rembrandtplein-16-maten-test.wav');
 
     // TWEENS
     this.timeline = createTimeline({
