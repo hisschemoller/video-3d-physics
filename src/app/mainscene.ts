@@ -1,6 +1,7 @@
 import { Scene3D, THREE } from 'enable3d';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { dataURIToBlob, defaultFileName } from '@app/utils';
+import { pauseSound, playSound, setupAudio } from './audio';
 
 const RAF_RATE = 60;
 const PORT = 3020;
@@ -107,6 +108,9 @@ export default class MainScene extends Scene3D {
     this.directionalLight.shadow.camera.far = SHADOW_FAR;
     this.scene.add(this.directionalLight);
 
+    // AUDIO
+    setupAudio(this.pCamera);
+
     // CAMERA HELPER
     const cameraHelper = new THREE.CameraHelper(this.pCamera);
     document.getElementById('camera-helper')?.addEventListener('click', (e) => {
@@ -188,9 +192,7 @@ export default class MainScene extends Scene3D {
     document.getElementById('pause-toggle')?.addEventListener('click', () => {
       const el: HTMLInputElement = document.getElementById('pause-toggle') as HTMLInputElement;
       this.isPaused = el.checked;
-      if (!this.isPaused) {
-        this.run();
-      }
+      this.togglePause();
     });
 
     window.addEventListener('keydown', (e) => {
@@ -198,9 +200,7 @@ export default class MainScene extends Scene3D {
         this.isPaused = !this.isPaused;
         const el: HTMLInputElement = document.getElementById('pause-toggle') as HTMLInputElement;
         el.checked = this.isPaused;
-        if (!this.isPaused) {
-          this.run();
-        }
+        this.togglePause();
       }
     });
   }
@@ -211,6 +211,15 @@ export default class MainScene extends Scene3D {
       this.capture();
     } else {
       this.run();
+    }
+  }
+
+  togglePause() {
+    if (this.isPaused) {
+      pauseSound();
+    } else {
+      this.run();
+      playSound();
     }
   }
 
