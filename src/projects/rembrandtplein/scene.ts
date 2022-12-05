@@ -10,7 +10,7 @@ import createSequence from './sequence';
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 112;
 const SECONDS_PER_BEAT = 60 / BPM;
-const MEASURES = 2;
+const MEASURES = 4;
 const BEATS_PER_MEASURE = 4;
 const STEPS_PER_BEAT = 4;
 const STEPS = STEPS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
@@ -185,7 +185,7 @@ export default class Scene extends MainScene {
       actor.addTween({
         delay: STEP_DURATION * 6,
         duration: PATTERN_DURATION,
-        videoStart: 25,
+        videoStart: 22, // 25,
         fromImagePosition: new THREE.Vector2(602 - 100, 34 - 18),
       });
       actor.getMesh().castShadow = false;
@@ -223,7 +223,7 @@ export default class Scene extends MainScene {
       actor.addTween({
         delay: STEP_DURATION * 12,
         duration: PATTERN_DURATION,
-        videoStart: 46,
+        videoStart: 67, // 46,
         fromImagePosition: new THREE.Vector2(1146, 0),
       });
       actor.getMesh().castShadow = false;
