@@ -7,6 +7,7 @@ export interface ProjectSettings {
   scene3d: MainScene;
   scene: THREE.Scene;
   isPreview: boolean;
+  measures: number;
   patternDuration: number;
   previewScale: number;
   stepDuration: number;

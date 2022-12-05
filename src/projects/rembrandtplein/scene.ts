@@ -100,6 +100,7 @@ export default class Scene extends MainScene {
       height: this.height,
       height3d: this.height3d,
       isPreview,
+      measures: MEASURES,
       patternDuration: PATTERN_DURATION,
       previewScale: PROJECT_PREVIEW_SCALE,
       scene: this.scene,

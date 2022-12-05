@@ -258,10 +258,12 @@ export function createTweenGroup(
     fromMatrix4: THREE.Matrix4,
     toMatrix4: THREE.Matrix4,
   }) => {
-    const startPosition = new THREE.Vector3().setFromMatrixPosition(fromMatrix4);
-    const endPosition = new THREE.Vector3().setFromMatrixPosition(toMatrix4);
-    const startQuaternion = new THREE.Quaternion().setFromRotationMatrix(fromMatrix4);
-    const endQuaternion = new THREE.Quaternion().setFromRotationMatrix(toMatrix4);
+    const startPosition = fromMatrix4 ? new THREE.Vector3().setFromMatrixPosition(fromMatrix4) : undefined;
+    const endPosition = toMatrix4 ? new THREE.Vector3().setFromMatrixPosition(toMatrix4) : undefined;
+    const startQuaternion = fromMatrix4 ? new THREE.Quaternion().setFromRotationMatrix(fromMatrix4) : undefined;
+    const endQuaternion = toMatrix4 ? new THREE.Quaternion().setFromRotationMatrix(toMatrix4) : undefined;
+    const startScale = fromMatrix4 ? new THREE.Vector3().setFromMatrixScale(fromMatrix4) : undefined;
+    const endScale = toMatrix4 ? new THREE.Vector3().setFromMatrixScale(toMatrix4) : undefined;
 
     const tween = createTween({
       delay,
@@ -272,9 +274,10 @@ export function createTweenGroup(
       },
       onUpdate: async (progress: number) => {
         group.visible = true;
-        if (fromMatrix4 !== toMatrix4) {
+        if (startPosition && endPosition && startQuaternion && endQuaternion && startScale && endScale) {
           group.position.lerpVectors(startPosition, endPosition, progress);
           group.quaternion.slerpQuaternions(startQuaternion, endQuaternion, progress);
+          group.scale.lerpVectors(startScale, endScale, progress);
         }
       },
       onComplete: () => {
