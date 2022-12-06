@@ -8,7 +8,9 @@ async function createTrack1(
   group: THREE.Group,
   svgScale: number,
 ) {
-  const { measures, patternDuration, stepDuration, width, width3d } = projectSettings;
+  const {
+    measures, patternDuration, stepDuration, width, width3d,
+  } = projectSettings;
   const circleSize = (194 / width) * width3d;
   const actor = await createActor(projectSettings, {
     height: 128,
@@ -27,11 +29,11 @@ async function createTrack1(
   for (let i = 0; i < measures; i += 1) {
     tweenGroup.addTween({
       delay: 0.001 + (i * (patternDuration / measures)),
-      duration: stepDuration * 3,
-      ease: 'sineOut',
+      duration: stepDuration * 4,
+      ease: 'sineIn',
       fromMatrix4: getMatrix4({ x: 10, y: -8, z: 6 }),
       toMatrix4: getMatrix4({
-        x: 10, y: -8, z: 6, sx: 0.3, sy: 0.3,
+        x: 10, y: -8, z: 6, sx: 0.01, sy: 0.01,
       }),
     });
   }

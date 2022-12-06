@@ -36,7 +36,7 @@ export default class Scene extends MainScene {
     this.height = 1440;
     this.width3d = 16;
     this.height3d = (this.height / this.width) * this.width3d;
-    this.fps = 15;
+    this.fps = 30;
     this.captureFps = 30;
     this.captureThrottle = 10;
     this.captureDuration = STEP_DURATION;
@@ -116,7 +116,8 @@ export default class Scene extends MainScene {
       x: -8.20, y: 8.23, rx: 0.1623, sx: 1.03, sy: 1.03,
     }));
 
-    await this.createBackground(projectSettings, videos, group.getMesh());
+    // await this.createBackground(projectSettings, videos, group.getMesh());
+    await this.createSimpleBackground(projectSettings, group.getMesh());
     createSequence(projectSettings, videos, group.getMesh());
 
     this.postCreate();
@@ -138,23 +139,6 @@ export default class Scene extends MainScene {
     const { width, width3d } = projectSettings;
     const SVG_SCALE = width3d / width;
     const to3d = this.to3d.bind(this);
-
-    // { // BACKGROUND EXAMPLE IMAGE
-    //   const actor = await createActor(projectSettings, {
-    //     imgSrc: '../assets/projects/rembrandtplein/rembrandtplein-collage.jpg',
-    //     height: this.height,
-    //     width: this.width,
-    //   }, {
-    //     box: { w: this.width3d, h: this.height3d, d: 0.02 },
-    //     imageRect: { w: this.width, h: this.height },
-    //     depth: 0.02,
-    //   });
-    //   actor.setStaticPosition(getMatrix4({}));
-    //   actor.setStaticImage(0, 0);
-    //   actor.getMesh().castShadow = false;
-    //   actor.getMesh().receiveShadow = false;
-    //   group.add(actor.getMesh());
-    // }
 
     { // BACKGROUND LEFT
       const scale = 438 / 616; // 0.74;
@@ -264,6 +248,46 @@ export default class Scene extends MainScene {
         videoStart: 10,
         fromImagePosition: new THREE.Vector2(0, 604),
       });
+      actor.getMesh().castShadow = false;
+      actor.getMesh().receiveShadow = false;
+      group.add(actor.getMesh());
+    }
+
+    { // SHADOW GROUND
+      const planeGeometry = new THREE.PlaneGeometry(width3d, 6);
+      planeGeometry.rotateX(Math.PI / -2);
+      const ground = new THREE.Mesh(
+        planeGeometry,
+        new THREE.ShadowMaterial({ opacity: 0.4, transparent: true, side: THREE.FrontSide }),
+        // new THREE.MeshPhongMaterial({ color: 0x999999 }),
+      );
+      ground.position.set(8, -9.2, 3);
+      ground.receiveShadow = true;
+      group.add(ground);
+    }
+  }
+
+  /**
+   * createBackground
+   */
+  async createSimpleBackground(
+    projectSettings: ProjectSettings,
+    group: THREE.Group,
+  ): Promise<void> {
+    const { width3d } = projectSettings;
+
+    { // BACKGROUND EXAMPLE IMAGE
+      const actor = await createActor(projectSettings, {
+        imgSrc: '../assets/projects/rembrandtplein/rembrandtplein-collage.jpg',
+        height: this.height,
+        width: this.width,
+      }, {
+        box: { w: this.width3d, h: this.height3d, d: 0.02 },
+        imageRect: { w: this.width, h: this.height },
+        depth: 0.02,
+      });
+      actor.setStaticPosition(getMatrix4({}));
+      actor.setStaticImage(0, 0);
       actor.getMesh().castShadow = false;
       actor.getMesh().receiveShadow = false;
       group.add(actor.getMesh());
