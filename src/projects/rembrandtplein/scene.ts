@@ -118,7 +118,7 @@ export default class Scene extends MainScene {
 
     // await this.createBackground(projectSettings, videos, group.getMesh());
     await this.createSimpleBackground(projectSettings, group.getMesh());
-    createSequence(projectSettings, videos, group.getMesh());
+    createSequence(projectSettings, group.getMesh());
 
     this.postCreate();
   }
