@@ -40,7 +40,6 @@ function createHeldNotesFromArray(
     tweenGroup.addTween({
       delay,
       duration,
-      ease: 'sineInOut',
       fromMatrix4: getMatrix4({ x, y, z: 6 }),
       toMatrix4: getMatrix4({ x, y, z: 6 }),
     });
@@ -72,10 +71,7 @@ function createPulsesFromArray(
   return tweenGroup;
 }
 
-async function createTrack1(
-  p: ProjectSettings,
-  group: THREE.Group,
-) {
+async function createTrack1(p: ProjectSettings, group: THREE.Group) { // KICK
   const { stepDuration: s } = p;
   const actor = await createYellowCircleSvgActor(p);
   const tweenGroup = createPulsesFromArray(p, actor, 10, -8,
@@ -83,26 +79,80 @@ async function createTrack1(
   group.add(tweenGroup.getMesh());
 }
 
-async function createTrack2(
-  p: ProjectSettings,
-  group: THREE.Group,
-) {
+async function createTrack2(p: ProjectSettings, group: THREE.Group) { // TIK 1
   const { stepDuration: s } = p;
   {
     const actor = await createYellowCircleSvgActor(p);
-    const tweenGroup = createPulsesFromArray(p, actor, 6, -6,
-      [2, 16 + 2, 32 + 2, 48 + 2].map((t) => t * s));
+    const tweenGroup = createPulsesFromArray(p, actor, 5, -5,
+      [2.4, 16 + 2.4, 32 + 2.4, 48 + 2.4].map((t) => t * s));
     group.add(tweenGroup.getMesh());
   }
   {
     const actor = await createYellowCircleSvgActor(p);
-    const tweenGroup = createPulsesFromArray(p, actor, 6, -5,
-      [4, 16 + 4, 32 + 4, 48 + 4].map((t) => t * s));
+    const tweenGroup = createPulsesFromArray(p, actor, 5, -6,
+      [4.8, 16 + 4.8, 32 + 4.8, 48 + 4.8].map((t) => t * s));
     group.add(tweenGroup.getMesh());
   }
 }
 
-async function createTrack5(p: ProjectSettings, group: THREE.Group) { // BAS EN EEN TIK
+/**
+ * Elke maat verschuift de tik iets.
+ */
+async function createTrack3(p: ProjectSettings, group: THREE.Group) { // TIK 2
+  const { stepDuration: s } = p;
+
+  { // 2.4 tot 4.1
+    const offsetPerMeasure = (4.1 - 2.4) / 8;
+    const actor = await createYellowCircleSvgActor(p);
+    const staticTimes = [];
+    const measures = 16;
+    for (let i = 0; i < measures; i += 1) {
+      staticTimes.push((i * 16) + 2.4);
+    }
+    const delayArray = staticTimes.map((t, i) => {
+      const offsetMeasureIndex = 8 - Math.abs(8 - i);
+      const offset = offsetMeasureIndex * offsetPerMeasure;
+      return (t + offset) * s;
+    });
+    const tweenGroup = createPulsesFromArray(p, actor, 6, -5, delayArray);
+    group.add(tweenGroup.getMesh());
+  }
+
+  { // 4.8 tot 6.7
+    const offsetPerMeasure = (6.7 - 4.8) / 8;
+    const actor = await createYellowCircleSvgActor(p);
+    const staticTimes = [];
+    const measures = 16;
+    for (let i = 0; i < measures; i += 1) {
+      staticTimes.push((i * 16) + 4.8);
+    }
+    const delayArray = staticTimes.map((t, i) => {
+      const offsetMeasureIndex = 8 - Math.abs(8 - i);
+      const offset = offsetMeasureIndex * offsetPerMeasure;
+      return (t + offset) * s;
+    });
+    const tweenGroup = createPulsesFromArray(p, actor, 6, -6, delayArray);
+    group.add(tweenGroup.getMesh());
+  }
+}
+
+async function createTrack4(p: ProjectSettings, group: THREE.Group) { // AKKOORD
+  const { stepDuration: s } = p;
+  {
+    const actor = await createYellowCircleSvgActor(p);
+    const tweenGroup = createHeldNotesFromArray(p, actor, 8, -4,
+      [16 + 6, 48 + 6].map((t) => t * s), 6 * s);
+    group.add(tweenGroup.getMesh());
+  }
+  {
+    const actor = await createYellowCircleSvgActor(p);
+    const tweenGroup = createPulsesFromArray(p, actor, 8, -5,
+      [48 + 4].map((t) => t * s));
+    group.add(tweenGroup.getMesh());
+  }
+}
+
+async function createTrack5(p: ProjectSettings, group: THREE.Group) { // 5. BAS EN EEN TIK
   const { stepDuration: s } = p;
   { // BAS
     const actor = await createYellowCircleSvgActor(p);
@@ -116,6 +166,22 @@ async function createTrack5(p: ProjectSettings, group: THREE.Group) { // BAS EN 
       [48 + 3].map((t) => t * s));
     group.add(tweenGroup.getMesh());
   }
+}
+
+async function createTrack6(p: ProjectSettings, group: THREE.Group) { // 6. ZACHT AKKOORD
+  const { stepDuration: s } = p;
+  {
+    const actor = await createYellowCircleSvgActor(p);
+    const tweenGroup = createHeldNotesFromArray(p, actor, 8, -7,
+      [48 + 2].map((t) => t * s), 4 * s);
+    group.add(tweenGroup.getMesh());
+  }
+  // {
+  //   const actor = await createYellowCircleSvgActor(p);
+  //   const tweenGroup = createPulsesFromArray(p, actor, 8, -5,
+  //     [48 + 4].map((t) => t * s));
+  //   group.add(tweenGroup.getMesh());
+  // }
 }
 
 async function createTrack7(p: ProjectSettings, group: THREE.Group) { // SYNTH & SNARE
@@ -162,13 +228,16 @@ async function createTrack8(p: ProjectSettings, group: THREE.Group) { // RATEL, 
   }
 }
 
-export default async function createSequence(
-  p: ProjectSettings,
-  group: THREE.Group,
-) {
+export default async function createSequence(p: ProjectSettings, group: THREE.Group) {
   createTrack1(p, group);
   createTrack2(p, group);
+  createTrack4(p, group);
   createTrack5(p, group);
+  createTrack6(p, group);
   createTrack7(p, group);
   createTrack8(p, group);
+}
+
+export async function createSequence2(p: ProjectSettings, group: THREE.Group) {
+  createTrack3(p, group);
 }

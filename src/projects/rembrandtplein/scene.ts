@@ -5,7 +5,7 @@ import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
 import { playSound } from '@app/audio';
 import { createActor, createTweenGroup } from './actor';
-import createSequence from './sequence';
+import createSequence, { createSequence2 } from './sequence';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 112;
@@ -25,6 +25,8 @@ console.log('STEP_DURATION', STEP_DURATION);
 export default class Scene extends MainScene {
   timeline: Timeline;
 
+  timeline2: Timeline;
+
   width3d: number;
 
   height3d: number;
@@ -39,7 +41,7 @@ export default class Scene extends MainScene {
     this.fps = 30;
     this.captureFps = 30;
     this.captureThrottle = 10;
-    this.captureDuration = STEP_DURATION;
+    this.captureDuration = PATTERN_DURATION * 4;
     this.clearColor = 0x7ba8dd;
   }
 
@@ -71,6 +73,9 @@ export default class Scene extends MainScene {
     // TWEENS
     this.timeline = createTimeline({
       duration: PATTERN_DURATION,
+    });
+    this.timeline2 = createTimeline({
+      duration: PATTERN_DURATION * 4,
     });
 
     // VIDEOS
@@ -119,12 +124,14 @@ export default class Scene extends MainScene {
     // await this.createBackground(projectSettings, videos, group.getMesh());
     await this.createSimpleBackground(projectSettings, group.getMesh());
     createSequence(projectSettings, group.getMesh());
+    createSequence2({ ...projectSettings, timeline: this.timeline2 }, group.getMesh());
 
     this.postCreate();
   }
 
   async updateAsync(time: number, delta: number) {
     await this.timeline.update(time, delta);
+    await this.timeline2.update(time, delta);
     super.updateAsync(time, delta);
   }
 
