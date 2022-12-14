@@ -6,6 +6,7 @@ import { getMatrix4 } from '@app/utils';
 import { playSound } from '@app/audio';
 import { createActor, createTweenGroup } from './actor';
 import createSequence, { createSequence2 } from './sequence';
+import createPlanes from './planes';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 112;
@@ -123,8 +124,9 @@ export default class Scene extends MainScene {
 
     // await this.createBackground(projectSettings, videos, group.getMesh());
     await this.createSimpleBackground(projectSettings, group.getMesh());
-    createSequence(projectSettings, group.getMesh());
-    createSequence2({ ...projectSettings, timeline: this.timeline2 }, group.getMesh());
+    createPlanes(projectSettings, group.getMesh(), this.to3d.bind(this));
+    // createSequence(projectSettings, group.getMesh());
+    // createSequence2({ ...projectSettings, timeline: this.timeline2 }, group.getMesh());
 
     this.postCreate();
   }
@@ -275,7 +277,7 @@ export default class Scene extends MainScene {
   }
 
   /**
-   * createBackground
+   * createSimpleBackground
    */
   async createSimpleBackground(
     projectSettings: ProjectSettings,
@@ -285,7 +287,7 @@ export default class Scene extends MainScene {
 
     { // BACKGROUND EXAMPLE IMAGE
       const actor = await createActor(projectSettings, {
-        imgSrc: '../assets/projects/rembrandtplein/rembrandtplein-collage.jpg',
+        imgSrc: '../assets/projects/rembrandtplein/frame_00005_rendered_2022-11-18.png',
         height: this.height,
         width: this.width,
       }, {
