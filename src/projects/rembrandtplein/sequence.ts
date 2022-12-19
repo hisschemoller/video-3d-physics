@@ -3,26 +3,29 @@ import { ProjectSettings } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
 import { Actor, createActor, createTweenGroup } from './actor';
 
-async function createYellowCircleSvgActor(
+async function createSvgActor(
   p: ProjectSettings,
+  to3d: (size: number, isWidth: boolean) => number,
+  svgName: string,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
 ) {
   const { width, width3d } = p;
-  const circleSize = (194 / width) * width3d;
   const svgScale = width3d / width;
-  const imageWidth = 128;
-  const imageHeight = 128;
 
   const actor = await createActor(p, {
-    height: imageHeight,
-    imgSrc: '../assets/projects/rembrandtplein/yellow.jpg',
-    width: imageWidth,
+    height: 1920,
+    imgSrc: '../assets/projects/rembrandtplein/rembrandtplein-sequence.png',
+    width: 1440,
   }, {
-    imageRect: { w: imageWidth, h: imageHeight },
-    svg: { scale: svgScale, url: '../assets/projects/rembrandtplein/circle.svg' },
+    imageRect: { w, h },
+    svg: { scale: svgScale, url: `../assets/projects/rembrandtplein/${svgName}.svg` },
     depth: 0.005,
   });
-  actor.setStaticPosition(getMatrix4({ x: circleSize * -0.5, y: circleSize * 0.5, z: 0 }));
-  actor.setStaticImage(0, 0);
+  actor.setStaticPosition(getMatrix4({ x: to3d(w, true) * -0.5, y: to3d(h, false) * -0.5, z: 0 }));
+  actor.setStaticImage(x, y);
   return actor;
 }
 
@@ -79,17 +82,21 @@ async function createTrack1(p: ProjectSettings, group: THREE.Group) { // KICK
   group.add(tweenGroup.getMesh());
 }
 
-async function createTrack2(p: ProjectSettings, group: THREE.Group) { // TIK 1
+async function createTrack2(
+  p: ProjectSettings,
+  group: THREE.Group,
+  to3d: (size: number, isWidth: boolean) => number,
+) { // TIK 1
   const { stepDuration: s } = p;
   {
-    const actor = await createYellowCircleSvgActor(p);
-    const tweenGroup = createPulsesFromArray(p, actor, 5, -5,
+    const actor = await createSvgActor(p, to3d, 'track2-1', 807, 389, 110, 108);
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(807, true), to3d(389, false),
       [2.4, 16 + 2.4, 32 + 2.4, 48 + 2.4].map((t) => t * s));
     group.add(tweenGroup.getMesh());
   }
   {
-    const actor = await createYellowCircleSvgActor(p);
-    const tweenGroup = createPulsesFromArray(p, actor, 5, -6,
+    const actor = await createSvgActor(p, to3d, 'track2-2', 795, 550, 130, 131);
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(795, true), to3d(550, false),
       [4.8, 16 + 4.8, 32 + 4.8, 48 + 4.8].map((t) => t * s));
     group.add(tweenGroup.getMesh());
   }
@@ -103,7 +110,7 @@ async function createTrack3(p: ProjectSettings, group: THREE.Group) { // TIK 2
 
   { // 2.4 tot 4.1
     const offsetPerMeasure = (4.1 - 2.4) / 8;
-    const actor = await createYellowCircleSvgActor(p);
+    const actor = await createSvgActor(p);
     const staticTimes = [];
     const measures = 16;
     for (let i = 0; i < measures; i += 1) {
@@ -114,7 +121,7 @@ async function createTrack3(p: ProjectSettings, group: THREE.Group) { // TIK 2
       const offset = offsetMeasureIndex * offsetPerMeasure;
       return (t + offset) * s;
     });
-    const tweenGroup = createPulsesFromArray(p, actor, 6, -5, delayArray);
+    const tweenGroup = createPulsesFromArray(p, actor, 6, -6, delayArray);
     group.add(tweenGroup.getMesh());
   }
 
@@ -131,7 +138,7 @@ async function createTrack3(p: ProjectSettings, group: THREE.Group) { // TIK 2
       const offset = offsetMeasureIndex * offsetPerMeasure;
       return (t + offset) * s;
     });
-    const tweenGroup = createPulsesFromArray(p, actor, 6, -6, delayArray);
+    const tweenGroup = createPulsesFromArray(p, actor, 6, -5, delayArray);
     group.add(tweenGroup.getMesh());
   }
 }
@@ -228,16 +235,24 @@ async function createTrack8(p: ProjectSettings, group: THREE.Group) { // RATEL, 
   }
 }
 
-export default async function createSequence(p: ProjectSettings, group: THREE.Group) {
-  createTrack1(p, group);
-  createTrack2(p, group);
-  createTrack4(p, group);
-  createTrack5(p, group);
-  createTrack6(p, group);
-  createTrack7(p, group);
-  createTrack8(p, group);
+export default async function createSequence(
+  p: ProjectSettings,
+  group: THREE.Group,
+  to3d: (size: number, isWidth: boolean) => number,
+) {
+  // createTrack1(p, group);
+  createTrack2(p, group, to3d);
+  // createTrack4(p, group);
+  // createTrack5(p, group);
+  // createTrack6(p, group);
+  // createTrack7(p, group);
+  // createTrack8(p, group);
 }
 
-export async function createSequence2(p: ProjectSettings, group: THREE.Group) {
-  createTrack3(p, group);
+export async function createSequence2(
+  p: ProjectSettings,
+  group: THREE.Group,
+  to3d: (size: number, isWidth: boolean) => number,
+) {
+  // createTrack3(p, group, to3d);
 }
