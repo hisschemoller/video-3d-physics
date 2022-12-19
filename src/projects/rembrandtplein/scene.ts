@@ -116,6 +116,7 @@ export default class Scene extends MainScene {
       width: this.width,
       width3d: this.width3d,
     };
+    const projectSettings2 = { ...projectSettings, timeline: this.timeline2 };
 
     const group = createTweenGroup(projectSettings); // GROUP
     group.setStaticPosition(getMatrix4({
@@ -124,9 +125,9 @@ export default class Scene extends MainScene {
 
     // await this.createBackground(projectSettings, videos, group.getMesh());
     await this.createSimpleBackground(projectSettings, group.getMesh());
-    createPlanes(projectSettings, group.getMesh(), this.to3d.bind(this));
+    createPlanes(projectSettings2, group.getMesh(), this.to3d.bind(this));
     // createSequence(projectSettings, group.getMesh());
-    // createSequence2({ ...projectSettings, timeline: this.timeline2 }, group.getMesh());
+    // createSequence2(projectSettings2, group.getMesh());
 
     this.postCreate();
   }
