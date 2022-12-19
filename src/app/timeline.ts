@@ -2,6 +2,7 @@ import { Tween } from '@app/tween';
 
 export interface Timeline {
   add: (tween: Tween) => void;
+  getDuration: () => number;
   update: (time: number, delta: number) => Promise<void[]>;
 }
 
@@ -20,6 +21,8 @@ export default function createTimeline({
     tweens.push(tween);
   };
 
+  const getDuration = () => duration;
+
   const update = async (time: number, delta: number) => {
     const promises = tweens.reduce((accumulator, tween) => {
       const promise = tween.update(time, delta, duration);
@@ -28,5 +31,5 @@ export default function createTimeline({
     return Promise.all(promises);
   };
 
-  return { add, update };
+  return { add, getDuration, update };
 }

@@ -70,7 +70,7 @@ function createFadeInOut(
   timeline.add(fadeInTween);
 
   const fadeOutTween = createTween({
-    delay: (delay + duration - fadeDuration) * s,
+    delay: ((delay + duration - fadeDuration) * s) % timeline.getDuration(),
     duration: fadeDuration * s,
     onStart: () => {},
     onUpdate: (progress: number) => {
