@@ -32,11 +32,13 @@ async function createSvgActor(
 function createHeldNotesFromArray(
   p: ProjectSettings,
   actor: Actor,
-  x: number,
-  y: number,
+  xAt0: number,
+  yAt0: number,
   delayArray: number[],
   duration: number,
 ) {
+  const x = 8 + ((xAt0 - 8) * 0.7);
+  const y = 6 + ((yAt0 - 6) * 0.7);
   const tweenGroup = createTweenGroup(p);
   tweenGroup.getMesh().add(actor.getMesh());
   delayArray.forEach((delay) => {
@@ -53,19 +55,21 @@ function createHeldNotesFromArray(
 function createPulsesFromArray(
   p: ProjectSettings,
   actor: Actor,
-  x: number,
-  y: number,
+  xAt0: number,
+  yAt0: number,
   delayArray: number[],
 ) {
+  const x = 8 + ((xAt0 - 8) * 0.6);
+  const y = -6 + ((6 + yAt0) * 0.6);
   const { stepDuration } = p;
   const tweenGroup = createTweenGroup(p);
   tweenGroup.getMesh().add(actor.getMesh());
   delayArray.forEach((delay) => {
     tweenGroup.addTween({
       delay,
-      duration: stepDuration * 4,
+      duration: stepDuration * 3,
       ease: 'sineIn',
-      fromMatrix4: getMatrix4({ x, y, z: 6 }),
+      fromMatrix4: getMatrix4({ x, y, z: 6, sx: 1.5, sy: 1.5 }),
       toMatrix4: getMatrix4({
         x, y, z: 6, sx: 0.01, sy: 0.01,
       }),
@@ -105,40 +109,44 @@ async function createTrack2(
 /**
  * Elke maat verschuift de tik iets.
  */
-async function createTrack3(p: ProjectSettings, group: THREE.Group) { // TIK 2
+async function createTrack3(
+  p: ProjectSettings,
+  group: THREE.Group,
+  to3d: (size: number, isWidth: boolean) => number,
+) { // TIK 2
   const { stepDuration: s } = p;
 
   { // 2.4 tot 4.1
     const offsetPerMeasure = (4.1 - 2.4) / 8;
-    const actor = await createSvgActor(p);
+    const actor = await createSvgActor(p, to3d, 'track3-1', 998, 390, 119, 120);
     const staticTimes = [];
     const measures = 16;
     for (let i = 0; i < measures; i += 1) {
       staticTimes.push((i * 16) + 2.4);
     }
-    const delayArray = staticTimes.map((t, i) => {
+    const delays = staticTimes.map((t, i) => {
       const offsetMeasureIndex = 8 - Math.abs(8 - i);
       const offset = offsetMeasureIndex * offsetPerMeasure;
       return (t + offset) * s;
     });
-    const tweenGroup = createPulsesFromArray(p, actor, 6, -6, delayArray);
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(998, true), to3d(390, false), delays);
     group.add(tweenGroup.getMesh());
   }
 
   { // 4.8 tot 6.7
     const offsetPerMeasure = (6.7 - 4.8) / 8;
-    const actor = await createYellowCircleSvgActor(p);
+    const actor = await createSvgActor(p, to3d, 'track3-2', 1001, 565, 114, 116);
     const staticTimes = [];
     const measures = 16;
     for (let i = 0; i < measures; i += 1) {
       staticTimes.push((i * 16) + 4.8);
     }
-    const delayArray = staticTimes.map((t, i) => {
+    const delays = staticTimes.map((t, i) => {
       const offsetMeasureIndex = 8 - Math.abs(8 - i);
       const offset = offsetMeasureIndex * offsetPerMeasure;
       return (t + offset) * s;
     });
-    const tweenGroup = createPulsesFromArray(p, actor, 6, -5, delayArray);
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(1001, true), to3d(565, false), delays);
     group.add(tweenGroup.getMesh());
   }
 }
@@ -254,5 +262,5 @@ export async function createSequence2(
   group: THREE.Group,
   to3d: (size: number, isWidth: boolean) => number,
 ) {
-  // createTrack3(p, group, to3d);
+  createTrack3(p, group, to3d);
 }
