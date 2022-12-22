@@ -35,18 +35,25 @@ function createHeldNotesFromArray(
   xAt0: number,
   yAt0: number,
   delayArray: number[],
-  duration: number,
+  z = 6,
+  duration = 4,
+  startScale = 1,
 ) {
-  const x = 8 + ((xAt0 - 8) * 0.7);
-  const y = 6 + ((yAt0 - 6) * 0.7);
+  const x = 8 + ((xAt0 - 8) * 0.6);
+  const y = -6 + ((6 + yAt0) * 0.6);
+  const { stepDuration } = p;
   const tweenGroup = createTweenGroup(p);
   tweenGroup.getMesh().add(actor.getMesh());
   delayArray.forEach((delay) => {
     tweenGroup.addTween({
       delay,
-      duration,
-      fromMatrix4: getMatrix4({ x, y, z: 6 }),
-      toMatrix4: getMatrix4({ x, y, z: 6 }),
+      duration: stepDuration * duration,
+      fromMatrix4: getMatrix4({
+        x, y, z, sx: startScale, sy: startScale,
+      }),
+      toMatrix4: getMatrix4({
+        x, y, z, sx: startScale, sy: startScale,
+      }),
     });
   });
   return tweenGroup;
@@ -164,18 +171,22 @@ async function createTrack3(
   }
 }
 
-async function createTrack4(p: ProjectSettings, group: THREE.Group) { // AKKOORD
+async function createTrack4(
+  p: ProjectSettings,
+  group: THREE.Group,
+  to3d: (size: number, isWidth: boolean) => number,
+) { // AKKOORD
   const { stepDuration: s } = p;
   {
-    const actor = await createYellowCircleSvgActor(p);
-    const tweenGroup = createHeldNotesFromArray(p, actor, 8, -4,
-      [16 + 6, 48 + 6].map((t) => t * s), 6 * s);
+    const actor = await createSvgActor(p, to3d, 'track4-1', 212, 155, 338, 339);
+    const tweenGroup = createHeldNotesFromArray(p, actor, to3d(410, true), to3d(360, false),
+      [16 + 6, 48 + 6].map((t) => t * s), 6, 4, 0.55);
     group.add(tweenGroup.getMesh());
   }
   {
-    const actor = await createYellowCircleSvgActor(p);
-    const tweenGroup = createPulsesFromArray(p, actor, 8, -5,
-      [48 + 4].map((t) => t * s));
+    const actor = await createSvgActor(p, to3d, 'track4-2', 234, 482, 228, 250);
+    const tweenGroup = createHeldNotesFromArray(p, actor, to3d(380, true), to3d(590, false),
+      [48 + 4].map((t) => t * s), 5.98, 4, 0.55);
     group.add(tweenGroup.getMesh());
   }
 }
@@ -194,7 +205,7 @@ async function createTrack5(
   }
   { // TIK
     const actor = await createSvgActor(p, to3d, 'track5-2', 105, 1004, 331, 329);
-    const tweenGroup = createPulsesFromArray(p, actor, to3d(350, true), to3d(300, false),
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(1650, true), to3d(400, false),
       [48 + 3].map((t) => t * s), 6, 6, 0.5);
     group.add(tweenGroup.getMesh());
   }
@@ -267,7 +278,7 @@ export default async function createSequence(
 ) {
   createTrack1(p, group, to3d);
   createTrack2(p, group, to3d);
-  // createTrack4(p, group);
+  createTrack4(p, group, to3d);
   createTrack5(p, group, to3d);
   // createTrack6(p, group);
   // createTrack7(p, group);
