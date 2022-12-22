@@ -83,11 +83,15 @@ function createPulsesFromArray(
   return tweenGroup;
 }
 
-async function createTrack1(p: ProjectSettings, group: THREE.Group) { // KICK
+async function createTrack1(
+  p: ProjectSettings,
+  group: THREE.Group,
+  to3d: (size: number, isWidth: boolean) => number,
+) { // KICK
   const { stepDuration: s } = p;
-  const actor = await createYellowCircleSvgActor(p);
-  const tweenGroup = createPulsesFromArray(p, actor, 10, -8,
-    [0.001, 16, 32, 48].map((t) => t * s));
+  const actor = await createSvgActor(p, to3d, 'track1', 1458, 985, 313, 307);
+  const tweenGroup = createPulsesFromArray(p, actor, to3d(1458, true), to3d(1050, false),
+    [0.001, 16, 32, 48].map((t) => t * s), 6, 4, 0.7);
   group.add(tweenGroup.getMesh());
 }
 
@@ -257,7 +261,7 @@ export default async function createSequence(
   group: THREE.Group,
   to3d: (size: number, isWidth: boolean) => number,
 ) {
-  // createTrack1(p, group);
+  createTrack1(p, group, to3d);
   createTrack2(p, group, to3d);
   // createTrack4(p, group);
   // createTrack5(p, group);
