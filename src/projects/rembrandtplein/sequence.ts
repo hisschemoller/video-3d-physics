@@ -58,6 +58,9 @@ function createPulsesFromArray(
   xAt0: number,
   yAt0: number,
   delayArray: number[],
+  z = 6,
+  duration = 4,
+  startScale = 1,
 ) {
   const x = 8 + ((xAt0 - 8) * 0.6);
   const y = -6 + ((6 + yAt0) * 0.6);
@@ -67,11 +70,13 @@ function createPulsesFromArray(
   delayArray.forEach((delay) => {
     tweenGroup.addTween({
       delay,
-      duration: stepDuration * 3,
+      duration: stepDuration * duration,
       ease: 'sineIn',
-      fromMatrix4: getMatrix4({ x, y, z: 6, sx: 1.5, sy: 1.5 }),
+      fromMatrix4: getMatrix4({
+        x, y, z, sx: startScale, sy: startScale,
+      }),
       toMatrix4: getMatrix4({
-        x, y, z: 6, sx: 0.01, sy: 0.01,
+        x, y, z, sx: 0.01, sy: 0.01,
       }),
     });
   });
@@ -94,13 +99,13 @@ async function createTrack2(
   const { stepDuration: s } = p;
   {
     const actor = await createSvgActor(p, to3d, 'track2-1', 807, 389, 110, 108);
-    const tweenGroup = createPulsesFromArray(p, actor, to3d(807, true), to3d(389, false),
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(800, true), to3d(390, false),
       [2.4, 16 + 2.4, 32 + 2.4, 48 + 2.4].map((t) => t * s));
     group.add(tweenGroup.getMesh());
   }
   {
     const actor = await createSvgActor(p, to3d, 'track2-2', 795, 550, 130, 131);
-    const tweenGroup = createPulsesFromArray(p, actor, to3d(795, true), to3d(550, false),
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(800, true), to3d(550, false),
       [4.8, 16 + 4.8, 32 + 4.8, 48 + 4.8].map((t) => t * s));
     group.add(tweenGroup.getMesh());
   }
@@ -129,7 +134,9 @@ async function createTrack3(
       const offset = offsetMeasureIndex * offsetPerMeasure;
       return (t + offset) * s;
     });
-    const tweenGroup = createPulsesFromArray(p, actor, to3d(998, true), to3d(390, false), delays);
+    const tweenGroup = createPulsesFromArray(
+      p, actor, to3d(1000, true), to3d(390, false), delays, 6.1,
+    );
     group.add(tweenGroup.getMesh());
   }
 
@@ -146,7 +153,9 @@ async function createTrack3(
       const offset = offsetMeasureIndex * offsetPerMeasure;
       return (t + offset) * s;
     });
-    const tweenGroup = createPulsesFromArray(p, actor, to3d(1001, true), to3d(565, false), delays);
+    const tweenGroup = createPulsesFromArray(
+      p, actor, to3d(1000, true), to3d(550, false), delays, 6.1,
+    );
     group.add(tweenGroup.getMesh());
   }
 }
