@@ -278,30 +278,37 @@ async function createTrack7(
   }
 }
 
-async function createTrack8(p: ProjectSettings, group: THREE.Group) { // RATEL, TIK 12, 13 & WHOOSH
+/**
+ * createTrack8 - RATEL, TIK 12, 13 & WHOOSH
+ */
+async function createTrack8(
+  p: ProjectSettings,
+  group: THREE.Group,
+  to3d: (size: number, isWidth: boolean) => number,
+) {
   const { stepDuration: s } = p;
   { // RATEL
-    const actor = await createYellowCircleSvgActor(p);
-    const tweenGroup = createPulsesFromArray(p, actor, 9, -4,
-      [4].map((t) => t * s));
+    const actor = await createSvgActor(p, to3d, 'track8-1', 728, 29, 157, 242);
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(728, true), to3d(100, false),
+      [4].map((t) => t * s), 5, 3, 0.6);
     group.add(tweenGroup.getMesh());
   }
   { // TIK 12
-    const actor = await createYellowCircleSvgActor(p);
-    const tweenGroup = createPulsesFromArray(p, actor, 9, -5,
-      [11, 32 + 11].map((t) => t * s));
+    const actor = await createSvgActor(p, to3d, 'track8-2', 931, 61, 126, 142);
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(900, true), to3d(100, false),
+      [11, 32 + 11].map((t) => t * s), 5, 3, 1);
     group.add(tweenGroup.getMesh());
   }
   { // TIK 13
-    const actor = await createYellowCircleSvgActor(p);
-    const tweenGroup = createPulsesFromArray(p, actor, 9, -6,
-      [16 + 12, 48 + 12].map((t) => t * s));
+    const actor = await createSvgActor(p, to3d, 'track8-3', 1125, 62, 122, 140);
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(1050, true), to3d(100, false),
+      [16 + 12, 48 + 12].map((t) => t * s), 5, 3, 0.9);
     group.add(tweenGroup.getMesh());
   }
   { // WHOOSH
-    const actor = await createYellowCircleSvgActor(p);
-    const tweenGroup = createPulsesFromArray(p, actor, 9, -7,
-      [48].map((t) => t * s));
+    const actor = await createSvgActor(p, to3d, 'track8-4', 1332, 57, 289, 296);
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(1300, true), to3d(100, false),
+      [48].map((t) => t * s), 5, 3, 0.3);
     group.add(tweenGroup.getMesh());
   }
 }
@@ -317,7 +324,7 @@ export default async function createSequence(
   createTrack5(p, group, to3d);
   createTrack6(p, group, to3d);
   createTrack7(p, group, to3d);
-  // createTrack8(p, group, to3d);
+  createTrack8(p, group, to3d);
 }
 
 export async function createSequence2(
