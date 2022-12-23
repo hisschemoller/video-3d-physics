@@ -3,6 +3,9 @@ import { ProjectSettings } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
 import { Actor, createActor, createTweenGroup } from './actor';
 
+/**
+ * createSvgActor
+ */
 async function createSvgActor(
   p: ProjectSettings,
   to3d: (size: number, isWidth: boolean) => number,
@@ -29,6 +32,9 @@ async function createSvgActor(
   return actor;
 }
 
+/**
+ * createHeldNotesFromArray
+ */
 function createHeldNotesFromArray(
   p: ProjectSettings,
   actor: Actor,
@@ -59,6 +65,9 @@ function createHeldNotesFromArray(
   return tweenGroup;
 }
 
+/**
+ * createPulsesFromArray
+ */
 function createPulsesFromArray(
   p: ProjectSettings,
   actor: Actor,
@@ -90,11 +99,14 @@ function createPulsesFromArray(
   return tweenGroup;
 }
 
+/**
+ * createTrack1 - KICK
+ */
 async function createTrack1(
   p: ProjectSettings,
   group: THREE.Group,
   to3d: (size: number, isWidth: boolean) => number,
-) { // KICK
+) {
   const { stepDuration: s } = p;
   const actor = await createSvgActor(p, to3d, 'track1', 1458, 985, 313, 307);
   const tweenGroup = createPulsesFromArray(p, actor, to3d(1458, true), to3d(1050, false),
@@ -102,11 +114,14 @@ async function createTrack1(
   group.add(tweenGroup.getMesh());
 }
 
+/**
+ * createTrack2 - TIK 1
+ */
 async function createTrack2(
   p: ProjectSettings,
   group: THREE.Group,
   to3d: (size: number, isWidth: boolean) => number,
-) { // TIK 1
+) {
   const { stepDuration: s } = p;
   {
     const actor = await createSvgActor(p, to3d, 'track2-1', 807, 389, 110, 108);
@@ -125,11 +140,11 @@ async function createTrack2(
 /**
  * Elke maat verschuift de tik iets.
  */
-async function createTrack3(
+async function createTrack3( // TIK 2
   p: ProjectSettings,
   group: THREE.Group,
   to3d: (size: number, isWidth: boolean) => number,
-) { // TIK 2
+) {
   const { stepDuration: s } = p;
 
   { // 2.4 tot 4.1
@@ -171,11 +186,14 @@ async function createTrack3(
   }
 }
 
+/**
+ * createTrack4 - AKKOORD
+ */
 async function createTrack4(
   p: ProjectSettings,
   group: THREE.Group,
   to3d: (size: number, isWidth: boolean) => number,
-) { // AKKOORD
+) {
   const { stepDuration: s } = p;
   {
     const actor = await createSvgActor(p, to3d, 'track4-1', 212, 155, 338, 339);
@@ -191,11 +209,14 @@ async function createTrack4(
   }
 }
 
+/**
+ * createTrack5 - BAS EN EEN TIK
+ */
 async function createTrack5(
   p: ProjectSettings,
   group: THREE.Group,
   to3d: (size: number, isWidth: boolean) => number,
-) { // 5. BAS EN EEN TIK
+) {
   const { stepDuration: s } = p;
   { // BAS
     const actor = await createSvgActor(p, to3d, 'track5-1', 496, 985, 417, 349);
@@ -211,12 +232,19 @@ async function createTrack5(
   }
 }
 
-async function createTrack6(p: ProjectSettings, group: THREE.Group) { // 6. ZACHT AKKOORD
+/**
+ * createTrack6 - ZACHT AKKOORD
+ */
+async function createTrack6(
+  p: ProjectSettings,
+  group: THREE.Group,
+  to3d: (size: number, isWidth: boolean) => number,
+) {
   const { stepDuration: s } = p;
   {
-    const actor = await createYellowCircleSvgActor(p);
-    const tweenGroup = createHeldNotesFromArray(p, actor, 8, -7,
-      [48 + 2].map((t) => t * s), 4 * s);
+    const actor = await createSvgActor(p, to3d, 'track6', 1478, 376, 338, 339);
+    const tweenGroup = createHeldNotesFromArray(p, actor, to3d(1550, true), to3d(650, false),
+      [48 + 2].map((t) => t * s), 5.98, 4, 0.58);
     group.add(tweenGroup.getMesh());
   }
   // {
@@ -280,7 +308,7 @@ export default async function createSequence(
   createTrack2(p, group, to3d);
   createTrack4(p, group, to3d);
   createTrack5(p, group, to3d);
-  // createTrack6(p, group);
+  createTrack6(p, group, to3d);
   // createTrack7(p, group);
   // createTrack8(p, group);
 }
