@@ -91,47 +91,47 @@ export default async function createPlanes(
     const actor = await createSvgActor(p, group, to3d, 1, 1, 595, 103, 239, 272);
     createFadeInOut(p, actor.getMesh(), m * 1, m * 6, m * 2);
   }
-  {
+  { // BLAUW VOOR HOTEL
     const actor = await createSvgActor(p, group, to3d, 1, 2, 598, 597, 390, 264);
-    createFadeInOut(p, actor.getMesh(), m * 7, m * 6, m * 2);
-  }
-  {
-    const actor = await createSvgActor(p, group, to3d, 1, 3, 183, 740, 405, 203);
-    createFadeInOut(p, actor.getMesh(), m * 1, m * 14, m * 2);
-  }
-  {
-    const actor = await createSvgActor(p, group, to3d, 1, 4, 238, 335, 386, 284);
     createFadeInOut(p, actor.getMesh(), m * 10, m * 6, m * 2);
+  }
+  { // GRIJS MET ZWARTE DEUREN
+    const actor = await createSvgActor(p, group, to3d, 1, 3, 183, 740, 405, 203);
+    createFadeInOut(p, actor.getMesh(), m * 1, m * 7, m * 2);
+  }
+  { // BLAUW-GROEN VOOR HOTEL SCHUIN
+    const actor = await createSvgActor(p, group, to3d, 1, 4, 238, 335, 356, 284);
+    createFadeInOut(p, actor.getMesh(), m * 15, m * 6, m * 2);
   }
   {
     const actor = await createSvgActor(p, group, to3d, 1, 5, 1443, 365, 477, 292);
-    createFadeInOut(p, actor.getMesh(), m * 6, m * 4.5, m * 2);
+    createFadeInOut(p, actor.getMesh(), m * 10, m * 4.5, m * 2);
   }
   {
     const actor = await createSvgActor(p, group, to3d, 1, 6, 1601, 777, 319, 196);
-    createFadeInOut(p, actor.getMesh(), m * 8, m * 8, m * 2);
+    createFadeInOut(p, actor.getMesh(), m * 14, m * 8, m * 2);
   }
   {
     const actor = await createSvgActor(p, group, to3d, 1, 7, 1301, 0, 619, 310);
-    createFadeInOut(p, actor.getMesh(), m * 1, m * 8, m * 2);
+    createFadeInOut(p, actor.getMesh(), m * 5.5, m * 8, m * 2);
   }
   {
     const actor = await createSvgActor(p, group, to3d, 1, 8, 1199, 549, 240, 340);
-    createFadeInOut(p, actor.getMesh(), m * 9.5, m * 6, m * 2);
+    createFadeInOut(p, actor.getMesh(), m * 7.5, m * 6, m * 2);
   }
-  {
+  { // DAK LINKSBOVEN
     const actor = await createSvgActor(p, group, to3d, 2, 9, 0, 0, 264, 264);
-    createFadeInOut(p, actor.getMesh(), m * 1, m * 5, m * 2);
+    createFadeInOut(p, actor.getMesh(), m * 11, m * 8, m * 2);
   }
-  {
+  { // STROOK RAMEN IN HOTEL
     const actor = await createSvgActor(p, group, to3d, 2, 10, 0, 385, 434, 129);
-    createFadeInOut(p, actor.getMesh(), m * 0.1, m * 8, m * 2);
+    createFadeInOut(p, actor.getMesh(), m * 5, m * 8, m * 2);
   }
-  {
+  { // DONKERE ZIJMUUR
     const actor = await createSvgActor(p, group, to3d, 2, 11, 443, 263, 159, 604);
-    createFadeInOut(p, actor.getMesh(), m * 4.5, m * 8, m * 2);
+    createFadeInOut(p, actor.getMesh(), m * 7.5, m * 8, m * 2);
   }
-  {
+  { // HUIS
     const actor = await createSvgActor(p, group, to3d, 2, 12, 583, 151, 423, 360);
     createFadeInOut(p, actor.getMesh(), m * 6.5, m * 8, m * 2);
   }
@@ -141,6 +141,6 @@ export default async function createPlanes(
   }
   {
     const actor = await createSvgActor(p, group, to3d, 2, 14, 1592, 0, 328, 453);
-    createFadeInOut(p, actor.getMesh(), m * 7.5, m * 8, m * 2);
+    createFadeInOut(p, actor.getMesh(), m * 12, m * 8, m * 2);
   }
 }
