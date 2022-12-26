@@ -100,6 +100,42 @@ function createPulsesFromArray(
 }
 
 /**
+ * createPulseWithRepeats
+ */
+function createPulseWithRepeats(
+  p: ProjectSettings,
+  actor: Actor,
+  xAt0: number,
+  yAt0: number,
+  delay: number,
+  z = 6,
+  duration = 4,
+  startScale = 1,
+  repeats = 4,
+) {
+  const x = 8 + ((xAt0 - 8) * 0.6);
+  const y = -6 + ((6 + yAt0) * 0.6);
+  const { stepDuration } = p;
+  const tweenGroup = createTweenGroup(p);
+  tweenGroup.getMesh().add(actor.getMesh());
+  for (let i = 0; i < repeats; i += 1) {
+    const scale = startScale / (i + 1);
+    tweenGroup.addTween({
+      delay: delay + (stepDuration * duration * i),
+      duration: stepDuration * duration,
+      ease: 'sineIn',
+      fromMatrix4: getMatrix4({
+        x, y, z, sx: scale, sy: scale,
+      }),
+      toMatrix4: getMatrix4({
+        x, y, z, sx: 0.01, sy: 0.01,
+      }),
+    });
+  }
+  return tweenGroup;
+}
+
+/**
  * createTrack1 - KICK
  */
 async function createTrack1(
@@ -260,8 +296,8 @@ async function createTrack7(
   const { stepDuration: s } = p;
   { // SYNTH MET DELAY (2:4)
     const actor = await createSvgActor(p, to3d, 'track7-1', 14, 685, 307, 293);
-    const tweenGroup = createPulsesFromArray(p, actor, to3d(50, true), to3d(1050, false),
-      [16 + 10].map((t) => t * s), 4, 4, 0.6);
+    const tweenGroup = createPulseWithRepeats(p, actor, to3d(50, true), to3d(1050, false),
+      (16 + 10) * s, 4, 3, 0.6, 6);
     group.add(tweenGroup.getMesh());
   }
   { // SNARE (1:2)
@@ -306,14 +342,14 @@ async function createTrack8Long(
   const { stepDuration: s } = p;
   { // RATEL MET DELAY (6/8)
     const actor = await createSvgActor(p, to3d, 'track8-1', 728, 29, 157, 242);
-    const tweenGroup = createPulsesFromArray(p, actor, to3d(728, true), to3d(100, false),
-      [(16 * 6) + 4].map((t) => t * s), 5, 3, 0.6);
+    const tweenGroup = createPulseWithRepeats(p, actor, to3d(728, true), to3d(100, false),
+      ((16 * 6) + 4) * s, 5, 3, 0.7, 6);
     group.add(tweenGroup.getMesh());
   }
   { // WHOOSH MET DELAY (4/8)
     const actor = await createSvgActor(p, to3d, 'track8-4', 1332, 57, 289, 296);
-    const tweenGroup = createPulsesFromArray(p, actor, to3d(1300, true), to3d(100, false),
-      [(16 * 3) + 0].map((t) => t * s), 5, 3, 0.3);
+    const tweenGroup = createPulseWithRepeats(p, actor, to3d(1300, true), to3d(100, false),
+      ((16 * 3) + 0) * s, 5, 3, 0.5, 8);
     group.add(tweenGroup.getMesh());
   }
 }
