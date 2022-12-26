@@ -43,7 +43,7 @@ function createHeldNotesFromArray(
   delayArray: number[],
   z = 6,
   duration = 4,
-  startScale = 1,
+  endScale = 1,
 ) {
   const x = 8 + ((xAt0 - 8) * 0.6);
   const y = -6 + ((6 + yAt0) * 0.6);
@@ -55,10 +55,10 @@ function createHeldNotesFromArray(
       delay,
       duration: stepDuration * duration,
       fromMatrix4: getMatrix4({
-        x, y, z, sx: startScale, sy: startScale,
+        x, y, z, sx: 0.1, sy: 0.1,
       }),
       toMatrix4: getMatrix4({
-        x, y, z, sx: startScale, sy: startScale,
+        x, y, z, sx: endScale, sy: endScale,
       }),
     });
   });
@@ -125,13 +125,13 @@ async function createTrack2(
   const { stepDuration: s } = p;
   {
     const actor = await createSvgActor(p, to3d, 'track2-1', 807, 389, 110, 108);
-    const tweenGroup = createPulsesFromArray(p, actor, to3d(800, true), to3d(390, false),
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(800, true), to3d(590, false),
       [2.4, 16 + 2.4, 32 + 2.4, 48 + 2.4].map((t) => t * s));
     group.add(tweenGroup.getMesh());
   }
   {
     const actor = await createSvgActor(p, to3d, 'track2-2', 795, 550, 130, 131);
-    const tweenGroup = createPulsesFromArray(p, actor, to3d(800, true), to3d(550, false),
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(800, true), to3d(750, false),
       [4.8, 16 + 4.8, 32 + 4.8, 48 + 4.8].map((t) => t * s));
     group.add(tweenGroup.getMesh());
   }
@@ -161,7 +161,7 @@ async function createTrack3( // TIK 2
       return (t + offset) * s;
     });
     const tweenGroup = createPulsesFromArray(
-      p, actor, to3d(1000, true), to3d(390, false), delays, 6.1,
+      p, actor, to3d(1000, true), to3d(590, false), delays, 6.1,
     );
     group.add(tweenGroup.getMesh());
   }
@@ -180,7 +180,7 @@ async function createTrack3( // TIK 2
       return (t + offset) * s;
     });
     const tweenGroup = createPulsesFromArray(
-      p, actor, to3d(1000, true), to3d(550, false), delays, 6.1,
+      p, actor, to3d(1000, true), to3d(750, false), delays, 6.1,
     );
     group.add(tweenGroup.getMesh());
   }
@@ -198,13 +198,13 @@ async function createTrack4(
   {
     const actor = await createSvgActor(p, to3d, 'track4-1', 212, 155, 338, 339);
     const tweenGroup = createHeldNotesFromArray(p, actor, to3d(410, true), to3d(360, false),
-      [16 + 6, 48 + 6].map((t) => t * s), 6, 4, 0.55);
+      [16 + 6, 48 + 6].map((t) => t * s), 6, 5, 0.55);
     group.add(tweenGroup.getMesh());
   }
   {
     const actor = await createSvgActor(p, to3d, 'track4-2', 234, 482, 228, 250);
     const tweenGroup = createHeldNotesFromArray(p, actor, to3d(380, true), to3d(590, false),
-      [48 + 4].map((t) => t * s), 5.98, 4, 0.55);
+      [48 + 4].map((t) => t * s), 5.98, 7, 0.55);
     group.add(tweenGroup.getMesh());
   }
 }
@@ -244,7 +244,7 @@ async function createTrack6(
   {
     const actor = await createSvgActor(p, to3d, 'track6', 1478, 376, 338, 339);
     const tweenGroup = createHeldNotesFromArray(p, actor, to3d(1550, true), to3d(650, false),
-      [48 + 2].map((t) => t * s), 5.98, 4, 0.58);
+      [48 + 2].map((t) => t * s), 5.98, 3, 0.58);
     group.add(tweenGroup.getMesh());
   }
   // {
