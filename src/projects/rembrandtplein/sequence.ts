@@ -247,16 +247,10 @@ async function createTrack6(
       [48 + 2].map((t) => t * s), 5.98, 3, 0.58);
     group.add(tweenGroup.getMesh());
   }
-  // {
-  //   const actor = await createYellowCircleSvgActor(p);
-  //   const tweenGroup = createPulsesFromArray(p, actor, 8, -5,
-  //     [48 + 4].map((t) => t * s));
-  //   group.add(tweenGroup.getMesh());
-  // }
 }
 
 /**
- * createTrack7 - SYNTH & SNARE
+ * createTrack7 - SYNTH MET DELAY & SNARE
  */
 async function createTrack7(
   p: ProjectSettings,
@@ -264,13 +258,13 @@ async function createTrack7(
   to3d: (size: number, isWidth: boolean) => number,
 ) {
   const { stepDuration: s } = p;
-  { // SYNTH
+  { // SYNTH MET DELAY (2:4)
     const actor = await createSvgActor(p, to3d, 'track7-1', 14, 685, 307, 293);
     const tweenGroup = createPulsesFromArray(p, actor, to3d(50, true), to3d(1050, false),
-      [10, 32 + 10].map((t) => t * s), 4, 4, 0.6);
+      [16 + 10].map((t) => t * s), 4, 4, 0.6);
     group.add(tweenGroup.getMesh());
   }
-  { // SNARE
+  { // SNARE (1:2)
     const actor = await createSvgActor(p, to3d, 'track7-2', 1650, 30, 246, 219);
     const tweenGroup = createPulsesFromArray(p, actor, to3d(1750, true), to3d(100, false),
       [12, 32 + 12].map((t) => t * s), 5, 3, 0.5);
@@ -279,36 +273,47 @@ async function createTrack7(
 }
 
 /**
- * createTrack8 - RATEL, TIK 12, 13 & WHOOSH
+ * createTrack8 - TIK 12 & 13
  */
-async function createTrack8(
+async function createTrack8Short(
   p: ProjectSettings,
   group: THREE.Group,
   to3d: (size: number, isWidth: boolean) => number,
 ) {
   const { stepDuration: s } = p;
-  { // RATEL
-    const actor = await createSvgActor(p, to3d, 'track8-1', 728, 29, 157, 242);
-    const tweenGroup = createPulsesFromArray(p, actor, to3d(728, true), to3d(100, false),
-      [4].map((t) => t * s), 5, 3, 0.6);
-    group.add(tweenGroup.getMesh());
-  }
-  { // TIK 12
+  { // TIK 12 (1:2)
     const actor = await createSvgActor(p, to3d, 'track8-2', 931, 61, 126, 142);
     const tweenGroup = createPulsesFromArray(p, actor, to3d(900, true), to3d(100, false),
       [11, 32 + 11].map((t) => t * s), 5, 3, 1);
     group.add(tweenGroup.getMesh());
   }
-  { // TIK 13
+  { // TIK 13 (2:2)
     const actor = await createSvgActor(p, to3d, 'track8-3', 1125, 62, 122, 140);
     const tweenGroup = createPulsesFromArray(p, actor, to3d(1050, true), to3d(100, false),
       [16 + 12, 48 + 12].map((t) => t * s), 5, 3, 0.9);
     group.add(tweenGroup.getMesh());
   }
-  { // WHOOSH
+}
+
+/**
+ * createTrack8 - RATEL & WHOOSH
+ */
+async function createTrack8Long(
+  p: ProjectSettings,
+  group: THREE.Group,
+  to3d: (size: number, isWidth: boolean) => number,
+) {
+  const { stepDuration: s } = p;
+  { // RATEL MET DELAY (6/8)
+    const actor = await createSvgActor(p, to3d, 'track8-1', 728, 29, 157, 242);
+    const tweenGroup = createPulsesFromArray(p, actor, to3d(728, true), to3d(100, false),
+      [(16 * 6) + 4].map((t) => t * s), 5, 3, 0.6);
+    group.add(tweenGroup.getMesh());
+  }
+  { // WHOOSH MET DELAY (4/8)
     const actor = await createSvgActor(p, to3d, 'track8-4', 1332, 57, 289, 296);
     const tweenGroup = createPulsesFromArray(p, actor, to3d(1300, true), to3d(100, false),
-      [48].map((t) => t * s), 5, 3, 0.3);
+      [(16 * 3) + 0].map((t) => t * s), 5, 3, 0.3);
     group.add(tweenGroup.getMesh());
   }
 }
@@ -324,7 +329,7 @@ export default async function createSequence(
   createTrack5(p, group, to3d);
   createTrack6(p, group, to3d);
   createTrack7(p, group, to3d);
-  createTrack8(p, group, to3d);
+  createTrack8Short(p, group, to3d);
 }
 
 export async function createSequence2(
@@ -333,4 +338,5 @@ export async function createSequence2(
   to3d: (size: number, isWidth: boolean) => number,
 ) {
   createTrack3(p, group, to3d);
+  createTrack8Long(p, group, to3d);
 }
