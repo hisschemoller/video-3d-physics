@@ -63,10 +63,10 @@ export default class Scene extends MainScene {
     // DIRECTIONAL LIGHT
     this.directionalLight.position.set(6, 9, 6);
     // this.directionalLight.intensity = 0.98;
-    this.directionalLight.color.setHSL(0, 1, 0.95);
+    this.directionalLight.color.setHSL(0, 1, 0.98);
 
     // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.40;
+    this.ambientLight.intensity = 0.55; // 0.40;
 
     // AUDIO
     playSound('../assets/projects/rembrandtplein/rembrandtplein-16-maten-test.wav');
