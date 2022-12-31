@@ -257,7 +257,7 @@ async function createTrack5(
   { // BAS
     const actor = await createSvgActor(p, to3d, 'track5-1', 496, 985, 417, 349);
     const tweenGroup = createPulsesFromArray(p, actor, to3d(700, true), to3d(1100, false),
-      [4, 16 + 3, 16 + 11, 16 + 12, 32 + 4, 48 + 12].map((t) => t * s), 6, 4, 0.55);
+      [4, 16 + 11, 16 + 12, 32 + 4, 48 + 12].map((t) => t * s), 6, 4, 0.55);
     group.add(tweenGroup.getMesh());
   }
   { // TIK
@@ -297,7 +297,7 @@ async function createTrack7(
   { // SYNTH MET DELAY (2:4)
     const actor = await createSvgActor(p, to3d, 'track7-1', 14, 685, 307, 293);
     const tweenGroup = createPulseWithRepeats(p, actor, to3d(50, true), to3d(1050, false),
-      (16 + 10) * s, 4, 3, 0.6, 6);
+      (16 + 10) * s, 4, 3, 0.6, 10);
     group.add(tweenGroup.getMesh());
   }
   { // SNARE (1:2)
@@ -340,16 +340,28 @@ async function createTrack8Long(
   to3d: (size: number, isWidth: boolean) => number,
 ) {
   const { stepDuration: s } = p;
-  { // RATEL MET DELAY (6/8)
-    const actor = await createSvgActor(p, to3d, 'track8-1', 728, 29, 157, 242);
-    const tweenGroup = createPulseWithRepeats(p, actor, to3d(728, true), to3d(100, false),
-      ((16 * 6) + 4) * s, 5, 3, 0.7, 6);
-    group.add(tweenGroup.getMesh());
-  }
-  { // WHOOSH MET DELAY (4/8)
+  { // WHOOSH MET DELAY (4/8) EERSTE KEER
     const actor = await createSvgActor(p, to3d, 'track8-4', 1332, 57, 289, 296);
     const tweenGroup = createPulseWithRepeats(p, actor, to3d(1300, true), to3d(100, false),
-      ((16 * 3) + 0) * s, 5, 3, 0.5, 8);
+      ((16 * 3) + 0) * s, 5, 3, 0.5, 12);
+    group.add(tweenGroup.getMesh());
+  }
+  { // WHOOSH MET DELAY (4/8) TWEEDE KEER
+    const actor = await createSvgActor(p, to3d, 'track8-4', 1332, 57, 289, 296);
+    const tweenGroup = createPulseWithRepeats(p, actor, to3d(1300, true), to3d(100, false),
+      ((16 * 11) + 0) * s, 5, 3, 0.5, 8);
+    group.add(tweenGroup.getMesh());
+  }
+  { // RATEL MET DELAY (6/8) EERSTE KEER
+    const actor = await createSvgActor(p, to3d, 'track8-1', 728, 29, 157, 242);
+    const tweenGroup = createPulseWithRepeats(p, actor, to3d(728, true), to3d(100, false),
+      ((16 * 5) + 4) * s, 5, 3, 0.7, 6);
+    group.add(tweenGroup.getMesh());
+  }
+  { // RATEL MET DELAY (6/8) TWEEDE KEER
+    const actor = await createSvgActor(p, to3d, 'track8-1', 728, 29, 157, 242);
+    const tweenGroup = createPulseWithRepeats(p, actor, to3d(728, true), to3d(100, false),
+      ((16 * 13) + 4) * s, 5, 3, 0.7, 6);
     group.add(tweenGroup.getMesh());
   }
 }

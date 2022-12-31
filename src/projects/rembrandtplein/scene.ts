@@ -39,10 +39,10 @@ export default class Scene extends MainScene {
     this.height = 1440;
     this.width3d = 16;
     this.height3d = (this.height / this.width) * this.width3d;
-    this.fps = 30;
+    this.fps = 15;
     this.captureFps = 30;
     this.captureThrottle = 10;
-    this.captureDuration = PATTERN_DURATION * 4;
+    this.captureDuration = PATTERN_DURATION * 4 * 2;
     this.clearColor = 0x7ba8dd;
   }
 
@@ -62,14 +62,15 @@ export default class Scene extends MainScene {
 
     // DIRECTIONAL LIGHT
     this.directionalLight.position.set(6, 9, 6);
-    // this.directionalLight.intensity = 0.98;
     this.directionalLight.color.setHSL(0, 1, 0.98);
 
     // AMBIENT LIGHT
     this.ambientLight.intensity = 0.55; // 0.40;
 
     // AUDIO
-    playSound('../assets/projects/rembrandtplein/rembrandtplein-16-maten-test.wav');
+    if (!this.scene.userData.isCapture) {
+      playSound('../assets/projects/rembrandtplein/rembrandtplein-16-maten-test.wav');
+    }
 
     // TWEENS
     this.timeline = createTimeline({
@@ -123,8 +124,8 @@ export default class Scene extends MainScene {
       x: -8.20, y: 8.23, rx: 0.1623, sx: 1.03, sy: 1.03,
     }));
 
-    // await this.createBackground(projectSettings, videos, group.getMesh());
-    await this.createSimpleBackground(projectSettings, group.getMesh());
+    await this.createBackground(projectSettings, videos, group.getMesh());
+    // await this.createSimpleBackground(projectSettings, group.getMesh());
     createPlanes(projectSettings2, group.getMesh(), this.to3d.bind(this));
     createSequence(projectSettings, group.getMesh(), this.to3d.bind(this));
     createSequence2(projectSettings2, group.getMesh(), this.to3d.bind(this));
@@ -157,7 +158,10 @@ export default class Scene extends MainScene {
         svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-left.svg' },
         depth: 0.005,
       });
-      actor.setStaticPosition(getMatrix4({ x: 0, y: to3d(-74), z: 0.1 }));
+      const s = 1.01;
+      actor.setStaticPosition(getMatrix4({
+        x: -0.05, y: to3d(-74 + 3), z: 0.04, sx: s, sy: s,
+      }));
       actor.addTween({
         delay: 0.01,
         duration: PATTERN_DURATION,
@@ -176,7 +180,7 @@ export default class Scene extends MainScene {
         svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-leftmid.svg' },
         depth: 0.005,
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(602), y: to3d(-34), z: 0.05 }));
+      actor.setStaticPosition(getMatrix4({ x: to3d(602), y: to3d(-34), z: 0.02 }));
       actor.addTween({
         delay: STEP_DURATION * 6,
         duration: PATTERN_DURATION,
@@ -195,7 +199,10 @@ export default class Scene extends MainScene {
         svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-rightmid.svg' },
         depth: 0.005,
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(1196), y: to3d(-74), z: 0.15 }));
+      const s = 1.004;
+      actor.setStaticPosition(getMatrix4({
+        x: to3d(1196 + 3), y: to3d(-74 + 1), z: 0.06, sx: s, sy: s,
+      }));
       actor.addTween({
         delay: STEP_DURATION * 24,
         duration: PATTERN_DURATION,
@@ -214,7 +221,10 @@ export default class Scene extends MainScene {
         svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-right.svg' },
         depth: 0.005,
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(1483), y: 0, z: 0.2 }));
+      const s = 1.01;
+      actor.setStaticPosition(getMatrix4({
+        x: to3d(1483 + 5), y: 0 + 0.06, z: 0.08, sx: s, sy: s,
+      }));
       actor.addTween({
         delay: STEP_DURATION * 12,
         duration: PATTERN_DURATION,
@@ -233,7 +243,7 @@ export default class Scene extends MainScene {
         svg: { scale: SVG_SCALE, url: '../assets/projects/rembrandtplein/bg-tree.svg' },
         depth: 0.005,
       });
-      actor.setStaticPosition(getMatrix4({ x: to3d(900), y: 0, z: 0.1 }));
+      actor.setStaticPosition(getMatrix4({ x: to3d(900), y: 0, z: 0.05 }));
       actor.addTween({
         delay: STEP_DURATION * 18,
         duration: PATTERN_DURATION,

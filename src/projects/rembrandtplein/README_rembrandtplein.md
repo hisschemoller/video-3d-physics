@@ -37,3 +37,26 @@ ffmpeg -i rembrandtplein-0010a.mov -vf scale=480:270 rembrandtplein-0010a_previe
 # convert preview to png sequence
 ffmpeg -i rembrandtplein-0010a_preview.mov '/Volumes/Samsung_X5/rembrandtplein-0010/frames_preview/frame_%05d.png'
 ```
+
+## Render PNG sequence
+
+```
+# png to mp4 (from index 1030 met 30 FPS
+ffmpeg -framerate 30 -start_number 1030 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p rembrandtplein-video-x1.mp4
+# repeat 8 times, 1029 frames, video alleen
+ffmpeg -i rembrandtplein-video-x1.mp4 -filter_complex "loop=loop=8:size=1029:start=0" rembrandtplein-video-x8.mp4
+# repeat 8 times, audio
+ffmpeg -stream_loop 8 -i rembrandtplein-audio-x1.wav -c copy rembrandtplein-audio-x8.wav
+# video en audio samenvoegen
+ffmpeg -i rembrandtplein-video-x8.mp4 -i rembrandtplein-audio-x8.wav -vcodec copy rembrandtplein-x8.mp4
+# scale to 50%, 960 * 540
+ffmpeg -i rembrandtplein-x8.mp4 -vf scale=960:720 rembrandtplein-x8_halfsize.mp4
+```
+
+## Muziek
+
+Video duurt 1029 frames.<br>
+Video duurt 1029 / 30 FPS = 34.3 seconden.<br>
+Video duurt 16 maten van 4 beats = 64 beats.<br>
+Een beat duurt 34.3 / 64 = 0.5359375 seconden.<br>
+Het tempo is 60 / 0.5359375 = 111.95335276967931 BPM<br>
