@@ -26,7 +26,6 @@ export function getDistance(x1: number, y1: number, x2: number, y2: number) {
   return Math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2);
 }
 
-
 /**
  * Create matrix from rotation, scale and position.
  */
@@ -41,10 +40,14 @@ export function getMatrix4(config: MatrixConfig = {}) {
   return matrix4;
 }
 
+/**
+ * Log the bounding box size of the geometry.
+ */
 export function logBoundingBox(geometry: THREE.BufferGeometry) {
   geometry.computeBoundingBox();
   const size = new THREE.Vector3();
   geometry.boundingBox?.getSize(size);
+  // eslint-disable-next-line no-console
   console.log(
     `Bounding box w: ${size.x.toFixed(3)}, h: ${size.y.toFixed(3)}, d: ${size.z.toFixed(3)}`,
   );

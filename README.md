@@ -180,7 +180,7 @@ out_w and out_h are width and height of the output rectangle.<br>
 out_x and out_y are the left top corner of the output rectangle.<br>
 
 ```
-ffmpeg -i input.avi -filter:v "crop=out_w:out_h:out_x:out_y" output.avi<br>
+ffmpeg -i input.avi -filter:v "crop=out_w:out_h:out_x:out_y" output.avi
 ```
 
 ## Chromakey, replace greenscreen with transparency in PNG's.
