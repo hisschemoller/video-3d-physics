@@ -38,6 +38,7 @@ ffmpeg -i rembrandtplein-0010a.mov -vf scale=480:270 rembrandtplein-0010a_previe
 ffmpeg -i rembrandtplein-0010a_preview.mov '/Volumes/Samsung_X5/rembrandtplein-0010/frames_preview/frame_%05d.png'
 ```
 
+
 ## Render PNG sequence
 
 ```
@@ -52,6 +53,7 @@ ffmpeg -i rembrandtplein-video-x8.mp4 -i rembrandtplein-audio-x8.wav -vcodec cop
 # scale to 50%, 960 * 540
 ffmpeg -i rembrandtplein-x8.mp4 -vf scale=960:720 rembrandtplein-x8_halfsize.mp4
 ```
+
 
 ## Muziek
 
