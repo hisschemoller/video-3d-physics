@@ -281,7 +281,7 @@ export function createTweenGroup(
         }
       },
       onComplete: () => {
-        group.visible = false;
+        // group.visible = false;
       },
     });
     timeline.add(tween);

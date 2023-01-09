@@ -7,7 +7,7 @@ import { createTweenGroup } from './actor';
 import createBackground from './background';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 109;
+const BPM = 105;
 const SECONDS_PER_BEAT = 60 / BPM;
 const MEASURES = 4;
 const BEATS_PER_MEASURE = 4;
@@ -35,7 +35,7 @@ export default class Scene extends MainScene {
     this.height = 1440;
     this.width3d = 16;
     this.height3d = (this.height / this.width) * this.width3d;
-    this.fps = 15;
+    this.fps = 30;
     this.captureFps = 30;
     this.captureThrottle = 10;
     this.captureDuration = PATTERN_DURATION * 4 * 2;
