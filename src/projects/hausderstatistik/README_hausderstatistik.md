@@ -16,3 +16,10 @@
   * 0:35 man draait zich even om
   * 3:02 man en kinderen komen aanlopen
 
+## Sequence order
+
+1. 1267
+2. 1271 focus op rode gebouw
+3. 1272 reclamezuil in beeld
+4. 1268 focus op reclamezuil
+5. 1266 reclamebord in beeld

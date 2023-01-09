@@ -1,10 +1,10 @@
-import { THREE } from 'enable3d';
-import { ProjectSettings, ImageData, VideoData } from '@app/interfaces';
+import { ProjectSettings } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
 // import { playSound } from '@app/audio';
-import { createActor, createTweenGroup } from './actor';
+import { createTweenGroup } from './actor';
+import createBackground from './background';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 109;
@@ -80,6 +80,11 @@ export default class Scene extends MainScene {
         height: 480,
         width: 640,
       },
+      frame1267: {
+        imgSrc: '../assets/projects/hausderstatistik/Berlijn 2019 Haus der Statistik 1267.png',
+        height: 480,
+        width: 640,
+      },
     };
 
     // PROJECT SETTINGS
@@ -98,13 +103,11 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-    const group = createTweenGroup(projectSettings); // GROUP
-    // group.setStaticPosition(getMatrix4({
-    //   x: -8.20, y: 8.23, rx: 0.1623, sx: 1., sy: 1.03,
-    // }));
-    group.setStaticPosition(getMatrix4({ x: -8, y: 6 }));
+    // GROUP
+    const group = createTweenGroup(projectSettings);
+    group.setStaticPosition(getMatrix4({ x: this.width3d * -0.5, y: this.height3d * 0.5 }));
 
-    await this.createBackground(projectSettings, videos, group.getMesh());
+    await createBackground(projectSettings, videos, group.getMesh());
 
     this.postCreate();
   }
@@ -112,31 +115,5 @@ export default class Scene extends MainScene {
   async updateAsync(time: number, delta: number) {
     await this.timeline.update(time, delta);
     super.updateAsync(time, delta);
-  }
-
-  /**
-   * createBackground
-   */
-  async createBackground(
-    projectSettings: ProjectSettings,
-    videos: { [key: string]: VideoData | ImageData },
-    group: THREE.Group,
-  ): Promise<void> {
-    const { height3d, width, width3d } = projectSettings;
-    const SVG_SCALE = width3d / width;
-    const to3d = this.to3d.bind(this);
-
-    { // BACKGROUND EXAMPLE IMAGE
-      const actor = await createActor(projectSettings, videos.frame1266, {
-        box: { w: width3d, h: height3d, d: 0.02 },
-        imageRect: { w: videos.frame1266.width, h: videos.frame1266.height },
-        depth: 0.02,
-      });
-      actor.setStaticPosition(getMatrix4({}));
-      actor.setStaticImage(0, 0);
-      actor.getMesh().castShadow = false;
-      actor.getMesh().receiveShadow = false;
-      group.add(actor.getMesh());
-    }
   }
 }
