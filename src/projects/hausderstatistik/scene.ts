@@ -107,7 +107,7 @@ export default class Scene extends MainScene {
     const group = createTweenGroup(projectSettings);
     group.setStaticPosition(getMatrix4({ x: this.width3d * -0.5, y: this.height3d * 0.5 }));
 
-    await createBackground(projectSettings, videos, group.getMesh());
+    await createBackground(projectSettings, videos, group.getMesh(), this.to3d.bind(this));
 
     this.postCreate();
   }

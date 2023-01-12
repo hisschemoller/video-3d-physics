@@ -6,15 +6,18 @@ import { createActor, createTweenGroup } from './actor';
 async function createBackground1(
   p: ProjectSettings,
   videos: { [key: string]: VideoData | ImageData },
+  to3d: (size: number, isWidth: boolean) => number,
 ) {
-  const { height3d, stepDuration, width3d } = p;
+  const { stepDuration, width, width3d } = p;
+  const SVG_SCALE = width3d / width;
+  const axisX = to3d(577, true);
 
   const actor = await createActor(p, videos.frame1267, {
-    box: { w: width3d, h: height3d, d: 0.02 },
     imageRect: { w: videos.frame1266.width, h: videos.frame1266.height },
+    svg: { scale: SVG_SCALE, url: '../assets/projects/hausderstatistik/background.svg' },
     depth: 0.02,
   });
-  actor.setStaticPosition(getMatrix4({ x: -4 }));
+  actor.setStaticPosition(getMatrix4({ x: -axisX }));
   actor.setStaticImage(0, 0);
   actor.getMesh().castShadow = false;
   actor.getMesh().receiveShadow = false;
@@ -25,20 +28,24 @@ async function createBackground1(
   tweenGroupScale.addTween({
     delay: stepDuration * 4,
     duration: stepDuration * 16,
-    ease: 'sineInOut',
+    ease: 'cubicInOut',
     fromMatrix4: getMatrix4({ sx: 1.0 }),
-    toMatrix4: getMatrix4({ sx: 2.0 }),
+    toMatrix4: getMatrix4({ sx: 1.44 }),
   });
 
   const tweenGroupRotation = createTweenGroup(p);
-  tweenGroupRotation.setStaticPosition(getMatrix4({ x: 4, ry: 0.0 }));
+  tweenGroupRotation.setStaticPosition(getMatrix4({ x: axisX, ry: 0.0 }));
   tweenGroupRotation.getMesh().add(tweenGroupScale.getMesh());
   tweenGroupRotation.addTween({
     delay: stepDuration * 4,
     duration: stepDuration * 16,
-    ease: 'sineInOut',
-    fromMatrix4: getMatrix4({ x: 4, ry: 0.0 }),
-    toMatrix4: getMatrix4({ x: 4, ry: Math.PI * 0.1 }),
+    ease: 'cubicInOut',
+    fromMatrix4: getMatrix4({
+      x: axisX, y: 0, z: 0, ry: 0.0,
+    }),
+    toMatrix4: getMatrix4({
+      x: axisX + 4.3, y: -0.2, z: 7.5, ry: Math.PI * 0.06,
+    }),
   });
 
   return tweenGroupRotation;
@@ -51,7 +58,8 @@ export default async function createBackground(
   projectSettings: ProjectSettings,
   videos: { [key: string]: VideoData | ImageData },
   group: THREE.Group,
+  to3d: (size: number, isWidth: boolean) => number,
 ): Promise<void> {
-  const tweenGroup1 = await createBackground1(projectSettings, videos);
+  const tweenGroup1 = await createBackground1(projectSettings, videos, to3d);
   group.add(tweenGroup1.getMesh());
 }
