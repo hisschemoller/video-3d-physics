@@ -16,9 +16,14 @@
   * 0:35 man draait zich even om
   * 3:02 man en kinderen komen aanlopen
 
-## Sequence order
+## Background sequence order
 
-1. 1267
+1. 1267 overzicht vanaf grootste afstand
+2. 1271 focus op rode gebouw
+3. 1268 focus op reclamezuil
+4. 1273 karl marx allee
+
+1. 1267 overzicht vanaf grootste afstand
 2. 1271 focus op rode gebouw
 3. 1272 reclamezuil in beeld
 4. 1268 focus op reclamezuil

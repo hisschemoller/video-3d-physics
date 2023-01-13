@@ -1,3 +1,4 @@
+import { THREE } from 'enable3d';
 import { ProjectSettings } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
@@ -85,6 +86,11 @@ export default class Scene extends MainScene {
         height: 480,
         width: 640,
       },
+      frame1271: {
+        imgSrc: '../assets/projects/hausderstatistik/Berlijn 2019 Haus der Statistik 1271.png',
+        height: 480,
+        width: 640,
+      },
     };
 
     // PROJECT SETTINGS
@@ -107,6 +113,7 @@ export default class Scene extends MainScene {
     const group = createTweenGroup(projectSettings);
     group.setStaticPosition(getMatrix4({ x: this.width3d * -0.5, y: this.height3d * 0.5 }));
 
+    this.createShadowGround(group.getMesh());
     await createBackground(projectSettings, videos, group.getMesh(), this.to3d.bind(this));
 
     this.postCreate();
@@ -115,5 +122,18 @@ export default class Scene extends MainScene {
   async updateAsync(time: number, delta: number) {
     await this.timeline.update(time, delta);
     super.updateAsync(time, delta);
+  }
+
+  createShadowGround(group: THREE.Group) {
+    const planeGeometry = new THREE.PlaneGeometry(this.width3d, 6);
+    planeGeometry.rotateX(Math.PI / -2);
+    const ground = new THREE.Mesh(
+      planeGeometry,
+      new THREE.ShadowMaterial({ opacity: 0.4, transparent: true, side: THREE.FrontSide }),
+      // new THREE.MeshPhongMaterial({ color: 0x999999 }),
+    );
+    ground.position.set(8, -8, 3);
+    ground.receiveShadow = true;
+    group.add(ground);
   }
 }
