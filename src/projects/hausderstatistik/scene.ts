@@ -10,7 +10,7 @@ import createBackground from './background';
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 105;
 const SECONDS_PER_BEAT = 60 / BPM;
-const MEASURES = 4;
+const MEASURES = 8;
 const BEATS_PER_MEASURE = 4;
 const STEPS_PER_BEAT = 4;
 const STEPS = STEPS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
@@ -76,18 +76,23 @@ export default class Scene extends MainScene {
 
     // VIDEOS
     const videos = {
-      frame1266: {
-        imgSrc: '../assets/projects/hausderstatistik/Berlijn 2019 Haus der Statistik 1266.png',
-        height: 480,
-        width: 640,
-      },
       frame1267: {
         imgSrc: '../assets/projects/hausderstatistik/Berlijn 2019 Haus der Statistik 1267.png',
         height: 480,
         width: 640,
       },
+      frame1268: {
+        imgSrc: '../assets/projects/hausderstatistik/Berlijn 2019 Haus der Statistik 1268.png',
+        height: 480,
+        width: 640,
+      },
       frame1271: {
         imgSrc: '../assets/projects/hausderstatistik/Berlijn 2019 Haus der Statistik 1271.png',
+        height: 480,
+        width: 640,
+      },
+      frame1273: {
+        imgSrc: '../assets/projects/hausderstatistik/Berlijn 2019 Haus der Statistik 1273.png',
         height: 480,
         width: 640,
       },
@@ -113,7 +118,7 @@ export default class Scene extends MainScene {
     const group = createTweenGroup(projectSettings);
     group.setStaticPosition(getMatrix4({ x: this.width3d * -0.5, y: this.height3d * 0.5 }));
 
-    this.createShadowGround(group.getMesh());
+    // this.createShadowGround(group.getMesh());
     await createBackground(projectSettings, videos, group.getMesh(), this.to3d.bind(this));
 
     this.postCreate();

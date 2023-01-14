@@ -207,6 +207,7 @@ async function createBackground3(
     delay: fadeInDelay,
     duration: fadeInDuration,
     onStart: () => {
+      tweenGroupScale.setStaticPosition(getMatrix4({ sx: 1.0 }));
       tweenGroupRotation.setStaticPosition(getMatrix4({ x: axisX, z: -10 }));
     },
     onUpdate: (progress: number) => {
@@ -254,6 +255,7 @@ async function createBackground3(
 
   return tweenGroupRotation;
 }
+
 async function createBackground4(
   p: ProjectSettings,
   videos: { [key: string]: VideoData | ImageData },
@@ -263,6 +265,8 @@ async function createBackground4(
   const actorSc = 4.13;
   const bg1Sc = 4.9;
   const axisX = to3d(996, true);
+  const fadeInDelay = stepDuration * 60;
+  const fadeInDuration = stepDuration * 1;
   const moveDelay = stepDuration * 100;
   const moveDuration = stepDuration * 16;
   const fadeOutDelay = stepDuration * 116;
@@ -292,25 +296,44 @@ async function createBackground4(
   actor.getMesh().receiveShadow = false;
 
   const tweenGroupScale = createTweenGroup(p);
+
+  const tweenGroupRotation = createTweenGroup(p);
+
+  const fadeInTween = createTween({
+    delay: fadeInDelay,
+    duration: fadeInDuration,
+    onStart: () => {
+      setOpacity(bg1.getMesh().material as THREE.MeshPhongMaterial, 1);
+      tweenGroupScale.setStaticPosition(getMatrix4({ sx: actorSc, sy: actorSc, sz: 1.0 }));
+      tweenGroupRotation.setStaticPosition(getMatrix4({ x: axisX + 1, y: 18.9, z: -40 }));
+    },
+    onUpdate: (progress: number) => {
+      setOpacity(actor.getMesh().material as THREE.MeshPhongMaterial, progress);
+    },
+    onComplete: () => {},
+  });
+  timeline.add(fadeInTween);
+
   tweenGroupScale.setStaticPosition(getMatrix4({ sx: actorSc, sy: actorSc, sz: 1.0 }));
+  // tweenGroupScale.setStaticPosition(getMatrix4({ sx: 1.2, sy: 0.3, sz: 0.3 }));
   tweenGroupScale.getMesh().add(actor.getMesh());
   tweenGroupScale.addTween({
     delay: moveDelay,
     duration: moveDuration,
     ease: 'cubicInOut',
     fromMatrix4: getMatrix4({ sx: actorSc, sy: actorSc, sz: 1.0 }),
-    toMatrix4: getMatrix4({ sx: 1.6, sy: 0.4, sz: 0.4 }),
+    toMatrix4: getMatrix4({ sx: 1.2, sy: 0.3, sz: 0.3 }),
   });
 
-  const tweenGroupRotation = createTweenGroup(p);
   tweenGroupRotation.setStaticPosition(getMatrix4({ x: axisX + 1, y: 18.9, z: -40 }));
+  // tweenGroupRotation.setStaticPosition(getMatrix4({ x: 6.9, y: -4.2, z: 8.5, ry: Math.PI * -0.32 }));
   tweenGroupRotation.getMesh().add(tweenGroupScale.getMesh());
   tweenGroupRotation.addTween({
     delay: moveDelay,
     duration: moveDuration,
     ease: 'cubicInOut',
     fromMatrix4: getMatrix4({ x: axisX + 1, y: 18.9, z: -40 }),
-    toMatrix4: getMatrix4({ x: 6.8, y: -3.6, z: 7, ry: Math.PI * -0.31 }),
+    toMatrix4: getMatrix4({ x: 6.9, y: -4.2, z: 8.5, ry: Math.PI * -0.32 }),
   });
 
   const fadeOutTween = createTween({
@@ -327,7 +350,7 @@ async function createBackground4(
       // reset and move out of the way temporarily
       if (isFadeOutStarted) {
         isFadeOutStarted = false;
-        // TODO: use
+        tweenGroupRotation.setStaticPosition(getMatrix4({ x: 25 }));
       }
     },
   });
