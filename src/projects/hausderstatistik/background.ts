@@ -20,6 +20,9 @@ function setOpacity(
   }
 }
 
+/**
+ * createBackground 1
+ */
 async function createBackground1(
   p: ProjectSettings,
   videos: { [key: string]: VideoData | ImageData },
@@ -28,9 +31,9 @@ async function createBackground1(
   const axisX = to3d(577, true);
   const zoomDelay = stepDuration * 4;
   const zoomDuration = stepDuration * 16;
-  const fadeOutDelay = stepDuration * 20;
-  const fadeOutDuration = stepDuration * 16;
-  const fadeInDelay = stepDuration * 116;
+  const fadeOutDelay = stepDuration * (20 - 2);
+  const fadeOutDuration = stepDuration * 12;
+  const fadeInDelay = stepDuration * 108;
   const fadeInDuration = stepDuration * 10;
 
   const actor = await createActor(p, videos.frame1267, {
@@ -94,6 +97,9 @@ async function createBackground1(
   return tweenGroupRotation;
 }
 
+/**
+ * createBackground 2
+ */
 async function createBackground2(
   p: ProjectSettings,
   videos: { [key: string]: VideoData | ImageData },
@@ -104,7 +110,7 @@ async function createBackground2(
   const fadeInDuration = stepDuration * 1;
   const moveDelay = stepDuration * 36;
   const moveDuration = stepDuration * 16;
-  const fadeOutDelay = stepDuration * 52;
+  const fadeOutDelay = stepDuration * (52 - 6);
   const fadeOutDuration = stepDuration * 16;
   let isFadeOutStarted = false;
 
@@ -169,6 +175,9 @@ async function createBackground2(
   return tweenGroupRotation;
 }
 
+/**
+ * createBackground 3
+ */
 async function createBackground3(
   p: ProjectSettings,
   videos: { [key: string]: VideoData | ImageData },
@@ -180,7 +189,7 @@ async function createBackground3(
   const fadeInDuration = stepDuration * 1;
   const moveDelay = stepDuration * 68;
   const moveDuration = stepDuration * 16;
-  const fadeOutDelay = stepDuration * 84;
+  const fadeOutDelay = stepDuration * (84 - 8);
   const fadeOutDuration = stepDuration * 16;
   let isFadeOutStarted = false;
 
@@ -256,6 +265,9 @@ async function createBackground3(
   return tweenGroupRotation;
 }
 
+/**
+ * createBackground 4
+ */
 async function createBackground4(
   p: ProjectSettings,
   videos: { [key: string]: VideoData | ImageData },
@@ -269,8 +281,8 @@ async function createBackground4(
   const fadeInDuration = stepDuration * 1;
   const moveDelay = stepDuration * 100;
   const moveDuration = stepDuration * 16;
-  const fadeOutDelay = stepDuration * 116;
-  const fadeOutDuration = stepDuration * 10;
+  const fadeOutDelay = stepDuration * (116 - 4);
+  const fadeOutDuration = stepDuration * 12;
   let isFadeOutStarted = false;
 
   // background1 copy further back
@@ -310,7 +322,9 @@ async function createBackground4(
     onUpdate: (progress: number) => {
       setOpacity(actor.getMesh().material as THREE.MeshPhongMaterial, progress);
     },
-    onComplete: () => {},
+    onComplete: () => {
+      setOpacity(actor.getMesh().material as THREE.MeshPhongMaterial, 1);
+    },
   });
   timeline.add(fadeInTween);
 
@@ -326,7 +340,6 @@ async function createBackground4(
   });
 
   tweenGroupRotation.setStaticPosition(getMatrix4({ x: axisX + 1, y: 18.9, z: -40 }));
-  // tweenGroupRotation.setStaticPosition(getMatrix4({ x: 6.9, y: -4.2, z: 8.5, ry: Math.PI * -0.32 }));
   tweenGroupRotation.getMesh().add(tweenGroupScale.getMesh());
   tweenGroupRotation.addTween({
     delay: moveDelay,
@@ -343,13 +356,15 @@ async function createBackground4(
       isFadeOutStarted = true;
     },
     onUpdate: (progress: number) => {
-      setOpacity(actor.getMesh().material as THREE.MeshPhongMaterial, 1 - progress);
       setOpacity(bg1.getMesh().material as THREE.MeshPhongMaterial, 1 - progress);
+      setOpacity(actor.getMesh().material as THREE.MeshPhongMaterial, 1 - progress);
     },
     onComplete: () => {
       // reset and move out of the way temporarily
       if (isFadeOutStarted) {
         isFadeOutStarted = false;
+        setOpacity(bg1.getMesh().material as THREE.MeshPhongMaterial, 0);
+        setOpacity(actor.getMesh().material as THREE.MeshPhongMaterial, 0);
         tweenGroupRotation.setStaticPosition(getMatrix4({ x: 25 }));
       }
     },
