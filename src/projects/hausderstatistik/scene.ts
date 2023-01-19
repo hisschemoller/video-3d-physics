@@ -7,7 +7,7 @@ import { getMatrix4 } from '@app/utils';
 import { createTweenGroup } from './actor';
 import createBackground from './background';
 
-const PROJECT_PREVIEW_SCALE = 0.25;
+const PROJECT_PREVIEW_SCALE = 0.5;
 const BPM = 105;
 const SECONDS_PER_BEAT = 60 / BPM;
 const MEASURES = 8;
@@ -95,6 +95,42 @@ export default class Scene extends MainScene {
         imgSrc: '../assets/projects/hausderstatistik/Berlijn 2019 Haus der Statistik 1273.png',
         height: 480,
         width: 640,
+      },
+      video1267: {
+        fps: 30,
+        height: 480,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 640,
+        imgSrcPath: isPreview
+          ? '../assets/projects/hausderstatistik/hausderstatistik-1267_preview/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/hausderstatistik-1267/frames/&img=frame_#FRAME#.png',
+      },
+      video1268: {
+        fps: 30,
+        height: 480,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 640,
+        imgSrcPath: isPreview
+          ? '../assets/projects/hausderstatistik/hausderstatistik-1268_preview/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/hausderstatistik-1268/frames/&img=frame_#FRAME#.png',
+      },
+      video1271: {
+        fps: 30,
+        height: 480,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 640,
+        imgSrcPath: isPreview
+          ? '../assets/projects/hausderstatistik/hausderstatistik-1271_preview/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/hausderstatistik-1271/frames/&img=frame_#FRAME#.png',
+      },
+      video1273: {
+        fps: 30,
+        height: 480,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 640,
+        imgSrcPath: isPreview
+          ? '../assets/projects/hausderstatistik/hausderstatistik-1273_preview/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/hausderstatistik-1273/frames/&img=frame_#FRAME#.png',
       },
     };
 

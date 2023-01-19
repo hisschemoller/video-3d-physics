@@ -36,8 +36,8 @@ async function createBackground1(
   const fadeInDelay = stepDuration * 108;
   const fadeInDuration = stepDuration * 10;
 
-  const actor = await createActor(p, videos.frame1267, {
-    imageRect: { w: videos.frame1267.width, h: videos.frame1267.height },
+  const actor = await createActor(p, videos.video1267, {
+    imageRect: { w: videos.video1267.width, h: videos.video1267.height },
     svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
     depth: 0.02,
   });
@@ -45,6 +45,12 @@ async function createBackground1(
   actor.setStaticImage(0, 0);
   actor.getMesh().castShadow = false;
   actor.getMesh().receiveShadow = false;
+  actor.addTween({
+    delay: fadeInDelay,
+    duration: 8,
+    videoStart: 0,
+    fromImagePosition: new THREE.Vector2(0, 0),
+  });
 
   const tweenGroupScale = createTweenGroup(p);
   tweenGroupScale.setStaticPosition(getMatrix4({}));
@@ -114,8 +120,8 @@ async function createBackground2(
   const fadeOutDuration = stepDuration * 16;
   let isFadeOutStarted = false;
 
-  const actor = await createActor(p, videos.frame1271, {
-    imageRect: { w: videos.frame1271.width, h: videos.frame1271.height },
+  const actor = await createActor(p, videos.video1271, {
+    imageRect: { w: videos.video1271.width, h: videos.video1271.height },
     svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
     depth: 0.02,
   });
@@ -123,6 +129,12 @@ async function createBackground2(
   actor.setStaticImage(0, 0);
   actor.getMesh().castShadow = false;
   actor.getMesh().receiveShadow = false;
+  actor.addTween({
+    delay: fadeInDelay,
+    duration: 8,
+    videoStart: 8,
+    fromImagePosition: new THREE.Vector2(0, 0),
+  });
   setOpacity(actor.getMesh().material as THREE.MeshPhongMaterial, 0);
 
   const tweenGroupRotation = createTweenGroup(p);
@@ -193,8 +205,8 @@ async function createBackground3(
   const fadeOutDuration = stepDuration * 16;
   let isFadeOutStarted = false;
 
-  const actor = await createActor(p, videos.frame1268, {
-    imageRect: { w: videos.frame1268.width, h: videos.frame1268.height },
+  const actor = await createActor(p, videos.video1268, {
+    imageRect: { w: videos.video1268.width, h: videos.video1268.height },
     svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
     depth: 0.02,
   });
@@ -202,6 +214,12 @@ async function createBackground3(
   actor.setStaticImage(0, 0);
   actor.getMesh().castShadow = false;
   actor.getMesh().receiveShadow = false;
+  actor.addTween({
+    delay: fadeInDelay,
+    duration: 8,
+    videoStart: 2,
+    fromImagePosition: new THREE.Vector2(0, 0),
+  });
   setOpacity(actor.getMesh().material as THREE.MeshPhongMaterial, 0);
 
   const tweenGroupScale = createTweenGroup(p);
@@ -286,8 +304,8 @@ async function createBackground4(
   let isFadeOutStarted = false;
 
   // background1 copy further back
-  const bg1 = await createActor(p, videos.frame1267, {
-    imageRect: { w: videos.frame1267.width, h: videos.frame1267.height },
+  const bg1 = await createActor(p, videos.video1267, {
+    imageRect: { w: videos.video1267.width, h: videos.video1267.height },
     svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
     depth: 0.02,
   });
@@ -295,10 +313,16 @@ async function createBackground4(
   bg1.setStaticImage(0, 0);
   bg1.getMesh().castShadow = false;
   bg1.getMesh().receiveShadow = false;
+  bg1.addTween({
+    delay: fadeInDelay,
+    duration: 8,
+    videoStart: 2,
+    fromImagePosition: new THREE.Vector2(0, 0),
+  });
   group.add(bg1.getMesh());
 
-  const actor = await createActor(p, videos.frame1273, {
-    imageRect: { w: videos.frame1273.width, h: videos.frame1273.height },
+  const actor = await createActor(p, videos.video1273, {
+    imageRect: { w: videos.video1273.width, h: videos.video1273.height },
     svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
     depth: 0.02,
   });
@@ -306,6 +330,12 @@ async function createBackground4(
   actor.setStaticImage(0, 0);
   actor.getMesh().castShadow = false;
   actor.getMesh().receiveShadow = false;
+  actor.addTween({
+    delay: fadeInDelay,
+    duration: 8,
+    videoStart: 2,
+    fromImagePosition: new THREE.Vector2(0, 0),
+  });
 
   const tweenGroupScale = createTweenGroup(p);
 
