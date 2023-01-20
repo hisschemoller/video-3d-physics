@@ -27,8 +27,8 @@
 
 ```
 # 1267
-# get 10 seconds from 00:00:43
-ffmpeg -ss 00:00:43.0 -i 'Berlijn 2019 Haus der Statistik 1267.avi' -c copy -t 00:00:10.0 hausderstatistik-1267.avi
+# get 20 seconds from 00:00:31
+ffmpeg -ss 00:00:31.0 -i 'Berlijn 2019 Haus der Statistik 1267.avi' -c copy -t 00:00:20.0 hausderstatistik-1267.avi
 # convert to png sequence
 ffmpeg -i hausderstatistik-1267.avi '/Volumes/Samsung_X5/hausderstatistik-1267/frames/frame_%05d.png'
 # scale to 50%, 640 * 480 >  320 x 240

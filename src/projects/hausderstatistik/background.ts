@@ -39,7 +39,7 @@ async function createBackground1(
   const actor = await createActor(p, videos.video1267, {
     imageRect: { w: videos.video1267.width, h: videos.video1267.height },
     svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
-    depth: 0.02,
+    depth: 0.005,
   });
   actor.setStaticPosition(getMatrix4({ x: -axisX }));
   actor.setStaticImage(0, 0);
@@ -48,7 +48,7 @@ async function createBackground1(
   actor.addTween({
     delay: fadeInDelay,
     duration: 8,
-    videoStart: 0,
+    videoStart: 6.1 + (stepDuration * 48),
     fromImagePosition: new THREE.Vector2(0, 0),
   });
 
@@ -123,7 +123,7 @@ async function createBackground2(
   const actor = await createActor(p, videos.video1271, {
     imageRect: { w: videos.video1271.width, h: videos.video1271.height },
     svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
-    depth: 0.02,
+    depth: 0.005,
   });
   actor.setStaticPosition(getMatrix4({ x: -axisX }));
   actor.setStaticImage(0, 0);
@@ -208,7 +208,7 @@ async function createBackground3(
   const actor = await createActor(p, videos.video1268, {
     imageRect: { w: videos.video1268.width, h: videos.video1268.height },
     svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
-    depth: 0.02,
+    depth: 0.005,
   });
   actor.setStaticPosition(getMatrix4({ x: -axisX - 6.25, y: 4.7, sx: actorScale, sy: actorScale }));
   actor.setStaticImage(0, 0);
@@ -293,7 +293,6 @@ async function createBackground4(
 ) {
   const { stepDuration, timeline } = p;
   const actorSc = 4.13;
-  const bg1Sc = 4.9;
   const axisX = to3d(996, true);
   const fadeInDelay = stepDuration * 60;
   const fadeInDuration = stepDuration * 1;
@@ -304,10 +303,11 @@ async function createBackground4(
   let isFadeOutStarted = false;
 
   // background1 copy further back
+  const bg1Sc = 4.9;
   const bg1 = await createActor(p, videos.video1267, {
     imageRect: { w: videos.video1267.width, h: videos.video1267.height },
     svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
-    depth: 0.02,
+    depth: 0.005,
   });
   bg1.setStaticPosition(getMatrix4({ x: -axisX - 23, y: 23.5, z: -50, sx: bg1Sc, sy: bg1Sc }));
   bg1.setStaticImage(0, 0);
@@ -316,7 +316,7 @@ async function createBackground4(
   bg1.addTween({
     delay: fadeInDelay,
     duration: 8,
-    videoStart: 2,
+    videoStart: 6.1,
     fromImagePosition: new THREE.Vector2(0, 0),
   });
   group.add(bg1.getMesh());
@@ -324,7 +324,7 @@ async function createBackground4(
   const actor = await createActor(p, videos.video1273, {
     imageRect: { w: videos.video1273.width, h: videos.video1273.height },
     svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
-    depth: 0.02,
+    depth: 0.005,
   });
   actor.setStaticPosition(getMatrix4({ x: -axisX }));
   actor.setStaticImage(0, 0);
@@ -332,8 +332,8 @@ async function createBackground4(
   actor.getMesh().receiveShadow = false;
   actor.addTween({
     delay: fadeInDelay,
-    duration: 8,
-    videoStart: 2,
+    duration: fadeOutDelay + fadeOutDuration - fadeInDelay,
+    videoStart: 4.7,
     fromImagePosition: new THREE.Vector2(0, 0),
   });
 

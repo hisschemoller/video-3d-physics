@@ -58,7 +58,7 @@ export default class Scene extends MainScene {
     this.orbitControls.saveState();
 
     // DIRECTIONAL LIGHT
-    this.directionalLight.position.set(6, 9, 6);
+    this.directionalLight.position.set(0.5, 9, 6);
     this.directionalLight.color.setHSL(0, 1, 0.97);
 
     // AMBIENT LIGHT
