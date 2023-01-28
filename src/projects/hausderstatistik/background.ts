@@ -5,6 +5,7 @@ import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
 import createTween from '@app/tween';
 import { createActor, createTweenGroup } from './actor';
+import createStepAnimation1 from './stepAnimation';
 
 let svgScale: number;
 let to3d: (size: number, isWidth: boolean) => number;
@@ -38,7 +39,7 @@ async function createBackground1(
 
   const actor = await createActor(p, videos.video1267, {
     imageRect: { w: videos.video1267.width, h: videos.video1267.height },
-    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
+    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background1267.svg' },
     depth: 0.005,
   });
   actor.setStaticPosition(getMatrix4({ x: -axisX }));
@@ -54,7 +55,7 @@ async function createBackground1(
 
   const tweenGroupScale = createTweenGroup(p);
   tweenGroupScale.setStaticPosition(getMatrix4({}));
-  tweenGroupScale.getMesh().add(actor.getMesh());
+  tweenGroupScale.getGroup().add(actor.getMesh());
   tweenGroupScale.addTween({
     delay: zoomDelay,
     duration: zoomDuration,
@@ -65,7 +66,7 @@ async function createBackground1(
 
   const tweenGroupRotation = createTweenGroup(p);
   tweenGroupRotation.setStaticPosition(getMatrix4({ x: axisX, y: 0, z: 0, ry: 0.0 }));
-  tweenGroupRotation.getMesh().add(tweenGroupScale.getMesh());
+  tweenGroupRotation.getGroup().add(tweenGroupScale.getGroup());
   tweenGroupRotation.addTween({
     delay: zoomDelay,
     duration: zoomDuration,
@@ -122,7 +123,7 @@ async function createBackground2(
 
   const actor = await createActor(p, videos.video1271, {
     imageRect: { w: videos.video1271.width, h: videos.video1271.height },
-    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
+    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background1271.svg' },
     depth: 0.005,
   });
   actor.setStaticPosition(getMatrix4({ x: -axisX }));
@@ -139,7 +140,7 @@ async function createBackground2(
 
   const tweenGroupRotation = createTweenGroup(p);
   tweenGroupRotation.setStaticPosition(getMatrix4({ x: axisX, y: 0, z: 0, ry: 0 }));
-  tweenGroupRotation.getMesh().add(actor.getMesh());
+  tweenGroupRotation.getGroup().add(actor.getMesh());
 
   const fadeInTween = createTween({
     delay: fadeInDelay,
@@ -207,7 +208,7 @@ async function createBackground3(
 
   const actor = await createActor(p, videos.video1268, {
     imageRect: { w: videos.video1268.width, h: videos.video1268.height },
-    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
+    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background1268.svg' },
     depth: 0.005,
   });
   actor.setStaticPosition(getMatrix4({ x: -axisX - 6.25, y: 4.7, sx: actorScale, sy: actorScale }));
@@ -224,11 +225,11 @@ async function createBackground3(
 
   const tweenGroupScale = createTweenGroup(p);
   tweenGroupScale.setStaticPosition(getMatrix4({}));
-  tweenGroupScale.getMesh().add(actor.getMesh());
+  tweenGroupScale.getGroup().add(actor.getMesh());
 
   const tweenGroupRotation = createTweenGroup(p);
   tweenGroupRotation.setStaticPosition(getMatrix4({ x: axisX, z: -10 }));
-  tweenGroupRotation.getMesh().add(tweenGroupScale.getMesh());
+  tweenGroupRotation.getGroup().add(tweenGroupScale.getGroup());
 
   const fadeInTween = createTween({
     delay: fadeInDelay,
@@ -306,7 +307,7 @@ async function createBackground4(
   const bg1Sc = 4.9;
   const bg1 = await createActor(p, videos.video1267, {
     imageRect: { w: videos.video1267.width, h: videos.video1267.height },
-    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
+    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background1267.svg' },
     depth: 0.005,
   });
   bg1.setStaticPosition(getMatrix4({ x: -axisX - 23, y: 23.5, z: -50, sx: bg1Sc, sy: bg1Sc }));
@@ -323,7 +324,7 @@ async function createBackground4(
 
   const actor = await createActor(p, videos.video1273, {
     imageRect: { w: videos.video1273.width, h: videos.video1273.height },
-    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
+    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background1273.svg' },
     depth: 0.005,
   });
   actor.setStaticPosition(getMatrix4({ x: -axisX }));
@@ -360,7 +361,7 @@ async function createBackground4(
 
   tweenGroupScale.setStaticPosition(getMatrix4({ sx: actorSc, sy: actorSc, sz: 1.0 }));
   // tweenGroupScale.setStaticPosition(getMatrix4({ sx: 1.2, sy: 0.3, sz: 0.3 }));
-  tweenGroupScale.getMesh().add(actor.getMesh());
+  tweenGroupScale.getGroup().add(actor.getMesh());
   tweenGroupScale.addTween({
     delay: moveDelay,
     duration: moveDuration,
@@ -370,7 +371,7 @@ async function createBackground4(
   });
 
   tweenGroupRotation.setStaticPosition(getMatrix4({ x: axisX + 1, y: 18.9, z: -40 }));
-  tweenGroupRotation.getMesh().add(tweenGroupScale.getMesh());
+  tweenGroupRotation.getGroup().add(tweenGroupScale.getGroup());
   tweenGroupRotation.addTween({
     delay: moveDelay,
     duration: moveDuration,
@@ -418,14 +419,16 @@ export default async function createBackground(
   to3d = to3dFunction;
 
   const tweenGroup1 = await createBackground1(projectSettings, videos);
-  group.add(tweenGroup1.getMesh());
+  group.add(tweenGroup1.getGroup());
 
   const tweenGroup2 = await createBackground2(projectSettings, videos);
-  group.add(tweenGroup2.getMesh());
+  group.add(tweenGroup2.getGroup());
 
   const tweenGroup3 = await createBackground3(projectSettings, videos);
-  group.add(tweenGroup3.getMesh());
+  group.add(tweenGroup3.getGroup());
 
   const tweenGroup4 = await createBackground4(projectSettings, videos, group);
-  group.add(tweenGroup4.getMesh());
+  group.add(tweenGroup4.getGroup());
+
+  createStepAnimation1(projectSettings, group);
 }

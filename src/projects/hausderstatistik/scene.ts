@@ -155,7 +155,7 @@ export default class Scene extends MainScene {
     group.setStaticPosition(getMatrix4({ x: this.width3d * -0.5, y: this.height3d * 0.5 }));
 
     // this.createShadowGround(group.getMesh());
-    await createBackground(projectSettings, videos, group.getMesh(), this.to3d.bind(this));
+    await createBackground(projectSettings, videos, group.getGroup(), this.to3d.bind(this));
 
     this.postCreate();
   }

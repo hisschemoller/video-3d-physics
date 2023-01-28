@@ -296,7 +296,7 @@ export function createTweenGroup(
 
   return {
     addTween,
-    getMesh: () => group,
+    getGroup: () => group,
     setStaticPosition,
   };
 }
