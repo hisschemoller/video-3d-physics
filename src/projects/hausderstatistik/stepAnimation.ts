@@ -1,56 +1,69 @@
 import { THREE } from 'enable3d';
 import { ProjectSettings } from '@app/interfaces';
 import createTween from '@app/tween';
-
-const BOX_COLOR = 0x333333;
-const BOX_SIZE = 0.5;
-
-function createBox() {
-  const box = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(BOX_SIZE, BOX_SIZE, BOX_SIZE),
-    new THREE.MeshPhongMaterial({
-      side: THREE.FrontSide, color: BOX_COLOR, transparent: true, opacity: 1,
-    }),
-  );
-  return box;
-}
+import BoxCache from './BoxCache';
 
 function createStepAnimation(
   p: ProjectSettings,
-  parentObject3d: THREE.Mesh | THREE.Group,
+  sequence: THREE.Vector3[][],
+  boxSize: number,
 ) {
   const { stepDuration, timeline } = p;
-
-  const box = createBox();
-  box.position.set(6, -4, 1);
-
+  const cache = new BoxCache(boxSize);
+  const group = new THREE.Group();
+  const duration = stepDuration * sequence.length;
   let currentStep = -1;
-  const numSteps = 16;
-  const duration = stepDuration * numSteps;
+
   const fadeInTween = createTween({
     delay: 0.01,
     duration,
-    onStart: () => {
-      parentObject3d.add(box);
-    },
+    onStart: () => {},
     onUpdate: (progress: number) => {
-      const progressStep = Math.floor(progress * numSteps);
+      const progressStep = Math.min(Math.floor(progress * sequence.length), sequence.length - 1);
       if (progressStep !== currentStep) {
         currentStep = progressStep;
-        console.log(currentStep);
-        box.position.x = currentStep % 2 === 0 ? 6 : 6 + BOX_SIZE;
+
+        group.remove(...group.children);
+
+        sequence[currentStep].forEach((vector3) => {
+          const box = cache.getNext();
+          box.position.copy(vector3);
+          group.add(box);
+        });
       }
     },
     onComplete: () => {
-      parentObject3d.remove(box);
+      group.remove(...group.children);
     },
   });
   timeline.add(fadeInTween);
+
+  return group;
 }
 
 export default function createStepAnimation1(
-  p: ProjectSettings,
+  projectSettings: ProjectSettings,
   parentObject3d: THREE.Mesh | THREE.Group,
 ) {
-  createStepAnimation(p, parentObject3d);
+  const p = { ...projectSettings, stepDuration: projectSettings.stepDuration * 2 };
+  const boxSize = 0.5;
+  const sequenceLength = 16;
+  const sequence: THREE.Vector3[][] = [];
+  for (let i = 0; i < sequenceLength; i += 1) {
+    if (i % 2 === 0) {
+      sequence.push([
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(boxSize, boxSize, 0),
+      ]);
+    } else {
+      sequence.push([
+        new THREE.Vector3(boxSize, 0, 0),
+        new THREE.Vector3(0, boxSize, 0),
+      ]);
+    }
+  }
+
+  const group = createStepAnimation(p, sequence, boxSize);
+  group.position.set(6, -4, 1);
+  parentObject3d.add(group);
 }
