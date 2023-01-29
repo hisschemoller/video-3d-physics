@@ -5,7 +5,7 @@ import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
 import createTween from '@app/tween';
 import { createActor, createTweenGroup } from './actor';
-import createStepAnimation1 from './stepAnimation';
+import { createStepAnimation1, createStepAnimation2 } from './stepAnimation';
 
 let svgScale: number;
 let to3d: (size: number, isWidth: boolean) => number;
@@ -431,4 +431,5 @@ export default async function createBackground(
   group.add(tweenGroup4.getGroup());
 
   createStepAnimation1(projectSettings, group);
+  createStepAnimation2(projectSettings, group);
 }

@@ -1,6 +1,6 @@
 import { THREE } from 'enable3d';
 
-function createBox(size = 0.5, color = 0x333333) {
+function createBox(size = 0.5, color = 0xff7766) {
   const box = new THREE.Mesh(
     new THREE.BoxBufferGeometry(size, size, size),
     new THREE.MeshPhongMaterial({
