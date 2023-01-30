@@ -1,11 +1,13 @@
-import { THREE } from 'enable3d';
 import { ProjectSettings } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
 // import { playSound } from '@app/audio';
 import { createTweenGroup } from './actor';
-import createBackground from './background';
+import createBackgrounds from './background';
+import {
+  createObjects1, createObjects2, createObjects3, createObjects4,
+} from './objects';
 
 const PROJECT_PREVIEW_SCALE = 0.5;
 const BPM = 105;
@@ -58,8 +60,10 @@ export default class Scene extends MainScene {
     this.orbitControls.saveState();
 
     // DIRECTIONAL LIGHT
-    this.directionalLight.position.set(0.5, 9, 6);
     this.directionalLight.color.setHSL(0, 1, 0.97);
+    this.directionalLight.position.set(0.5, 9, 6 + 9.5);
+    this.directionalLight.target.position.set(0, 0, 9.5);
+    this.scene.add(this.directionalLight.target);
 
     // AMBIENT LIGHT
     this.ambientLight.intensity = 0.3;
@@ -154,8 +158,11 @@ export default class Scene extends MainScene {
     const group = createTweenGroup(projectSettings);
     group.setStaticPosition(getMatrix4({ x: this.width3d * -0.5, y: this.height3d * 0.5 }));
 
-    // this.createShadowGround(group.getMesh());
-    await createBackground(projectSettings, videos, group.getGroup(), this.to3d.bind(this));
+    await createBackgrounds(projectSettings, videos, group.getGroup(), this.to3d.bind(this));
+    await createObjects1(projectSettings, group.getGroup());
+    await createObjects2(projectSettings, group.getGroup());
+    await createObjects3(projectSettings, group.getGroup());
+    await createObjects4(projectSettings, group.getGroup());
 
     this.postCreate();
   }
@@ -163,18 +170,5 @@ export default class Scene extends MainScene {
   async updateAsync(time: number, delta: number) {
     await this.timeline.update(time, delta);
     super.updateAsync(time, delta);
-  }
-
-  createShadowGround(group: THREE.Group) {
-    const planeGeometry = new THREE.PlaneGeometry(this.width3d, 6);
-    planeGeometry.rotateX(Math.PI / -2);
-    const ground = new THREE.Mesh(
-      planeGeometry,
-      new THREE.ShadowMaterial({ opacity: 0.4, transparent: true, side: THREE.FrontSide }),
-      // new THREE.MeshPhongMaterial({ color: 0x999999 }),
-    );
-    ground.position.set(8, -8, 3);
-    ground.receiveShadow = true;
-    group.add(ground);
   }
 }

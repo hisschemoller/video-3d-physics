@@ -56,7 +56,7 @@ function createMeshFromShape(
     new THREE.MeshPhongMaterial({
       color,
       flatShading: false,
-      opacity: 0,
+      opacity: 1,
       side: THREE.BackSide,
       transparent: true,
     }),

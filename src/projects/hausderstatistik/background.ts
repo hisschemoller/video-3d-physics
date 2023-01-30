@@ -5,7 +5,6 @@ import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
 import createTween from '@app/tween';
 import { createActor, createTweenGroup } from './actor';
-import { createStepAnimation1, createStepAnimation2 } from './stepAnimation';
 
 let svgScale: number;
 let to3d: (size: number, isWidth: boolean) => number;
@@ -27,6 +26,7 @@ function setOpacity(
 async function createBackground1(
   p: ProjectSettings,
   videos: { [key: string]: VideoData | ImageData },
+  group: THREE.Group,
 ) {
   const { stepDuration, timeline } = p;
   const axisX = to3d(577, true);
@@ -74,6 +74,7 @@ async function createBackground1(
     fromMatrix4: getMatrix4({ x: axisX, y: 0, z: 0, ry: 0.0 }),
     toMatrix4: getMatrix4({ x: axisX + 4.3, y: -0.2, z: 7.5, ry: Math.PI * 0.06 }),
   });
+  group.add(tweenGroupRotation.getGroup());
 
   const fadeOutTween = createTween({
     delay: fadeOutDelay,
@@ -101,7 +102,7 @@ async function createBackground1(
   });
   timeline.add(fadeInTween);
 
-  return tweenGroupRotation;
+  return actor.getMesh();
 }
 
 /**
@@ -110,6 +111,7 @@ async function createBackground1(
 async function createBackground2(
   p: ProjectSettings,
   videos: { [key: string]: VideoData | ImageData },
+  group: THREE.Group,
 ) {
   const { stepDuration, timeline } = p;
   const axisX = to3d(1283, true);
@@ -141,6 +143,7 @@ async function createBackground2(
   const tweenGroupRotation = createTweenGroup(p);
   tweenGroupRotation.setStaticPosition(getMatrix4({ x: axisX, y: 0, z: 0, ry: 0 }));
   tweenGroupRotation.getGroup().add(actor.getMesh());
+  group.add(tweenGroupRotation.getGroup());
 
   const fadeInTween = createTween({
     delay: fadeInDelay,
@@ -185,7 +188,7 @@ async function createBackground2(
   });
   timeline.add(fadeOutTween);
 
-  return tweenGroupRotation;
+  return tweenGroupRotation.getGroup();
 }
 
 /**
@@ -408,7 +411,7 @@ async function createBackground4(
 /**
  * createBackground
  */
-export default async function createBackground(
+export default async function createBackgrounds(
   projectSettings: ProjectSettings,
   videos: { [key: string]: VideoData | ImageData },
   group: THREE.Group,
@@ -418,11 +421,9 @@ export default async function createBackground(
   svgScale = width3d / width;
   to3d = to3dFunction;
 
-  const tweenGroup1 = await createBackground1(projectSettings, videos);
-  group.add(tweenGroup1.getGroup());
+  await createBackground1(projectSettings, videos, group);
 
-  const tweenGroup2 = await createBackground2(projectSettings, videos);
-  group.add(tweenGroup2.getGroup());
+  await createBackground2(projectSettings, videos, group);
 
   const tweenGroup3 = await createBackground3(projectSettings, videos);
   group.add(tweenGroup3.getGroup());
@@ -430,6 +431,9 @@ export default async function createBackground(
   const tweenGroup4 = await createBackground4(projectSettings, videos, group);
   group.add(tweenGroup4.getGroup());
 
-  createStepAnimation1(projectSettings, group);
-  createStepAnimation2(projectSettings, group);
+  // createStepAnimation1(projectSettings, group);
+  // createStepAnimation2(projectSettings, group);
+  // createStepAnimation2(projectSettings, background2);
+
+  // createSequence(projectSettings, background2, to3d);
 }
