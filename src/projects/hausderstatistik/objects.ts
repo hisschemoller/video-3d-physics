@@ -81,6 +81,9 @@ function createTestBox(
   return box;
 }
 
+/**
+ * 1
+ */
 export async function createObjects1(
   p: ProjectSettings,
   rootGroup: THREE.Group,
@@ -102,27 +105,33 @@ export async function createObjects1(
   group.add(ground);
 }
 
+/**
+ * 2
+ */
 export async function createObjects2(
   p: ProjectSettings,
   rootGroup: THREE.Group,
 ) {
   const group = createRotatingGroup(p, {
     inDelay: 36,
-    inFrom: { x: 4, z: 2, ry: 1 },
+    inFrom: { x: 2, z: 5, ry: 1 },
     inTo: { x: 0, z: 0, ry: 0 },
     outDelay: 68,
     outFrom: { x: 0, z: 0, ry: 0 },
-    outTo: { x: 4, z: 2, ry: 1 },
+    outTo: { x: 2, z: 5, ry: 1 },
   });
   rootGroup.add(group);
 
-  const box = createTestBox(8 - 1, -7.2 + 0.7, 9.5, 0x727f61);
+  const box = createTestBox(8 - 1, -7.2 + 0.7, 9.5, 0x00ff00);
   group.add(box);
 
   const ground = createShadowGround(4, 2, 8 - 1, -7.2, 9.5);
   group.add(ground);
 }
 
+/**
+ * 3
+ */
 export async function createObjects3(
   p: ProjectSettings,
   rootGroup: THREE.Group,
@@ -137,13 +146,16 @@ export async function createObjects3(
   });
   rootGroup.add(group);
 
-  const box = createTestBox(8 - 1, -7.2 + 0.7, 9.5, 0x6a86af);
+  const box = createTestBox(8 - 1, -7.2 + 0.7, 9.5, 0x6a86af); // blauw
   group.add(box);
 
   const ground = createShadowGround(4, 2, 8 - 1, -7.2, 9.5);
   group.add(ground);
 }
 
+/**
+ * 4
+ */
 export async function createObjects4(
   p: ProjectSettings,
   rootGroup: THREE.Group,
@@ -158,9 +170,9 @@ export async function createObjects4(
   });
   rootGroup.add(group);
 
-  const box = createTestBox(8 - 1, -7.2 + 0.7, 9.5, 0xe88470);
+  const box = createTestBox(8 + 1, -7.2 + 0.7, 9.5, 0xe88470);
   group.add(box);
 
-  const ground = createShadowGround(4, 2, 8 - 1, -7.2, 9.5);
+  const ground = createShadowGround(4, 2, 8 + 1, -7.2, 9.5);
   group.add(ground);
 }

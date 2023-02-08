@@ -2,7 +2,7 @@ import { ProjectSettings } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
-// import { playSound } from '@app/audio';
+import { playSound } from '@app/audio';
 import { createTweenGroup } from './actor';
 import createBackgrounds from './background';
 import {
@@ -70,7 +70,7 @@ export default class Scene extends MainScene {
 
     // AUDIO
     if (!this.scene.userData.isCapture) {
-      // playSound('../assets/projects/rembrandtplein/rembrandtplein-16-maten-test.wav');
+      playSound('../assets/projects/hausderstatistik/hausderstatistik.wav');
     }
 
     // TWEENS
