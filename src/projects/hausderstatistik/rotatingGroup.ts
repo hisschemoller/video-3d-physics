@@ -25,7 +25,7 @@ function createRotatingGroup(
   const duration = s * 16;
 
   const group = new THREE.Group();
-  group.position.set(0, 0, 0);
+  // group.position.set(0, 0, 0);
 
   addMatrix4Tween(p, group, {
     delay: s * inDelay,
@@ -42,6 +42,9 @@ function createRotatingGroup(
     fromMatrix4: getMatrix4(outFrom),
     toMatrix4: getMatrix4(outTo),
   });
+
+  group.position.setFromMatrixPosition(getMatrix4(inFrom));
+  group.quaternion.setFromRotationMatrix(getMatrix4(inFrom));
 
   return group;
 }
@@ -72,7 +75,7 @@ function createTestBox(
   color: number,
 ) {
   const box = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(0.2, 1.4, 0.2),
+    new THREE.BoxBufferGeometry(0.2, 0.2, 0.2),
     new THREE.MeshPhongMaterial({ color }),
   );
   box.castShadow = true;
@@ -84,7 +87,7 @@ function createTestBox(
 /**
  * 1
  */
-export async function createObjects1(
+export async function createRotatingGroup1(
   p: ProjectSettings,
   rootGroup: THREE.Group,
 ) {
@@ -98,17 +101,19 @@ export async function createObjects1(
   });
   rootGroup.add(group);
 
-  const box = createTestBox(8 - 1, -7.2 + 0.7, 9.5, 0xe73b4e);
-  group.add(box);
-
   const ground = createShadowGround(4, 2, 8 - 1, -7.2, 9.5);
   group.add(ground);
+
+  const box = createTestBox(8 - 1, -7.2 + 0.7, 9.5, 0xff0000);
+  group.add(box);
+
+  return group;
 }
 
 /**
  * 2
  */
-export async function createObjects2(
+export async function createRotatingGroup2(
   p: ProjectSettings,
   rootGroup: THREE.Group,
 ) {
@@ -122,17 +127,19 @@ export async function createObjects2(
   });
   rootGroup.add(group);
 
+  const ground = createShadowGround(4, 2, 8 - 1, -7.2, 9.5);
+  group.add(ground);
+
   const box = createTestBox(8 - 1, -7.2 + 0.7, 9.5, 0x00ff00);
   group.add(box);
 
-  const ground = createShadowGround(4, 2, 8 - 1, -7.2, 9.5);
-  group.add(ground);
+  return group;
 }
 
 /**
  * 3
  */
-export async function createObjects3(
+export async function createRotatingGroup3(
   p: ProjectSettings,
   rootGroup: THREE.Group,
 ) {
@@ -146,17 +153,19 @@ export async function createObjects3(
   });
   rootGroup.add(group);
 
-  const box = createTestBox(8 - 1, -7.2 + 0.7, 9.5, 0x6a86af); // blauw
-  group.add(box);
-
   const ground = createShadowGround(4, 2, 8 - 1, -7.2, 9.5);
   group.add(ground);
+
+  const box = createTestBox(8 - 1, -7.2 + 0.7, 9.5, 0x0000ff); // blauw
+  group.add(box);
+
+  return group;
 }
 
 /**
  * 4
  */
-export async function createObjects4(
+export async function createRotatingGroup4(
   p: ProjectSettings,
   rootGroup: THREE.Group,
 ) {
@@ -170,9 +179,11 @@ export async function createObjects4(
   });
   rootGroup.add(group);
 
-  const box = createTestBox(8 + 1, -7.2 + 0.7, 9.5, 0xe88470);
+  const box = createTestBox(8 + 1, -7.2 + 0.7, 9.5, 0xeffff00);
   group.add(box);
 
   const ground = createShadowGround(4, 2, 8 + 1, -7.2, 9.5);
   group.add(ground);
+
+  return group;
 }

@@ -39,7 +39,7 @@ async function createBackground1(
 
   const actor = await createActor(p, videos.video1267, {
     imageRect: { w: videos.video1267.width, h: videos.video1267.height },
-    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background1267.svg' },
+    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
     depth: 0.005,
   });
   actor.setStaticPosition(getMatrix4({ x: -axisX }));
@@ -125,7 +125,7 @@ async function createBackground2(
 
   const actor = await createActor(p, videos.video1271, {
     imageRect: { w: videos.video1271.width, h: videos.video1271.height },
-    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background1271.svg' },
+    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
     depth: 0.005,
   });
   actor.setStaticPosition(getMatrix4({ x: -axisX }));
@@ -211,7 +211,7 @@ async function createBackground3(
 
   const actor = await createActor(p, videos.video1268, {
     imageRect: { w: videos.video1268.width, h: videos.video1268.height },
-    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background1268.svg' },
+    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
     depth: 0.005,
   });
   actor.setStaticPosition(getMatrix4({ x: -axisX - 6.25, y: 4.7, sx: actorScale, sy: actorScale }));
@@ -310,7 +310,7 @@ async function createBackground4(
   const bg1Sc = 4.9;
   const bg1 = await createActor(p, videos.video1267, {
     imageRect: { w: videos.video1267.width, h: videos.video1267.height },
-    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background1267.svg' },
+    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
     depth: 0.005,
   });
   bg1.setStaticPosition(getMatrix4({ x: -axisX - 23, y: 23.5, z: -50, sx: bg1Sc, sy: bg1Sc }));

@@ -6,8 +6,8 @@ import { playSound } from '@app/audio';
 import { createTweenGroup } from './actor';
 import createBackgrounds from './background';
 import {
-  createObjects1, createObjects2, createObjects3, createObjects4,
-} from './objects';
+  createRotatingGroup1, createRotatingGroup2, createRotatingGroup3, createRotatingGroup4,
+} from './rotatingGroup';
 
 const PROJECT_PREVIEW_SCALE = 0.5;
 const BPM = 105;
@@ -159,10 +159,10 @@ export default class Scene extends MainScene {
     group.setStaticPosition(getMatrix4({ x: this.width3d * -0.5, y: this.height3d * 0.5 }));
 
     await createBackgrounds(projectSettings, videos, group.getGroup(), this.to3d.bind(this));
-    await createObjects1(projectSettings, group.getGroup());
-    await createObjects2(projectSettings, group.getGroup());
-    await createObjects3(projectSettings, group.getGroup());
-    await createObjects4(projectSettings, group.getGroup());
+    const group1 = await createRotatingGroup1(projectSettings, group.getGroup());
+    const group2 = await createRotatingGroup2(projectSettings, group.getGroup());
+    const group3 = await createRotatingGroup3(projectSettings, group.getGroup());
+    const group4 = await createRotatingGroup4(projectSettings, group.getGroup());
 
     this.postCreate();
   }
