@@ -2,6 +2,7 @@ import { THREE } from 'enable3d';
 import { ProjectSettings } from '@app/interfaces';
 import { getMatrix4, MatrixConfig } from '@app/utils';
 import addMatrix4Tween from './matrix4Tween';
+import { createTestTube } from './tubeObjects';
 
 function createRotatingGroup(
   p: ProjectSettings,
@@ -85,9 +86,35 @@ function createTestBox(
 }
 
 /**
- * 1
+ * 1.
  */
 export async function createRotatingGroup1(
+  p: ProjectSettings,
+  rootGroup: THREE.Group,
+) {
+  const group = createRotatingGroup(p, {
+    inDelay: 100,
+    inFrom: { x: 4, z: 2, ry: 1 },
+    inTo: { x: 0, z: 0, ry: 0 },
+    outDelay: 4,
+    outFrom: { x: 0, z: 0, ry: 0 },
+    outTo: { x: 4, z: 2, ry: 1 },
+  });
+  rootGroup.add(group);
+
+  const ground = createShadowGround(4, 2, 8 + 1, -7.2, 9.5);
+  group.add(ground);
+
+  const box = createTestBox(8 + 1, -7.2 + 0.7, 9.5, 0xeffff00);
+  group.add(box);
+
+  return group;
+}
+
+/**
+ * 2.
+ */
+export async function createRotatingGroup2(
   p: ProjectSettings,
   rootGroup: THREE.Group,
 ) {
@@ -104,16 +131,19 @@ export async function createRotatingGroup1(
   const ground = createShadowGround(4, 2, 8 - 1, -7.2, 9.5);
   group.add(ground);
 
-  const box = createTestBox(8 - 1, -7.2 + 0.7, 9.5, 0xff0000);
-  group.add(box);
+  // const box = createTestBox(8 - 1, -7.2 + 0.7, 9.5, 0xff0000);
+  // group.add(box);
+
+  const tube = createTestTube(8 - 1, -7.2 + 0.7, 9.5, 0xff0000);
+  group.add(tube);
 
   return group;
 }
 
 /**
- * 2
+ * 3.
  */
-export async function createRotatingGroup2(
+export async function createRotatingGroup3(
   p: ProjectSettings,
   rootGroup: THREE.Group,
 ) {
@@ -137,9 +167,9 @@ export async function createRotatingGroup2(
 }
 
 /**
- * 3
+ * 4.
  */
-export async function createRotatingGroup3(
+export async function createRotatingGroup4(
   p: ProjectSettings,
   rootGroup: THREE.Group,
 ) {
@@ -158,32 +188,6 @@ export async function createRotatingGroup3(
 
   const box = createTestBox(8 - 1, -7.2 + 0.7, 9.5, 0x0000ff); // blauw
   group.add(box);
-
-  return group;
-}
-
-/**
- * 4
- */
-export async function createRotatingGroup4(
-  p: ProjectSettings,
-  rootGroup: THREE.Group,
-) {
-  const group = createRotatingGroup(p, {
-    inDelay: 100,
-    inFrom: { x: 4, z: 2, ry: 1 },
-    inTo: { x: 0, z: 0, ry: 0 },
-    outDelay: 4,
-    outFrom: { x: 0, z: 0, ry: 0 },
-    outTo: { x: 4, z: 2, ry: 1 },
-  });
-  rootGroup.add(group);
-
-  const box = createTestBox(8 + 1, -7.2 + 0.7, 9.5, 0xeffff00);
-  group.add(box);
-
-  const ground = createShadowGround(4, 2, 8 + 1, -7.2, 9.5);
-  group.add(ground);
 
   return group;
 }
