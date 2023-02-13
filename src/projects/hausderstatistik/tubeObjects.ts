@@ -1,19 +1,70 @@
+/* eslint-disable no-param-reassign */
 import { THREE } from 'enable3d';
+import { ProjectSettings } from '@app/interfaces';
+import createTween, { EaseFunction } from '@app/tween';
 
-// eslint-disable-next-line import/prefer-default-export
-export function createTestTube(
+export function rotateAroundAxis(
+  projectSettings: ProjectSettings,
+  object3d: THREE.Mesh | THREE.Group,
+  delay: number,
+  duration: number,
+  rotations: number,
+  ease: keyof typeof EaseFunction = 'linear',
+) {
+  const { stepDuration, timeline } = projectSettings;
+
+  const tween = createTween({
+    delay: stepDuration * delay,
+    duration: stepDuration * duration,
+    ease,
+    onStart: () => {
+      object3d.visible = true;
+    },
+    onUpdate: async (progress: number) => {
+      object3d.rotation.y = progress * Math.PI * rotations;
+    },
+    onComplete: () => {
+      // FIXME: removed for Prins Hendrikkade
+      // mesh.visible = false;
+    },
+  });
+  timeline.add(tween);
+}
+
+export function createBox(
   x: number,
   y: number,
   z: number,
-  color: number,
+  w: number,
+  h: number,
+  d: number,
+  color: number = 0x555555,
 ) {
-  const curve = [[0, 0, 0], [4, -0.2, 0.2], [6, -0.5, 0.5]];
+  const box = new THREE.Mesh(
+    new THREE.BoxBufferGeometry(w, h, d),
+    new THREE.MeshPhongMaterial({ color }),
+  );
+  box.castShadow = true;
+  box.receiveShadow = true;
+  box.position.set(x, y, z);
+  return box;
+}
+
+export function createTube(
+  x: number,
+  y: number,
+  z: number,
+  curve: [number, number, number][],
+  radius: number = 0.05,
+  color: number = 0x555555,
+) {
+  // const curve = [[0, 0, 0], [-0.2, 4, 0.2], [-0.5, 6, 0.5]];
   const points = curve.map((curveItem) => new THREE.Vector3(...curveItem));
   const curve3 = new THREE.CatmullRomCurve3(points);
 
   const tube = new THREE.Mesh(
-    new THREE.TubeGeometry(curve3, 40, 0.05, 4, false),
-    new THREE.MeshPhongMaterial({ color }),
+    new THREE.TubeGeometry(curve3, 128, radius, 4, false),
+    new THREE.MeshPhongMaterial({ color, flatShading: true, shininess: 0 }),
   );
   tube.castShadow = true;
   tube.receiveShadow = true;

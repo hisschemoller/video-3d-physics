@@ -42,7 +42,7 @@ export default class Scene extends MainScene {
     this.captureFps = 30;
     this.captureThrottle = 10;
     this.captureDuration = PATTERN_DURATION * 4 * 2;
-    this.clearColor = 0x7ba8dd;
+    this.clearColor = 0xa69288;
   }
 
   async create() {
@@ -159,10 +159,10 @@ export default class Scene extends MainScene {
     group.setStaticPosition(getMatrix4({ x: this.width3d * -0.5, y: this.height3d * 0.5 }));
 
     await createBackgrounds(projectSettings, videos, group.getGroup(), this.to3d.bind(this));
-    const group1 = await createRotatingGroup1(projectSettings, group.getGroup());
-    const group2 = await createRotatingGroup2(projectSettings, group.getGroup());
-    const group3 = await createRotatingGroup3(projectSettings, group.getGroup());
-    const group4 = await createRotatingGroup4(projectSettings, group.getGroup());
+    await createRotatingGroup1(projectSettings, group.getGroup());
+    await createRotatingGroup2(projectSettings, group.getGroup());
+    await createRotatingGroup3(projectSettings, group.getGroup());
+    await createRotatingGroup4(projectSettings, group.getGroup());
 
     this.postCreate();
   }

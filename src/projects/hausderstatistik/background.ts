@@ -327,7 +327,7 @@ async function createBackground4(
 
   const actor = await createActor(p, videos.video1273, {
     imageRect: { w: videos.video1273.width, h: videos.video1273.height },
-    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background1273.svg' },
+    svg: { scale: svgScale, url: '../assets/projects/hausderstatistik/background.svg' },
     depth: 0.005,
   });
   actor.setStaticPosition(getMatrix4({ x: -axisX }));
