@@ -3,6 +3,35 @@ import { THREE } from 'enable3d';
 import { ProjectSettings } from '@app/interfaces';
 import createTween, { EaseFunction } from '@app/tween';
 
+export function oscillateOnAxis(
+  projectSettings: ProjectSettings,
+  object3d: THREE.Mesh | THREE.Group,
+  delay: number,
+  duration: number,
+  oscillations: number,
+  amplitude: number,
+  offset: number = 0,
+) {
+  const { stepDuration, timeline } = projectSettings;
+
+  const tween = createTween({
+    delay: stepDuration * delay,
+    duration: stepDuration * duration,
+    onStart: () => {
+      object3d.visible = true;
+    },
+    onUpdate: async (progress: number) => {
+      // object3d.position.y = progress * Math.PI * oscillations;
+      object3d.position.y = Math.sin((progress + offset) * oscillations * Math.PI) * amplitude;
+    },
+    onComplete: () => {
+      // FIXME: removed for Prins Hendrikkade
+      // mesh.visible = false;
+    },
+  });
+  timeline.add(tween);
+}
+
 export function rotateAroundAxis(
   projectSettings: ProjectSettings,
   object3d: THREE.Mesh | THREE.Group,

@@ -2,7 +2,9 @@ import { THREE } from 'enable3d';
 import { ProjectSettings } from '@app/interfaces';
 import { getMatrix4, MatrixConfig } from '@app/utils';
 import addMatrix4Tween from './matrix4Tween';
-import { createBox, createTube, rotateAroundAxis } from './tubeObjects';
+import {
+  createBox, createTube, oscillateOnAxis, rotateAroundAxis,
+} from './tubeObjects';
 
 const GROUND_X = 8;
 const GROUND_Y = -7.2;
@@ -229,57 +231,68 @@ export async function createRotatingGroup2(
   // );
   // group.add(tube);
 
-  {
-    const tube = createTube(
-      GROUND_X + 0.66, GROUND_Y + 1.8, GROUND_Z + 1,
-      [[0, 0, 0], [-0.33, 0.33, 0.012], [0, 0.4, 0.05], [0.33, 0.33, -0.012], [0, 0, 0]],
-      0.015, 0x777777,
-    );
-    group.add(tube);
-    rotateAroundAxis(p, tube, inDelay, 48, 4.5);
-  }
+  // {
+  //   const tube = createTube(
+  //     GROUND_X + 0.66, GROUND_Y + 1.8, GROUND_Z + 1,
+  //     [[0, 0, 0], [-0.33, 0.33, 0.012], [0, 0.4, 0.05], [0.33, 0.33, -0.012], [0, 0, 0]],
+  //     0.015, 0x777777,
+  //   );
+  //   group.add(tube);
+  //   rotateAroundAxis(p, tube, inDelay, 48, 4.5);
+  // }
+
+  // {
+  //   const tube = createTube(
+  //     GROUND_X + 0.66, GROUND_Y + 1.6, GROUND_Z + 1,
+  //     [[0.5, 0, 0], [-0.1, 0.12, 0.33], [-0.33, -0.12, 0.05], [0.05, 0.12, -0.33], [0.33, 0, 0]],
+  //     0.015, 0x777777,
+  //   );
+  //   group.add(tube);
+  //   rotateAroundAxis(p, tube, inDelay, 48, -3);
+  // }
+
+  // {
+  //   const tube = createTube(
+  //     GROUND_X + 0.66, GROUND_Y + 1.3, GROUND_Z + 1,
+  //    [[-0.4, 0, 0.3], [-0.1, 0.2, 0.02], [0.44, -0.1, -0.4], [-0.1, 0.1, -0.02], [-0.4, 0, 0.3]],
+  //     0.015, 0x777777,
+  //   );
+  //   group.add(tube);
+  //   rotateAroundAxis(p, tube, inDelay, 48, 6);
+  // }
+
+  // {
+  //   const tube = createTube(
+  //     GROUND_X + 0.66, GROUND_Y + 1.1, GROUND_Z + 1,
+  //     [[0, 0, 0], [-0.33, 0.33, 0.02], [0, 1, 0.33], [0.2, 0.66, -0.1], [0, 0, 0]],
+  //     0.015, 0x777777,
+  //   );
+  //   group.add(tube);
+  //   rotateAroundAxis(p, tube, inDelay, 48, -6);
+  // }
 
   {
-    const tube = createTube(
-      GROUND_X + 0.66, GROUND_Y + 1.6, GROUND_Z + 1,
-      [[0.5, 0, 0], [-0.1, 0.12, 0.33], [-0.33, -0.12, 0.05], [0.05, 0.12, -0.33], [0.33, 0, 0]],
-      0.015, 0x777777,
-    );
-    group.add(tube);
-    rotateAroundAxis(p, tube, inDelay, 48, -3);
-  }
+    const boxGroup = new THREE.Group();
+    boxGroup.position.set(GROUND_X, GROUND_Y + 1.7, GROUND_Z + 1);
+    group.add(boxGroup);
+    rotateAroundAxis(p, boxGroup, inDelay, 48, -1.5);
 
-  {
-    const tube = createTube(
-      GROUND_X + 0.66, GROUND_Y + 1.3, GROUND_Z + 1,
-      [[-0.4, 0, 0.3], [-0.1, 0.2, 0.02], [0.44, -0.1, -0.4], [-0.1, 0.1, -0.02], [-0.4, 0, 0.3]],
-      0.015, 0x777777,
-    );
-    group.add(tube);
-    rotateAroundAxis(p, tube, inDelay, 48, 6);
-  }
+    const distance = 0.6;
+    const size = 0.25;
 
-  {
-    const tube = createTube(
-      GROUND_X + 0.66, GROUND_Y + 1.1, GROUND_Z + 1,
-      [[0, 0, 0], [-0.33, 0.33, 0.02], [0, 1, 0.33], [0.2, 0.66, -0.1], [0, 0, 0]],
-      0.015, 0x777777,
-    );
-    group.add(tube);
-    rotateAroundAxis(p, tube, inDelay, 48, -6);
+    for (let i = 0; i < 5; i += 1) {
+      for (let j = 0; j < 5; j += 1) {
+        const box = createBox(
+          (distance * -2) + (distance * i),
+          0,
+          (distance * -2) + (distance * j),
+          size, size, 0.005, 0x777777,
+        );
+        boxGroup.add(box);
+        oscillateOnAxis(p, box, inDelay, 48, 3, 0.33, Math.random());
+      }
+    }
   }
-
-  // addMatrix4Tween(p, tube2, {
-  //   delay: p.stepDuration * 4,
-  //   duration: p.stepDuration * 32,
-  //   ease: 'linear',
-  //   fromMatrix4: getMatrix4({
-  //     x: GROUND_X + 1, y: GROUND_Y + 1, z: GROUND_Z, ry: 0,
-  //   }),
-  //   toMatrix4: getMatrix4({
-  //     x: GROUND_X + 1, y: GROUND_Y + 1, z: GROUND_Z, ry: Math.PI * 1,
-  //   }),
-  // });
 
   return group;
 }
