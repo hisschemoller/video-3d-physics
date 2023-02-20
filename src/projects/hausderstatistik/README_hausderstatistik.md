@@ -72,3 +72,28 @@ ffmpeg -i hausderstatistik-1273.avi -vf scale=320:240 hausderstatistik-1273_prev
 # convert preview to png sequence
 ffmpeg -i hausderstatistik-1273_preview.avi '/Volumes/Samsung_X5/hausderstatistik-1273/frames_preview/frame_%05d.png'
 ```
+
+## Render PNG sequence
+
+```
+# png to mp4 (from index 531 met 30 FPS
+ffmpeg -framerate 30 -start_number 531 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p hausderstatistik-video-x1.mp4
+# repeat 16 times, 549 frames, video only
+ffmpeg -i hausderstatistik-video-x1.mp4 -filter_complex "loop=loop=16:size=549:start=0" hausderstatistik-video-x16.mp4
+# slide bitwig exported audio from 18.3 to 36.6 sec
+ffmpeg -ss 00:00:18.3 -i "2023-01-29 Haus der Statistik 002.wav" -c copy -t 00:00:36.6 hausderstatistik-audio-x1.wav
+# repeat 16 times, audio
+ffmpeg -stream_loop 16 -i hausderstatistik-audio-x1.wav -c copy hausderstatistik-audio-x16.wav
+# video en audio samenvoegen
+ffmpeg -i hausderstatistik-video-x16.mp4 -i hausderstatistik-audio-x16.wav -vcodec copy hausderstatistik-x16.mp4
+# scale to 50%, 960 * 720
+ffmpeg -i hausderstatistik-x16.mp4 -vf scale=960:720 hausderstatistik-x16_halfsize.mp4
+```
+
+## Muziek
+
+Video duurt 549 frames.<br>
+Video duurt 549 / 30 FPS = 18.3 seconden.<br>
+Video duurt 8 maten van 4 beats = 32 beats.<br>
+Een beat duurt 18.3 / 32 = 0.571875 seconden.<br>
+Het tempo is 60 / 0.571875 = 104.91803278688525 BPM<br>

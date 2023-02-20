@@ -180,16 +180,47 @@ export async function createRotatingGroup1(
   //   rotateAroundAxis(p, tube, inDelay, 48, -12);
   // }
 
+  // {
+  //   const boxGroup = new THREE.Group();
+  //   boxGroup.position.set(GROUND_X, GROUND_Y + 2, GROUND_Z + 1);
+  //   group.add(boxGroup);
+  //   rotateAroundAxis(p, boxGroup, inDelay, 48, -1.5);
+
+  //   for (let i = 0; i < 5; i += 1) {
+  //     const box = createBox(0, -0.6, -1 + (i * 0.4), 0.15, 1.2, 0.005, 0x777777);
+  //     boxGroup.add(box);
+  //     rotateAroundAxis(p, box, inDelay, 48, 6);
+  //   }
+  // }
+
   {
     const boxGroup = new THREE.Group();
-    boxGroup.position.set(GROUND_X, GROUND_Y + 2, GROUND_Z + 1);
+    boxGroup.position.set(GROUND_X, GROUND_Y + 2.5, GROUND_Z + 1);
     group.add(boxGroup);
-    rotateAroundAxis(p, boxGroup, inDelay, 48, -1.5);
+    // rotateAroundAxis(p, boxGroup, inDelay, 48, -1.5);
 
-    for (let i = 0; i < 5; i += 1) {
-      const box = createBox(0, -0.6, -1 + (i * 0.4), 0.15, 1.2, 0.005, 0x777777);
-      boxGroup.add(box);
-      rotateAroundAxis(p, box, inDelay, 48, 6);
+    const distanceX = 0.25;
+    const distanceY = 0.5;
+
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 2; j += 1) {
+        const box = createBox(
+          (distanceX * -4.5) + (distanceX * i),
+          (distanceY * -2) + (distanceY * j),
+          0,
+          0.2, 0.3, 0.005, 0x777777,
+        );
+        // const curve: [number, number, number][] = [[0, 0, 0], [0, 0.05, 0]];
+        // const tube = createTube(
+        //   (distance * -2) + (distance * i),
+        //   0,
+        //   (distance * -2) + (distance * j),
+        //   curve, 0.15, 0x777777,
+        // );
+        boxGroup.add(box);
+        oscillateOnAxis(p, box, inDelay, 48, 6, 0.1, Math.random(), 'z');
+        rotateAroundAxis(p, box, inDelay, 48, 6, 'linear', Math.random(), 'x');
+      }
     }
   }
 

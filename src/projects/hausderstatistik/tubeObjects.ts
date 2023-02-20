@@ -11,6 +11,7 @@ export function oscillateOnAxis(
   oscillations: number,
   amplitude: number,
   offset: number = 0,
+  axis: 'x' | 'y' | 'z' = 'y',
 ) {
   const { stepDuration, timeline } = projectSettings;
 
@@ -22,7 +23,7 @@ export function oscillateOnAxis(
     },
     onUpdate: async (progress: number) => {
       // object3d.position.y = progress * Math.PI * oscillations;
-      object3d.position.y = Math.sin((progress + offset) * oscillations * Math.PI) * amplitude;
+      object3d.position[axis] = Math.sin((progress + offset) * oscillations * Math.PI) * amplitude;
     },
     onComplete: () => {
       // FIXME: removed for Prins Hendrikkade
@@ -39,6 +40,8 @@ export function rotateAroundAxis(
   duration: number,
   rotations: number,
   ease: keyof typeof EaseFunction = 'linear',
+  offset: number = 0,
+  axis: 'x' | 'y' | 'z' = 'y',
 ) {
   const { stepDuration, timeline } = projectSettings;
 
@@ -50,7 +53,7 @@ export function rotateAroundAxis(
       object3d.visible = true;
     },
     onUpdate: async (progress: number) => {
-      object3d.rotation.y = progress * Math.PI * rotations;
+      object3d.rotation[axis] = (progress + offset) * Math.PI * rotations;
     },
     onComplete: () => {
       // FIXME: removed for Prins Hendrikkade
@@ -86,14 +89,16 @@ export function createTube(
   curve: [number, number, number][],
   radius: number = 0.05,
   color: number = 0x555555,
+  radiusSegments: number = 4,
+  flatShading: boolean = true,
 ) {
   // const curve = [[0, 0, 0], [-0.2, 4, 0.2], [-0.5, 6, 0.5]];
   const points = curve.map((curveItem) => new THREE.Vector3(...curveItem));
   const curve3 = new THREE.CatmullRomCurve3(points);
 
   const tube = new THREE.Mesh(
-    new THREE.TubeGeometry(curve3, 128, radius, 4, false),
-    new THREE.MeshPhongMaterial({ color, flatShading: true, shininess: 0 }),
+    new THREE.TubeGeometry(curve3, 128, radius, radiusSegments, true),
+    new THREE.MeshPhongMaterial({ color, flatShading, shininess: 0 }),
   );
   tube.castShadow = true;
   tube.receiveShadow = true;

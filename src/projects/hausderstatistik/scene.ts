@@ -41,7 +41,7 @@ export default class Scene extends MainScene {
     this.fps = 30;
     this.captureFps = 30;
     this.captureThrottle = 10;
-    this.captureDuration = PATTERN_DURATION * 4 * 2;
+    this.captureDuration = PATTERN_DURATION * 2;
     this.clearColor = 0xa69288;
   }
 
@@ -60,13 +60,14 @@ export default class Scene extends MainScene {
     this.orbitControls.saveState();
 
     // DIRECTIONAL LIGHT
-    this.directionalLight.color.setHSL(0, 1, 0.97);
+    this.directionalLight.color.setRGB(1, 1, 1);
     this.directionalLight.position.set(0.5, 9, 6 + 9.5);
+    this.directionalLight.intensity = 1.4;
     this.directionalLight.target.position.set(0, 0, 9.5);
     this.scene.add(this.directionalLight.target);
 
     // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.3;
+    this.ambientLight.intensity = 0.23;
 
     // AUDIO
     if (!this.scene.userData.isCapture) {
