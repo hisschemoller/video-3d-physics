@@ -97,3 +97,5 @@ Video duurt 549 / 30 FPS = 18.3 seconden.<br>
 Video duurt 8 maten van 4 beats = 32 beats.<br>
 Een beat duurt 18.3 / 32 = 0.571875 seconden.<br>
 Het tempo is 60 / 0.571875 = 104.91803278688525 BPM<br>
+
+Finished.
