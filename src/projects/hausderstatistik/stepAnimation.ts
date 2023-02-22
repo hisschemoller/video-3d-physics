@@ -84,7 +84,7 @@ export function createStepAnimation2(
 ) {
   const p = { ...projectSettings, stepDuration: projectSettings.stepDuration * 0.5 };
   const boxSize = 0.3;
-  const delay = p.stepDuration * 16;
+  const delay = p.stepDuration * 64;
   const sequenceLength = 64;
   const sequence: THREE.Vector3[][] = [];
   for (let i = 0; i < sequenceLength; i += 1) {
@@ -104,7 +104,7 @@ export function createStepAnimation2(
   addMatrix4Tween(p, group, {
     delay,
     duration: p.stepDuration * sequence.length,
-    fromMatrix4: getMatrix4({ x: 12, y: -4, z: 1, ry: 0 }),
-    toMatrix4: getMatrix4({ x: 2, y: -4, z: 2, ry: -4 }),
+    fromMatrix4: getMatrix4({ x: 6, y: -4, z: 1, ry: 0 }),
+    toMatrix4: getMatrix4({ x: 6, y: -4, z: 2, ry: -4 }),
   });
 }

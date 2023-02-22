@@ -326,3 +326,33 @@ spring: (bodyA: PhysicsBody, bodyB: PhysicsBody, config?: {
     enableSpring?: boolean | undefined;
 }, disableCollisionsBetweenLinkedBodies?: boolean | undefined) => Ammo.btGeneric6DofSpringConstraint;
 ```
+
+# AI
+
+* Erik Winkowski - 'Leaving Home'
+  * Instagram
+  * I used 3D parameters to set the camera movements, then the initial image option to upload my own dawings.
+  * I used variations of 'black and white abstract woodcut' along with descriptions of what was in the scene.
+* How to make: AI Animations
+  * https://www.youtube.com/watch?v=w_sxuDMt_V0
+    * Google account.
+    * Hugging Face account (https://huggingface.co/)
+    * Deforum Art (https://deforum.github.io/) Google Colab Notebook (Deforum Stable Diffusion v0.7)
+    * Copy Notebook to Google Drive and open the copy, close the original.
+    * Connect with button at right top.
+    * Run cell NVIDIA GPU.
+    * Run cell Environment Setup.
+    * Run cell Path Setup. (Drive folders, Protogen_V2.2.ckpt, 4.3 GB)
+    * Download weights file from Hugging Face. (sd-v1-4.ckpt, 4GB) (not needed in v0.7 anymore?)
+      * https://huggingface.co/CompVis/stable-diffusion-v-1-4-original
+    * Upload the weights file to Google Drive/AI/models/. (not needed in v0.7 anymore?)
+    * (Cell Setup Environment doesn't exist in notebook v0.7)
+    * (Cell Python Definition doesn't exist in notebook v0.7)
+    * (Cell Select Model doesn't exist in notebook v0.7)
+    * Settings for Animation and others, set as required.
+    * Run cell Settings > Animation.
+    * Set the Promps cell.
+    * Run cell Settings > Promps.
+    * Set the Load Settings cell.
+    * Run cell Settings > Load Settings. (video frames are rendered)
+

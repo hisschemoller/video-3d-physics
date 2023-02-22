@@ -2,7 +2,7 @@ import { ExtendedMesh, THREE } from 'enable3d';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
 import { getMatrix4 } from '@app/utils';
 
-export const BASE_COLOR = 0xD6C49C;
+export const BASE_COLOR = 0xffffff; // 0xD6C49C;
 
 /**
  * Create 3D box.
