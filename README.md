@@ -140,7 +140,7 @@ But on the right side `x1=590` (width of 640 - 50) moves top right 50 px to the 
 Settings for a 640x480px video to have no correction applied:
 
 ```
-ffmpeg -hide_banner -i input.mp4 -lavfi "perspective=x0=0:y0=0:x1=640:y1=0:x2=-0:y2=480:x3=640:y3=480:interpolation=linear" output.mp4
+ffmpeg -hide_banner -i input.mp4 -lavfi "perspective=x0=0:y0=0:x1=640:y1=0:x2=0:y2=480:x3=640:y3=480:interpolation=linear" output.mp4
 ```
 
 ### Color adjustment filter
