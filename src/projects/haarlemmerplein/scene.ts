@@ -1,10 +1,11 @@
 import { THREE } from 'enable3d';
-import { ProjectSettings, VideoData } from '@app/interfaces';
+import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
 import { playSound } from '@app/audio';
-import { createActor, createTweenGroup } from './actor';
+import { createActor } from './actor';
+import { setupPhysics } from './physics';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 102;
@@ -47,27 +48,6 @@ export default class Scene extends MainScene {
 
     const isPreview = true && !this.scene.userData.isCapture;
 
-    // CAMERA & ORBIT_CONTROLS
-    this.cameraTarget.set(0, 1.92, 0);
-    this.pCamera.position.set(0, 0, 8.4);
-    this.pCamera.lookAt(this.cameraTarget);
-    this.pCamera.updateProjectionMatrix();
-
-    // ORBIT CONTROLS
-    this.orbitControls.target = this.cameraTarget;
-    this.orbitControls.update();
-    this.orbitControls.saveState();
-
-    // DIRECTIONAL LIGHT
-    // this.directionalLight.color.setRGB(1, 1, 1);
-    // this.directionalLight.position.set(0.5, 9, 6 + 9.5);
-    // this.directionalLight.intensity = 1.4;
-    // this.directionalLight.target.position.set(0, 0, 9.5);
-    // this.scene.add(this.directionalLight.target);
-
-    // AMBIENT LIGHT
-    // this.ambientLight.intensity = 0.23;
-
     // AUDIO
     if (!this.scene.userData.isCapture) {
       // playSound('../assets/projects/hausderstatistik/hausderstatistik.wav');
@@ -78,8 +58,8 @@ export default class Scene extends MainScene {
       duration: PATTERN_DURATION,
     });
 
-    // VIDEOS
-    const videos = {
+    // media
+    const media = {
       frame19: {
         imgSrc: '../assets/projects/haarlemmerplein/haarlemmerplein-19-perspective_frame_500.png',
         height: 1080,
@@ -126,18 +106,8 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-    // GROUP
-    // const group = createTweenGroup(projectSettings);
-    // group.setStaticPosition(getMatrix4({ x: this.width3d * -0.5, y: this.height3d * 0.5 }));
-
-    const group = createTweenGroup(projectSettings);
-    group.setStaticPosition(getMatrix4(
-      { x: this.toVP3d(0), y: this.toVP3d(-245, false), rx: 0.22 },
-    ));
-    const axesHelper = new THREE.AxesHelper(25);
-    group.getGroup().add(axesHelper);
-
-    this.createBackgroundActors(projectSettings, videos, group);
+    // this.createBackgroundActors(projectSettings, videos, this.scene);
+    setupPhysics(projectSettings, media);
 
     this.postCreate();
   }
@@ -152,22 +122,22 @@ export default class Scene extends MainScene {
    */
   async createBackgroundActors(
     projectSettings: ProjectSettings,
-    videos: { [key: string]: VideoData | ImageData },
-    group: THREE.Group,
+    media: { [key: string]: VideoData | ImageData | undefined },
+    parent: THREE.Group | THREE.Scene,
   ) {
     // const to3d = this.to3d.bind(this);
 
-    const actor = await createActor(projectSettings, videos.frame19, {
+    const actor = await createActor(projectSettings, media.frame19, {
       box: { w: this.width3d, h: this.height3d, d: 0.02 },
       depth: 0.02,
       imageRect: { w: this.width, h: this.height },
     });
     actor.setStaticPosition(getMatrix4({
-      x: -8, y: 6, z: 0,
+      x: -8, y: 4.5, z: 0,
     }));
     actor.setStaticImage(0, 0);
     actor.getMesh().castShadow = false;
     actor.getMesh().receiveShadow = false;
-    group.add(actor.getMesh());
+    parent.add(actor.getMesh());
   }
 }
