@@ -1,7 +1,9 @@
+/* eslint-disable object-curly-newline */
 import { ExtendedObject3D, THREE } from 'enable3d';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
+import Hanger from './Hanger';
 
 /**
  * Create SVG extrude hanging on ropes.
@@ -9,18 +11,18 @@ import { createActor } from './actor';
 async function createHanger(
   projectSettings: ProjectSettings,
   fix: ExtendedObject3D, {
-    imgH,
-    imgW,
+    img,
     mediaData,
     position,
     ropes,
+    svgScale,
     svgUrl,
   }: {
-    imgH: number,
-    imgW: number,
+    img: { x: number, y: number, w: number, h: number },
     mediaData: ImageData | VideoData,
     position: THREE.Vector3, // indicates object's left top
     ropes: { pivot: THREE.Vector3, length: number }[],
+    svgScale: number,
     svgUrl: string,
   },
 ) {
@@ -29,13 +31,13 @@ async function createHanger(
   } = projectSettings;
   const DEPTH = 0.05;
   const ROPE_RADIUS = 0.05;
-  const SVG_SCALE = width3d / width;
-  const boundingBox = new THREE.Vector3(imgW * SVG_SCALE, imgH * SVG_SCALE, DEPTH);
+  const SCALE = width3d / width;
+  const boundingBox = new THREE.Vector3(img.w * SCALE * svgScale, img.h * SCALE * svgScale, DEPTH);
 
   // SVG EXTRUDE ACTOR
   const actor = await createActor(projectSettings, mediaData, {
-    imageRect: { w: imgW, h: imgH },
-    svg: { scale: SVG_SCALE, url: svgUrl },
+    imageRect: { w: img.w, h: img.h },
+    svg: { scale: SCALE * svgScale, url: svgUrl },
     depth: DEPTH,
   });
   actor.setStaticPosition(getMatrix4({
@@ -47,8 +49,8 @@ async function createHanger(
     delay: 0.1,
     duration: patternDuration,
     videoStart: 50,
-    fromImagePosition: new THREE.Vector2(0, 0),
-    toImagePosition: new THREE.Vector2(0, 0),
+    fromImagePosition: new THREE.Vector2(img.x, img.y),
+    toImagePosition: new THREE.Vector2(img.x, img.y),
   });
 
   // HANGER
@@ -74,6 +76,10 @@ async function createHanger(
       x: position.x + ropeConfig.pivot.x,
       y: position.y + ropeConfig.pivot.y + (ropeConfig.length / 2),
       z: position.z,
+    }, {
+      phong: {
+        color: 0x222222,
+      },
     });
 
     // ROPE TO FIX
@@ -104,7 +110,7 @@ async function createHanger(
  * Setup
  */
 // eslint-disable-next-line import/prefer-default-export
-export function setupPhysics(
+export async function setupPhysics(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
 ) {
@@ -118,18 +124,39 @@ export function setupPhysics(
   // scene3d.physics.setGravity(0, 0, 0);
 
   const fix = scene3d.physics.add.box({
-    width: 0.1, height: 0.1, depth: 0.1, mass: 0, collisionFlags: 4, // GHOST
+    width: 0.1, height: 0.1, depth: 0.1, mass: 0, collisionFlags: 4, // 4 = GHOST
   });
 
-  createHanger(projectSettings, fix, {
-    imgH: 669, // image and svg height in pixels
-    imgW: 679, // image and svg width in pixels
+  // createHanger(projectSettings, fix, {
+  //   img: { x: 0, y: 0, w: 679, h: 669 },
+  //   mediaData: media?.video20 as VideoData,
+  //   position: new THREE.Vector3(-3, 3, -7), // indicates object's left top
+  //   ropes: [
+  //     { pivot: new THREE.Vector3(100 * SCALE, 0, 0), length: 1 }, // left top relative
+  //     { pivot: new THREE.Vector3(500 * SCALE, 0, 0), length: 2 },
+  //   ],
+  //   svgScale: 1.2,
+  //   svgUrl: '../assets/projects/haarlemmerplein/lucht20.svg',
+  // });
+
+  const sky = new Hanger({
+    projectSettings,
+    position: new THREE.Vector3(-3, 3, -7), // indicates object's left top
+  });
+  await sky.createSVGExtrudeHanger({
+    img: { x: 0, y: 0, w: 679, h: 669 },
     mediaData: media?.video20 as VideoData,
-    position: new THREE.Vector3(-3, 2, -10), // indicates object's left top
+    svgScale: 1.2,
+    svgUrl: '../assets/projects/haarlemmerplein/lucht20.svg',
+  });
+  sky.addRopesToFix({
     ropes: [
       { pivot: new THREE.Vector3(100 * SCALE, 0, 0), length: 1 }, // left top relative
       { pivot: new THREE.Vector3(500 * SCALE, 0, 0), length: 2 },
     ],
-    svgUrl: '../assets/projects/haarlemmerplein/lucht20.svg',
+    fix,
   });
+
+  // Een hanger aan een andere hanger
+  //
 }
