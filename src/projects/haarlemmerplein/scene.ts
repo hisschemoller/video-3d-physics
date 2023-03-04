@@ -3,7 +3,7 @@ import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import { getMatrix4 } from '@app/utils';
-import { playSound } from '@app/audio';
+// import { playSound } from '@app/audio';
 import { createActor } from './actor';
 import { setupPhysics } from './physics';
 
@@ -85,8 +85,8 @@ export default class Scene extends MainScene {
         scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
         width: 1920,
         imgSrcPath: isPreview
-          ? '../assets/projects/hausderstatistik/hausderstatistik-1271_preview/frame_#FRAME#.png'
-          : 'fs-img?dir=/Volumes/Samsung_X5/hausderstatistik-1271/frames/&img=frame_#FRAME#.png',
+          ? '../assets/projects/haarlemmerplein/frames_preview-20/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/haarlemmerplein-20/frames/&img=frame_#FRAME#.png',
       },
     };
 
