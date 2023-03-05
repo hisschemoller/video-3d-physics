@@ -2,7 +2,7 @@
 import { ExtendedObject3D, THREE } from 'enable3d';
 import { ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
-import { createActor } from './actor';
+import { Actor, createActor } from './actor';
 
 export default class Hanger {
   static DEPTH = 0.05;
@@ -30,33 +30,27 @@ export default class Hanger {
     this.projectSettings = projectSettings;
   }
 
-  async createSVGExtrudeHanger({
+  async createActor({
     img,
     mediaData,
-    svgScale,
     svgUrl,
   }: {
     img: { x: number, y: number, w: number, h: number },
     mediaData: ImageData | VideoData,
-    svgScale: number,
     svgUrl: string,
-  }): Promise<void> {
-    this.scale = svgScale;
-    const { patternDuration, scene3d, width, width3d } = this.projectSettings;
+  }) {
+    const { patternDuration, width, width3d } = this.projectSettings;
     const pxTo3d = width3d / width;
 
-    this.boundingBox = new THREE.Vector3(
-      img.w * pxTo3d * this.scale, img.h * pxTo3d * this.scale, Hanger.DEPTH,
-    );
     const actor = await createActor(this.projectSettings, mediaData as VideoData, {
       imageRect: { w: img.w, h: img.h },
       svg: { scale: pxTo3d * this.scale, url: svgUrl },
       depth: Hanger.DEPTH,
     });
     actor.setStaticPosition(getMatrix4({
-      x: this.boundingBox.x / -2,
-      y: this.boundingBox.y / 2,
-      z: this.boundingBox.z / -2,
+      x: (img.w * pxTo3d * this.scale) / -2,
+      y: (img.h * pxTo3d * this.scale) / 2,
+      z: Hanger.DEPTH / -2,
     }));
     actor.addTween({
       delay: 0.1,
@@ -66,7 +60,16 @@ export default class Hanger {
       toImagePosition: new THREE.Vector2(img.x, img.y),
     });
 
-    // HANGER
+    return actor;
+  }
+
+  createHanger({
+    actor,
+  }: {
+    actor: Actor,
+  }) {
+    const { scene3d } = this.projectSettings;
+
     this.hanger = new ExtendedObject3D();
     this.hanger.add(actor.getMesh());
     this.hanger.position.set(
@@ -81,15 +84,57 @@ export default class Hanger {
     });
   }
 
-  /**
-   * Local is measured from bounding box left top, so subtract half for center of mass.
-   */
-  getLocalToGlobalPoint(local: THREE.Vector3) {
-    return new THREE.Vector3(
-      this.hanger.position.x + (local.x * this.scale) - (this.boundingBox.x / 2),
-      this.hanger.position.y - (local.y * this.scale) + (this.boundingBox.y / 2),
-      this.hanger.position.z + (local.z * this.scale) - (this.boundingBox.z / 2),
+  async createSVGExtrudeFloor({
+    img,
+    mediaData,
+    svgScale,
+    svgUrl,
+  }: {
+    img: { x: number, y: number, w: number, h: number },
+    mediaData: ImageData | VideoData,
+    svgScale: number,
+    svgUrl: string,
+  }): Promise<void> {
+    this.scale = svgScale;
+    const { width, width3d } = this.projectSettings;
+    const pxTo3d = width3d / width;
+
+    const actor = await this.createActor({ img, mediaData, svgUrl });
+    actor.getMesh().quaternion.setFromRotationMatrix(getMatrix4({ rx: Math.PI / 2 }));
+
+    this.boundingBox = new THREE.Vector3(
+      img.w * pxTo3d * this.scale,
+      Hanger.DEPTH,
+      img.h * pxTo3d * this.scale,
     );
+
+    this.createHanger({ actor });
+  }
+
+  async createSVGExtrudeHanger({
+    img,
+    mediaData,
+    svgScale,
+    svgUrl,
+  }: {
+    img: { x: number, y: number, w: number, h: number },
+    mediaData: ImageData | VideoData,
+    svgScale: number,
+    svgUrl: string,
+  }): Promise<void> {
+    this.scale = svgScale;
+    const { width, width3d } = this.projectSettings;
+    const pxTo3d = width3d / width;
+
+    const actor = await this.createActor({ img, mediaData, svgUrl });
+
+    this.boundingBox = new THREE.Vector3(
+      img.w * pxTo3d * this.scale,
+      img.h * pxTo3d * this.scale,
+      Hanger.DEPTH,
+    );
+
+    this.createHanger({ actor });
   }
 
   /**
@@ -107,19 +152,14 @@ export default class Hanger {
     pivotOnOtherHanger: THREE.Vector3;
   }) {
     const { scene3d } = this.projectSettings;
-    const pivotTop = new THREE.Vector3(
-      otherHanger.position.x + (pivotOnOtherHanger.x * otherHanger.scale),
-      otherHanger.position.y - (pivotOnOtherHanger.y * otherHanger.scale),
-      otherHanger.position.z + (pivotOnOtherHanger.z * otherHanger.scale),
-    );
 
     const rope = scene3d.physics.add.cylinder({
       height: length,
       radiusBottom: Hanger.ROPE_RADIUS,
       radiusTop: Hanger.ROPE_RADIUS,
-      x: pivotTop.x,
-      y: pivotTop.y - (length / 2),
-      z: pivotTop.z,
+      x: this.position.x,
+      y: this.position.y - (length / 2),
+      z: this.position.z,
     }, {
       phong: {
         color: 0x222222,
@@ -195,5 +235,16 @@ export default class Hanger {
         },
       });
     });
+  }
+
+  /**
+   * Local is measured from bounding box left top, so subtract half for center of mass.
+   */
+  getLocalToGlobalPoint(local: THREE.Vector3) {
+    return new THREE.Vector3(
+      this.hanger.position.x + (local.x * this.scale) - (this.boundingBox.x / 2),
+      this.hanger.position.y - (local.y * this.scale) + (this.boundingBox.y / 2),
+      this.hanger.position.z + (local.z * this.scale) - (this.boundingBox.z / 2),
+    );
   }
 }

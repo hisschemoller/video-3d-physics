@@ -37,7 +37,7 @@ export async function setupPhysics(
   sky.createRopesToFix({
     ropes: [
       { pivot: new THREE.Vector3(100 * SCALE, 0, 0), length: 1 }, // left top relative
-      // { pivot: new THREE.Vector3(500 * SCALE, 0, 0), length: 2 },
+      { pivot: new THREE.Vector3(500 * SCALE, 0, 0), length: 2 },
     ],
     fix,
   });
@@ -62,4 +62,23 @@ export async function setupPhysics(
     otherHanger: sky,
     pivotOnOtherHanger: pointOnSky,
   });
+
+  // floor
+  const floor = new Hanger({
+    projectSettings,
+    position: new THREE.Vector3(-7, -6, -3), // indicates object's left top
+  });
+  await floor.createSVGExtrudeFloor({
+    img: { x: 0, y: 0, w: 679, h: 669 },
+    mediaData: media?.video20 as VideoData,
+    svgScale: 1.0,
+    svgUrl: '../assets/projects/haarlemmerplein/lucht20.svg',
+  });
+//   floor.createRopesToFix({
+//     ropes: [
+//       { pivot: new THREE.Vector3(100 * SCALE, 0, 0), length: 1 }, // left top relative
+//       { pivot: new THREE.Vector3(500 * SCALE, 0, 0), length: 2 },
+//     ],
+//     fix,
+//   });
 }
