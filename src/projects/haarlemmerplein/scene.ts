@@ -48,6 +48,16 @@ export default class Scene extends MainScene {
 
     const isPreview = true && !this.scene.userData.isCapture;
 
+    // DIRECTIONAL LIGHT
+    this.directionalLight.color.setRGB(1, 1, 1);
+    this.directionalLight.position.set(20, 5, 10);
+    this.directionalLight.intensity = 1.0;
+    // this.directionalLight.target.position.set(0, 0, 9.5);
+    // this.scene.add(this.directionalLight.target);
+
+    // AMBIENT LIGHT
+    this.ambientLight.intensity = 0.5;
+
     // AUDIO
     if (!this.scene.userData.isCapture) {
       // playSound('../assets/projects/hausderstatistik/hausderstatistik.wav');
@@ -61,12 +71,12 @@ export default class Scene extends MainScene {
     // media
     const media = {
       frame19: {
-        imgSrc: '../assets/projects/haarlemmerplein/haarlemmerplein-19-perspective_frame_500.png',
+        imgSrc: '../assets/projects/haarlemmerplein/haarlemmerplein-19-perspective_frame_00377.png',
         height: 1080,
         width: 1920,
       },
       frame20: {
-        imgSrc: '../assets/projects/haarlemmerplein/haarlemmerplein-20-perspective_frame_500.png',
+        imgSrc: '../assets/projects/haarlemmerplein/haarlemmerplein-20-perspective_frame_00572.png',
         height: 1080,
         width: 1920,
       },

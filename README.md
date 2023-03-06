@@ -360,3 +360,16 @@ spring: (bodyA: PhysicsBody, bodyB: PhysicsBody, config?: {
     * Set the Load Settings cell.
     * Run cell Settings > Load Settings. (video frames are rendered)
 
+# Photogrammetry
+
+* Object Capture
+  * https://developer.apple.com/augmented-reality/object-capture/
+
+# NVIDIA Instant NeRF
+
+* Instant Nerf of my hometown in Mexico
+  * https://www.reddit.com/r/photogrammetry/comments/11jfy1w/instant_nerf_of_my_hometown_in_mexico/
+* Getting Started with NVIDIA Instant NeRFs
+  * https://developer.nvidia.com/blog/getting-started-with-nvidia-instant-nerfs/
+* Why THIS is the Future of Imagery (and Nobody Knows it Yet)
+  * https://www.youtube.com/watch?v=YX5AoaWrowY
