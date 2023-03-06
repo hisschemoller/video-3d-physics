@@ -92,7 +92,7 @@ export default class Hanger {
     scene3d.add.existing(this.hanger);
     scene3d.physics.add.existing(this.hanger, {
       mass: 1,
-      shape: 'mesh',
+      shape: 'concaveMesh', // https://enable3d.io/examples/compare-physics-body-shapes.html
     });
   }
 
@@ -199,7 +199,7 @@ export default class Hanger {
         pivotB: {
           x: this.position.x + (ropeConfig.pivot.x * this.scale),
           y: this.position.y + ropeConfig.length,
-          z: this.position.z + (ropeConfig.pivot.z) + (this.boundingBox.z / -2),
+          z: this.position.z + (ropeConfig.pivot.z * this.scale) + (this.boundingBox.z / -2),
         },
       });
     });
