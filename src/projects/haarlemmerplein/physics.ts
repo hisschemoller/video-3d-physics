@@ -18,7 +18,7 @@ export async function setupPhysics(
     scene3d.physics.debug.enable();
   }
 
-  // scene3d.physics.setGravity(0, 0, 0);
+  scene3d.physics.setGravity(0, 0, 0);
 
   const fix = scene3d.physics.add.box({
     width: 0.1, height: 0.1, depth: 0.1, mass: 0, collisionFlags: 4, // 4 = GHOST
@@ -70,12 +70,12 @@ export async function setupPhysics(
   // FLOOR
   const floor = new Hanger({
     projectSettings,
-    position: new THREE.Vector3(-9, -2, -4), // indicates object's left top
+    position: new THREE.Vector3(-10, -2, -4), // indicates object's left top
   });
   await floor.createSVGExtrudeFloor({
     img: { x: 67, y: 887, w: 1853, h: 193 },
     mediaData: media?.frame20 as ImageData,
-    svgScale: 1.0,
+    svgScale: 0.9,
     svgUrl: '../assets/projects/haarlemmerplein/grond20.svg',
   });
   floor.createRopesFromFloorToFix({
@@ -86,4 +86,18 @@ export async function setupPhysics(
     ],
     fix,
   });
+
+  // TREE
+  const tree = new Hanger({
+    projectSettings,
+    position: new THREE.Vector3(3, 3, -2), // indicates object's left top
+  });
+  await tree.createSVGExtrudeHanger({
+    rotationY: Math.PI * -0.5,
+    img: { x: 1177, y: 0, w: 743, h: 940 },
+    mediaData: media?.frame19 as ImageData,
+    svgScale: 1.0,
+    svgUrl: '../assets/projects/haarlemmerplein/boom19.svg',
+  });
+  tree.createSingleRopeFromAngledHangerToFix({ length: 1, fix });
 }
