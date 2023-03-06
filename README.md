@@ -258,6 +258,10 @@ https://jeromewu.github.io/ffmpeg-wasm-a-pure-webassembly-javascript-port-of-ffm
 
 ## Constraints
 
+About damping the constraints so they won't go on forever:<br>
+PhysicsJoint goes on forever: https://forum.babylonjs.com/t/physicsjoint-goes-on-forever/8921/11
+
+
 ### Fixed
 
 Don't understand yet. Doesn't work like lock.

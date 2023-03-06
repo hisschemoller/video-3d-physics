@@ -1,8 +1,9 @@
 /* eslint-disable object-curly-newline */
 import { ExtendedObject3D, THREE } from 'enable3d';
-import { ProjectSettings, VideoData } from '@app/interfaces';
+import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
 import { Actor, createActor } from './actor';
+import { AxesHelper } from 'three';
 
 export default class Hanger {
   static DEPTH = 0.05;
@@ -42,7 +43,7 @@ export default class Hanger {
     const { patternDuration, width, width3d } = this.projectSettings;
     const pxTo3d = width3d / width;
 
-    const actor = await createActor(this.projectSettings, mediaData as VideoData, {
+    const actor = await createActor(this.projectSettings, mediaData, {
       imageRect: { w: img.w, h: img.h },
       svg: { scale: pxTo3d * this.scale, url: svgUrl },
       depth: Hanger.DEPTH,
@@ -52,13 +53,21 @@ export default class Hanger {
       y: (img.h * pxTo3d * this.scale) / 2,
       z: Hanger.DEPTH / -2,
     }));
-    actor.addTween({
-      delay: 0.1,
-      duration: patternDuration,
-      videoStart: 50,
-      fromImagePosition: new THREE.Vector2(img.x, img.y),
-      toImagePosition: new THREE.Vector2(img.x, img.y),
-    });
+
+    // video or image
+    if ('imgSrcPath' in mediaData) {
+      // if video add tween
+      actor.addTween({
+        delay: 0.1,
+        duration: patternDuration,
+        videoStart: 50,
+        fromImagePosition: new THREE.Vector2(img.x, img.y),
+        toImagePosition: new THREE.Vector2(img.x, img.y),
+      });
+    } else {
+      // if image set position
+      actor.setStaticImage(img.x, img.y);
+    }
 
     return actor;
   }
@@ -100,7 +109,13 @@ export default class Hanger {
     const pxTo3d = width3d / width;
 
     const actor = await this.createActor({ img, mediaData, svgUrl });
-    actor.getMesh().quaternion.setFromRotationMatrix(getMatrix4({ rx: Math.PI / 2 }));
+    actor.setStaticPosition(getMatrix4({
+      x: (img.w * pxTo3d * this.scale) / -2,
+      y: Hanger.DEPTH / -2,
+      z: (img.h * pxTo3d * this.scale) / -2,
+      rx: Math.PI / -2,
+    }));
+    actor.getMesh().add(new AxesHelper(5));
 
     this.boundingBox = new THREE.Vector3(
       img.w * pxTo3d * this.scale,
@@ -109,6 +124,7 @@ export default class Hanger {
     );
 
     this.createHanger({ actor });
+    this.hanger.add(new AxesHelper(10));
   }
 
   async createSVGExtrudeHanger({
@@ -135,6 +151,53 @@ export default class Hanger {
     );
 
     this.createHanger({ actor });
+  }
+
+  createRopesFromFloorToFix({
+    ropes,
+    fix,
+  }: {
+    ropes: { pivot: THREE.Vector3, length: number }[];
+    fix: ExtendedObject3D;
+  }): void {
+    const { scene3d } = this.projectSettings;
+
+    ropes.forEach((ropeConfig) => {
+      const rope = scene3d.physics.add.cylinder({
+        height: ropeConfig.length,
+        radiusBottom: Hanger.ROPE_RADIUS,
+        radiusTop: Hanger.ROPE_RADIUS,
+        x: this.position.x + (ropeConfig.pivot.x * this.scale),
+        y: this.position.y + (ropeConfig.length / 2),
+        z: this.position.z + (ropeConfig.pivot.z * this.scale) + (this.boundingBox.z / -2),
+      }, {
+        phong: {
+          color: 0x222222,
+        },
+      });
+
+      // ROPE TO HANGER
+      scene3d.physics.add.constraints.pointToPoint(rope.body, this.hanger.body, {
+        // the offset from the center of each object
+        pivotA: { x: 0, y: ropeConfig.length / -2, z: 0 },
+        pivotB: {
+          x: (this.boundingBox.x / -2) + (ropeConfig.pivot.x * this.scale),
+          y: (this.boundingBox.y / 2),
+          z: (this.boundingBox.z / -2) + (ropeConfig.pivot.z * this.scale),
+        },
+      });
+
+      // ROPE TO FIX
+      scene3d.physics.add.constraints.pointToPoint(rope.body, fix.body, {
+        // the offset from the center of each object
+        pivotA: { x: 0, y: ropeConfig.length / 2, z: 0 },
+        pivotB: {
+          x: this.position.x + (ropeConfig.pivot.x * this.scale),
+          y: this.position.y + ropeConfig.length,
+          z: this.position.z + (ropeConfig.pivot.z) + (this.boundingBox.z / -2),
+        },
+      });
+    });
   }
 
   /**
@@ -165,17 +228,7 @@ export default class Hanger {
         color: 0x222222,
       },
     });
-
-    // ROPE TO OTHER HANGER
-    scene3d.physics.add.constraints.pointToPoint(rope.body, otherHanger.hanger.body, {
-      // the offset from the center of each object
-      pivotA: { x: 0, y: length / 2, z: 0 },
-      pivotB: {
-        x: (pivotOnOtherHanger.x * otherHanger.scale) - (otherHanger.boundingBox.x / 2),
-        y: (pivotOnOtherHanger.y * -otherHanger.scale) + (otherHanger.boundingBox.y / 2),
-        z: (pivotOnOtherHanger.z * otherHanger.scale) - (otherHanger.boundingBox.z / 2),
-      },
-    });
+    console.log('rope', rope.position);
 
     // ROPE TO HANGER
     scene3d.physics.add.constraints.pointToPoint(rope.body, this.hanger.body, {
@@ -187,6 +240,30 @@ export default class Hanger {
         z: 0,
       },
     });
+    console.log('hanger',
+      this.hanger.position.x + 0,
+      this.hanger.position.y + (this.boundingBox.y / 2),
+      this.hanger.position.z + 0);
+
+    // ROPE TO OTHER HANGER
+    scene3d.physics.add.constraints.pointToPoint(rope.body, otherHanger.hanger.body, {
+      // the offset from the center of each object
+      pivotA: { x: 0, y: length / 2, z: 0 },
+      pivotB: {
+        x: (pivotOnOtherHanger.x * otherHanger.scale) - (otherHanger.boundingBox.x / 2),
+        y: (pivotOnOtherHanger.y * -otherHanger.scale) + (otherHanger.boundingBox.y / 2),
+        z: (pivotOnOtherHanger.z * otherHanger.scale) - (otherHanger.boundingBox.z / 2),
+      },
+    });
+    console.log('other',
+      (pivotOnOtherHanger.x * otherHanger.scale) - (otherHanger.boundingBox.x / 2),
+      (pivotOnOtherHanger.y * -otherHanger.scale) + (otherHanger.boundingBox.y / 2),
+      (pivotOnOtherHanger.z * otherHanger.scale) - (otherHanger.boundingBox.z / 2));
+    console.log('this.position.z', this.position.z);
+    console.log('pivotOnOtherHanger.z', pivotOnOtherHanger.z);
+    console.log('this.scale', this.scale);
+    console.log('this.boundingBox', this.boundingBox);
+    console.log(' ');
   }
 
   createRopesToFix({
@@ -213,17 +290,6 @@ export default class Hanger {
         },
       });
 
-      // ROPE TO FIX
-      scene3d.physics.add.constraints.pointToPoint(rope.body, fix.body, {
-        // the offset from the center of each object
-        pivotA: { x: 0, y: ropeConfig.length / 2, z: 0 },
-        pivotB: {
-          x: this.position.x + ropeConfig.pivot.x,
-          y: this.position.y + ropeConfig.length,
-          z: this.position.z,
-        },
-      });
-
       // ROPE TO HANGER
       scene3d.physics.add.constraints.pointToPoint(rope.body, this.hanger.body, {
         // the offset from the center of each object
@@ -232,6 +298,17 @@ export default class Hanger {
           x: (this.boundingBox.x / -2) + ropeConfig.pivot.x,
           y: (this.boundingBox.y / 2),
           z: 0,
+        },
+      });
+
+      // ROPE TO FIX
+      scene3d.physics.add.constraints.pointToPoint(rope.body, fix.body, {
+        // the offset from the center of each object
+        pivotA: { x: 0, y: ropeConfig.length / 2, z: 0 },
+        pivotB: {
+          x: this.position.x + ropeConfig.pivot.x,
+          y: this.position.y + ropeConfig.length,
+          z: this.position.z,
         },
       });
     });
