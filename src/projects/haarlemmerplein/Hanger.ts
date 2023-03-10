@@ -61,7 +61,7 @@ export default class Hanger {
     if ('imgSrcPath' in mediaData) {
       // if video add tween
       actor.addTween({
-        delay: 1,
+        delay: 0,
         duration: patternDuration,
         videoStart: 50,
         fromImagePosition: new THREE.Vector2(img.x, img.y),

@@ -2,10 +2,12 @@ import { THREE } from 'enable3d';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
+import createTween from '@app/tween';
 import { getMatrix4 } from '@app/utils';
 // import { playSound } from '@app/audio';
 import { createActor } from './actor';
 import { setupPhysics } from './physics';
+import { setupGreenscreens } from './greenscreen';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 102;
@@ -56,7 +58,7 @@ export default class Scene extends MainScene {
     // this.scene.add(this.directionalLight.target);
 
     // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.5;
+    this.ambientLight.intensity = 0.6;
 
     // AUDIO
     if (!this.scene.userData.isCapture) {
@@ -98,6 +100,24 @@ export default class Scene extends MainScene {
           ? '../assets/projects/haarlemmerplein/frames_preview-20/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/haarlemmerplein-20/frames/&img=frame_#FRAME#.png',
       },
+      video19green027: {
+        fps: 30,
+        height: 720,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1280,
+        imgSrcPath: isPreview
+          ? '../assets/projects/haarlemmerplein/frames_preview-19-green-027/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/haarlemmerplein-19-27-34_greenscreen/frames/&img=frame_#FRAME#.png',
+      },
+      video19green100: {
+        fps: 30,
+        height: 720,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1280,
+        imgSrcPath: isPreview
+          ? '../assets/projects/haarlemmerplein/frames_preview-19-green-100/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/haarlemmerplein-19-100-117_greenscreen/frames/&img=frame_#FRAME#.png',
+      },
     };
 
     // PROJECT SETTINGS
@@ -117,7 +137,9 @@ export default class Scene extends MainScene {
     };
 
     // this.createBackgroundActors(projectSettings, videos, this.scene);
-    setupPhysics(projectSettings, media);
+    await setupPhysics(projectSettings, media);
+    await setupGreenscreens(projectSettings, media);
+    this.animateCamera();
 
     this.postCreate();
   }
@@ -125,6 +147,23 @@ export default class Scene extends MainScene {
   async updateAsync(time: number, delta: number) {
     await this.timeline.update(time, delta);
     super.updateAsync(time, delta);
+  }
+
+  animateCamera() {
+    const group = new THREE.Group();
+    group.add(this.pCamera);
+    this.scene.add(group);
+
+    const tween = createTween({
+      delay: 0,
+      duration: PATTERN_DURATION,
+      onStart: () => {},
+      onUpdate: (progress) => {
+        group.rotation.y = Math.sin(progress * Math.PI * 2) * -0.5;
+      },
+      onComplete: () => {},
+    });
+    this.timeline.add(tween);
   }
 
   /**
@@ -135,8 +174,6 @@ export default class Scene extends MainScene {
     media: { [key: string]: VideoData | ImageData | undefined },
     parent: THREE.Group | THREE.Scene,
   ) {
-    // const to3d = this.to3d.bind(this);
-
     const actor = await createActor(projectSettings, media.frame19, {
       box: { w: this.width3d, h: this.height3d, d: 0.02 },
       depth: 0.02,

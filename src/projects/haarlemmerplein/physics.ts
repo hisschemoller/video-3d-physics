@@ -1,8 +1,8 @@
 /* eslint-disable object-curly-newline */
 import { ExtendedObject3D, THREE } from 'enable3d';
+import { GridHelper } from 'three';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import Hanger from './Hanger';
-import { GridHelper } from 'three';
 
 async function createBuilding(
   projectSettings: ProjectSettings,
@@ -119,7 +119,7 @@ async function createTree19(
   });
   await tree.createSVGExtrudeHanger({
     img: { x: 1177, y: 0, w: 743, h: 940 },
-    mediaData: media?.frame19 as ImageData,
+    mediaData: media?.video19 as VideoData,
     svgScale: 0.9,
     svgUrl: '../assets/projects/haarlemmerplein/boom19.svg',
     color: 0x33aa33,
@@ -187,7 +187,7 @@ export async function setupPhysics(
   await createTree19(projectSettings, media, fix, pxTo3d);
   await createTree20(projectSettings, media, fix, pxTo3d);
 
-  const grid = new GridHelper(30, 10, 0x666666, 0x666666);
+  const grid = new GridHelper(30, 10, 0x333333, 0x333333);
   grid.position.set(0, -4, 0);
   scene3d.scene.add(grid);
 }
