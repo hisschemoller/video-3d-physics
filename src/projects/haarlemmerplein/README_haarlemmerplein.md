@@ -20,8 +20,8 @@ ffmpeg -i haarlemmerplein-19_preview.mov '/Volumes/Samsung_X5/haarlemmerplein-19
 ```
 
 Haarlemmerplein 2022-05-01 0020<br>
-1920 x 1080
-2:16
+1920 x 1080<br>
+2:16<br>
 
 ```
 # perspective correct 1920 x 1080
@@ -34,4 +34,42 @@ ffmpeg -i haarlemmerplein-20-perspective.mov '/Volumes/Samsung_X5/haarlemmerplei
 ffmpeg -i haarlemmerplein-20-perspective.mov -vf scale=480:270 haarlemmerplein-20_preview.mov
 # convert preview to png sequence
 ffmpeg -i haarlemmerplein-20_preview.mov '/Volumes/Samsung_X5/haarlemmerplein-20/frames_preview/frame_%05d.png'
+```
+
+haarlemmerplein-19-27-34 720p greenscreen.mp4<br>
+1280 × 720<br>
+0:07<br>
+#00B140, daarna #00ff00
+
+```
+# chromakey greenscreen to transparent PNGs
+ffmpeg -i 'haarlemmerplein-19-27-34 720p 0x00ff00.mp4' -vf "chromakey=0x00ff00:0.28:0.05" '/Volumes/Samsung_X5/haarlemmerplein-19-27-34_greenscreen/frames/frame_%05d.png'
+# scale PNGs to 25%, 1280 * 0.25 = 320 (x 180) preview size
+ffmpeg -start_number 1 -i '/Volumes/Samsung_X5/haarlemmerplein-19-27-34_greenscreen/frames/frame_%05d.png' -vf scale=320:180 '/Volumes/Samsung_X5/haarlemmerplein-19-27-34_greenscreen/frames_preview/frame_%05d.png'
+```
+
+haarlemmerplein-19-100-117 720p greenscreen.mp4<br>
+1280 × 720<br>
+0:07<br>
+
+```
+# slice 17 seconds
+ffmpeg -ss 00:01:00.0 -i 'haarlemmerplein-19-perspective.mov' -c copy -t 00:00:17.0 'haarlemmerplein-19-100-117.mov'
+# chromakey greenscreen to transparent PNGs
+ffmpeg -i 'haarlemmerplein-19-100-117 720p 0x00ff00.mp4' -vf "chromakey=0x00ff00:0.28:0.05" '/Volumes/Samsung_X5/haarlemmerplein-19-100-117_greenscreen/frames/frame_%05d.png'
+# scale PNGs to 25%, 1280 * 0.25 = 320 (x 180) preview size
+ffmpeg -start_number 1 -i '/Volumes/Samsung_X5/haarlemmerplein-19-100-117_greenscreen/frames/frame_%05d.png' -vf scale=320:180 '/Volumes/Samsung_X5/haarlemmerplein-19-100-117_greenscreen/frames_preview/frame_%05d.png'
+```
+
+haarlemmerplein-20-34-54 720p greenscreen.mp4<br>
+1280 × 720<br>
+0:07<br>
+
+```
+# slice 20 seconds
+ffmpeg -ss 00:00:34.0 -i 'haarlemmerplein-20-perspective.mov' -c copy -t 00:00:20.0 'haarlemmerplein-20-34-54.mov'
+# chromakey greenscreen to transparent PNGs
+ffmpeg -i 'haarlemmerplein-20-34-54 720p 0x00ff00.mp4' -vf "chromakey=0x00ff00:0.28:0.05" '/Volumes/Samsung_X5/haarlemmerplein-20-34-54_greenscreen/frames/frame_%05d.png'
+# scale PNGs to 25%, 1280 * 0.25 = 320 (x 180) preview size
+ffmpeg -start_number 1 -i '/Volumes/Samsung_X5/haarlemmerplein-20-34-54_greenscreen/frames/frame_%05d.png' -vf scale=320:180 '/Volumes/Samsung_X5/haarlemmerplein-20-34-54_greenscreen/frames_preview/frame_%05d.png'
 ```

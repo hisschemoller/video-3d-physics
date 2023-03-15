@@ -58,6 +58,33 @@ async function createGreenscreen19100(
   actor.getMesh().renderOrder = 2;
 }
 
+async function createGreenscreen20034(
+  projectSettings: ProjectSettings,
+  videos: { [key: string]: ImageData | VideoData | undefined },
+  pxTo3d: number,
+) {
+  const { width: videoWidth, height: videoHeight } = videos.video20green034 as VideoData;
+  const actor = await createActor(projectSettings, videos.video20green034, {
+    box: {
+      w: videoWidth * pxTo3d * 1.5,
+      h: videoHeight * pxTo3d * 1.5,
+      d: 0.02,
+    },
+    imageRect: { w: videoWidth, h: videoHeight },
+    depth: 0.02,
+  });
+  actor.setStaticPosition(getMatrix4({ x: -9, y: 5.5, z: 2.1 }));
+  actor.addTween({
+    delay: 17,
+    duration: projectSettings.patternDuration * 0.99,
+    videoStart: 0,
+    fromImagePosition: new THREE.Vector2(0, 0),
+  });
+  actor.getMesh().castShadow = false;
+  actor.getMesh().receiveShadow = false;
+  actor.getMesh().renderOrder = 3;
+}
+
 /**
  * Setup
  */
@@ -71,4 +98,5 @@ export async function setupGreenscreens(
 
   await createGreenscreen19027(projectSettings, media, pxTo3d);
   await createGreenscreen19100(projectSettings, media, pxTo3d);
+  await createGreenscreen20034(projectSettings, media, pxTo3d);
 }

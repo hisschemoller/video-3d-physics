@@ -118,6 +118,15 @@ export default class Scene extends MainScene {
           ? '../assets/projects/haarlemmerplein/frames_preview-19-green-100/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/haarlemmerplein-19-100-117_greenscreen/frames/&img=frame_#FRAME#.png',
       },
+      video20green034: {
+        fps: 30,
+        height: 720,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1280,
+        imgSrcPath: isPreview
+          ? '../assets/projects/haarlemmerplein/frames_preview-20-green-034/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/haarlemmerplein-20-34-54_greenscreen/frames/&img=frame_#FRAME#.png',
+      },
     };
 
     // PROJECT SETTINGS
@@ -155,7 +164,7 @@ export default class Scene extends MainScene {
     this.scene.add(group);
 
     const tween = createTween({
-      delay: 0,
+      delay: 0.2,
       duration: PATTERN_DURATION,
       onStart: () => {},
       onUpdate: (progress) => {
