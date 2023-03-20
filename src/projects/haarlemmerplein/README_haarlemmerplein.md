@@ -81,4 +81,18 @@ ffmpeg -start_number 1 -i '/Volumes/Samsung_X5/haarlemmerplein-20-34-54_greenscr
 ffmpeg -framerate 30 -start_number 567 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p haarlemmerplein-video-x1.mp4
 # repeat 8 times, 564 frames, video only
 ffmpeg -i haarlemmerplein-video-x1.mp4 -filter_complex "loop=loop=8:size=564:start=0" haarlemmerplein-video-x8.mp4
+# repeat 8 times, audio
+ffmpeg -stream_loop 16 -i haarlemmerplein-audio-x1.wav -c copy haarlemmerplein-audio-x8.wav
+# video en audio samenvoegen
+ffmpeg -i haarlemmerplein-video-x8.mp4 -i haarlemmerplein-audio-x8.wav -vcodec copy haarlemmerplein-x8.mp4
+# scale to 50%, 960 * 540
+ffmpeg -i haarlemmerplein-x8.mp4 -vf scale=960:540 haarlemmerplein-x8_halfsize.mp4
 ```
+
+## Audio
+
+Video duurt 567 frames.<br>
+Video duurt 567 / 30 FPS = 18.9 seconden.<br>
+Video duurt 8 maten van 4 beats = 32 beats.<br>
+Een beat duurt 18.9 / 32 = 0.590625 seconden.<br>
+Het tempo is 60 / 0.590625 = 101.5873015873016 BPM<br>
