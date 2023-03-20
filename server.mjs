@@ -14,7 +14,11 @@ const publicPath = 'public';
 if (params[0] === 'serve') {
   const server = http.createServer(app);
   server.listen(port, () => {
-    console.log('\x1b[33m%s\x1b[0m', `listening at http://localhost:${port}`);
+    console.log('');
+    console.log('\x1b[46m%s\x1b[0m', `                                        `);
+    console.log('\x1b[46m%s\x1b[0m', `     V3DPh on http://localhost:${port}     `);
+    console.log('\x1b[46m%s\x1b[0m', `                                        `);
+    console.log('');
   });
 
   app.use(cors());

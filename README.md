@@ -364,6 +364,8 @@ spring: (bodyA: PhysicsBody, bodyB: PhysicsBody, config?: {
 
 * Object Capture
   * https://developer.apple.com/augmented-reality/object-capture/
+* PhotoCatch
+  * https://apps.apple.com/jp/app/photocatch/id1576081762?l=en
 
 # NVIDIA Instant NeRF
 
