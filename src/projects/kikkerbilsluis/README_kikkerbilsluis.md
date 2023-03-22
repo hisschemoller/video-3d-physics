@@ -42,3 +42,11 @@ ffmpeg -i "Amsterdam Brug PHKade 3 21-07-2021.mov" -vf scale=480:270 kikkerbilsl
 # convert preview to png sequence
 ffmpeg -i kikkerbilsluis-3_preview.mov '/Volumes/Samsung_X5/kikkerbilsluis-3/frames_preview/frame_%05d.png'
 ```
+
+## Blender tutorials
+
+* Extruding PROFILES ALONG PATHS in Blender!
+  * https://www.youtube.com/watch?v=31rhH3FM9-c
+* How to Extrude Along a Curve in Blender
+  * https://www.youtube.com/watch?v=iKWz1mTQYpA
+  

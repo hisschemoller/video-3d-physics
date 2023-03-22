@@ -6,6 +6,7 @@ import createTween from '@app/tween';
 import { getMatrix4 } from '@app/utils';
 // import { playSound } from '@app/audio';
 import { createActor } from './actor';
+import { createBridge } from './bridge';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 117;
@@ -33,7 +34,7 @@ export default class Scene extends MainScene {
     super();
 
     this.width = 1920;
-    this.height = 1080;
+    this.height = 1440;
     this.width3d = 16;
     this.height3d = (this.height / this.width) * this.width3d;
     this.fps = 30;
@@ -66,7 +67,11 @@ export default class Scene extends MainScene {
       duration: PATTERN_DURATION,
     });
 
-    // media
+    // BLENDER GLTF
+    const gltf = await this.load.gltf('../assets/projects/kikkerbilsluis/kikkerbilsluis.glb');
+    console.log(gltf);
+
+    // MEDIA
     const media = {
       frame1: {
         imgSrc: '../assets/projects/kikkerbilsluis/kikkerbilsluis-1_frame_01380.png',
@@ -129,6 +134,7 @@ export default class Scene extends MainScene {
     };
 
     // this.createBackgroundActors(projectSettings, videos, this.scene);
+    await createBridge(projectSettings, media, gltf);
 
     this.postCreate();
   }
@@ -158,22 +164,22 @@ export default class Scene extends MainScene {
   /**
    * createBackgroundActors
    */
-  async createBackgroundActors(
-    projectSettings: ProjectSettings,
-    media: { [key: string]: VideoData | ImageData | undefined },
-    parent: THREE.Group | THREE.Scene,
-  ) {
-    const actor = await createActor(projectSettings, media.frame19, {
-      box: { w: this.width3d, h: this.height3d, d: 0.02 },
-      depth: 0.02,
-      imageRect: { w: this.width, h: this.height },
-    });
-    actor.setStaticPosition(getMatrix4({
-      x: -8, y: 4.5, z: 0,
-    }));
-    actor.setStaticImage(0, 0);
-    actor.getMesh().castShadow = false;
-    actor.getMesh().receiveShadow = false;
-    parent.add(actor.getMesh());
-  }
+  // async createBackgroundActors(
+  //   projectSettings: ProjectSettings,
+  //   media: { [key: string]: VideoData | ImageData | undefined },
+  //   parent: THREE.Group | THREE.Scene,
+  // ) {
+  //   const actor = await createActor(projectSettings, media.frame19, {
+  //     box: { w: this.width3d, h: this.height3d, d: 0.02 },
+  //     depth: 0.02,
+  //     imageRect: { w: this.width, h: this.height },
+  //   });
+  //   actor.setStaticPosition(getMatrix4({
+  //     x: -8, y: 4.5, z: 0,
+  //   }));
+  //   actor.setStaticImage(0, 0);
+  //   actor.getMesh().castShadow = false;
+  //   actor.getMesh().receiveShadow = false;
+  //   parent.add(actor.getMesh());
+  // }
 }
