@@ -1,12 +1,10 @@
 import { THREE } from 'enable3d';
-import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
+import { ProjectSettings } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
-import { getMatrix4 } from '@app/utils';
 // import { playSound } from '@app/audio';
-import { createActor } from './actor';
-import { createBridge } from './bridge';
+import { createBridge, createBridgeRailing } from './bridge';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 117;
@@ -52,14 +50,14 @@ export default class Scene extends MainScene {
     // DIRECTIONAL LIGHT
     this.directionalLight.color.setRGB(1, 1, 1);
     this.directionalLight.position.set(20, 5, 10);
-    this.directionalLight.intensity = 1.0;
+    this.directionalLight.intensity = 1.4;
 
     // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.6;
+    this.ambientLight.intensity = 0.8;
 
     // AUDIO
     if (!this.scene.userData.isCapture) {
-      // playSound('../assets/projects/hausderstatistik/hausderstatistik.wav');
+      // playSound('../assets/projects/kikkerbilsluis/kikkerbilsluis.wav');
     }
 
     // TWEENS
@@ -133,8 +131,8 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-    // this.createBackgroundActors(projectSettings, videos, this.scene);
-    await createBridge(projectSettings, media, gltf);
+    await createBridge(projectSettings, gltf);
+    await createBridgeRailing(projectSettings, media);
 
     this.postCreate();
   }
@@ -160,26 +158,4 @@ export default class Scene extends MainScene {
     });
     this.timeline.add(tween);
   }
-
-  /**
-   * createBackgroundActors
-   */
-  // async createBackgroundActors(
-  //   projectSettings: ProjectSettings,
-  //   media: { [key: string]: VideoData | ImageData | undefined },
-  //   parent: THREE.Group | THREE.Scene,
-  // ) {
-  //   const actor = await createActor(projectSettings, media.frame19, {
-  //     box: { w: this.width3d, h: this.height3d, d: 0.02 },
-  //     depth: 0.02,
-  //     imageRect: { w: this.width, h: this.height },
-  //   });
-  //   actor.setStaticPosition(getMatrix4({
-  //     x: -8, y: 4.5, z: 0,
-  //   }));
-  //   actor.setStaticImage(0, 0);
-  //   actor.getMesh().castShadow = false;
-  //   actor.getMesh().receiveShadow = false;
-  //   parent.add(actor.getMesh());
-  // }
 }

@@ -49,4 +49,6 @@ ffmpeg -i kikkerbilsluis-3_preview.mov '/Volumes/Samsung_X5/kikkerbilsluis-3/fra
   * https://www.youtube.com/watch?v=31rhH3FM9-c
 * How to Extrude Along a Curve in Blender
   * https://www.youtube.com/watch?v=iKWz1mTQYpA
+* Blender 3.0 Tutorial - How to Add An Image To An Object
+  * https://www.youtube.com/watch?v=jLGWE335J28 
   
