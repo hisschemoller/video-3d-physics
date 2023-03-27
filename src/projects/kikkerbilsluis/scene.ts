@@ -133,6 +133,7 @@ export default class Scene extends MainScene {
 
     await createBridge(projectSettings, gltf);
     await createBridgeRailing(projectSettings, media);
+    this.animateCamera();
 
     this.postCreate();
   }
@@ -148,11 +149,11 @@ export default class Scene extends MainScene {
     this.scene.add(group);
 
     const tween = createTween({
-      delay: 0.2,
+      delay: 0.1,
       duration: PATTERN_DURATION,
       onStart: () => {},
       onUpdate: (progress) => {
-        group.rotation.y = Math.sin(progress * Math.PI * 2) * -0.5;
+        group.rotation.x = 0.07 + Math.sin(progress * Math.PI * 2) * -0.05;
       },
       onComplete: () => {},
     });
