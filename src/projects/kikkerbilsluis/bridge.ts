@@ -6,8 +6,9 @@ import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
+import createTween from '@app/tween';
 
-export async function createBridge(
+async function createBridgeDeck(
   projectSettings: ProjectSettings,
   gltf: GLTF,
 ) {
@@ -23,9 +24,10 @@ export async function createBridge(
   });
   brugdek.position.set(0, -3, 0);
   scene3d.add.existing(brugdek);
+  return brugdek;
 }
 
-export async function createBridgeRailing(
+async function createBridgeRailing(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
 ) {
@@ -37,7 +39,7 @@ export async function createBridgeRailing(
     svg: { scale: svgScale, url: '../assets/projects/kikkerbilsluis/brugleuning.svg' },
     depth: 0.02,
   });
-  actor.setStaticPosition(getMatrix4({ x: -8, y: -0.95, z: -4.4, sx: 1.02, sy: 1.02 }));
+  actor.setStaticPosition(getMatrix4({ x: -8, y: -0.95 + 3, z: -4.4, sx: 1.02, sy: 1.02 }));
   actor.addTween({
     delay: 0,
     duration: 6.5,
@@ -47,4 +49,28 @@ export async function createBridgeRailing(
   // actor.getMesh().castShadow = false;
   // actor.getMesh().receiveShadow = false;
   // actor.getMesh().renderOrder = 1;
+  return actor.getMesh();
+}
+
+export async function createBridge(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+  gltf: GLTF,
+) {
+  const { patternDuration, timeline } = projectSettings;
+
+  const brugdek = await createBridgeDeck(projectSettings, gltf);
+  const brugrailing = await createBridgeRailing(projectSettings, media);
+  brugdek.add(brugrailing);
+
+  const tween = createTween({
+    delay: 0.1,
+    duration: patternDuration,
+    onStart: () => {},
+    onUpdate: (progress) => {
+      brugdek.rotation.x = -0.07 + Math.sin(progress * Math.PI * 2) * 0.05;
+    },
+    onComplete: () => {},
+  });
+  timeline.add(tween);
 }

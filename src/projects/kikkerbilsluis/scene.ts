@@ -132,8 +132,7 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-    await createBridge(projectSettings, gltf);
-    await createBridgeRailing(projectSettings, media);
+    await createBridge(projectSettings, media, gltf);
     await createSky(projectSettings, media);
     this.animateCamera();
 
@@ -155,7 +154,7 @@ export default class Scene extends MainScene {
       duration: PATTERN_DURATION,
       onStart: () => {},
       onUpdate: (progress) => {
-        group.rotation.x = 0.07 + Math.sin(progress * Math.PI * 2) * -0.05;
+        group.rotation.x = 0.07 + Math.cos(progress * Math.PI * 2) * 0.03;
       },
       onComplete: () => {},
     });

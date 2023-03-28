@@ -40,10 +40,26 @@ async function createSky3Left(
   });
 }
 
+async function createSky1MidRight(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+) {
+  const { width, width3d } = projectSettings;
+  const svgScale = width3d / width;
+  const actor = await createActor(projectSettings, media.frame1, {
+    imageRect: { w: 485, h: 686 },
+    svg: { scale: svgScale, url: '../assets/projects/kikkerbilsluis/lucht1-midrechts.svg' },
+    depth: 0.02,
+  });
+  actor.setStaticPosition(getMatrix4({ x: 2, y: 9, z: -10.5, ry: -0.1, sx: 1.5, sy: 1.5 }));
+  actor.setStaticImage(978, 0);
+}
+
 export async function createSky(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
 ) {
   await createSky2Mid(projectSettings, media);
   await createSky3Left(projectSettings, media);
+  await createSky1MidRight(projectSettings, media);
 }
