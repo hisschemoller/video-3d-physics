@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable object-curly-newline */
-import { THREE } from 'enable3d';
+import { ExtendedObject3D, THREE } from 'enable3d';
 // import { GridHelper } from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
@@ -23,6 +23,8 @@ async function createBridgeDeck(
     shininess: 1,
   });
   brugdek.position.set(0, -3, 0);
+  brugdek.castShadow = true;
+  brugdek.receiveShadow = true;
   scene3d.add.existing(brugdek);
   return brugdek;
 }
@@ -57,20 +59,39 @@ export async function createBridge(
   media: { [key: string]: VideoData | ImageData | undefined },
   gltf: GLTF,
 ) {
-  const { patternDuration, timeline } = projectSettings;
+  const { patternDuration, scene3d, timeline } = projectSettings;
 
   const brugdek = await createBridgeDeck(projectSettings, gltf);
   const brugrailing = await createBridgeRailing(projectSettings, media);
   brugdek.add(brugrailing);
+  const brug = new ExtendedObject3D();
+  brug.add(brugdek);
+  scene3d.add.existing(brug);
+  scene3d.physics.add.existing(brug, {
+    collisionFlags: 2,
+    shape: 'concaveMesh',
+  });
 
   const tween = createTween({
     delay: 0.1,
     duration: patternDuration,
     onStart: () => {},
     onUpdate: (progress) => {
-      brugdek.rotation.x = -0.07 + Math.sin(progress * Math.PI * 2) * 0.05;
+      brug.rotation.x = -0.07 + Math.sin(progress * Math.PI * 2) * 0.05;
+      brug.body.needUpdate = true;
     },
     onComplete: () => {},
   });
   timeline.add(tween);
+
+  // console.log(scene3d.physics.physicsWorld.getGravity().x);
+  scene3d.physics.setGravity(0, -9.8, 0.8);
+
+  if (scene3d.physics.debug) {
+    // scene3d.physics.debug.enable();
+  }
+
+  scene3d.physics.add.sphere(
+    { mass: 0.1, radius: 0.15, x: -0.1, y: -2.2 }, { phong: { shadowSide: THREE.FrontSide } },
+  );
 }

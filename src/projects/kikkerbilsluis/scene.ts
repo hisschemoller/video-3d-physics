@@ -68,7 +68,6 @@ export default class Scene extends MainScene {
 
     // BLENDER GLTF
     const gltf = await this.load.gltf('../assets/projects/kikkerbilsluis/kikkerbilsluis.glb');
-    console.log(gltf);
 
     // MEDIA
     const media = {
