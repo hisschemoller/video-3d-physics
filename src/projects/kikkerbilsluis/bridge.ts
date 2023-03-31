@@ -7,6 +7,7 @@ import createTween from '@app/tween';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
+import { createWheel } from './physics';
 
 async function createBridgeDeck(
   projectSettings: ProjectSettings,
@@ -68,12 +69,17 @@ export async function createBridge(
     shape: 'concaveMesh',
   });
 
+  const wheel = createWheel(6, 5, 4, 12, 0x0066ff, 0.9);
+  wheel.position.x = -4;
+  wheel.rotation.y = Math.PI * 0.5;
+  brug.add(wheel);
+
   const tween = createTween({
-    delay: 0.1,
+    delay: 1,
     duration: patternDuration,
     onStart: () => {},
     onUpdate: (progress) => {
-      brug.rotation.x = -0.07 + Math.sin(progress * Math.PI * 2) * 0.01;
+      brug.rotation.x = -0.07 + Math.sin(progress * Math.PI * 2) * 0.02;
       brug.body.needUpdate = true;
     },
     onComplete: () => {},

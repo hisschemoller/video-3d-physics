@@ -11,7 +11,7 @@ import { setupPhysics } from './physics';
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 117;
 const SECONDS_PER_BEAT = 60 / BPM;
-const MEASURES = 4;
+const MEASURES = 8;
 const BEATS_PER_MEASURE = 4;
 const STEPS_PER_BEAT = 4;
 const STEPS = STEPS_PER_BEAT * BEATS_PER_MEASURE * MEASURES;
@@ -132,9 +132,9 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-    await createBridge(projectSettings, media, gltf);
-    await setupPhysics(projectSettings, media);
+    await setupPhysics(projectSettings);
     await createSky(projectSettings, media);
+    await createBridge(projectSettings, media, gltf);
     this.animateCamera();
 
     this.postCreate();
@@ -151,11 +151,12 @@ export default class Scene extends MainScene {
     this.scene.add(group);
 
     const tween = createTween({
-      delay: 0.1,
+      delay: 1,
       duration: PATTERN_DURATION,
       onStart: () => {},
       onUpdate: (progress) => {
-        group.rotation.x = 0.07 + Math.cos(progress * Math.PI * 2) * 0.03;
+        group.rotation.x = 0.07 + Math.cos(progress * Math.PI * 4) * 0.02;
+        group.position.z = -0.2 + Math.cos(progress * Math.PI * 2) * -0.4;
       },
       onComplete: () => {},
     });
