@@ -3,10 +3,10 @@
 import { ExtendedObject3D, THREE } from 'enable3d';
 // import { GridHelper } from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
+import createTween from '@app/tween';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
-import createTween from '@app/tween';
 
 async function createBridgeDeck(
   projectSettings: ProjectSettings,
@@ -35,7 +35,6 @@ async function createBridgeRailing(
 ) {
   const { width, width3d } = projectSettings;
   const svgScale = width3d / width;
-  // const { width: videoWidth, height: videoHeight } = media.video1 as VideoData;
   const actor = await createActor(projectSettings, media.video1, {
     imageRect: { w: 1920, h: 225 },
     svg: { scale: svgScale, url: '../assets/projects/kikkerbilsluis/brugleuning.svg' },
@@ -48,9 +47,6 @@ async function createBridgeRailing(
     videoStart: 45,
     fromImagePosition: new THREE.Vector2(0, 664),
   });
-  // actor.getMesh().castShadow = false;
-  // actor.getMesh().receiveShadow = false;
-  // actor.getMesh().renderOrder = 1;
   return actor.getMesh();
 }
 
@@ -77,21 +73,10 @@ export async function createBridge(
     duration: patternDuration,
     onStart: () => {},
     onUpdate: (progress) => {
-      brug.rotation.x = -0.07 + Math.sin(progress * Math.PI * 2) * 0.05;
+      brug.rotation.x = -0.07 + Math.sin(progress * Math.PI * 2) * 0.01;
       brug.body.needUpdate = true;
     },
     onComplete: () => {},
   });
   timeline.add(tween);
-
-  // console.log(scene3d.physics.physicsWorld.getGravity().x);
-  scene3d.physics.setGravity(0, -9.8, 0.8);
-
-  if (scene3d.physics.debug) {
-    // scene3d.physics.debug.enable();
-  }
-
-  scene3d.physics.add.sphere(
-    { mass: 0.1, radius: 0.15, x: -0.1, y: -2.2 }, { phong: { shadowSide: THREE.FrontSide } },
-  );
 }

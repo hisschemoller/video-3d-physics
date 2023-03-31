@@ -4,8 +4,9 @@ import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 // import { playSound } from '@app/audio';
-import { createBridge, createBridgeRailing } from './bridge';
+import { createBridge } from './bridge';
 import { createSky } from './background';
+import { setupPhysics } from './physics';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 117;
@@ -50,11 +51,11 @@ export default class Scene extends MainScene {
 
     // DIRECTIONAL LIGHT
     this.directionalLight.color.setRGB(1, 1, 1);
-    this.directionalLight.position.set(20, 5, 10);
-    this.directionalLight.intensity = 0.5;
+    this.directionalLight.position.set(20, 10, 10);
+    this.directionalLight.intensity = 0.8;
 
     // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.8;
+    this.ambientLight.intensity = 0.7;
 
     // AUDIO
     if (!this.scene.userData.isCapture) {
@@ -132,6 +133,7 @@ export default class Scene extends MainScene {
     };
 
     await createBridge(projectSettings, media, gltf);
+    await setupPhysics(projectSettings, media);
     await createSky(projectSettings, media);
     this.animateCamera();
 
