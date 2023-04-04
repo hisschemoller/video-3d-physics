@@ -67,6 +67,7 @@ export function createWheel(
   const geometry = new THREE.ExtrudeBufferGeometry(arcShape, extrudeSettings);
   const material = new THREE.MeshBasicMaterial({ color, opacity: 0, transparent: true });
   const mesh = new THREE.Mesh(geometry, material);
+  mesh.renderOrder = 1;
   mesh.castShadow = true;
   mesh.receiveShadow = true;
   geometry.translate(0, 0, -1); // somehow this has an offset as well :/
@@ -74,6 +75,7 @@ export function createWheel(
   const wireframeGeometry = new THREE.WireframeGeometry(geometry);
   const wireframeMaterial = new THREE.MeshPhongMaterial(materialParams);
   const wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+  wireframe.renderOrder = 2;
 
   const wheel = new ExtendedObject3D();
   wheel.add(mesh);
@@ -95,7 +97,7 @@ function createEnable3dExampleWheel(
     duration: patternDuration,
     onStart: () => {},
     onUpdate: (progress: number) => {
-      wheel.position.x = -6 + (progress * 12);
+      wheel.position.x = -4 + (progress * 12);
       wheel.rotation.z = progress * Math.PI * -2;
       wheel.body.needUpdate = true;
     },

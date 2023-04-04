@@ -69,7 +69,7 @@ export async function createBridge(
     shape: 'concaveMesh',
   });
 
-  const wheel = createWheel(6, 5, 4, 12, 0x0066ff, 0.9);
+  const wheel = createWheel(6, 5, 4, 12, 0x000000, 0.9);
   wheel.position.x = -4;
   wheel.rotation.y = Math.PI * 0.5;
   brug.add(wheel);
