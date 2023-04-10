@@ -148,28 +148,6 @@ async function createNemo(
   buildings.add(actor3.getMesh());
 }
 
-async function createWhiteCar(
-  projectSettings: ProjectSettings,
-  media: { [key: string]: VideoData | ImageData | undefined },
-) {
-  const { patternDuration, width, width3d } = projectSettings;
-  const svgScale = width3d / width;
-  const actor = await createActor(projectSettings, media.frame3witteauto, {
-    imageRect: { w: 843, h: 177 },
-    svg: { scale: svgScale, url: '../assets/projects/kikkerbilsluis/witte-auto.svg' },
-    depth: 0.02,
-  });
-  actor.setStaticPosition(getMatrix4({ x: 0, y: 1.5, z: 0, sx: 0.7, sy: 0.7 }));
-  actor.setStaticImage(553, 664);
-  // wheel.position.x = -6 + (progress * 12);
-  actor.addTween({
-    delay: 1,
-    duration: patternDuration,
-    fromMatrix4: getMatrix4({ x: -8, y: -1, z: 0, sx: 0.7, sy: 0.7 }),
-    toMatrix4: getMatrix4({ x: 4, y: -1, z: 0, sx: 0.7, sy: 0.7 }),
-  });
-}
-
 async function createPilon(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
@@ -215,7 +193,6 @@ export async function createSky(
   await createNemo(projectSettings, media, buildings);
   await createUp(projectSettings, media, buildings);
 
-  await createWhiteCar(projectSettings, media);
   await createPilon(projectSettings, media);
   await createBarrierPole(projectSettings, media);
 }

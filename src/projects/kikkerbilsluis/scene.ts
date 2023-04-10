@@ -9,7 +9,7 @@ import { createSky } from './background';
 import { setupPhysics } from './physics';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 117;
+const BPM = 100;
 const SECONDS_PER_BEAT = 60 / BPM;
 const MEASURES = 8;
 const BEATS_PER_MEASURE = 4;
@@ -37,7 +37,7 @@ export default class Scene extends MainScene {
     this.height = 1440;
     this.width3d = 16;
     this.height3d = (this.height / this.width) * this.width3d;
-    this.fps = 30;
+    this.fps = 15;
     this.captureFps = 30;
     this.captureThrottle = 10;
     this.captureDuration = PATTERN_DURATION * 2;
@@ -124,6 +124,24 @@ export default class Scene extends MainScene {
           ? '../assets/projects/kikkerbilsluis/frames_preview-3/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/kikkerbilsluis-3/frames/&img=frame_#FRAME#.png',
       },
+      video2_greenscreen: {
+        fps: 30,
+        height: 720,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1280,
+        imgSrcPath: isPreview
+          ? '../assets/projects/kikkerbilsluis/frames_preview-2_greenscreen/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/kikkerbilsluis-2_greenscreen/frames/&img=frame_#FRAME#.png',
+      },
+      video2a_greenscreen: {
+        fps: 30,
+        height: 720,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1280,
+        imgSrcPath: isPreview
+          ? '../assets/projects/kikkerbilsluis/frames_preview-2a_greenscreen/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/kikkerbilsluis-2a_greenscreen/frames/&img=frame_#FRAME#.png',
+      },
     };
 
     // PROJECT SETTINGS
@@ -161,7 +179,7 @@ export default class Scene extends MainScene {
     this.scene.add(group);
 
     const tween = createTween({
-      delay: 1,
+      delay: 2,
       duration: PATTERN_DURATION,
       onStart: () => {},
       onUpdate: (progress) => {

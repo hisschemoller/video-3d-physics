@@ -1,7 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable object-curly-newline */
 import { ExtendedObject3D, THREE } from 'enable3d';
-// import { GridHelper } from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import createTween from '@app/tween';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
@@ -33,12 +32,11 @@ async function createBridgeDeck(
 async function createBridgeRailing(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
+  pxTo3d: number,
 ) {
-  const { width, width3d } = projectSettings;
-  const svgScale = width3d / width;
   const actor = await createActor(projectSettings, media.video1, {
     imageRect: { w: 1920, h: 225 },
-    svg: { scale: svgScale, url: '../assets/projects/kikkerbilsluis/brugleuning.svg' },
+    svg: { scale: pxTo3d, url: '../assets/projects/kikkerbilsluis/brugleuning.svg' },
     depth: 0.02,
   });
   actor.setStaticPosition(getMatrix4({ x: -8, y: -0.95 + 3, z: -4.4, sx: 1.02, sy: 1.02 }));
@@ -77,15 +75,14 @@ async function createBridgeRailing(
 async function createStreetLight(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
+  pxTo3d: number,
 ) {
-  const { width, width3d } = projectSettings;
-  const svgScale = width3d / width;
   const actor = await createActor(projectSettings, media.frame1, {
     imageRect: { w: 78, h: 880 },
-    svg: { scale: svgScale, url: '../assets/projects/kikkerbilsluis/lantarenpaal.svg' },
+    svg: { scale: pxTo3d, url: '../assets/projects/kikkerbilsluis/lantarenpaal.svg' },
     depth: 0.01,
   });
-  actor.setStaticPosition(getMatrix4({ x: -6.5, y: 4.6, z: -4.2, rz: 0.05 }));
+  actor.setStaticPosition(getMatrix4({ x: -6.5, y: 4.6, z: -3.7, rz: 0.05 }));
   actor.setStaticImage(1732, 16);
   return actor;
 }
@@ -93,16 +90,94 @@ async function createStreetLight(
 async function createPole(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
+  pxTo3d: number,
 ) {
-  const { width, width3d } = projectSettings;
-  const svgScale = width3d / width;
   const actor = await createActor(projectSettings, media.frame3, {
     imageRect: { w: 20, h: 754 },
-    svg: { scale: svgScale, url: '../assets/projects/kikkerbilsluis/paal.svg' },
+    svg: { scale: pxTo3d, url: '../assets/projects/kikkerbilsluis/paal.svg' },
     depth: 0.01,
   });
   actor.setStaticPosition(getMatrix4({ x: -7.7, y: 6.5, z: -3.7, rz: 0.05, sx: 1.5, sy: 1.5 }));
   actor.setStaticImage(578, 0);
+  return actor;
+}
+
+async function createGreenscreen2(
+  projectSettings: ProjectSettings,
+  videos: { [key: string]: ImageData | VideoData | undefined },
+  pxTo3d: number,
+) {
+  const { width: videoWidth, height: videoHeight } = videos.video2_greenscreen as VideoData;
+  const actor = await createActor(projectSettings, videos.video2_greenscreen, {
+    box: {
+      w: videoWidth * pxTo3d * 1.6,
+      h: videoHeight * pxTo3d * 1.6,
+      d: 0.02,
+    },
+    imageRect: { w: videoWidth, h: videoHeight },
+    depth: 0.02,
+  });
+  actor.setStaticPosition(getMatrix4({ x: -8, y: 3.3, z: -3.9, sx: 1.0, sy: 1.0 }));
+  actor.addTween({
+    delay: projectSettings.stepDuration * 64,
+    duration: projectSettings.patternDuration * 0.99,
+    videoStart: 0.7,
+    fromImagePosition: new THREE.Vector2(0, 0),
+  });
+  actor.getMesh().castShadow = false;
+  actor.getMesh().receiveShadow = false;
+  actor.getMesh().renderOrder = 2;
+  return actor;
+}
+
+async function createGreenscreen2a(
+  projectSettings: ProjectSettings,
+  videos: { [key: string]: ImageData | VideoData | undefined },
+  pxTo3d: number,
+) {
+  const { width: videoWidth, height: videoHeight } = videos.video2a_greenscreen as VideoData;
+  const actor = await createActor(projectSettings, videos.video2a_greenscreen, {
+    box: {
+      w: videoWidth * pxTo3d * 1.6,
+      h: videoHeight * pxTo3d * 1.6,
+      d: 0.02,
+    },
+    imageRect: { w: videoWidth, h: videoHeight },
+    depth: 0.02,
+  });
+  actor.setStaticPosition(getMatrix4({ x: -8, y: 3.3, z: -3.4, sx: 1.0, sy: 1.0 }));
+  actor.addTween({
+    delay: projectSettings.stepDuration * 64,
+    duration: 13,
+    videoStart: 0.7,
+    fromImagePosition: new THREE.Vector2(0, 0),
+  });
+  actor.getMesh().castShadow = false;
+  actor.getMesh().receiveShadow = false;
+  actor.getMesh().renderOrder = 2;
+  return actor;
+}
+
+async function createWhiteCar(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+  pxTo3d: number,
+) {
+  const { patternDuration } = projectSettings;
+
+  const actor = await createActor(projectSettings, media.frame3witteauto, {
+    imageRect: { w: 843, h: 177 },
+    svg: { scale: pxTo3d, url: '../assets/projects/kikkerbilsluis/witte-auto.svg' },
+    depth: 0.02,
+  });
+  // actor.setStaticPosition(getMatrix4({ x: 0, y: 0.8, z: 0, sx: 0.6, sy: 0.6 }));
+  actor.setStaticImage(553, 664);
+  actor.addTween({
+    delay: 2,
+    duration: patternDuration,
+    fromMatrix4: getMatrix4({ x: -6, y: -1.4, z: 2, sx: 0.6, sy: 0.6 }),
+    toMatrix4: getMatrix4({ x: 3, y: -1.4, z: 2, sx: 0.6, sy: 0.6 }),
+  });
   return actor;
 }
 
@@ -111,10 +186,11 @@ export async function createBridge(
   media: { [key: string]: VideoData | ImageData | undefined },
   gltf: GLTF,
 ) {
-  const { patternDuration, scene3d, timeline } = projectSettings;
+  const { patternDuration, scene3d, timeline, width, width3d } = projectSettings;
+  const pxTo3d = width3d / width;
 
   const brugdek = await createBridgeDeck(projectSettings, gltf);
-  const brugrailing = await createBridgeRailing(projectSettings, media);
+  const brugrailing = await createBridgeRailing(projectSettings, media, pxTo3d);
   brugdek.add(brugrailing);
   const brug = new ExtendedObject3D();
   brug.add(brugdek);
@@ -126,16 +202,25 @@ export async function createBridge(
 
   // const pilon = await createPilon(projectSettings, gltf);
 
-  const light = await createStreetLight(projectSettings, media);
+  const light = await createStreetLight(projectSettings, media, pxTo3d);
   brug.add(light.getMesh());
 
-  const pole = await createPole(projectSettings, media);
+  const pole = await createPole(projectSettings, media, pxTo3d);
   brug.add(pole.getMesh());
 
-  const wheel = createWheel(6, 5, 4, 12, 0x000000, 0.9);
+  const wheel = createWheel(6, 5, 4, 12, 0x000000, 0.5);
   wheel.position.x = -4;
   wheel.rotation.y = Math.PI * 0.5;
   brug.add(wheel);
+
+  const greenscreen2 = await createGreenscreen2(projectSettings, media, pxTo3d);
+  brug.add(greenscreen2.getMesh());
+
+  const greenscreen2a = await createGreenscreen2a(projectSettings, media, pxTo3d);
+  brug.add(greenscreen2a.getMesh());
+
+  const whiteCar = await createWhiteCar(projectSettings, media, pxTo3d);
+  brug.add(whiteCar.getMesh());
 
   const tween = createTween({
     delay: 1,

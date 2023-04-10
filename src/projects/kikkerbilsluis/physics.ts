@@ -65,20 +65,20 @@ export function createWheel(
   arcShape.holes.push(holePath);
 
   const geometry = new THREE.ExtrudeBufferGeometry(arcShape, extrudeSettings);
-  const material = new THREE.MeshBasicMaterial({ color, opacity: 0, transparent: true });
-  const mesh = new THREE.Mesh(geometry, material);
-  mesh.renderOrder = 1;
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
+  // const material = new THREE.MeshBasicMaterial({ color, opacity: 0, transparent: true });
+  // const mesh = new THREE.Mesh(geometry, material);
+  // mesh.renderOrder = 1;
+  // mesh.castShadow = true;
+  // mesh.receiveShadow = true;
   geometry.translate(0, 0, -1); // somehow this has an offset as well :/
 
   const wireframeGeometry = new THREE.WireframeGeometry(geometry);
   const wireframeMaterial = new THREE.MeshPhongMaterial(materialParams);
   const wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
-  wireframe.renderOrder = 2;
+  wireframe.renderOrder = 1;
 
   const wheel = new ExtendedObject3D();
-  wheel.add(mesh);
+  // wheel.add(mesh);
   wheel.add(wireframe);
   return wheel;
 }
