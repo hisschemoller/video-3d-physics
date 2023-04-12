@@ -73,7 +73,7 @@ ffmpeg -start_number 1 -i '/Volumes/Samsung_X5/kikkerbilsluis-2a_greenscreen/fra
 
 Amsterdam Brug PHKade 3a 21-07-2021 720p greenscreen.mp4<br>
 1280 × 720<br>
-0:20
+0:25
 
 ```bash
 # slice 1:10 to 1:35

@@ -142,6 +142,15 @@ export default class Scene extends MainScene {
           ? '../assets/projects/kikkerbilsluis/frames_preview-2a_greenscreen/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/kikkerbilsluis-2a_greenscreen/frames/&img=frame_#FRAME#.png',
       },
+      video3a_greenscreen: {
+        fps: 30,
+        height: 720,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1280,
+        imgSrcPath: isPreview
+          ? '../assets/projects/kikkerbilsluis/frames_preview-3a_greenscreen/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/kikkerbilsluis-3a_greenscreen/frames/&img=frame_#FRAME#.png',
+      },
     };
 
     // PROJECT SETTINGS

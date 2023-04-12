@@ -158,6 +158,34 @@ async function createGreenscreen2a(
   return actor;
 }
 
+async function createGreenscreen3a(
+  projectSettings: ProjectSettings,
+  videos: { [key: string]: ImageData | VideoData | undefined },
+  pxTo3d: number,
+) {
+  const { width: videoWidth, height: videoHeight } = videos.video3a_greenscreen as VideoData;
+  const actor = await createActor(projectSettings, videos.video3a_greenscreen, {
+    box: {
+      w: videoWidth * pxTo3d * 1.6,
+      h: videoHeight * pxTo3d * 1.6,
+      d: 0.02,
+    },
+    imageRect: { w: videoWidth, h: videoHeight },
+    depth: 0.02,
+  });
+  actor.setStaticPosition(getMatrix4({ x: -8, y: 4, z: -3.7, rz: -0.012, sx: 1.0, sy: 1.0 }));
+  actor.addTween({
+    delay: projectSettings.stepDuration * 64,
+    duration: projectSettings.patternDuration * 0.99,
+    videoStart: 0,
+    fromImagePosition: new THREE.Vector2(0, 0),
+  });
+  actor.getMesh().castShadow = false;
+  actor.getMesh().receiveShadow = false;
+  actor.getMesh().renderOrder = 2;
+  return actor;
+}
+
 async function createWhiteCar(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
@@ -175,8 +203,8 @@ async function createWhiteCar(
   actor.addTween({
     delay: 2,
     duration: patternDuration,
-    fromMatrix4: getMatrix4({ x: -6, y: -1.4, z: 2, sx: 0.6, sy: 0.6 }),
-    toMatrix4: getMatrix4({ x: 3, y: -1.4, z: 2, sx: 0.6, sy: 0.6 }),
+    fromMatrix4: getMatrix4({ x: -5, y: -1.4, z: 4, sx: 0.5, sy: 0.5 }),
+    toMatrix4: getMatrix4({ x: 2, y: -1.4, z: 4, sx: 0.5, sy: 0.5 }),
   });
   return actor;
 }
@@ -218,6 +246,9 @@ export async function createBridge(
 
   const greenscreen2a = await createGreenscreen2a(projectSettings, media, pxTo3d);
   brug.add(greenscreen2a.getMesh());
+
+  const greenscreen3a = await createGreenscreen3a(projectSettings, media, pxTo3d);
+  brug.add(greenscreen3a.getMesh());
 
   const whiteCar = await createWhiteCar(projectSettings, media, pxTo3d);
   brug.add(whiteCar.getMesh());
