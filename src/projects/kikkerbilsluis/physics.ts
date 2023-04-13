@@ -83,14 +83,14 @@ export function createWheel(
   return wheel;
 }
 
-function createEnable3dExampleWheel(
+function createCarWheel(
   projectSettings: ProjectSettings,
 ) {
   const { patternDuration, scene3d, timeline } = projectSettings;
   const wheel = createWheel();
   wheel.position.y = 0;
   scene3d.scene.add(wheel);
-  scene3d.physics.add.existing(wheel, { shape: 'mesh', collisionFlags: 2 }); // 'hacd'
+  // scene3d.physics.add.existing(wheel, { shape: 'mesh', collisionFlags: 2 }); // 'hacd'
 
   const tween = createTween({
     delay: 0,
@@ -99,7 +99,27 @@ function createEnable3dExampleWheel(
     onUpdate: (progress: number) => {
       wheel.position.x = -4 + (progress * 12);
       wheel.rotation.z = progress * Math.PI * -2;
-      wheel.body.needUpdate = true;
+      // wheel.body.needUpdate = true;
+    },
+  });
+  timeline.add(tween);
+}
+
+function createCarWheel2(
+  projectSettings: ProjectSettings,
+) {
+  const { patternDuration, scene3d, timeline } = projectSettings;
+  const wheel = createWheel(1, 0.5, 0.7, 6);
+  wheel.position.y = -0.5;
+  scene3d.scene.add(wheel);
+
+  const tween = createTween({
+    delay: 16,
+    duration: patternDuration,
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      wheel.position.x = 4 + (progress * -11);
+      wheel.rotation.z = progress * Math.PI * 4;
     },
   });
   timeline.add(tween);
@@ -125,7 +145,8 @@ export async function setupPhysics(
   // });
 
   // await createSvgWheel(projectSettings, media, fix, pxTo3d);
-  createEnable3dExampleWheel(projectSettings);
+  createCarWheel(projectSettings);
+  createCarWheel2(projectSettings);
 
   const grid = new GridHelper(30, 10, 0x333333, 0x333333);
   grid.position.set(0, -4, 0);

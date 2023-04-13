@@ -92,6 +92,11 @@ export default class Scene extends MainScene {
         height: 1080,
         width: 1920,
       },
+      frame3zwarteauto: {
+        imgSrc: '../assets/projects/kikkerbilsluis/kikkerbilsluis-3_frame_01720.png',
+        height: 1080,
+        width: 1920,
+      },
       frame3paalinzon: {
         imgSrc: '../assets/projects/kikkerbilsluis/kikkerbilsluis-3_frame_01775.png',
         height: 1080,

@@ -173,7 +173,7 @@ async function createGreenscreen3a(
     imageRect: { w: videoWidth, h: videoHeight },
     depth: 0.02,
   });
-  actor.setStaticPosition(getMatrix4({ x: -8, y: 4, z: -3.7, rz: -0.012, sx: 1.0, sy: 1.0 }));
+  actor.setStaticPosition(getMatrix4({ x: -8, y: 4, z: -3.8, rz: -0.012, sx: 1.0, sy: 1.0 }));
   actor.addTween({
     delay: projectSettings.stepDuration * 64,
     duration: projectSettings.patternDuration * 0.99,
@@ -205,6 +205,28 @@ async function createWhiteCar(
     duration: patternDuration,
     fromMatrix4: getMatrix4({ x: -5, y: -1.4, z: 4, sx: 0.5, sy: 0.5 }),
     toMatrix4: getMatrix4({ x: 2, y: -1.4, z: 4, sx: 0.5, sy: 0.5 }),
+  });
+  return actor;
+}
+
+async function createBlackCar(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+  pxTo3d: number,
+) {
+  const { patternDuration } = projectSettings;
+
+  const actor = await createActor(projectSettings, media.frame3zwarteauto, {
+    imageRect: { w: 564, h: 127 },
+    svg: { scale: pxTo3d, url: '../assets/projects/kikkerbilsluis/zwarte-auto.svg' },
+    depth: 0.02,
+  });
+  actor.setStaticImage(710, 643);
+  actor.addTween({
+    delay: 16,
+    duration: patternDuration,
+    fromMatrix4: getMatrix4({ x: 5, y: -1.4, z: -2.5, sx: 1.2, sy: 1.2 }),
+    toMatrix4: getMatrix4({ x: -8, y: -1.4, z: -2.5, sx: 1.2, sy: 1.2 }),
   });
   return actor;
 }
@@ -252,6 +274,9 @@ export async function createBridge(
 
   const whiteCar = await createWhiteCar(projectSettings, media, pxTo3d);
   brug.add(whiteCar.getMesh());
+
+  const blackCar = await createBlackCar(projectSettings, media, pxTo3d);
+  brug.add(blackCar.getMesh());
 
   const tween = createTween({
     delay: 1,
