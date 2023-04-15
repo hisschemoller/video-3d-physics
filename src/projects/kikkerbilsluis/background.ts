@@ -4,6 +4,7 @@ import { THREE } from 'enable3d';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
+import createTween from '@app/tween';
 
 async function createSky2Mid(
   projectSettings: ProjectSettings,
@@ -178,6 +179,35 @@ async function createBarrierPole(
   actor.setStaticImage(1462, 0);
 }
 
+async function createBackgroundShape(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+) {
+  const { patternDuration, scene, timeline, width, width3d } = projectSettings;
+  const svgScale = width3d / width;
+  const actor = await createActor(projectSettings, media.blue, {
+    imageRect: { w: 512, h: 512 },
+    svg: { scale: svgScale, url: '../assets/projects/kikkerbilsluis/achtergrond.svg' },
+    depth: 0.01,
+  });
+  actor.setStaticPosition(getMatrix4({ x: -10, y: 10, z: -14, sx: 3.5, sy: 3.5 }));
+  actor.setStaticImage(0, 0);
+
+  const group = new THREE.Group();
+  group.add(actor.getMesh());
+  scene.add(group);
+
+  const tween = createTween({
+    delay: 3,
+    duration: patternDuration * 0.99,
+    onStart: () => {},
+    onUpdate: (progress: number) => {
+      group.rotation.z = progress * Math.PI * 2;
+    },
+  });
+  timeline.add(tween);
+}
+
 export async function createSky(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
@@ -195,4 +225,6 @@ export async function createSky(
 
   await createPilon(projectSettings, media);
   await createBarrierPole(projectSettings, media);
+
+  await createBackgroundShape(projectSettings, media);
 }
