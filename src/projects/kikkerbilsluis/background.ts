@@ -185,24 +185,32 @@ async function createBackgroundShape(
 ) {
   const { patternDuration, scene, timeline, width, width3d } = projectSettings;
   const svgScale = width3d / width;
-  const actor = await createActor(projectSettings, media.blue, {
-    imageRect: { w: 512, h: 512 },
-    svg: { scale: svgScale, url: '../assets/projects/kikkerbilsluis/achtergrond.svg' },
-    depth: 0.01,
-  });
-  actor.setStaticPosition(getMatrix4({ x: -10, y: 10, z: -14, sx: 3.5, sy: 3.5 }));
-  actor.setStaticImage(0, 0);
 
   const group = new THREE.Group();
-  group.add(actor.getMesh());
+  group.position.z = -14;
   scene.add(group);
 
+  const actor = await createActor(projectSettings, media.blue, {
+    imageRect: { w: 512, h: 512 },
+    svg: { scale: svgScale, url: '../assets/projects/kikkerbilsluis/achtergrond2.svg' },
+    depth: 0.01,
+  });
+  actor.setStaticPosition(getMatrix4({ z: -10, sx: 2.5, sy: 2.5 }));
+  actor.setStaticImage(0, 0);
+  group.add(actor.getMesh());
+
+  for (let i = 1, n = 4; i < n; i += 1) {
+    const quarter = actor.getMesh().clone();
+    quarter.rotation.z = Math.PI * (0.5 * i);
+    group.add(quarter);
+  }
+
   const tween = createTween({
-    delay: 3,
-    duration: patternDuration * 0.99,
+    delay: 1,
+    duration: patternDuration,
     onStart: () => {},
     onUpdate: (progress: number) => {
-      group.rotation.z = progress * Math.PI * 2;
+      group.rotation.z = progress * Math.PI * -0.5;
     },
   });
   timeline.add(tween);

@@ -225,8 +225,8 @@ async function createBlackCar(
   actor.addTween({
     delay: 16,
     duration: patternDuration,
-    fromMatrix4: getMatrix4({ x: 5, y: -1.4, z: -2.5, sx: 1.2, sy: 1.2 }),
-    toMatrix4: getMatrix4({ x: -8, y: -1.4, z: -2.5, sx: 1.2, sy: 1.2 }),
+    fromMatrix4: getMatrix4({ x: 5, y: -1.4, z: -2.0, sx: 1.2, sy: 1.2 }),
+    toMatrix4: getMatrix4({ x: -8, y: -1.4, z: -2.0, sx: 1.2, sy: 1.2 }),
   });
   return actor;
 }

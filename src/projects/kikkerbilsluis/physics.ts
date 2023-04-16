@@ -109,16 +109,16 @@ function createCarWheel2(
   projectSettings: ProjectSettings,
 ) {
   const { patternDuration, scene3d, timeline } = projectSettings;
-  const wheel = createWheel(1, 0.5, 0.7, 6);
-  wheel.position.y = -0.5;
+  const wheel = createWheel(1, 0.75, 0.5, 6);
+  wheel.position.y = 0;
   scene3d.scene.add(wheel);
 
   const tween = createTween({
-    delay: 16,
+    delay: 14,
     duration: patternDuration,
     onStart: () => {},
     onUpdate: (progress: number) => {
-      wheel.position.x = 4 + (progress * -11);
+      wheel.position.x = 4.5 + (progress * -11);
       wheel.rotation.z = progress * Math.PI * 4;
     },
   });

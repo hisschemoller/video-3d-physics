@@ -102,6 +102,11 @@ export default class Scene extends MainScene {
         height: 1080,
         width: 1920,
       },
+      blue: {
+        imgSrc: '../assets/projects/kikkerbilsluis/color-blue.jpg',
+        height: 512,
+        width: 512,
+      },
       video1: {
         fps: 30,
         height: 1080,
