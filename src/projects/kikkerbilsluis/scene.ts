@@ -40,7 +40,7 @@ export default class Scene extends MainScene {
     this.fps = 15;
     this.captureFps = 30;
     this.captureThrottle = 10;
-    this.captureDuration = PATTERN_DURATION * 2;
+    this.captureDuration = PATTERN_DURATION * 3;
     this.clearColor = 0x557799;
   }
 
@@ -87,6 +87,11 @@ export default class Scene extends MainScene {
         height: 1080,
         width: 1920,
       },
+      frame1rodeauto: {
+        imgSrc: '../assets/projects/kikkerbilsluis/kikkerbilsluis-1_frame_01956.png',
+        height: 1080,
+        width: 1920,
+      },
       frame3witteauto: {
         imgSrc: '../assets/projects/kikkerbilsluis/kikkerbilsluis-3_frame_00235.png',
         height: 1080,
@@ -106,6 +111,11 @@ export default class Scene extends MainScene {
         imgSrc: '../assets/projects/kikkerbilsluis/color-blue.jpg',
         height: 512,
         width: 512,
+      },
+      backgroundDrawing: {
+        imgSrc: '../assets/projects/kikkerbilsluis/kikkerbilsluis-background6.png',
+        height: 1024,
+        width: 1024,
       },
       video1: {
         fps: 30,

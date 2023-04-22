@@ -2,9 +2,9 @@
 /* eslint-disable object-curly-newline */
 import { THREE } from 'enable3d';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
+import createTween from '@app/tween';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
-import createTween from '@app/tween';
 
 async function createSky2Mid(
   projectSettings: ProjectSettings,
@@ -179,7 +179,44 @@ async function createBarrierPole(
   actor.setStaticImage(1462, 0);
 }
 
-async function createBackgroundShape(
+// async function createBackgroundShape(
+//   projectSettings: ProjectSettings,
+//   media: { [key: string]: VideoData | ImageData | undefined },
+// ) {
+//   const { patternDuration, scene, timeline, width, width3d } = projectSettings;
+//   const svgScale = width3d / width;
+
+//   const group = new THREE.Group();
+//   group.position.z = -14;
+//   scene.add(group);
+
+//   const actor = await createActor(projectSettings, media.blue, {
+//     imageRect: { w: 512, h: 512 },
+//     svg: { scale: svgScale, url: '../assets/projects/kikkerbilsluis/achtergrond2.svg' },
+//     depth: 0.01,
+//   });
+//   actor.setStaticPosition(getMatrix4({ z: -10, sx: 2.5, sy: 2.5 }));
+//   actor.setStaticImage(0, 0);
+//   group.add(actor.getMesh());
+
+//   for (let i = 1, n = 4; i < n; i += 1) {
+//     const quarter = actor.getMesh().clone();
+//     quarter.rotation.z = Math.PI * (0.5 * i);
+//     group.add(quarter);
+//   }
+
+//   const tween = createTween({
+//     delay: 1,
+//     duration: patternDuration,
+//     onStart: () => {},
+//     onUpdate: (progress: number) => {
+//       group.rotation.z = progress * Math.PI * -0.5;
+//     },
+//   });
+//   timeline.add(tween);
+// }
+
+async function createBackgroundDrawing(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
 ) {
@@ -187,15 +224,15 @@ async function createBackgroundShape(
   const svgScale = width3d / width;
 
   const group = new THREE.Group();
-  group.position.z = -14;
+  group.position.z = -13.8;
   scene.add(group);
 
-  const actor = await createActor(projectSettings, media.blue, {
-    imageRect: { w: 512, h: 512 },
-    svg: { scale: svgScale, url: '../assets/projects/kikkerbilsluis/achtergrond2.svg' },
+  const actor = await createActor(projectSettings, media.backgroundDrawing, {
+    imageRect: { w: 1024, h: 1024 },
+    svg: { scale: svgScale, url: '../assets/projects/kikkerbilsluis/square1024.svg' },
     depth: 0.01,
   });
-  actor.setStaticPosition(getMatrix4({ z: -10, sx: 2.5, sy: 2.5 }));
+  actor.setStaticPosition(getMatrix4({ z: -10, sx: 3, sy: 3 }));
   actor.setStaticImage(0, 0);
   group.add(actor.getMesh());
 
@@ -234,5 +271,6 @@ export async function createSky(
   await createPilon(projectSettings, media);
   await createBarrierPole(projectSettings, media);
 
-  await createBackgroundShape(projectSettings, media);
+  // await createBackgroundShape(projectSettings, media);
+  await createBackgroundDrawing(projectSettings, media);
 }

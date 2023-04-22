@@ -194,12 +194,11 @@ async function createWhiteCar(
   const { patternDuration } = projectSettings;
 
   const actor = await createActor(projectSettings, media.frame3witteauto, {
-    imageRect: { w: 843, h: 177 },
+    imageRect: { w: 848, h: 175 },
     svg: { scale: pxTo3d, url: '../assets/projects/kikkerbilsluis/witte-auto.svg' },
     depth: 0.02,
   });
-  // actor.setStaticPosition(getMatrix4({ x: 0, y: 0.8, z: 0, sx: 0.6, sy: 0.6 }));
-  actor.setStaticImage(553, 664);
+  actor.setStaticImage(547, 664);
   actor.addTween({
     delay: 2,
     duration: patternDuration,
@@ -225,11 +224,33 @@ async function createBlackCar(
   actor.addTween({
     delay: 16,
     duration: patternDuration,
-    fromMatrix4: getMatrix4({ x: 5, y: -1.4, z: -2.0, sx: 1.2, sy: 1.2 }),
-    toMatrix4: getMatrix4({ x: -8, y: -1.4, z: -2.0, sx: 1.2, sy: 1.2 }),
+    fromMatrix4: getMatrix4({ x: 5, y: -1.4, z: -2.0, rz: -0.04, sx: 1.2, sy: 1.2 }),
+    toMatrix4: getMatrix4({ x: -8, y: -1.4, z: -2.0, rz: -0.04, sx: 1.2, sy: 1.2 }),
   });
   return actor;
 }
+
+// async function createRedCar(
+//   projectSettings: ProjectSettings,
+//   media: { [key: string]: VideoData | ImageData | undefined },
+//   pxTo3d: number,
+// ) {
+//   const { patternDuration } = projectSettings;
+
+//   const actor = await createActor(projectSettings, media.frame1rodeauto, {
+//     imageRect: { w: 454, h: 153 },
+//     svg: { scale: pxTo3d, url: '../assets/projects/kikkerbilsluis/rode-auto.svg' },
+//     depth: 0.02,
+//   });
+//   actor.setStaticImage(688, 778);
+//   actor.addTween({
+//     delay: 16,
+//     duration: patternDuration,
+//     fromMatrix4: getMatrix4({ x: 5, y: -1.4, z: -2.0, sx: 1.2, sy: 1.2 }),
+//     toMatrix4: getMatrix4({ x: -8, y: -1.4, z: -2.0, sx: 1.2, sy: 1.2 }),
+//   });
+//   return actor;
+// }
 
 export async function createBridge(
   projectSettings: ProjectSettings,
@@ -277,6 +298,9 @@ export async function createBridge(
 
   const blackCar = await createBlackCar(projectSettings, media, pxTo3d);
   brug.add(blackCar.getMesh());
+
+  // const redCar = await createRedCar(projectSettings, media, pxTo3d);
+  // brug.add(redCar.getMesh());
 
   const tween = createTween({
     delay: 1,

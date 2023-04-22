@@ -95,5 +95,25 @@ ffmpeg -start_number 1 -i '/Volumes/Samsung_X5/kikkerbilsluis-3a_greenscreen/fra
   * https://www.youtube.com/watch?v=jLGWE335J28 
 
 
-Dan Abrams - Freezing
-Shuttle 358 - Emergent
+## Render PNG sequence
+
+```bash
+# png to mp4 (from index 1153 met 30 FPS
+ffmpeg -framerate 30 -start_number 1153 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p kikkerbilsluis-video-x1.mp4
+# repeat 8 times, 576 frames, video only
+ffmpeg -i kikkerbilsluis-video-x1.mp4 -filter_complex "loop=loop=8:size=576:start=0" kikkerbilsluis-video-x8.mp4
+# repeat 8 times, audio
+ffmpeg -stream_loop 8 -i kikkerbilsluis-audio-x1.wav -c copy kikkerbilsluis-audio-x8.wav
+# video en audio samenvoegen
+ffmpeg -i kikkerbilsluis-video-x8.mp4 -i kikkerbilsluis-audio-x8.wav -vcodec copy kikkerbilsluis-x8.mp4
+# scale to 50%, 960 * 720
+ffmpeg -i kikkerbilsluis-x8.mp4 -vf scale=960:720 kikkerbilsluis-x8_halfsize.mp4
+```
+
+## Muziek
+
+Video duurt 576 frames.<br>
+Video duurt 576 / 30 FPS = 19.2 seconden.<br>
+Video duurt 8 maten van 4 beats = 32 beats.<br>
+Een beat duurt 19.2 / 32 = 0.6 seconden.<br>
+Het tempo is 60 / 0.6 = 100 BPM<br>
