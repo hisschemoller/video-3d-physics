@@ -1,8 +1,11 @@
+/* eslint-disable object-curly-newline */
 import { THREE } from 'enable3d';
 import { ProjectSettings } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
-import createTween from '@app/tween';
+import { getMatrix4 } from '@app/utils';
+import { createTweenGroup } from './actor';
+import createBackground from './background';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 100;
@@ -45,6 +48,15 @@ export default class Scene extends MainScene {
 
     const isPreview = true && !this.scene.userData.isCapture;
 
+    // CAMERA & ORBIT_CONTROLS
+    this.cameraTarget.set(0, 2, 0);
+    this.pCamera.position.set(0, 0, 11.5);
+    this.pCamera.lookAt(this.cameraTarget);
+    this.pCamera.updateProjectionMatrix();
+    this.orbitControls.target = this.cameraTarget;
+    this.orbitControls.update();
+    this.orbitControls.saveState();
+
     // // DIRECTIONAL LIGHT
     // this.directionalLight.color.setRGB(1, 1, 1);
     // this.directionalLight.position.set(20, 10, 10);
@@ -86,6 +98,15 @@ export default class Scene extends MainScene {
       width: this.width,
       width3d: this.width3d,
     };
+
+    // GROUP
+    const scale = 1.315;
+    const group = createTweenGroup(projectSettings); // GROUP
+    group.setStaticPosition(getMatrix4({ x: -10.51, y: 7.99, rx: 0.147, sx: scale, sy: scale }));
+    const axesHelper = new THREE.AxesHelper(25);
+    group.getGroup().add(axesHelper);
+
+    createBackground(projectSettings, media, group.getGroup());
 
     this.postCreate();
   }
