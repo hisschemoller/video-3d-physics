@@ -142,7 +142,7 @@ export default class MainScene extends Scene3D {
     });
 
     // GRID HELPER
-    const gridHelper = new THREE.GridHelper(20, 20, 0xff0000, 0xff0000);
+    const gridHelper = new THREE.GridHelper(20, 20, 0x00ff00, 0xff0000);
     gridHelper.position.set(0, 0, 0);
     document.getElementById('grid-helper')?.addEventListener('click', (e) => {
       if ((e.target as HTMLInputElement).checked) {
