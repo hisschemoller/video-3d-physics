@@ -62,6 +62,44 @@ async function createHouseRightBack(
   group.add(actor.getMesh());
 }
 
+async function createBuildingBack(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+  group: THREE.Group,
+  svgScale: number,
+) {
+  const scale = 3;
+  const actor = await createActor(projectSettings, media.frame500, {
+    svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/gebouw-achter.svg' },
+    imageRect: { w: 307, h: 189 },
+    depth: 0.01,
+  });
+  actor.setStaticPosition(getMatrix4({ x: 7, y: -4.5, z: -11.5 - 9, sx: scale, sy: scale }));
+  actor.setStaticImage(960, 575);
+  actor.getMesh().castShadow = true;
+  actor.getMesh().receiveShadow = true;
+  group.add(actor.getMesh());
+}
+
+async function createChurch(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+  group: THREE.Group,
+  svgScale: number,
+) {
+  const scale = 1.85;
+  const actor = await createActor(projectSettings, media.frame500, {
+    svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/kerk.svg' },
+    imageRect: { w: 963, h: 897 },
+    depth: 0.01,
+  });
+  actor.setStaticPosition(getMatrix4({ x: -7.35, y: 4.15, z: -11.5, sx: scale, sy: scale }));
+  actor.setStaticImage(0, 0);
+  actor.getMesh().castShadow = true;
+  actor.getMesh().receiveShadow = true;
+  group.add(actor.getMesh());
+}
+
 export default async function createWalls(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
@@ -73,4 +111,6 @@ export default async function createWalls(
   createBuildingRight(projectSettings, media, group, svgScale);
   createChurchRight(projectSettings, media, group, svgScale);
   createHouseRightBack(projectSettings, media, group, svgScale);
+  createBuildingBack(projectSettings, media, group, svgScale);
+  createChurch(projectSettings, media, group, svgScale);
 }

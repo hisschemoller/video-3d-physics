@@ -42,7 +42,7 @@ export default class Scene extends MainScene {
     this.captureFps = 30;
     this.captureThrottle = 10;
     this.captureDuration = PATTERN_DURATION * 3;
-    this.clearColor = 0x76BEA3; // 0x539c81;
+    this.clearColor = 0xa4c2d9; // 0xa4d9b0; // 0x76BEA3; // 0x539c81;
     this.shadowSize = 8;
   }
 
@@ -66,9 +66,9 @@ export default class Scene extends MainScene {
     // this.directionalLight.intensity = 0.8;
     // DIRECTIONAL LIGHT
     // this.directionalLight.color.setRGB(1, 1, 1);
-    this.directionalLight.position.set(20, 10, 10 - 8);
-    // this.directionalLight.intensity = 1;
-    this.directionalLight.target.position.set(0, 0, 0 - 8);
+    this.directionalLight.intensity = 1.15;
+    this.directionalLight.position.set(20, 10 - 2, 10 - 18);
+    this.directionalLight.target.position.set(0, 0 - 2, 0 - 18);
     this.scene.add(this.directionalLight.target);
 
     // // AMBIENT LIGHT

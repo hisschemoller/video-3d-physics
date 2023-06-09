@@ -33,17 +33,22 @@ export default async function createBackground(
 export async function createGround(projectSettings: ProjectSettings) {
   const { scene } = projectSettings;
 
-  const gridHelper = new THREE.GridHelper(20, 20, 0xff0000, 0xffffff);
-  gridHelper.position.set(10, -2, -11.5);
+  const gridHelper = new THREE.GridHelper(22, 10, 0x00ff00, 0x000000);
+  gridHelper.position.set(-11, -2, -11.4);
   gridHelper.rotation.x = 0.02 + 0.14;
   scene.add(gridHelper);
 
-  const planeGeometry = new THREE.PlaneGeometry(40, 20);
+  const gridHelper2 = new THREE.GridHelper(22, 10, 0x00ff00, 0x000000);
+  gridHelper2.position.set(11, -2, -11.4);
+  gridHelper2.rotation.x = 0.02 + 0.14;
+  scene.add(gridHelper2);
+
+  const planeGeometry = new THREE.PlaneGeometry(44, 22);
   planeGeometry.rotateX(Math.PI / -2);
   const ground = new THREE.Mesh(
     planeGeometry,
     // new THREE.ShadowMaterial({ opacity: 0.4, transparent: true, side: THREE.FrontSide }),
-    new THREE.MeshPhongMaterial({ color: 0xcccccc, side: THREE.FrontSide }),
+    new THREE.MeshPhongMaterial({ color: 0x8d8076, side: THREE.FrontSide }),
   );
   ground.position.set(0, -2, -11.5);
   ground.rotation.x = 0.02 + 0.14;
