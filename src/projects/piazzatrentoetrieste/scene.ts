@@ -8,6 +8,7 @@ import { getMatrix4 } from '@app/utils';
 import { createTweenGroup } from './actor';
 import createBackground, { createGround } from './background';
 import createWalls from './walls';
+import createDrawings from './drawings';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 100;
@@ -66,13 +67,13 @@ export default class Scene extends MainScene {
     // this.directionalLight.intensity = 0.8;
     // DIRECTIONAL LIGHT
     // this.directionalLight.color.setRGB(1, 1, 1);
-    this.directionalLight.intensity = 1.15;
+    this.directionalLight.intensity = 0.2; // 1.15;
     this.directionalLight.position.set(20, 10 - 2, 10 - 18);
     this.directionalLight.target.position.set(0, 0 - 2, 0 - 18);
     this.scene.add(this.directionalLight.target);
 
     // // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.7;
+    this.ambientLight.intensity = 1; // 0.7;
 
     // TWEENS
     this.timeline = createTimeline({
@@ -80,16 +81,24 @@ export default class Scene extends MainScene {
     });
 
     // MEDIA
+    const sq1024 = { height: 1024, width: 1024 };
     const media = {
       frame500: {
         imgSrc: '../assets/projects/piazzatrentoetrieste/piazzatrentoetrieste-perspective_frame_500.png',
         height: 1080,
         width: 1920,
       },
+      achterKathedraal1024: {
+        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/achter-kathedraal-1024.jpg',
+      },
+      kathedraalZijkant1024: {
+        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/katedraal-zijkant-1024.jpg',
+      },
+      rechtsAchter1024: {
+        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/rechts-achter-1024-2.jpg',
+      },
       test: {
-        imgSrc: '../assets/projects/test/testimage3d.jpg',
-        height: 1024,
-        width: 1024,
+        ...sq1024, imgSrc: '../assets/projects/test/testimage3d.jpg',
       },
       video: {
         fps: 30,
@@ -120,7 +129,7 @@ export default class Scene extends MainScene {
 
     // GROUP
     const scale = 1.315;
-    const group = createTweenGroup(projectSettings); // GROUP
+    const group = createTweenGroup(projectSettings);
     group.setStaticPosition(getMatrix4({ x: -10.51, y: 7.99, rx: 0.147, sx: scale, sy: scale }));
     const axesHelper = new THREE.AxesHelper(25);
     group.getGroup().add(axesHelper);
@@ -128,6 +137,7 @@ export default class Scene extends MainScene {
     // createBackground(projectSettings, media, group.getGroup());
     createGround(projectSettings);
     createWalls(projectSettings, media, group.getGroup());
+    createDrawings(projectSettings, media, group.getGroup());
     // this.animateCamera();
 
     this.postCreate();

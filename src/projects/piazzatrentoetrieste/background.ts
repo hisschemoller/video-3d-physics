@@ -34,12 +34,12 @@ export async function createGround(projectSettings: ProjectSettings) {
   const { scene } = projectSettings;
 
   const gridHelper = new THREE.GridHelper(22, 10, 0x00ff00, 0x000000);
-  gridHelper.position.set(-11, -2, -11.4);
+  gridHelper.position.set(-11, -2, -12.5);
   gridHelper.rotation.x = 0.02 + 0.14;
   scene.add(gridHelper);
 
   const gridHelper2 = new THREE.GridHelper(22, 10, 0x00ff00, 0x000000);
-  gridHelper2.position.set(11, -2, -11.4);
+  gridHelper2.position.set(11, -2, -12.5);
   gridHelper2.rotation.x = 0.02 + 0.14;
   scene.add(gridHelper2);
 
@@ -50,7 +50,7 @@ export async function createGround(projectSettings: ProjectSettings) {
     // new THREE.ShadowMaterial({ opacity: 0.4, transparent: true, side: THREE.FrontSide }),
     new THREE.MeshPhongMaterial({ color: 0x8d8076, side: THREE.FrontSide }),
   );
-  ground.position.set(0, -2, -11.5);
+  ground.position.set(0, -2, -12.5);
   ground.rotation.x = 0.02 + 0.14;
   ground.receiveShadow = true;
   scene.add(ground);
