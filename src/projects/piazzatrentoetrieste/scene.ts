@@ -88,6 +88,11 @@ export default class Scene extends MainScene {
         height: 1080,
         width: 1920,
       },
+      schuttingRechts: {
+        imgSrc: '../assets/projects/piazzatrentoetrieste/schutting-rechts.jpg',
+        height: 183,
+        width: 327,
+      },
       achterKathedraal1024: {
         ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/achter-kathedraal-1024.jpg',
       },
