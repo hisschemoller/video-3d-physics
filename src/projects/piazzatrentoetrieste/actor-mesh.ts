@@ -58,14 +58,14 @@ function createMeshFromShape(
       flatShading: false,
       opacity: 1,
       side: THREE.BackSide,
-      transparent: true,
+      transparent: false,
     }),
     new THREE.MeshPhongMaterial({
       ...surface,
       flatShading: false,
       opacity: 1,
       side: THREE.BackSide,
-      transparent: true,
+      transparent: false,
     }),
   ];
   const geometry = new THREE.ExtrudeGeometry(shape, {
