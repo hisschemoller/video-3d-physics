@@ -6,7 +6,7 @@ import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 import { getMatrix4 } from '@app/utils';
 import { createTweenGroup } from './actor';
-import createBackground, { createGround } from './background';
+import { createGround } from './background';
 import createWalls from './walls';
 import createDrawings from './drawings';
 
@@ -96,11 +96,17 @@ export default class Scene extends MainScene {
       achterKathedraal1024: {
         ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/achter-kathedraal-1024.jpg',
       },
+      huisRechtsAchter1024: {
+        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/huis-rechts-achter-1024.jpg',
+      },
       links1024: {
-        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/links-1024.jpg',
+        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/links-kleur3-1024.jpg',
       },
       kathedraalZijkant1024: {
         ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/katedraal-zijkant-1024.jpg',
+      },
+      kerkRechts1024: {
+        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/kerk-rechts-1024.jpg',
       },
       rechts1024: {
         ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/rechts-1024.jpg',

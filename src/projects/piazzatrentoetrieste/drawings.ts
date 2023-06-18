@@ -104,6 +104,46 @@ async function createRight(
   group.add(actor.getMesh());
 }
 
+async function createChurchRight(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+  group: THREE.Group,
+  svgScale: number,
+) {
+  const scale = 0.84;
+  const actor = await createActor(projectSettings, media.kerkRechts1024, {
+    svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/kerk-rechts-tekening.svg' },
+    imageRect: { w: 189, h: 994 },
+    depth: 0.01,
+  });
+  actor.setStaticPosition(getMatrix4({
+    x: 23.3, y: -2.2, z: -16.6, sx: scale * 1.1, sy: scale, sz: scale }));
+  actor.setStaticImage(0, 30);
+  actor.getMesh().castShadow = true;
+  actor.getMesh().receiveShadow = true;
+  group.add(actor.getMesh());
+}
+
+async function createHouseRightBack(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+  group: THREE.Group,
+  svgScale: number,
+) {
+  const scale = 0.565;
+  const actor = await createActor(projectSettings, media.huisRechtsAchter1024, {
+    svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/huis-rechts-achter-tekening.svg' },
+    imageRect: { w: 199, h: 992 },
+    depth: 0.01,
+  });
+  actor.setStaticPosition(getMatrix4({
+    x: 18.2, y: -4.6, z: -18.6, sx: scale, sy: scale, sz: scale }));
+  actor.setStaticImage(0, 32);
+  actor.getMesh().castShadow = true;
+  actor.getMesh().receiveShadow = true;
+  group.add(actor.getMesh());
+}
+
 export default async function createDrawings(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
@@ -117,4 +157,6 @@ export default async function createDrawings(
   createChurchSide(projectSettings, media, group, svgScale);
   createLeft(projectSettings, media, group, svgScale);
   createRight(projectSettings, media, group, svgScale);
+  createChurchRight(projectSettings, media, group, svgScale);
+  createHouseRightBack(projectSettings, media, group, svgScale);
 }
