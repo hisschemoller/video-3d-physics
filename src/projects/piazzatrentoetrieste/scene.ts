@@ -100,7 +100,7 @@ export default class Scene extends MainScene {
         ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/huis-rechts-achter-1024.jpg',
       },
       links1024: {
-        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/links-kleur3-1024.jpg',
+        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/links-groot-1024.jpg',
       },
       kathedraalZijkant1024: {
         ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/katedraal-zijkant-1024.jpg',

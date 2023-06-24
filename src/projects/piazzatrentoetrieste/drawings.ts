@@ -70,14 +70,18 @@ async function createLeft(
   group: THREE.Group,
   svgScale: number,
 ) {
-  const scale = 1.1;
+  const scale = 0.9; // 1.1;
   const actor = await createActor(projectSettings, media.links1024, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/square-1024.svg' },
     imageRect: { w: 1024, h: 1024 },
     depth: 0.01,
   });
+  // actor.setStaticPosition(getMatrix4({
+  //   x: -9, y: 0.2, z: 0, ry: Math.PI * 0.445, sx: scale, sy: scale, sz: 1.2 }));
+  // actor.setStaticPosition(getMatrix4({
+  //   x: -8.9, y: -1.4, z: 0, ry: Math.PI * 0.445, sx: scale, sy: scale, sz: scale * 1.4 }));
   actor.setStaticPosition(getMatrix4({
-    x: -9, y: 0.2, z: 0, ry: Math.PI * 0.445, sx: scale, sy: scale, sz: 1.2 }));
+    x: -8.8, y: -1.4, z: -2, ry: Math.PI * 0.49, sx: scale, sy: scale, sz: scale * 1.2 }));
   actor.setStaticImage(0, 0);
   // actor.getMesh().castShadow = true;
   actor.getMesh().receiveShadow = true;
