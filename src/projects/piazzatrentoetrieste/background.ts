@@ -30,28 +30,51 @@ export default async function createBackground(
   }
 }
 
-export async function createGround(projectSettings: ProjectSettings) {
+export async function createGround(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+) {
   const { scene } = projectSettings;
 
-  const gridHelper = new THREE.GridHelper(22, 10, 0x00ff00, 0x000000);
-  gridHelper.position.set(-11, -2, -12.5);
-  gridHelper.rotation.x = 0.02 + 0.14;
-  scene.add(gridHelper);
+  const group = new THREE.Group();
+  group.position.set(0, -4, 0);
+  group.rotation.x = 0.02 + 0.14;
+  scene.add(group);
 
-  const gridHelper2 = new THREE.GridHelper(22, 10, 0x00ff00, 0x000000);
-  gridHelper2.position.set(11, -2, -12.5);
-  gridHelper2.rotation.x = 0.02 + 0.14;
-  scene.add(gridHelper2);
+  // const gridHelper = new THREE.GridHelper(22, 10, 0x00ff00, 0x000000);
+  // gridHelper.position.set(-11, 0, -12.5);
+  // group.add(gridHelper);
 
-  const planeGeometry = new THREE.PlaneGeometry(44, 22);
-  planeGeometry.rotateX(Math.PI / -2);
-  const ground = new THREE.Mesh(
-    planeGeometry,
-    // new THREE.ShadowMaterial({ opacity: 0.4, transparent: true, side: THREE.FrontSide }),
-    new THREE.MeshPhongMaterial({ color: 0x8d8076, side: THREE.FrontSide }),
+  // const gridHelper2 = new THREE.GridHelper(22, 10, 0x00ff00, 0x000000);
+  // gridHelper2.position.set(11, 0, -12.5);
+  // group.add(gridHelper2);
+
+  const actor = await createActor(projectSettings, media.straatTile2048, {
+    box: { w: 22, h: 22, d: 0.01 },
+    imageRect: { w: 2048, h: 2048 },
+    depth: 0.01,
+  });
+  actor.setStaticImage(0, 0);
+  actor.setStaticPosition(getMatrix4({ z: -23, rx: Math.PI * -0.5 }));
+  group.add(actor.getMesh());
+
+  const groundLeft = actor.getMesh().clone();
+  groundLeft.position.x = -22;
+  group.add(groundLeft);
+}
+
+export async function createSky(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+) {
+  const { scene } = projectSettings;
+
+  const sky = new THREE.Mesh(
+    new THREE.SphereGeometry(100, 25, 25),
+    new THREE.MeshPhongMaterial({
+      map: new THREE.TextureLoader().load((media.test as ImageData).imgSrc),
+    }),
   );
-  ground.position.set(0, -2, -12.5);
-  ground.rotation.x = 0.02 + 0.14;
-  ground.receiveShadow = true;
-  scene.add(ground);
+  sky.material.side = THREE.BackSide;
+  scene.add(sky);
 }
