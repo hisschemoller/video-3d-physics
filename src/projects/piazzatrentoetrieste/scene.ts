@@ -6,7 +6,7 @@ import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 import { getMatrix4 } from '@app/utils';
 import { createTweenGroup } from './actor';
-import { createGround } from './background';
+import { createGround, createSky } from './background';
 import createWalls from './walls';
 import createDrawings from './drawings';
 
@@ -62,18 +62,13 @@ export default class Scene extends MainScene {
     this.orbitControls.saveState();
 
     // DIRECTIONAL LIGHT
-    // this.directionalLight.color.setRGB(1, 1, 1);
-    // this.directionalLight.position.set(20, 10, 10);
-    // this.directionalLight.intensity = 0.8;
-    // DIRECTIONAL LIGHT
-    // this.directionalLight.color.setRGB(1, 1, 1);
     this.directionalLight.intensity = 0.2; // 1.15;
     this.directionalLight.position.set(20, 10 - 2, 10 - 18);
     this.directionalLight.target.position.set(0, 0 - 2, 0 - 18);
     this.scene.add(this.directionalLight.target);
 
     // // AMBIENT LIGHT
-    this.ambientLight.intensity = 1; // 0.7;
+    this.ambientLight.intensity = 0.9; // 0.7;
 
     // TWEENS
     this.timeline = createTimeline({
@@ -114,6 +109,15 @@ export default class Scene extends MainScene {
       rechtsAchter1024: {
         ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/rechts-achter-1024-2.jpg',
       },
+      sky1024: {
+        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/sky-1024.jpg',
+      },
+      straatTile1024: {
+        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-tile-1024.jpg',
+      },
+      straatTile2048: {
+        height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-tile-2048.jpg',
+      },
       test: {
         ...sq1024, imgSrc: '../assets/projects/test/testimage3d.jpg',
       },
@@ -152,7 +156,8 @@ export default class Scene extends MainScene {
     group.getGroup().add(axesHelper);
 
     // createBackground(projectSettings, media, group.getGroup());
-    createGround(projectSettings);
+    createGround(projectSettings, media);
+    createSky(projectSettings, media);
     createWalls(projectSettings, media, group.getGroup());
     createDrawings(projectSettings, media, group.getGroup());
     this.animateCamera();

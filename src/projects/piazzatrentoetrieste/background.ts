@@ -72,7 +72,7 @@ export async function createSky(
   const sky = new THREE.Mesh(
     new THREE.SphereGeometry(100, 25, 25),
     new THREE.MeshPhongMaterial({
-      map: new THREE.TextureLoader().load((media.test as ImageData).imgSrc),
+      map: new THREE.TextureLoader().load((media.sky1024 as ImageData).imgSrc),
     }),
   );
   sky.material.side = THREE.BackSide;
