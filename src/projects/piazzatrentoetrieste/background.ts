@@ -35,31 +35,32 @@ export async function createGround(
   media: { [key: string]: VideoData | ImageData | undefined },
 ) {
   const { scene } = projectSettings;
+  const size = 23;
 
   const group = new THREE.Group();
   group.position.set(0, -4, 0);
   group.rotation.x = 0.02 + 0.14;
   scene.add(group);
 
-  // const gridHelper = new THREE.GridHelper(22, 10, 0x00ff00, 0x000000);
-  // gridHelper.position.set(-11, 0, -12.5);
-  // group.add(gridHelper);
+  const gridHelper = new THREE.GridHelper(size, 10, 0x000000, 0xff0000);
+  gridHelper.position.set(size / -2, 0.02, -12.5);
+  group.add(gridHelper);
 
-  // const gridHelper2 = new THREE.GridHelper(22, 10, 0x00ff00, 0x000000);
-  // gridHelper2.position.set(11, 0, -12.5);
-  // group.add(gridHelper2);
+  const gridHelper2 = new THREE.GridHelper(size, 10, 0x000000, 0xff0000);
+  gridHelper2.position.set(size / 2, 0.02, -12.5);
+  group.add(gridHelper2);
 
   const actor = await createActor(projectSettings, media.straatTile2048, {
-    box: { w: 22, h: 22, d: 0.01 },
+    box: { w: size, h: size, d: 0.01 },
     imageRect: { w: 2048, h: 2048 },
     depth: 0.01,
   });
   actor.setStaticImage(0, 0);
-  actor.setStaticPosition(getMatrix4({ z: -23, rx: Math.PI * -0.5 }));
+  actor.setStaticPosition(getMatrix4({ z: -12.5 - (size / 2), rx: Math.PI * -0.5 }));
   group.add(actor.getMesh());
 
   const groundLeft = actor.getMesh().clone();
-  groundLeft.position.x = -22;
+  groundLeft.position.x = -size;
   group.add(groundLeft);
 }
 
@@ -77,4 +78,38 @@ export async function createSky(
   );
   sky.material.side = THREE.BackSide;
   scene.add(sky);
+}
+
+async function createStreetlight(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+  group: THREE.Group,
+  position: { x: number, y: number, z: number },
+  scale: number,
+) {
+  const { width, width3d } = projectSettings;
+  const svgScale = width3d / width;
+
+  const actor = await createActor(projectSettings, media.lantarenpaal, {
+    svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/lantarenpaal.svg' },
+    imageRect: { w: 258, h: 999 },
+    depth: 0.01,
+  });
+  actor.setStaticPosition(getMatrix4({
+    ...position, sx: scale, sy: scale, sz: scale }));
+  actor.setStaticImage(0, 0);
+  actor.getMesh().castShadow = true;
+  actor.getMesh().receiveShadow = true;
+  group.add(actor.getMesh());
+}
+
+export async function createStreetlights(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+  group: THREE.Group,
+) {
+  createStreetlight(projectSettings, media, group, { x: 17, y: 6, z: -4 }, 1.9);
+  createStreetlight(projectSettings, media, group, { x: 15, y: 1.5, z: -10 }, 1.3);
+  createStreetlight(projectSettings, media, group, { x: 15, y: -1, z: -15 }, 1);
+  createStreetlight(projectSettings, media, group, { x: 12, y: -3, z: -18 }, 0.8);
 }

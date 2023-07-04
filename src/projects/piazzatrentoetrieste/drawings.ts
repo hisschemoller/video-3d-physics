@@ -101,7 +101,7 @@ async function createRight(
     depth: 0.01,
   });
   actor.setStaticPosition(getMatrix4({
-    x: 25.5, y: 1.8, z: -14.5, ry: Math.PI * -0.4, sx: scale, sy: scale, sz: scale }));
+    x: 25.4, y: 1.8, z: -14.5, ry: Math.PI * -0.4, sx: scale, sy: scale, sz: scale }));
   actor.setStaticImage(0, 0);
   // actor.getMesh().castShadow = true;
   actor.getMesh().receiveShadow = true;

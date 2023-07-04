@@ -6,7 +6,7 @@ import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 import { getMatrix4 } from '@app/utils';
 import { createTweenGroup } from './actor';
-import { createGround, createSky } from './background';
+import { createGround, createSky, createStreetlight, createStreetlights } from './background';
 import createWalls from './walls';
 import createDrawings from './drawings';
 
@@ -118,6 +118,9 @@ export default class Scene extends MainScene {
       straatTile2048: {
         height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-tile-2048.jpg',
       },
+      lantarenpaal: {
+        height: 999, width: 258, imgSrc: '../assets/projects/piazzatrentoetrieste/lantarenpaal.png',
+      },
       test: {
         ...sq1024, imgSrc: '../assets/projects/test/testimage3d.jpg',
       },
@@ -158,6 +161,7 @@ export default class Scene extends MainScene {
     // createBackground(projectSettings, media, group.getGroup());
     createGround(projectSettings, media);
     createSky(projectSettings, media);
+    createStreetlights(projectSettings, media, group.getGroup());
     createWalls(projectSettings, media, group.getGroup());
     createDrawings(projectSettings, media, group.getGroup());
     this.animateCamera();
