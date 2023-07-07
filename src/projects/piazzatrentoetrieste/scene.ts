@@ -9,6 +9,7 @@ import { createTweenGroup } from './actor';
 import { createGround, createSky, createStreetlight, createStreetlights } from './background';
 import createWalls from './walls';
 import createDrawings from './drawings';
+import { createGreenscreen } from './greenscreen';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 100;
@@ -139,6 +140,15 @@ export default class Scene extends MainScene {
           ? '../assets/projects/piazzatrentoetrieste/frames_preview-1/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/piazzatrentoetrieste/frames/&img=frame_#FRAME#.png',
       },
+      video_greenscreen: {
+        fps: 30,
+        height: 240,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1280,
+        imgSrcPath: isPreview
+          ? '../assets/projects/piazzatrentoetrieste/frames_preview_greenscreen/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/piazzatrentoetrieste_greenscreen/frames/&img=frame_#FRAME#.png',
+      },
     };
 
     // PROJECT SETTINGS
@@ -170,6 +180,7 @@ export default class Scene extends MainScene {
     createStreetlights(projectSettings, media, group.getGroup());
     createWalls(projectSettings, media, group.getGroup());
     createDrawings(projectSettings, media, group.getGroup());
+    createGreenscreen(projectSettings, media, group.getGroup());
     this.animateCamera();
 
     this.postCreate();
