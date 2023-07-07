@@ -42,26 +42,35 @@ export async function createGround(
   group.rotation.x = 0.02 + 0.14;
   scene.add(group);
 
-  const gridHelper = new THREE.GridHelper(size, 10, 0x000000, 0xff0000);
-  gridHelper.position.set(size / -2, 0.02, -12.5);
-  group.add(gridHelper);
+  // const gridHelper = new THREE.GridHelper(size, 10, 0x000000, 0xff0000);
+  // gridHelper.position.set(size / -2, 0.02, -12.5);
+  // group.add(gridHelper);
 
-  const gridHelper2 = new THREE.GridHelper(size, 10, 0x000000, 0xff0000);
-  gridHelper2.position.set(size / 2, 0.02, -12.5);
-  group.add(gridHelper2);
+  // const gridHelper2 = new THREE.GridHelper(size, 10, 0x000000, 0xff0000);
+  // gridHelper2.position.set(size / 2, 0.02, -12.5);
+  // group.add(gridHelper2);
 
-  const actor = await createActor(projectSettings, media.straatTile2048, {
+  const groundLeft = await createActor(projectSettings, media.straatLinks2048, {
     box: { w: size, h: size, d: 0.01 },
     imageRect: { w: 2048, h: 2048 },
     depth: 0.01,
   });
-  actor.setStaticImage(0, 0);
-  actor.setStaticPosition(getMatrix4({ z: -12.5 - (size / 2), rx: Math.PI * -0.5 }));
-  group.add(actor.getMesh());
+  groundLeft.setStaticImage(0, 0);
+  groundLeft.setStaticPosition(getMatrix4({ x: -size, z: -12.5 - (size / 2), rx: Math.PI * -0.5 }));
+  group.add(groundLeft.getMesh());
 
-  const groundLeft = actor.getMesh().clone();
-  groundLeft.position.x = -size;
-  group.add(groundLeft);
+  const groundRight = await createActor(projectSettings, media.straatRechts2048, {
+    box: { w: size, h: size, d: 0.01 },
+    imageRect: { w: 2048, h: 2048 },
+    depth: 0.01,
+  });
+  groundRight.setStaticImage(0, 0);
+  groundRight.setStaticPosition(getMatrix4({ z: -12.5 - (size / 2), rx: Math.PI * -0.5 }));
+  group.add(groundRight.getMesh());
+
+  // const groundLeft = actor.getMesh().clone();
+  // groundLeft.position.x = -size;
+  // group.add(groundLeft);
 }
 
 export async function createSky(
@@ -98,8 +107,9 @@ async function createStreetlight(
   actor.setStaticPosition(getMatrix4({
     ...position, sx: scale, sy: scale, sz: scale }));
   actor.setStaticImage(0, 0);
-  actor.getMesh().castShadow = true;
-  actor.getMesh().receiveShadow = true;
+  actor.getMesh().castShadow = false;
+  actor.getMesh().receiveShadow = false;
+  actor.getMesh().renderOrder = 1;
   group.add(actor.getMesh());
 }
 
@@ -108,8 +118,8 @@ export async function createStreetlights(
   media: { [key: string]: VideoData | ImageData | undefined },
   group: THREE.Group,
 ) {
-  createStreetlight(projectSettings, media, group, { x: 17, y: 6, z: -4 }, 1.9);
+  createStreetlight(projectSettings, media, group, { x: 17, y: 6.6, z: -4 }, 1.9);
   createStreetlight(projectSettings, media, group, { x: 15, y: 1.5, z: -10 }, 1.3);
   createStreetlight(projectSettings, media, group, { x: 15, y: -1, z: -15 }, 1);
-  createStreetlight(projectSettings, media, group, { x: 12, y: -3, z: -18 }, 0.8);
+  createStreetlight(projectSettings, media, group, { x: 12, y: -2.8, z: -18 }, 0.8);
 }

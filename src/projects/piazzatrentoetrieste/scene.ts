@@ -118,6 +118,12 @@ export default class Scene extends MainScene {
       straatTile2048: {
         height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-tile-2048.jpg',
       },
+      straatLinks2048: {
+        height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-links-2048.jpg',
+      },
+      straatRechts2048: {
+        height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-rechts-2048.jpg',
+      },
       lantarenpaal: {
         height: 999, width: 258, imgSrc: '../assets/projects/piazzatrentoetrieste/lantarenpaal.png',
       },
@@ -155,8 +161,8 @@ export default class Scene extends MainScene {
     const scale = 1.315;
     const group = createTweenGroup(projectSettings);
     group.setStaticPosition(getMatrix4({ x: -10.51, y: 7.99, rx: 0.147, sx: scale, sy: scale }));
-    const axesHelper = new THREE.AxesHelper(25);
-    group.getGroup().add(axesHelper);
+    // const axesHelper = new THREE.AxesHelper(25);
+    // group.getGroup().add(axesHelper);
 
     // createBackground(projectSettings, media, group.getGroup());
     createGround(projectSettings, media);
