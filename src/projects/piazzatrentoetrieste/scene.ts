@@ -6,7 +6,7 @@ import createTimeline, { Timeline } from '@app/timeline';
 import createTween from '@app/tween';
 import { getMatrix4 } from '@app/utils';
 import { createTweenGroup } from './actor';
-import { createGround, createSky, createStreetlight, createStreetlights } from './background';
+import { createGround, createSky, createStreetlights } from './background';
 import createWalls from './walls';
 import createDrawings from './drawings';
 import { createGreenscreen } from './greenscreen';
@@ -40,10 +40,10 @@ export default class Scene extends MainScene {
     this.height = 1080;
     this.width3d = 16;
     this.height3d = (this.height / this.width) * this.width3d;
-    this.fps = 30;
+    this.fps = 15;
     this.captureFps = 30;
     this.captureThrottle = 10;
-    this.captureDuration = PATTERN_DURATION * 3;
+    this.captureDuration = PATTERN_DURATION * 2;
     this.clearColor = 0xa4c2d9; // 0xa4d9b0; // 0x76BEA3; // 0x539c81;
     this.shadowSize = 8;
   }
@@ -120,10 +120,10 @@ export default class Scene extends MainScene {
         height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-tile-2048.jpg',
       },
       straatLinks2048: {
-        height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-links-2048.jpg',
+        height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-links-2048-7.jpg',
       },
       straatRechts2048: {
-        height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-rechts-2048.jpg',
+        height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-rechts-2048-4.jpg',
       },
       lantarenpaal: {
         height: 999, width: 258, imgSrc: '../assets/projects/piazzatrentoetrieste/lantarenpaal.png',
@@ -137,7 +137,7 @@ export default class Scene extends MainScene {
         scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
         width: 1920,
         imgSrcPath: isPreview
-          ? '../assets/projects/piazzatrentoetrieste/frames_preview-1/frame_#FRAME#.png'
+          ? '../assets/projects/piazzatrentoetrieste/frames_preview/frame_#FRAME#.png'
           : 'fs-img?dir=/Volumes/Samsung_X5/piazzatrentoetrieste/frames/&img=frame_#FRAME#.png',
       },
       video_greenscreen: {

@@ -30,9 +30,36 @@ ffmpeg -ss 00:00:12.0 -i 'piazzatrentoetrieste-perspective.mov' -c copy -t 00:00
 # Runway
 # ...
 # Crop to only the bottom 240px
-ffmpeg -i 'piazzatrentoetrieste-1 greenscreen 720p.mp4' -filter:v "crop=1280:240:0:480" 'piazzatrentoetrieste-greenscreen-cropped.mp4'
+ffmpeg -i 'piazzatrentoetrieste-1 greenscreen-2 720p.mp4' -filter:v "crop=1280:240:0:480" 'piazzatrentoetrieste-greenscreen-cropped.mp4'
 # chromakey greenscreen to transparent PNGs
 ffmpeg -i 'piazzatrentoetrieste-greenscreen-cropped.mp4' -vf "chromakey=0x00ff00:0.28:0.05" '/Volumes/Samsung_X5/piazzatrentoetrieste_greenscreen/frames/frame_%05d.png'
 # scale PNGs to 25%, 1280 * 0.25 = 320 x 240 * 0.25 = 60 preview size
 ffmpeg -start_number 1 -i '/Volumes/Samsung_X5/piazzatrentoetrieste_greenscreen/frames/frame_%05d.png' -vf scale=320:60 '/Volumes/Samsung_X5/piazzatrentoetrieste_greenscreen/frames_preview/frame_%05d.png'
 ```
+
+## Render PNG sequence
+
+```bash
+# png to mp4 (from index 866 met 30 FPS
+ffmpeg -framerate 30 -start_number 866 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p piazzatrentoetrieste-video-x1.mp4
+# repeat 8 times, 863 frames, video only
+ffmpeg -i piazzatrentoetrieste-video-x1.mp4 -filter_complex "loop=loop=8:size=863:start=0" piazzatrentoetrieste-video-x8.mp4
+```
+
+Muziek voorbeelden
+
+* [nm 072047] goem - extensie (2000)
+  * 10-kim_cascone-reduktie_(object_ornament_mix)-mdz
+* [mpc 61 cd] various - modulation & transformation 4 (1999)
+  * 02 shim.ke.mp3
+  * 06 (15)2.mp3
+  * 15 mesurait la force.mp3
+  * 21 snake.mp3
+  * 33 pomona.mp3
+* [mp 089] robert babicz - desert (2000)
+* [line_032 ] taylor deupree + christopher willits - listening garden (2007)
+  * 03 Taylor Deupree + Christopher Willits - Listening Garden_ III.mp3
+* morphagene_reels
+  * 414090__leonvanbokhorst__morphagene-analog-studio-den-bosch.wav
+  * 466445__makenoisemusic__scanner-reel.wav
+  * 422441__makenoisemusic__noir-reel-by-hainbach.wav
