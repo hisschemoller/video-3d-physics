@@ -120,10 +120,10 @@ export default class Scene extends MainScene {
         height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-tile-2048.jpg',
       },
       straatLinks2048: {
-        height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-links-2048-7.jpg',
+        height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-links-2048-9.jpg',
       },
       straatRechts2048: {
-        height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-rechts-2048-4.jpg',
+        height: 2048, width: 2048, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-rechts-2048-6.jpg',
       },
       lantarenpaal: {
         height: 999, width: 258, imgSrc: '../assets/projects/piazzatrentoetrieste/lantarenpaal.png',

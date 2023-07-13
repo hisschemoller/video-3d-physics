@@ -3,6 +3,7 @@ import { THREE } from 'enable3d';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
+import createAntenna from './roofs';
 
 async function createBehindChurch(
   projectSettings: ProjectSettings,
@@ -22,6 +23,7 @@ async function createBehindChurch(
   actor.getMesh().castShadow = true;
   actor.getMesh().receiveShadow = true;
   group.add(actor.getMesh());
+  return actor.getMesh();
 }
 
 async function createBehindRight(
@@ -42,6 +44,7 @@ async function createBehindRight(
   actor.getMesh().castShadow = true;
   actor.getMesh().receiveShadow = true;
   group.add(actor.getMesh());
+  return actor.getMesh();
 }
 
 async function createChurchSide(
@@ -62,6 +65,7 @@ async function createChurchSide(
   actor.getMesh().castShadow = true;
   actor.getMesh().receiveShadow = true;
   group.add(actor.getMesh());
+  return actor.getMesh();
 }
 
 async function createLeft(
@@ -86,6 +90,7 @@ async function createLeft(
   // actor.getMesh().castShadow = true;
   actor.getMesh().receiveShadow = true;
   group.add(actor.getMesh());
+  return actor.getMesh();
 }
 
 async function createRight(
@@ -106,6 +111,7 @@ async function createRight(
   // actor.getMesh().castShadow = true;
   actor.getMesh().receiveShadow = true;
   group.add(actor.getMesh());
+  return actor.getMesh();
 }
 
 async function createChurchRight(
@@ -126,6 +132,7 @@ async function createChurchRight(
   actor.getMesh().castShadow = true;
   actor.getMesh().receiveShadow = true;
   group.add(actor.getMesh());
+  return actor.getMesh();
 }
 
 async function createHouseRightBack(
@@ -146,6 +153,7 @@ async function createHouseRightBack(
   actor.getMesh().castShadow = true;
   actor.getMesh().receiveShadow = true;
   group.add(actor.getMesh());
+  return actor.getMesh();
 }
 
 export default async function createDrawings(
@@ -156,11 +164,25 @@ export default async function createDrawings(
   const { width, width3d } = projectSettings;
   const svgScale = width3d / width;
 
-  createBehindChurch(projectSettings, media, group, svgScale);
-  createBehindRight(projectSettings, media, group, svgScale);
-  createChurchSide(projectSettings, media, group, svgScale);
-  createLeft(projectSettings, media, group, svgScale);
-  createRight(projectSettings, media, group, svgScale);
-  createChurchRight(projectSettings, media, group, svgScale);
-  createHouseRightBack(projectSettings, media, group, svgScale);
+  const behindChurch = await createBehindChurch(projectSettings, media, group, svgScale);
+  const behindRight = await createBehindRight(projectSettings, media, group, svgScale);
+  const churchSide = await createChurchSide(projectSettings, media, group, svgScale);
+  const left = await createLeft(projectSettings, media, group, svgScale);
+  const right = await createRight(projectSettings, media, group, svgScale);
+  const churchRight = await createChurchRight(projectSettings, media, group, svgScale);
+  const houseRightBack = await createHouseRightBack(projectSettings, media, group, svgScale);
+
+  createAntenna(churchSide, 'antenne9', 6, 0.0, 0, 0x7E8E99, 0.006, Math.PI / 2);
+  createAntenna(left, 'antenne10', 4, 2.5, 0, 0x869CAC, 0.008, Math.PI / 2);
+  createAntenna(left, 'antenne2', 7, 3.7, 0, 0x869CAC, 0.008, Math.PI / 2);
+  createAntenna(left, 'antenne3', 6.2, 1.5, 0, 0x869CAC, 0.008, Math.PI / 2);
+  createAntenna(right, 'antenne12', 3.5, 2.5, -1, 0x647480, 0.006, Math.PI / -2);
+  createAntenna(right, 'antenne7', 2, 2.5, -1, 0x647480, 0.006, Math.PI / -2);
+  createAntenna(churchRight, 'antenne13', -1.5, 1.2, 0, 0x82878B, 0.006);
+  createAntenna(houseRightBack, 'antenne14', 1.5, 3.5, 0, 0x68727A, 0.006);
+
+  createAntenna(behindChurch, 'antenne1', 5, 0.5, 0, 0x4F606C, 0.005, Math.PI / 2);
+  createAntenna(behindRight, 'antenne6', 4, 0.5, 0, 0x4F606C, 0.005, Math.PI / 2);
+  createAntenna(behindRight, 'antenne4', 5, 0.5, 0, 0x4F606C, 0.005, Math.PI / 2);
+  createAntenna(behindRight, 'antenne5', 2, 0.5, 0, 0x4F606C, 0.005, Math.PI / 2);
 }
