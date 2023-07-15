@@ -10,7 +10,7 @@ ffmpeg -i 'Ferrara, Kathedraal, 2022-05-23.mov' -vf "select=eq(n\,449)" -vframes
 # perspective correct 1920 x 1080, remove audio
 ffmpeg -hide_banner -i 'Ferrara, Kathedraal, 2022-05-23.mov' -lavfi "perspective=x0=60:y0=0:x1=1882:y1=32:x2=0:y2=1080:x3=1920:y3=1080:interpolation=linear" -an piazzatrentoetrieste-perspective.mov
 # extract frame 500 as an image
-ffmpeg -i piazzatrentoetrieste-perspective.mov -vf "select=eq(n\,449)" -vframes 1 piazzatrentoetrieste-perspective_frame_500.png
+ffmpeg -i piazzatrentoetrieste-perspective.mov -vf "select=eq(n\,449)" -vframes 1 piazzatrentoetrieste-perspective_frame_500.png  
 # convert to png sequence
 ffmpeg -i piazzatrentoetrieste-perspective.mov /Volumes/Samsung_X5/piazzatrentoetrieste/frames/frame_%05d.png
 # scale to 25%, 1920 * 0.25 = 480 (x 270)
@@ -59,3 +59,5 @@ Video duurt 863 / 30 FPS = 28.766666666666666 seconden.<br>
 Video duurt 12 maten van 4 beats = 48 beats.<br>
 Een beat duurt 28.766666666666666 / 48 = 0.5993055555555555 seconden.<br>
 Het tempo is 60 / 0.5993055555555555 = 100.11587485515643 BPM<br>
+
+Finished and branched.
