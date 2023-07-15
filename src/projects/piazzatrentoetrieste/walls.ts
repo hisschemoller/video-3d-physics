@@ -196,7 +196,7 @@ export default async function createWalls(
   const svgScale = width3d / width;
 
   const buildingRight = await createBuildingRight(projectSettings, media, group, svgScale);
-  createChurch(projectSettings, media, group, svgScale);
+  const church = await createChurch(projectSettings, media, group, svgScale);
   const churchRight = await createChurchRight(projectSettings, media, group, svgScale);
   const houseRightBack = await createHouseRightBack(projectSettings, media, group, svgScale);
   const buildingBack = await createBuildingBack(projectSettings, media, group, svgScale);
@@ -214,4 +214,8 @@ export default async function createWalls(
   createAntenna(buildingBack, 'antenne7', 2.3, 0.1, -0.5, 0x8b96a2, 0.001);
   createAntenna(buildingRight, 'antenne5', 1.0, 0.5, 0.0, 0x76848E, 0.004);
   createAntenna(buildingRight, 'antenne9', 0.0, 0.5, 0.0, 0x6B757D, 0.004);
+
+  createAntenna(church, 'spits2', 0.2, 0.6, 0.0, 0x6B757D, 0.0014);
+  createAntenna(church, 'spits2', 2.2, 0.6, 0.0, 0x6B757D, 0.0014);
+  createAntenna(church, 'spits2', 4.2, 0.6, 0.0, 0x6B757D, 0.0014);
 }

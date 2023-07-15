@@ -44,22 +44,18 @@ ffmpeg -start_number 1 -i '/Volumes/Samsung_X5/piazzatrentoetrieste_greenscreen/
 ffmpeg -framerate 30 -start_number 866 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p piazzatrentoetrieste-video-x1.mp4
 # repeat 8 times, 863 frames, video only
 ffmpeg -i piazzatrentoetrieste-video-x1.mp4 -filter_complex "loop=loop=8:size=863:start=0" piazzatrentoetrieste-video-x8.mp4
+# repeat 8 times, audio
+ffmpeg -stream_loop 8 -i piazzatrentoetrieste-audio-x1.wav -c copy piazzatrentoetrieste-audio-x8.wav
+# video en audio samenvoegen
+ffmpeg -i piazzatrentoetrieste-video-x8.mp4 -i piazzatrentoetrieste-audio-x8.wav -vcodec copy piazzatrentoetrieste-x8.mp4
+# scale to 50%, 960 * 540
+ffmpeg -i piazzatrentoetrieste-x8.mp4 -vf scale=960:540 piazzatrentoetrieste-x8_halfsize.mp4
 ```
 
-Muziek voorbeelden
+## Muziek
 
-* [nm 072047] goem - extensie (2000)
-  * 10-kim_cascone-reduktie_(object_ornament_mix)-mdz
-* [mpc 61 cd] various - modulation & transformation 4 (1999)
-  * 02 shim.ke.mp3
-  * 06 (15)2.mp3
-  * 15 mesurait la force.mp3
-  * 21 snake.mp3
-  * 33 pomona.mp3
-* [mp 089] robert babicz - desert (2000)
-* [line_032 ] taylor deupree + christopher willits - listening garden (2007)
-  * 03 Taylor Deupree + Christopher Willits - Listening Garden_ III.mp3
-* morphagene_reels
-  * 414090__leonvanbokhorst__morphagene-analog-studio-den-bosch.wav
-  * 466445__makenoisemusic__scanner-reel.wav
-  * 422441__makenoisemusic__noir-reel-by-hainbach.wav
+Video duurt 863 frames.<br>
+Video duurt 863 / 30 FPS = 28.766666666666666 seconden.<br>
+Video duurt 12 maten van 4 beats = 48 beats.<br>
+Een beat duurt 28.766666666666666 / 48 = 0.5993055555555555 seconden.<br>
+Het tempo is 60 / 0.5993055555555555 = 100.11587485515643 BPM<br>

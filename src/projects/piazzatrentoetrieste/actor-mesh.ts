@@ -25,7 +25,7 @@ export function createRectangle(
   const materials = [
     new THREE.MeshPhongMaterial({
       color: BASE_COLOR,
-      opacity: 1,
+      opacity: 0,
       transparent: true,
       side: THREE.FrontSide,
     }),

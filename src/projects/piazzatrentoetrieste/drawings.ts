@@ -3,7 +3,7 @@ import { THREE } from 'enable3d';
 import { ImageData, ProjectSettings, VideoData } from '@app/interfaces';
 import { getMatrix4 } from '@app/utils';
 import { createActor } from './actor';
-import createAntenna from './roofs';
+import createAntenna, { createFlagPole } from './roofs';
 
 async function createBehindChurch(
   projectSettings: ProjectSettings,
@@ -185,4 +185,9 @@ export default async function createDrawings(
   createAntenna(behindRight, 'antenne6', 4, 0.5, 0, 0x4F606C, 0.005, Math.PI / 2);
   createAntenna(behindRight, 'antenne4', 5, 0.5, 0, 0x4F606C, 0.005, Math.PI / 2);
   createAntenna(behindRight, 'antenne5', 2, 0.5, 0, 0x4F606C, 0.005, Math.PI / 2);
+
+  createFlagPole(churchSide, 'vlaggestok', 0, 4, 0.0, 0.010);
+  createFlagPole(churchSide, 'vlaggestok', 2.5, 3, 0.0, 0.009);
+  createFlagPole(churchSide, 'vlaggestok', 5, 2, 0.0, 0.008);
+  createFlagPole(churchSide, 'vlaggestok', 7.5, 1, 0.0, 0.007);
 }

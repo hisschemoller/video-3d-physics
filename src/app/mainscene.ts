@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Scene3D, THREE } from 'enable3d';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { dataURIToBlob, defaultFileName } from '@app/utils';
@@ -306,6 +307,8 @@ export default class MainScene extends Scene3D {
     // stop when done
     if (this.frameCount < this.captureLastFrame) {
       requestAnimationFrame(this.capture.bind(this));
+    } else {
+      console.log('capture done');
     }
 
     await this._update(true);
@@ -320,6 +323,9 @@ export default class MainScene extends Scene3D {
         'Content-Type': 'application/json',
       },
     }).catch(() => {});
+
+    console.clear();
+    console.log(`capture frame ${this.frameCount + 1} of ${this.captureLastFrame}`);
 
     this.frameCount += 1;
   }
