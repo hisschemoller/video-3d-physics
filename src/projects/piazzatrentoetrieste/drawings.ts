@@ -76,7 +76,7 @@ async function createLeft(
 ) {
   const scale = 0.9; // 1.1;
   const actor = await createActor(projectSettings, media.links1024, {
-    svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/square-1024.svg' },
+    svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/links2.svg' },
     imageRect: { w: 1024, h: 1024 },
     depth: 0.01,
   });
@@ -101,7 +101,7 @@ async function createRight(
 ) {
   const scale = 1.3;
   const actor = await createActor(projectSettings, media.rechts1024, {
-    svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/square-1024.svg' },
+    svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/rechts2.svg' },
     imageRect: { w: 1024, h: 1024 },
     depth: 0.01,
   });
