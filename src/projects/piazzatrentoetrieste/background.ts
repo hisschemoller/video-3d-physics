@@ -33,22 +33,23 @@ export default async function createBackground(
 export async function createGround(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
+  group: THREE.Group,
 ) {
-  const { scene } = projectSettings;
   const size = 23;
 
-  const group = new THREE.Group();
-  group.position.set(0, -4, 0);
-  group.rotation.x = 0.02 + 0.14;
-  scene.add(group);
+  const groundGroup = new THREE.Group();
+  groundGroup.position.set(8.3, -9.0, 2.3);
+  // groundGroup.rotation.x = 0.02;
+  groundGroup.scale.set(0.75, 1, 1);
+  group.add(groundGroup);
 
   // const gridHelper = new THREE.GridHelper(size, 10, 0x000000, 0xff0000);
   // gridHelper.position.set(size / -2, 0.02, -12.5);
-  // group.add(gridHelper);
+  // groundGroup.add(gridHelper);
 
   // const gridHelper2 = new THREE.GridHelper(size, 10, 0x000000, 0xff0000);
   // gridHelper2.position.set(size / 2, 0.02, -12.5);
-  // group.add(gridHelper2);
+  // groundGroup.add(gridHelper2);
 
   const groundLeft = await createActor(projectSettings, media.straatLinks2048, {
     box: { w: size, h: size, d: 0.01 },
@@ -57,7 +58,7 @@ export async function createGround(
   });
   groundLeft.setStaticImage(0, 0);
   groundLeft.setStaticPosition(getMatrix4({ x: -size, z: -12.5 - (size / 2), rx: Math.PI * -0.5 }));
-  group.add(groundLeft.getMesh());
+  groundGroup.add(groundLeft.getMesh());
 
   const groundRight = await createActor(projectSettings, media.straatRechts2048, {
     box: { w: size, h: size, d: 0.01 },
@@ -66,7 +67,7 @@ export async function createGround(
   });
   groundRight.setStaticImage(0, 0);
   groundRight.setStaticPosition(getMatrix4({ z: -12.5 - (size / 2), rx: Math.PI * -0.5 }));
-  group.add(groundRight.getMesh());
+  groundGroup.add(groundRight.getMesh());
 
   // const groundLeft = actor.getMesh().clone();
   // groundLeft.position.x = -size;

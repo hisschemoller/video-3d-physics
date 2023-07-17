@@ -174,14 +174,13 @@ export default class Scene extends MainScene {
     // const axesHelper = new THREE.AxesHelper(25);
     // group.getGroup().add(axesHelper);
 
-    // createBackground(projectSettings, media, group.getGroup());
-    createGround(projectSettings, media);
+    createGround(projectSettings, media, group.getGroup());
     createSky(projectSettings, media);
     createStreetlights(projectSettings, media, group.getGroup());
     createWalls(projectSettings, media, group.getGroup());
     createDrawings(projectSettings, media, group.getGroup());
     createGreenscreen(projectSettings, media, group.getGroup());
-    this.animateCamera();
+    this.animateCamera(group.getGroup());
 
     this.postCreate();
   }
@@ -191,18 +190,34 @@ export default class Scene extends MainScene {
     super.updateAsync(time, delta);
   }
 
-  animateCamera() {
-    const group = new THREE.Group();
-    group.add(this.pCamera);
-    this.scene.add(group);
+  animateCamera(worldGroup: THREE.Group) {
+    const worldGroupRotation = worldGroup.rotation.x;
+
+    const camTarget = new THREE.Vector3(0, 0, -10);
+
+    const cameraGroup = new THREE.Group();
+    cameraGroup.add(this.pCamera);
+    cameraGroup.position.set(0, 0, 0);
+    this.scene.add(cameraGroup);
+
+    this.pCamera.position.set(0, 0, 30);
+    cameraGroup.add(this.pCamera);
 
     const tween = createTween({
       delay: 0.2,
       duration: PATTERN_DURATION,
       onStart: () => {},
       onUpdate: (progress) => {
-        group.rotation.y = Math.sin(progress * Math.PI * 2) * 0.6;
-        group.position.z = -4 + (Math.cos(progress * Math.PI * 4) * 4);
+        const cos = Math.cos(progress * Math.PI * -2);
+        const sin = Math.sin(progress * Math.PI * -2);
+
+        this.pCamera.position.x = 30 * sin;
+        this.pCamera.position.z = (15 * cos) - 12;
+        this.pCamera.position.y = (-1 * cos) + (Math.abs(sin) * -1.5);
+
+        // eslint-disable-next-line no-param-reassign
+        worldGroup.rotation.x = worldGroupRotation + (Math.abs(sin) * -0.15);
+        this.pCamera.lookAt(camTarget);
       },
       onComplete: () => {},
     });
