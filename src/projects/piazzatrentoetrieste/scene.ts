@@ -10,6 +10,7 @@ import { createGround, createSky, createStreetlights } from './background';
 import createWalls from './walls';
 import createDrawings from './drawings';
 import { createGreenscreen } from './greenscreen';
+import createTools from './tools';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 100;
@@ -131,6 +132,9 @@ export default class Scene extends MainScene {
       test: {
         ...sq1024, imgSrc: '../assets/projects/test/testimage3d.jpg',
       },
+      tools1024: {
+        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/tekenhulp.jpg',
+      },
       video: {
         fps: 30,
         height: 1080,
@@ -180,6 +184,7 @@ export default class Scene extends MainScene {
     createWalls(projectSettings, media, group.getGroup());
     createDrawings(projectSettings, media, group.getGroup());
     createGreenscreen(projectSettings, media, group.getGroup());
+    createTools(projectSettings, media, group.getGroup());
     this.animateCamera(group.getGroup());
 
     this.postCreate();
