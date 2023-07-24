@@ -15,7 +15,7 @@ async function createBehindChurch(
   const actor = await createActor(projectSettings, media.achterKathedraal1024, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/achter-kathedraal.svg' },
     imageRect: { w: 1024, h: 669 },
-    depth: 0.01,
+    depth: 0.1,
   });
   actor.setStaticPosition(getMatrix4({
     x: 4.3, y: -5.8, z: -18, ry: Math.PI * 0.35, sx: scale, sy: scale }));
@@ -36,7 +36,7 @@ async function createBehindRight(
   const actor = await createActor(projectSettings, media.rechtsAchter1024, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/rechts-achter.svg' },
     imageRect: { w: 1024, h: 970 },
-    depth: 0.01,
+    depth: 0.1,
   });
   actor.setStaticPosition(getMatrix4({
     x: 14.3, y: -5.7, z: -20.7, ry: Math.PI * 0, sx: scale, sy: scale }));
@@ -57,7 +57,7 @@ async function createChurchSide(
   const actor = await createActor(projectSettings, media.kathedraalZijkant1024, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/katedraal-zijkant.svg' },
     imageRect: { w: 1024, h: 1024 },
-    depth: 0.01,
+    depth: 0.1,
   });
   actor.setStaticPosition(getMatrix4({
     x: 5.2, y: -2.8, z: -11.5, ry: Math.PI * 0.5, sx: scale, sy: scale }));
@@ -78,7 +78,7 @@ async function createLeft(
   const actor = await createActor(projectSettings, media.links1024, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/links2.svg' },
     imageRect: { w: 1024, h: 1024 },
-    depth: 0.01,
+    depth: 0.1,
   });
   // actor.setStaticPosition(getMatrix4({
   //   x: -9, y: 0.2, z: 0, ry: Math.PI * 0.445, sx: scale, sy: scale, sz: 1.2 }));
@@ -103,7 +103,7 @@ async function createRight(
   const actor = await createActor(projectSettings, media.rechts1024, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/rechts2.svg' },
     imageRect: { w: 1024, h: 1024 },
-    depth: 0.01,
+    depth: 0.1,
   });
   actor.setStaticPosition(getMatrix4({
     x: 25.4, y: 1.8, z: -14.5, ry: Math.PI * -0.4, sx: scale, sy: scale, sz: scale }));
@@ -124,7 +124,7 @@ async function createChurchRight(
   const actor = await createActor(projectSettings, media.kerkRechts1024, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/kerk-rechts-tekening.svg' },
     imageRect: { w: 189, h: 994 },
-    depth: 0.01,
+    depth: 0.1,
   });
   actor.setStaticPosition(getMatrix4({
     x: 23.3, y: -2.2, z: -16.6, sx: scale * 1.1, sy: scale, sz: scale }));
@@ -145,7 +145,7 @@ async function createHouseRightBack(
   const actor = await createActor(projectSettings, media.huisRechtsAchter1024, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/huis-rechts-achter-tekening.svg' },
     imageRect: { w: 199, h: 992 },
-    depth: 0.01,
+    depth: 0.1,
   });
   actor.setStaticPosition(getMatrix4({
     x: 18.2, y: -4.6, z: -18.6, sx: scale, sy: scale, sz: scale }));

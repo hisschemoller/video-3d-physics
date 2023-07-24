@@ -77,7 +77,7 @@ export async function createActor(
   // MESH
   let mesh: ExtendedMesh;
   if (box) {
-    mesh = createRectangle(box.w, box.h, texture, box.d);
+    mesh = createRectangle(box.w, box.h, texture, box.d, color);
   } else if (svg) {
     mesh = await createSVG(svg.url, svg.scale, texture, depth, color);
   } else if (points) {

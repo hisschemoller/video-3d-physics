@@ -52,18 +52,20 @@ export async function createGround(
   // groundGroup.add(gridHelper2);
 
   const groundLeft = await createActor(projectSettings, media.straatLinks2048, {
-    box: { w: size, h: size, d: 0.01 },
+    box: { w: size, h: size, d: 0.1 },
     imageRect: { w: 2048, h: 2048 },
-    depth: 0.01,
+    depth: 0.1,
+    color: 0xc0b7b0,
   });
   groundLeft.setStaticImage(0, 0);
   groundLeft.setStaticPosition(getMatrix4({ x: -size, z: -12.5 - (size / 2), rx: Math.PI * -0.5 }));
   groundGroup.add(groundLeft.getMesh());
 
   const groundRight = await createActor(projectSettings, media.straatRechts2048, {
-    box: { w: size, h: size, d: 0.01 },
+    box: { w: size, h: size, d: 0.1 },
     imageRect: { w: 2048, h: 2048 },
-    depth: 0.01,
+    depth: 0.1,
+    color: 0xc0b7b0,
   });
   groundRight.setStaticImage(0, 0);
   groundRight.setStaticPosition(getMatrix4({ z: -12.5 - (size / 2), rx: Math.PI * -0.5 }));

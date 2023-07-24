@@ -17,7 +17,7 @@ async function createBuildingRight(
   const actor = await createActor(projectSettings, media.video, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/gebouw-poort-rechts.svg' },
     imageRect: { w: 170, h: 684 },
-    depth: 0.01,
+    depth: 0.1,
   });
   // actor.setStaticPosition(getMatrix4({ x: 13.1, y: -1.85, z: 3, sx: scale, sy: scale }));
   actor.setStaticPosition(getMatrix4({ x: 22.3, y: 3, z: -11.5 - 3, sx: scale, sy: scale }));
@@ -45,7 +45,7 @@ async function createChurch(
   const actor = await createActor(projectSettings, media.video, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/kerk.svg' },
     imageRect: { w: 963, h: 897 },
-    depth: 0.01,
+    depth: 0.1,
   });
   actor.setStaticPosition(getMatrix4({ x: -7.35 - 2, y: 4.15, z: -11.5, sx: scale, sy: scale }));
   // actor.setStaticImage(0, 0);
@@ -73,7 +73,7 @@ async function createChurchRight(
   const actor = await createActor(projectSettings, media.video, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/kerk-rechts.svg' },
     imageRect: { w: 312, h: 384 },
-    depth: 0.01,
+    depth: 0.1,
   });
   actor.setStaticPosition(getMatrix4({ x: 17.3, y: -1.9, z: -11.5 - 5, sx: scale, sy: scale }));
   // actor.setStaticImage(1438, 408);
@@ -101,7 +101,7 @@ async function createHouseRightBack(
   const actor = await createActor(projectSettings, media.video, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/huis-rechts-achter.svg' },
     imageRect: { w: 147, h: 238 },
-    depth: 0.01,
+    depth: 0.1,
   });
   actor.setStaticPosition(getMatrix4({ x: 16.2, y: -4.4, z: -11.5 - 7, sx: scale, sy: scale }));
   // actor.setStaticImage(1348, 541);
@@ -129,12 +129,12 @@ async function createBuildingBack(
   const actor = await createActor(projectSettings, media.video, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/gebouw-achter.svg' },
     imageRect: { w: 307, h: 189 },
-    depth: 0.01,
+    depth: 0.1,
   });
   actor.setStaticPosition(getMatrix4({ x: 7, y: -4.5, z: -11.5 - 9, sx: scale, sy: scale }));
   // actor.setStaticImage(960, 575);
   actor.addTween({
-    delay: stepDuration * 1,
+    delay: stepDuration * 2,
     duration: patternDuration * 0.99,
     videoStart: 20,
     fromImagePosition: new THREE.Vector2(960, 575),
@@ -155,7 +155,7 @@ async function createSchuttingLinks(
   const actor = await createActor(projectSettings, media.frame500, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/schutting-links.svg' },
     imageRect: { w: 215, h: 186 },
-    depth: 0.03,
+    depth: 0.1,
     color: 0xab8c68,
   });
   actor.setStaticPosition(getMatrix4({
@@ -176,7 +176,7 @@ async function createSchuttingRechts(
   const actor = await createActor(projectSettings, media.schuttingRechts, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/schutting-rechts.svg' },
     imageRect: { w: 327, h: 183 },
-    depth: 0.03,
+    depth: 0.1,
     color: 0xab8c68,
   });
   actor.setStaticPosition(getMatrix4({

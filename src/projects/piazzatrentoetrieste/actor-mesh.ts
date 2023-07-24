@@ -12,6 +12,7 @@ export function createRectangle(
   height: number,
   texture : THREE.Texture,
   depth = 0.02,
+  color: number = BASE_COLOR,
 ) {
   const geometry = new THREE.BoxGeometry(width, height, depth);
 
@@ -24,8 +25,8 @@ export function createRectangle(
   });
   const materials = [
     new THREE.MeshPhongMaterial({
-      color: BASE_COLOR,
-      opacity: 0,
+      color,
+      opacity: 1,
       transparent: true,
       side: THREE.FrontSide,
     }),
@@ -56,7 +57,7 @@ function createMeshFromShape(
     new THREE.MeshPhongMaterial({
       color,
       flatShading: false,
-      opacity: 0,
+      opacity: 1,
       side: THREE.BackSide,
       transparent: true,
     }),
@@ -68,6 +69,7 @@ function createMeshFromShape(
       transparent: true,
     }),
   ];
+
   const geometry = new THREE.ExtrudeGeometry(shape, {
     bevelEnabled: false,
     depth,
