@@ -16,6 +16,7 @@ async function createBehindChurch(
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/achter-kathedraal.svg' },
     imageRect: { w: 1024, h: 669 },
     depth: 0.1,
+    color: 0xead1c2,
   });
   actor.setStaticPosition(getMatrix4({
     x: 4.3, y: -5.8, z: -18, ry: Math.PI * 0.35, sx: scale, sy: scale }));
@@ -37,6 +38,7 @@ async function createBehindRight(
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/rechts-achter.svg' },
     imageRect: { w: 1024, h: 970 },
     depth: 0.1,
+    color: 0xb9b0a5,
   });
   actor.setStaticPosition(getMatrix4({
     x: 14.3, y: -5.7, z: -20.7, ry: Math.PI * 0, sx: scale, sy: scale }));
@@ -58,6 +60,7 @@ async function createChurchSide(
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/katedraal-zijkant.svg' },
     imageRect: { w: 1024, h: 1024 },
     depth: 0.1,
+    color: 0xd9d3cd,
   });
   actor.setStaticPosition(getMatrix4({
     x: 5.2, y: -2.8, z: -11.5, ry: Math.PI * 0.5, sx: scale, sy: scale }));
@@ -79,15 +82,11 @@ async function createLeft(
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/links2.svg' },
     imageRect: { w: 1024, h: 1024 },
     depth: 0.1,
+    color: 0xbe916d,
   });
-  // actor.setStaticPosition(getMatrix4({
-  //   x: -9, y: 0.2, z: 0, ry: Math.PI * 0.445, sx: scale, sy: scale, sz: 1.2 }));
-  // actor.setStaticPosition(getMatrix4({
-  //   x: -8.9, y: -1.4, z: 0, ry: Math.PI * 0.445, sx: scale, sy: scale, sz: scale * 1.4 }));
   actor.setStaticPosition(getMatrix4({
     x: -8.8, y: -1.4, z: -2, ry: Math.PI * 0.49, sx: scale, sy: scale, sz: scale * 1.2 }));
   actor.setStaticImage(0, 0);
-  // actor.getMesh().castShadow = true;
   actor.getMesh().receiveShadow = true;
   group.add(actor.getMesh());
   return actor.getMesh();
@@ -104,11 +103,11 @@ async function createRight(
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/rechts2.svg' },
     imageRect: { w: 1024, h: 1024 },
     depth: 0.1,
+    color: 0xbd8865,
   });
   actor.setStaticPosition(getMatrix4({
     x: 25.4, y: 1.8, z: -14.5, ry: Math.PI * -0.4, sx: scale, sy: scale, sz: scale }));
   actor.setStaticImage(0, 0);
-  // actor.getMesh().castShadow = true;
   actor.getMesh().receiveShadow = true;
   group.add(actor.getMesh());
   return actor.getMesh();

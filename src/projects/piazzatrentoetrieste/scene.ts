@@ -112,7 +112,7 @@ export default class Scene extends MainScene {
         ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/rechts-achter-1024-2.jpg',
       },
       sky1024: {
-        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/sky-1024.jpg',
+        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/sky4-1024.jpg',
       },
       straatTile1024: {
         ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/straat-tile-1024.jpg',

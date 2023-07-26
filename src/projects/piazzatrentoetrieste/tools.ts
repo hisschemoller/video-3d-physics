@@ -98,7 +98,7 @@ async function createTool3(
   group: THREE.Group,
   svgScale: number,
 ) {
-  const scale = 4;
+  const scale = 0.6;
   const actor = await createActor(projectSettings, media.tools1024, {
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/tekenhulp3.svg' },
     imageRect: { w: 485, h: 270 },
@@ -106,9 +106,9 @@ async function createTool3(
     color: 0xba926f,
   });
   actor.setStaticPosition(getMatrix4({
-    x: 5, y: -20, z: -10, sx: scale, sy: scale }));
+    x: -8, y: -6, z: -16, sx: scale, sy: scale }));
   actor.setStaticImage(316, 151);
-  actor.getMesh().rotation.x = Math.PI / 2;
+  actor.getMesh().rotation.y = Math.PI / 2;
   actor.getMesh().castShadow = true;
   actor.getMesh().receiveShadow = true;
   group.add(actor.getMesh());
@@ -154,7 +154,6 @@ async function createTool4(
   actor.setStaticPosition(getMatrix4({
     x: 5, y: -5, z: 10, sx: scale, sy: scale }));
   actor.setStaticImage(11, 463);
-  // actor.getMesh().rotation.x = Math.PI / 2;
   actor.getMesh().castShadow = true;
   actor.getMesh().receiveShadow = true;
   group.add(actor.getMesh());

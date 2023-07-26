@@ -70,10 +70,6 @@ export async function createGround(
   groundRight.setStaticImage(0, 0);
   groundRight.setStaticPosition(getMatrix4({ z: -12.5 - (size / 2), rx: Math.PI * -0.5 }));
   groundGroup.add(groundRight.getMesh());
-
-  // const groundLeft = actor.getMesh().clone();
-  // groundLeft.position.x = -size;
-  // group.add(groundLeft);
 }
 
 export async function createSky(
