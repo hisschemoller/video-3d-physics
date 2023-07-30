@@ -11,6 +11,7 @@ import createWalls from './walls';
 import createDrawings from './drawings';
 import { createGreenscreen } from './greenscreen';
 import createTools from './tools';
+import createTools2 from './tools2';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 100;
@@ -135,6 +136,9 @@ export default class Scene extends MainScene {
       tools1024: {
         ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/tekenhulp.jpg',
       },
+      tools21024: {
+        ...sq1024, imgSrc: '../assets/projects/piazzatrentoetrieste/tekenhulp-2.jpg',
+      },
       video: {
         fps: 30,
         height: 1080,
@@ -185,6 +189,7 @@ export default class Scene extends MainScene {
     createDrawings(projectSettings, media, group.getGroup());
     createGreenscreen(projectSettings, media, group.getGroup());
     createTools(projectSettings, media, group.getGroup());
+    createTools2(projectSettings, media, group.getGroup());
     this.animateCamera(group.getGroup());
 
     this.postCreate();
