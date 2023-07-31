@@ -92,6 +92,37 @@ async function createTool2bAgain(
   return actor.getMesh();
 }
 
+async function createTool2bAgainAgain(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+  group: THREE.Group,
+  svgScale: number,
+) {
+  const scale = 1;
+  const actor = await createActor(projectSettings, media.tools21024, {
+    svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/tekenhulp2b.svg' },
+    imageRect: { w: 410, h: 690 },
+    depth: 0.1,
+    color: 0xc4976b,
+  });
+  actor.setStaticPosition(getMatrix4({ sx: scale, sy: scale }));
+  actor.setStaticImage(161, 39);
+  actor.getMesh().castShadow = true;
+  actor.getMesh().receiveShadow = true;
+
+  const g1 = new THREE.Group();
+  g1.rotation.z = Math.PI * 0.5;
+  g1.add(actor.getMesh());
+
+  const g2 = new THREE.Group();
+  g2.position.set(-8.8, -9, -8);
+  g2.rotation.y = Math.PI * 1;
+  g2.add(g1);
+
+  group.add(g2);
+  return actor.getMesh();
+}
+
 async function createTool2c(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
@@ -112,7 +143,7 @@ async function createTool2c(
   actor.getMesh().receiveShadow = true;
 
   const g = new THREE.Group();
-  g.position.set(14, -4, -32);
+  g.position.set(14, -3.8, -31.5);
   g.rotation.x = Math.PI * -0.5;
   g.add(actor.getMesh());
 
@@ -299,6 +330,38 @@ async function createTool2fAgain(
   return actor.getMesh();
 }
 
+async function createTool2fAgainAgain(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+  group: THREE.Group,
+  svgScale: number,
+) {
+  const scale = 3;
+  const actor = await createActor(projectSettings, media.tools21024, {
+    svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/tekenhulp2f.svg' },
+    imageRect: { w: 85, h: 298 },
+    depth: 0.1,
+    color: 0xd4cfb2,
+  });
+  actor.setStaticPosition(getMatrix4({ sx: scale, sy: scale }));
+  actor.setStaticImage(920, 78);
+  actor.getMesh().castShadow = true;
+  actor.getMesh().receiveShadow = true;
+
+  const g1 = new THREE.Group();
+  g1.rotation.z = Math.PI * 0.5;
+  g1.add(actor.getMesh());
+
+  const g2 = new THREE.Group();
+  g2.position.set(-6, -9, -18.8);
+  g2.rotation.y = Math.PI * -0.5;
+  g2.add(g1);
+
+  group.add(g2);
+
+  return actor.getMesh();
+}
+
 async function createTool2g(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
@@ -359,6 +422,7 @@ export default async function createTools2(
   await createTool2aAgain(projectSettings, media, group, svgScale);
   await createTool2b(projectSettings, media, group, svgScale);
   await createTool2bAgain(projectSettings, media, group, svgScale);
+  await createTool2bAgainAgain(projectSettings, media, group, svgScale);
   await createTool2c(projectSettings, media, group, svgScale);
   await createTool2cAgain(projectSettings, media, group, svgScale);
   await createTool2d(projectSettings, media, group, svgScale);
@@ -367,6 +431,7 @@ export default async function createTools2(
   await createTool2eAgain(projectSettings, media, group, svgScale);
   await createTool2f(projectSettings, media, group, svgScale);
   await createTool2fAgain(projectSettings, media, group, svgScale);
+  await createTool2fAgainAgain(projectSettings, media, group, svgScale);
   await createTool2g(projectSettings, media, group, svgScale);
   await createTool2gAgain(projectSettings, media, group, svgScale);
 }

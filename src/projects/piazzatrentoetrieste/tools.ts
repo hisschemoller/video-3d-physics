@@ -92,6 +92,28 @@ async function createTool2Again(
   return actor.getMesh();
 }
 
+async function createTool2AgainAgain(
+  projectSettings: ProjectSettings,
+  media: { [key: string]: VideoData | ImageData | undefined },
+  group: THREE.Group,
+  svgScale: number,
+) {
+  const scale = 1.0;
+  const actor = await createActor(projectSettings, media.tools1024, {
+    svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/tekenhulp2.svg' },
+    imageRect: { w: 863, h: 369 },
+    depth: 0.1,
+    color: 0xECD39F,
+  });
+  actor.setStaticPosition(getMatrix4({
+    x: 32.5, y: -9, z: -10, rz: Math.PI * -1, sx: scale, sy: scale }));
+  actor.setStaticImage(145, 33);
+  actor.getMesh().castShadow = true;
+  actor.getMesh().receiveShadow = true;
+  group.add(actor.getMesh());
+  return actor.getMesh();
+}
+
 async function createTool3(
   projectSettings: ProjectSettings,
   media: { [key: string]: VideoData | ImageData | undefined },
@@ -243,6 +265,7 @@ export default async function createTools(
   await createTool1Again(projectSettings, media, group, svgScale);
   await createTool2(projectSettings, media, group, svgScale);
   await createTool2Again(projectSettings, media, group, svgScale);
+  await createTool2AgainAgain(projectSettings, media, group, svgScale);
   await createTool3(projectSettings, media, group, svgScale);
   await createTool3Again(projectSettings, media, group, svgScale);
   await createTool4(projectSettings, media, group, svgScale);
