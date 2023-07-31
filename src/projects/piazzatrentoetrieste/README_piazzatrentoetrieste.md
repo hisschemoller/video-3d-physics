@@ -59,3 +59,19 @@ Video duurt 863 / 30 FPS = 28.766666666666666 seconden.<br>
 Video duurt 12 maten van 4 beats = 48 beats.<br>
 Een beat duurt 28.766666666666666 / 48 = 0.5993055555555555 seconden.<br>
 Het tempo is 60 / 0.5993055555555555 = 100.11587485515643 BPM<br>
+
+
+## Render PNG sequence of version 2
+
+```bash
+# png to mp4 (from index 869 met 30 FPS
+ffmpeg -framerate 30 -start_number 869 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p piazzatrentoetrieste-2-video-x1.mp4
+# repeat 8 times, 860 frames, video only
+ffmpeg -i piazzatrentoetrieste-2-video-x1.mp4 -filter_complex "loop=loop=8:size=860:start=0" piazzatrentoetrieste-2-video-x8.mp4
+# repeat 8 times, audio
+ffmpeg -stream_loop 8 -i piazzatrentoetrieste-2-audio-x1.wav -c copy piazzatrentoetrieste-2-audio-x8.wav
+# video en audio samenvoegen
+ffmpeg -i piazzatrentoetrieste-2-video-x8.mp4 -i piazzatrentoetrieste-2-audio-x8.wav -vcodec copy piazzatrentoetrieste-2-x8.mp4
+# scale to 50%, 960 * 540
+ffmpeg -i piazzatrentoetrieste-2-x8.mp4 -vf scale=960:540 piazzatrentoetrieste-2-x8_halfsize.mp4
+```

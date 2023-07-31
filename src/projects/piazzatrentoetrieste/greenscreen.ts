@@ -26,7 +26,7 @@ export async function createGreenscreen(
   });
   actor.setStaticPosition(getMatrix4({ x: 0, y: -6.5, z: -6, sx: 1.0, sy: 1.0 }));
   actor.addTween({
-    delay: stepDuration * 1,
+    delay: stepDuration * 36,
     duration: patternDuration * 0.99,
     videoStart: 0,
     fromImagePosition: new THREE.Vector2(0, 0),

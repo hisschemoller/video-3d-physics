@@ -102,6 +102,7 @@ async function createStreetlight(
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/lantarenpaal.svg' },
     imageRect: { w: 258, h: 999 },
     depth: 0.01,
+    color: 0x666666,
   });
   actor.setStaticPosition(getMatrix4({
     ...position, sx: scale, sy: scale, sz: scale }));

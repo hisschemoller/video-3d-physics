@@ -124,6 +124,7 @@ async function createChurchRight(
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/kerk-rechts-tekening.svg' },
     imageRect: { w: 189, h: 994 },
     depth: 0.1,
+    color: 0xa98971,
   });
   actor.setStaticPosition(getMatrix4({
     x: 23.3, y: -2.2, z: -16.6, sx: scale * 1.1, sy: scale, sz: scale }));
@@ -145,6 +146,7 @@ async function createHouseRightBack(
     svg: { scale: svgScale, url: '../assets/projects/piazzatrentoetrieste/huis-rechts-achter-tekening.svg' },
     imageRect: { w: 199, h: 992 },
     depth: 0.1,
+    color: 0xa98971,
   });
   actor.setStaticPosition(getMatrix4({
     x: 18.2, y: -4.6, z: -18.6, sx: scale, sy: scale, sz: scale }));
