@@ -57,6 +57,8 @@ export default class MainScene extends Scene3D {
 
   clearColor = 0xbbddff;
 
+  isCameraPaused = false;
+
   isPaused = false;
 
   constructor() {
@@ -203,6 +205,11 @@ export default class MainScene extends Scene3D {
         el.checked = this.isPaused;
         this.togglePause();
       }
+    });
+
+    // START / STOP CAMERA ANIMATION
+    document.getElementById('cam-animation-toggle')?.addEventListener('click', (e) => {
+      this.isCameraPaused = (e.target as HTMLInputElement).checked;
     });
   }
 

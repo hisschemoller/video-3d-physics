@@ -75,6 +75,12 @@ label {
 #pause-toggle:checked + label:before {
   content: 'Continue';
 }
+#cam-animation-toggle + label:before {
+  content: 'Pause Camera';
+}
+#cam-animation-toggle:checked + label:before {
+  content: 'Continue Camera';
+}
 .control {
   padding: 5px 10px;
 }

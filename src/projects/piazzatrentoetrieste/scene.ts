@@ -218,6 +218,9 @@ export default class Scene extends MainScene {
       duration: PATTERN_DURATION,
       onStart: () => {},
       onUpdate: (progress) => {
+        if (this.isCameraPaused) {
+          return;
+        }
         const cos = Math.cos(progress * Math.PI * -2);
         const sin = Math.sin(progress * Math.PI * -2);
 
