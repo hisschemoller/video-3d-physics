@@ -24,7 +24,7 @@ export interface Actor {
  */
 interface ActorData {
   box?: { w: number, h: number, d: number },
-  color?: number,
+  color?: number | 'transparant',
   depth: number,
   imageRect: { w: number, h: number, },
   points?: [number, number][],

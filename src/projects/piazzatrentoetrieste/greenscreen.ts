@@ -23,6 +23,7 @@ export async function createGreenscreen(
     },
     imageRect: { w: videoWidth, h: videoHeight },
     depth: 0.02,
+    color: 'transparant',
   });
   actor.setStaticPosition(getMatrix4({ x: 0, y: -6.5, z: -6, sx: 1.0, sy: 1.0 }));
   actor.addTween({

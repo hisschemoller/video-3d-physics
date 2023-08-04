@@ -12,7 +12,7 @@ export function createRectangle(
   height: number,
   texture : THREE.Texture,
   depth = 0.02,
-  color: number = BASE_COLOR,
+  color: number | 'transparant' = BASE_COLOR,
 ) {
   const geometry = new THREE.BoxGeometry(width, height, depth);
 
@@ -23,10 +23,13 @@ export function createRectangle(
     /* eslint-disable no-param-reassign */
     group.materialIndex = index === 4 ? 1 : 0;
   });
+
+  const isTransparant = color === 'transparant';
+  const colOrTrans = isTransparant ? {} : { color };
   const materials = [
     new THREE.MeshPhongMaterial({
-      color,
-      opacity: 1,
+      ...colOrTrans,
+      opacity: isTransparant ? 0 : 1,
       transparent: true,
       side: THREE.FrontSide,
     }),
@@ -49,15 +52,17 @@ function createMeshFromShape(
   shape: THREE.Shape,
   scale: number,
   depth: number,
-  color: number,
+  color: number | 'transparant',
   texture?: THREE.Texture,
 ) {
-  const surface = texture ? { map: texture } : { color };
+  const isTransparant = color === 'transparant';
+  const colOrTrans = isTransparant ? {} : { color };
+  const surface = texture ? { map: texture } : colOrTrans;
   const materials = [
     new THREE.MeshPhongMaterial({
-      color,
+      ...colOrTrans,
       flatShading: false,
-      opacity: 1,
+      opacity: isTransparant ? 0 : 1,
       side: THREE.BackSide,
       transparent: true,
     }),
@@ -112,7 +117,7 @@ export function createSVG(
   svgScale: number,
   texture?: THREE.Texture,
   depth: number = 0.02,
-  color: number = BASE_COLOR,
+  color: number | 'transparant' = BASE_COLOR,
 ) {
   return new Promise<ExtendedMesh>(
     (resolve, reject) => {
