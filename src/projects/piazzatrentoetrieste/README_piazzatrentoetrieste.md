@@ -75,3 +75,5 @@ ffmpeg -i piazzatrentoetrieste-2-video-x8.mp4 -i piazzatrentoetrieste-2-audio-x8
 # scale to 50%, 960 * 540
 ffmpeg -i piazzatrentoetrieste-2-x8.mp4 -vf scale=960:540 piazzatrentoetrieste-2-x8_halfsize.mp4
 ```
+
+Finished and branched.
