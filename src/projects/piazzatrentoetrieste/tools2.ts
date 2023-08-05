@@ -172,7 +172,7 @@ async function createTool2cAgain(
   actor.getMesh().receiveShadow = true;
 
   const g = new THREE.Group();
-  g.position.set(14, -8, 10);
+  g.position.set(14, -7.6, 10);
   g.rotation.x = Math.PI * 0.5;
   g.add(actor.getMesh());
 

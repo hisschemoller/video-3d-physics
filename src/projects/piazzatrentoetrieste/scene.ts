@@ -225,12 +225,12 @@ export default class Scene extends MainScene {
         const sin = Math.sin(progress * Math.PI * -2);
 
         const cos2 = Math.cos(progress * Math.PI * 4);
+        // val goes from 0 to 1 to 0 to 1 to 0 in one duration
         const val = Math.abs((cos2 - 1) / 2);
-        // val goes from 0 to 1 to 0 to 1 too 0 in one duration
 
         this.pCamera.position.x = 30 * sin;
         this.pCamera.position.z = (15 * cos) - 12;
-        this.pCamera.position.y = (-1 * cos) + (val * -1.5);
+        this.pCamera.position.y = (-1.3 * cos) + (val * -1.5);
         // eslint-disable-next-line no-param-reassign
         worldGroup.rotation.x = worldGroupRotation + (val * -0.15);
         this.pCamera.lookAt(camTarget);

@@ -64,11 +64,11 @@ Het tempo is 60 / 0.5993055555555555 = 100.11587485515643 BPM<br>
 ## Render PNG sequence of version 2
 
 ```bash
-# png to mp4 (from index 869 met 30 FPS
-ffmpeg -framerate 30 -start_number 869 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p piazzatrentoetrieste-2-video-x1.mp4
-# repeat 8 times, 860 frames, video only
-ffmpeg -i piazzatrentoetrieste-2-video-x1.mp4 -filter_complex "loop=loop=8:size=860:start=0" piazzatrentoetrieste-2-video-x8.mp4
-# repeat 8 times, audio
+# png to mp4 (from index 866 met 30 FPS
+ffmpeg -framerate 30 -start_number 866 -i rendered/frame_%05d.png -f mp4 -vcodec libx264 -pix_fmt yuv420p piazzatrentoetrieste-2-video-x1.mp4
+# repeat 8 times, 863 frames, video only
+ffmpeg -i piazzatrentoetrieste-2-video-x1.mp4 -filter_complex "loop=loop=8:size=863:start=0" piazzatrentoetrieste-2-video-x8.mp4
+# repeat 8 times, audio 
 ffmpeg -stream_loop 8 -i piazzatrentoetrieste-2-audio-x1.wav -c copy piazzatrentoetrieste-2-audio-x8.wav
 # video en audio samenvoegen
 ffmpeg -i piazzatrentoetrieste-2-video-x8.mp4 -i piazzatrentoetrieste-2-audio-x8.wav -vcodec copy piazzatrentoetrieste-2-x8.mp4
