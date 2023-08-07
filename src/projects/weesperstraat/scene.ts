@@ -2,7 +2,9 @@
 import { ProjectSettings } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
-import carTest from './car-test';
+// import carPhysicsExample from './car-physics-enable3d';
+import carRaycastExample from './car-raycast-enable3d';
+import Vehicle from './vehicle';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 100;
@@ -26,6 +28,8 @@ export default class Scene extends MainScene {
 
   height3d: number;
 
+  car: Vehicle;
+
   constructor() {
     super();
 
@@ -44,6 +48,12 @@ export default class Scene extends MainScene {
     await super.create();
 
     const isPreview = true && !this.scene.userData.isCapture;
+
+    // AMBIENT LIGHT
+    this.ambientLight.intensity = 0.5;
+
+    // DIRECTIONAL LIGHT
+    this.directionalLight.intensity = 2;
 
     // TWEENS
     this.timeline = createTimeline({
@@ -70,7 +80,9 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
-    carTest(projectSettings);
+    // carPhysicsExample(projectSettings);
+    this.car = await carRaycastExample(projectSettings) as Vehicle;
+    this.car.update();
 
     this.postCreate();
   }
@@ -78,5 +90,6 @@ export default class Scene extends MainScene {
   async updateAsync(time: number, delta: number) {
     await this.timeline.update(time, delta);
     super.updateAsync(time, delta);
+    this.car.update();
   }
 }
