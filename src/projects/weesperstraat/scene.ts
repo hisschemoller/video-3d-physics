@@ -50,10 +50,10 @@ export default class Scene extends MainScene {
     const isPreview = true && !this.scene.userData.isCapture;
 
     // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.5;
+    // this.ambientLight.intensity = 0.5;
 
     // DIRECTIONAL LIGHT
-    this.directionalLight.intensity = 2;
+    // this.directionalLight.intensity = 1;
 
     // TWEENS
     this.timeline = createTimeline({
@@ -61,8 +61,26 @@ export default class Scene extends MainScene {
     });
 
     // MEDIA
-    // const media = {
-    // };
+    const media = {
+      video2: {
+        fps: 30,
+        height: 1080,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1920,
+        imgSrcPath: isPreview
+          ? '../assets/projects/weesperstraat/weesperstraat-2-frames_preview/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/weesperstraat-2/frames/&img=frame_#FRAME#.png',
+      },
+      video3: {
+        fps: 30,
+        height: 1080,
+        scale: isPreview ? PROJECT_PREVIEW_SCALE : 1,
+        width: 1920,
+        imgSrcPath: isPreview
+          ? '../assets/projects/weesperstraat/weesperstraat-3-frames_preview/frame_#FRAME#.png'
+          : 'fs-img?dir=/Volumes/Samsung_X5/weesperstraat-3/frames/&img=frame_#FRAME#.png',
+      },
+    };
 
     // PROJECT SETTINGS
     const projectSettings: ProjectSettings = {
