@@ -8,13 +8,13 @@ export default async function carRaycastExample(
   const { scene3d } = projectSettings;
 
   // CAMERA & ORBIT_CONTROLS
-  scene3d.cameraTarget.set(0, 0, 0);
-  scene3d.camera.position.set(10, 10, 10);
-  scene3d.camera.lookAt(scene3d.cameraTarget);
-  scene3d.camera.updateProjectionMatrix();
-  scene3d.orbitControls.target = scene3d.cameraTarget;
-  scene3d.orbitControls.update();
-  scene3d.orbitControls.saveState();
+  // scene3d.cameraTarget.set(0, 0, 0);
+  // scene3d.camera.position.set(5, 0, 5);
+  // scene3d.camera.lookAt(scene3d.cameraTarget);
+  // scene3d.camera.updateProjectionMatrix();
+  // scene3d.orbitControls.target = scene3d.cameraTarget;
+  // scene3d.orbitControls.update();
+  // scene3d.orbitControls.saveState();
 
   const grass = await scene3d.load.texture('../assets/projects/weesperstraat/grass.jpg');
   const grassGround = grass.clone();
@@ -25,10 +25,10 @@ export default async function carRaycastExample(
   grassGround.repeat.set(10, 10);
 
   scene3d.physics.add.ground(
-    { y: -4 /* -1 */, width: 100, height: 100 }, { lambert: { map: grassGround } },
+    { y: -2 /* -1 */, width: 100, height: 100 }, { lambert: { map: grassGround } },
   );
 
-  const gltf = await scene3d.load.gltf('../assets/projects/weesperstraat/car.glb');
+  const gltf = await scene3d.load.gltf('../assets/projects/weesperstraat/car-tutorial.glb');
   const scene = gltf.scenes[0];
 
   let chassis: ExtendedObject3D | undefined;
@@ -38,14 +38,37 @@ export default async function carRaycastExample(
     const mesh = child as ExtendedObject3D;
     if (mesh) {
       if (/window/gi.test(child.name)) {
-        // mesh.material.transparent = true;
-        // mesh.material.opacity = 0.5;
-      } else if (child.name === 'Chassis') {
-        chassis = mesh;
+        if (mesh.material instanceof THREE.Material) {
+          mesh.material.transparent = true;
+          mesh.material.opacity = 0.5;
+        }
+      } else if (child.name === 'Body') {
+        // chassis = mesh;
+
+        const texture = new THREE.TextureLoader().load('../assets/projects/weesperstraat/car-texture.jpg');
+        texture.flipY = false;
+
+        chassis = gltf.scene.getObjectByName('Body') as ExtendedObject3D;
+        chassis.material = new THREE.MeshPhongMaterial({
+          map: texture,
+          shininess: 1,
+        });
         chassis.receiveShadow = true;
         chassis.castShadow = true;
-      } else if (child.name === 'Tire') {
+      } else if (child.name === 'Wheel') {
         tire = mesh;
+
+        const texture = new THREE.TextureLoader().load('../assets/projects/weesperstraat/wheel-texture.jpg');
+        texture.flipY = false;
+
+        tire.material = new THREE.MeshPhongMaterial({
+          map: texture,
+          shininess: 0,
+        });
+        // tire.geometry.computeVertexNormals();
+        // tire.geometry.normalizeNormals();
+        // tire.material.needsUpdate = true;
+
         tire.receiveShadow = true;
         tire.castShadow = true;
         tire.geometry.center();

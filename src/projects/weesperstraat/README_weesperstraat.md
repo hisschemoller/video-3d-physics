@@ -45,3 +45,16 @@ ffmpeg -i weesperstraat-3_preview.mov '/Volumes/Samsung_X5/weesperstraat-3/frame
   * https://discourse.threejs.org/t/vehicle-physics-with-cannon-js/11769
   * https://jblaha.art/sketchbook/0.4/
   * https://github.com/swift502/Sketchbook
+* Car modelling
+  * Low Poly Vehicles | Easy Beginner | Blender Tutorial
+    * https:/ /www.youtube.com/watch?v=Zkg7Ol2jEjs
+    * Tot 20:37 // 16:29, 12:28, 11:24, 10:26
+  * Car in Blender - PART I - Modelling [ Beginners ]
+    * https://www.youtube.com/watch?v=VGPvxIrobFE
+  * Modeling a LOW POLY NISSAN GT-R R35 | Blender 2.83 Complete Tutorial
+    * https://www.youtube.com/watch?v=5cM_lhRmiQI
+* Texture
+  * Texture Painting - Quick Start Guide - Blender (een hamer)
+    * https://www.youtube.com/watch?v=WjS_zNQNVlw
+  * Blender Beginner UV Unwrapping Tutorial (Chair Part 7)
+    * https://www.youtube.com/watch?v=XeBUfMKKZDo

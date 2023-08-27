@@ -49,11 +49,13 @@ export default class Scene extends MainScene {
 
     const isPreview = true && !this.scene.userData.isCapture;
 
+    // this.physics.debug?.enable();
+
     // AMBIENT LIGHT
-    // this.ambientLight.intensity = 0.5;
+    this.ambientLight.intensity = 0.9;
 
     // DIRECTIONAL LIGHT
-    // this.directionalLight.intensity = 1;
+    this.directionalLight.intensity = 1;
 
     // TWEENS
     this.timeline = createTimeline({
