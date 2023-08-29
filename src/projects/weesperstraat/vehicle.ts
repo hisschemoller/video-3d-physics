@@ -29,6 +29,14 @@ export default class Vehicle {
     physics: AmmoPhysics,
     chassis: ExtendedObject3D,
     wheelMesh: ExtendedObject3D,
+    wheelRadiusBack: number = 0.4,
+    wheelRadiusFront: number = 0.4,
+    wheelAxisPositionBack: number = -1.3,
+    wheelAxisFrontPosition: number = 1.2,
+    wheelHalfTrackBack: number = 1.1,
+    wheelHalfTrackFront: number = 1.1,
+    wheelAxisHeightBack: number = 0,
+    wheelAxisHeightFront: number = 0,
   ) {
     this.scene = scene;
     this.physics = physics;
@@ -51,16 +59,6 @@ export default class Vehicle {
     const FRONT_RIGHT = 1;
     const BACK_LEFT = 2;
     const BACK_RIGHT = 3;
-
-    const wheelAxisPositionBack = -1.3;
-    const wheelRadiusBack = 0.4;
-    const wheelHalfTrackBack = 1.1;
-    const wheelAxisHeightBack = 0;
-
-    const wheelAxisFrontPosition = 1.2;
-    const wheelRadiusFront = 0.4;
-    const wheelHalfTrackFront = 1.1;
-    const wheelAxisHeightFront = 0;
 
     this.addWheel(
       true,
