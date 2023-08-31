@@ -3,11 +3,13 @@ import { ProjectSettings } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
 // import carPhysicsExample from './car-physics-enable3d';
-import carRaycastExample from './car-raycast-enable3d';
+// import carRaycastExample from './car-raycast-enable3d';
 import Vehicle from './vehicle';
+import { createGround } from './background';
+import { createBlackCar } from './car';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
-const BPM = 100;
+const BPM = 97;
 const SECONDS_PER_BEAT = 60 / BPM;
 const MEASURES = 8;
 const BEATS_PER_MEASURE = 4;
@@ -28,13 +30,13 @@ export default class Scene extends MainScene {
 
   height3d: number;
 
-  car: Vehicle;
+  blackCar: Vehicle;
 
   constructor() {
     super();
 
     this.width = 1920;
-    this.height = 1080;
+    this.height = 1440;
     this.width3d = 16;
     this.height3d = (this.height / this.width) * this.width3d;
     this.fps = 15;
@@ -100,9 +102,10 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
+    await createGround(projectSettings, media);
     // carPhysicsExample(projectSettings);
-    this.car = await carRaycastExample(projectSettings) as Vehicle;
-    this.car.update();
+    this.blackCar = await createBlackCar(projectSettings) as Vehicle;
+    this.blackCar.update();
 
     this.postCreate();
   }
@@ -110,6 +113,6 @@ export default class Scene extends MainScene {
   async updateAsync(time: number, delta: number) {
     await this.timeline.update(time, delta);
     super.updateAsync(time, delta);
-    this.car.update();
+    this.blackCar.update();
   }
 }
