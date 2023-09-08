@@ -5,8 +5,8 @@ import createTimeline, { Timeline } from '@app/timeline';
 // import carPhysicsExample from './car-physics-enable3d';
 // import carRaycastExample from './car-raycast-enable3d';
 import Vehicle from './vehicle';
-import { createGround } from './background';
-import { createBlackCar } from './car';
+import createWalls, { createGround } from './background';
+import { createBlackCar, createRedCar } from './car';
 
 const PROJECT_PREVIEW_SCALE = 0.25;
 const BPM = 97;
@@ -32,6 +32,8 @@ export default class Scene extends MainScene {
 
   blackCar: Vehicle;
 
+  redCar: Vehicle;
+
   constructor() {
     super();
 
@@ -54,10 +56,11 @@ export default class Scene extends MainScene {
     // this.physics.debug?.enable();
 
     // AMBIENT LIGHT
-    this.ambientLight.intensity = 0.9;
+    this.ambientLight.intensity = 0.7;
 
     // DIRECTIONAL LIGHT
-    this.directionalLight.intensity = 1;
+    this.directionalLight.position.set(10, 20, 10);
+    this.directionalLight.intensity = 1.1;
 
     // TWEENS
     this.timeline = createTimeline({
@@ -104,8 +107,10 @@ export default class Scene extends MainScene {
 
     await createGround(projectSettings, media);
     // carPhysicsExample(projectSettings);
-    this.blackCar = await createBlackCar(projectSettings) as Vehicle;
-    this.blackCar.update();
+    // this.blackCar = await createBlackCar(projectSettings) as Vehicle;
+    // this.blackCar.update();
+    // this.redCar = await createRedCar(projectSettings) as Vehicle;
+    // this.redCar.update();
 
     this.postCreate();
   }
@@ -113,6 +118,7 @@ export default class Scene extends MainScene {
   async updateAsync(time: number, delta: number) {
     await this.timeline.update(time, delta);
     super.updateAsync(time, delta);
-    this.blackCar.update();
+    // this.blackCar.update();
+    // this.redCar.update();
   }
 }

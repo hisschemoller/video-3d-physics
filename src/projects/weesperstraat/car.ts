@@ -67,6 +67,55 @@ export async function createBlackCar(
   return car;
 }
 
-export async function createRedCar() {
+export async function createRedCar(
+  projectSettings: ProjectSettings,
+): Promise<Vehicle | undefined> {
+  const { scene3d } = projectSettings;
 
+  const gltf = await scene3d.load.gltf('../assets/projects/weesperstraat/car-red.glb');
+
+  // BODY
+  const body = gltf.scene.getObjectByName('Body') as ExtendedObject3D;
+  const bodyTexture = new THREE.TextureLoader().load('../assets/projects/weesperstraat/car-red-body-texture.jpg');
+  bodyTexture.flipY = false;
+  body.material = new THREE.MeshPhongMaterial({
+    map: bodyTexture,
+    shininess: 1,
+  });
+  body.receiveShadow = true;
+  body.castShadow = true;
+  body.position.x = -5;
+  body.position.y = -0.5;
+  body.rotation.y = Math.PI / 2;
+  scene3d.add.existing(body);
+  scene3d.physics.add.existing(body, { shape: 'convex', mass: 1200 });
+
+  // WHEEL
+  const wheelScale = 0.9;
+  const wheel = createWheel(gltf, '../assets/projects/weesperstraat/car-red-wheel-texture.jpg');
+  wheel.scale.set(wheelScale, wheelScale, wheelScale);
+
+  // CAR
+  const wheelRadius = (0.791 / 2) * wheelScale;
+  const axisPositionBack = -1.7;
+  const axisPositionFront = 1.55;
+  const wheelHalfTrack = 1.05;
+  const wheelAxisHeight = 0.00;
+  const car = new Vehicle(
+    scene3d.scene, scene3d.physics, body, wheel,
+    wheelRadius, wheelRadius, axisPositionBack, axisPositionFront,
+    wheelHalfTrack, wheelHalfTrack, wheelAxisHeight, wheelAxisHeight,
+  );
+
+  // const FRONT_LEFT = 0;
+  // const FRONT_RIGHT = 1;
+  const BACK_LEFT = 2;
+  const BACK_RIGHT = 3;
+  let engineForce = 0;
+  const maxEngineForce = 5000;
+  engineForce = maxEngineForce / 4;
+  car.vehicle.applyEngineForce(engineForce, BACK_LEFT);
+  car.vehicle.applyEngineForce(engineForce, BACK_RIGHT);
+
+  return car;
 }
