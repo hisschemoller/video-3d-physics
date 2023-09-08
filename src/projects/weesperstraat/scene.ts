@@ -1,4 +1,5 @@
 /* eslint-disable object-curly-newline */
+import { THREE } from 'enable3d';
 import { ProjectSettings } from '@app/interfaces';
 import MainScene from '@app/mainscene';
 import createTimeline, { Timeline } from '@app/timeline';
@@ -41,7 +42,7 @@ export default class Scene extends MainScene {
     this.height = 1440;
     this.width3d = 16;
     this.height3d = (this.height / this.width) * this.width3d;
-    this.fps = 15;
+    this.fps = 30;
     this.captureFps = 30;
     this.captureThrottle = 10;
     this.captureDuration = PATTERN_DURATION * 2;
@@ -105,7 +106,10 @@ export default class Scene extends MainScene {
       width3d: this.width3d,
     };
 
+    const group = new THREE.Group();
+    this.scene.add(group);
     await createGround(projectSettings, media);
+    await createWalls(projectSettings, media, group);
     // carPhysicsExample(projectSettings);
     // this.blackCar = await createBlackCar(projectSettings) as Vehicle;
     // this.blackCar.update();
